@@ -14,7 +14,8 @@ const clientes = [
         'matiasddae@gmail.com',
         'Colombres 2145',
         ['2453243','3412993525'],
-        'Argentino'
+        'Argentino',
+        "06fcac53-6f08-4516-906b-cdf1949ac01d"
     )
 ]
 
@@ -37,6 +38,29 @@ app.post('/api/clientes',(req,res)=>{
 
     clientes.push(cliente)
     res.status(201).send({message: 'Cliente creado', data: cliente})
+})
+
+app.put('/api/clientes/:id',(req,res)=>{
+    const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id)
+
+    if(clienteIdx===-1){
+        res.status(404).send({message:'Cliente No Encontrado'})
+    }
+
+    const input = {
+        tipoDoc: req.body.tipoDoc,
+        nroDoc: req.body.nroDoc,
+        nombre: req.body.nombre,
+        apellido: req.body.apellido,
+        fechaNacimiento: req.body.fechaNacimiento,
+        mail: req.body.mail,
+        domicilio: req.body.domicilio,
+        telefonos: req.body.telefonos,
+        nacionalidad: req.body.nacionalidad
+    }
+    clientes[clienteIdx] = {...clientes[clienteIdx], ...input}
+
+    res.status(200).send({message: 'Cliente modificado correctamente', data:clientes[clienteIdx]})
 })
 
 app.use('/', (req, res) => {
