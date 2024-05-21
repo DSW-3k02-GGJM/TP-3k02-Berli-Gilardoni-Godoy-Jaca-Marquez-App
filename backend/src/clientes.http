@@ -2,5 +2,20 @@
 GET http://localhost:8000/api/clientes
 
 ### Obtener un cliente
-GET http://localhost:8000/api/clientes/a46d9dcc-8052-47df-bede-be66009ef545
+GET http://localhost:8000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
 
+### Crear un cliente
+POST http://localhost:8000/api/clientes
+Content-Type: application/json
+
+{
+    "tipoDoc": "DNI",
+    "nroDoc": "34346437",
+    "nombre": "Marcos",
+    "apellido": "Godoy",
+    "fechaNacimiento": "27/05/2007",
+    "mail": "mjgodo@gmail.com",
+    "domicilio": "Pellegrini 1302",
+    "telefonos": ["4345648","3415642126"],
+    "nacionalidad": "Paraguayo"
+}
