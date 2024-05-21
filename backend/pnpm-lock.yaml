@@ -16,7 +16,7 @@ importers:
         specifier: 4.17.21
         version: 4.17.21
       '@types/node':
-        specifier: 20.12.12
+        specifier: ^20.12.12
         version: 20.12.12
       tsc-watch:
         specifier: ^6.2.0
