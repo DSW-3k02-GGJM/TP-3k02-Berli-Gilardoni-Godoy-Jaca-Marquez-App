@@ -5,28 +5,8 @@ app.use(express.json());
 const clientes = [
     new Cliente('DNI', '44213356', 'Matias', 'Marquez', '26/02/2024', 'matiasddae@gmail.com', 'Colombres 2145', ['2453243', '3412993525'], 'Argentino', "06fcac53-6f08-4516-906b-cdf1949ac01d")
 ];
-app.get('/api/clientes', (req, res) => {
-    res.json({ data: clientes });
-});
-app.get('/api/clientes/:id', (req, res) => {
-    const cliente = clientes.find((cliente) => cliente.id === req.params.id);
-    if (!cliente) {
-        res.status(404).send({ message: 'Cliente No Encontrado' });
-    }
-    res.json({ data: cliente });
-});
-app.post('/api/clientes', (req, res) => {
-    const { tipoDoc, nroDoc, nombre, apellido, fechaNacimiento, mail, domicilio, telefonos, nacionalidad } = req.body;
-    const cliente = new Cliente(tipoDoc, nroDoc, nombre, apellido, fechaNacimiento, mail, domicilio, telefonos, nacionalidad);
-    clientes.push(cliente);
-    res.status(201).send({ message: 'Cliente creado', data: cliente });
-});
-app.put('/api/clientes/:id', (req, res) => {
-    const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id);
-    if (clienteIdx === -1) {
-        res.status(404).send({ message: 'Cliente No Encontrado' });
-    }
-    const input = {
+function sanitizedClienteInput(req, res, next) {
+    req.body.sanitizedInput = {
         tipoDoc: req.body.tipoDoc,
         nroDoc: req.body.nroDoc,
         nombre: req.body.nombre,
@@ -37,7 +17,31 @@ app.put('/api/clientes/:id', (req, res) => {
         telefonos: req.body.telefonos,
         nacionalidad: req.body.nacionalidad
     };
-    clientes[clienteIdx] = { ...clientes[clienteIdx], ...input };
+    // Más validaciones
+    next();
+}
+app.get('/api/clientes', (req, res) => {
+    res.json({ data: clientes });
+});
+app.get('/api/clientes/:id', (req, res) => {
+    const cliente = clientes.find((cliente) => cliente.id === req.params.id);
+    if (!cliente) {
+        res.status(404).send({ message: 'Cliente No Encontrado' });
+    }
+    res.json({ data: cliente });
+});
+app.post('/api/clientes', sanitizedClienteInput, (req, res) => {
+    const input = req.body.sanitizedInput;
+    const cliente = new Cliente(input.tipoDoc, input.nroDoc, input.nombre, input.apellido, input.fechaNacimiento, input.mail, input.domicilio, input.telefonos, input.nacionalidad);
+    clientes.push(cliente);
+    res.status(201).send({ message: 'Cliente creado', data: cliente });
+});
+app.put('/api/clientes/:id', sanitizedClienteInput, (req, res) => {
+    const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id);
+    if (clienteIdx === -1) {
+        res.status(404).send({ message: 'Cliente No Encontrado' });
+    }
+    clientes[clienteIdx] = { ...clientes[clienteIdx], ...req.body.sanitizedInput };
     res.status(200).send({ message: 'Cliente modificado correctamente', data: clientes[clienteIdx] });
 });
 app.use('/', (req, res) => {

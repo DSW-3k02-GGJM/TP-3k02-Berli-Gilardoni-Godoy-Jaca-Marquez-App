@@ -1,5 +1,5 @@
-import express from 'express'
-import { Cliente } from './cliente.js';
+import express, {NextFunction,Request,Response} from 'express'
+import { Cliente } from './cliente.js'
 
 const app = express();
 app.use(express.json())
@@ -19,6 +19,23 @@ const clientes = [
     )
 ]
 
+function sanitizedClienteInput(req: Request, res: Response, next:NextFunction){
+    req.body.sanitizedInput = {
+        tipoDoc: req.body.tipoDoc,
+        nroDoc: req.body.nroDoc,
+        nombre: req.body.nombre,
+        apellido: req.body.apellido,
+        fechaNacimiento: req.body.fechaNacimiento,
+        mail: req.body.mail,
+        domicilio: req.body.domicilio,
+        telefonos: req.body.telefonos,
+        nacionalidad: req.body.nacionalidad
+    }
+    // Más validaciones
+
+    next()
+}
+
 app.get('/api/clientes',(req,res)=>{
     res.json({data: clientes})
 })
@@ -31,34 +48,23 @@ app.get('/api/clientes/:id',(req,res)=>{
     res.json({data: cliente})
 })
 
-app.post('/api/clientes',(req,res)=>{
-    const {tipoDoc,nroDoc,nombre,apellido,fechaNacimiento,mail,domicilio,telefonos,nacionalidad} = req.body
+app.post('/api/clientes', sanitizedClienteInput, (req,res)=>{
+    const input = req.body.sanitizedInput
 
-    const cliente = new Cliente(tipoDoc,nroDoc,nombre,apellido,fechaNacimiento,mail,domicilio,telefonos,nacionalidad)
+    const cliente = new Cliente(input.tipoDoc,input.nroDoc,input.nombre,input.apellido,input.fechaNacimiento,input.mail,input.domicilio,input.telefonos,input.nacionalidad)
 
     clientes.push(cliente)
     res.status(201).send({message: 'Cliente creado', data: cliente})
 })
 
-app.put('/api/clientes/:id',(req,res)=>{
+app.put('/api/clientes/:id',sanitizedClienteInput ,(req,res)=>{
     const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id)
 
     if(clienteIdx===-1){
         res.status(404).send({message:'Cliente No Encontrado'})
     }
 
-    const input = {
-        tipoDoc: req.body.tipoDoc,
-        nroDoc: req.body.nroDoc,
-        nombre: req.body.nombre,
-        apellido: req.body.apellido,
-        fechaNacimiento: req.body.fechaNacimiento,
-        mail: req.body.mail,
-        domicilio: req.body.domicilio,
-        telefonos: req.body.telefonos,
-        nacionalidad: req.body.nacionalidad
-    }
-    clientes[clienteIdx] = {...clientes[clienteIdx], ...input}
+    clientes[clienteIdx] = {...clientes[clienteIdx], ...req.body.sanitizedInput}
 
     res.status(200).send({message: 'Cliente modificado correctamente', data:clientes[clienteIdx]})
 })
