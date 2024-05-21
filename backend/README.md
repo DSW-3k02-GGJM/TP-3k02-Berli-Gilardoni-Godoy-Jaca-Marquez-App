@@ -16,7 +16,9 @@ Parandose en la carpeta 'backend' escribimos los siguientes comandos en consola:
    pnpm add -D tsc-watch@6.0.4
 ```
 2. Configuramos vscode con estas settings:
+   
 'preferences:import ending'
+
 ![alt text](img/image4.png)
 
 3. Dependencias de Express:
@@ -60,9 +62,11 @@ Parandose en la carpeta 'backend' escribimos los siguientes comandos en consola:
 Si querés configurar el vscode para ejecutar con botones seguí los siguientes pasos:
 
 1. Ir a 'Run and debug'
+
 ![alt text](img/image.png)
 
 2. Crear un arcfhivo launch.json
+   
 ![alt text](img/image-1.png)
 
 3. Borrar todo y pegar esto en dicho archivo:
@@ -93,4 +97,5 @@ Si querés configurar el vscode para ejecutar con botones seguí los siguientes 
    }
 ```
 4. Ya deberían estar los botones para ejecutar la app localmente.
+   
 ![alt text](img/image-2.png)
