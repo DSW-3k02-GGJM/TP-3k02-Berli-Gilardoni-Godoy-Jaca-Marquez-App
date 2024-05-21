@@ -1,0 +1,6 @@
+### Obtener todos los clientes
+GET http://localhost:8000/api/clientes
+
+### Obtener un cliente
+GET http://localhost:8000/api/clientes/a46d9dcc-8052-47df-bede-be66009ef545
+
