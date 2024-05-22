@@ -42,3 +42,20 @@ header a {
     color: azure;
     margin: 0.5em;
 }
+
+form {
+    border:2px solid black;
+    padding: 1vh;
+}
+
+form label, label input{
+    display: block;
+}
+
+.form {
+    padding: 5vh;
+}
+
+.head {
+    height: 75px;
+}
