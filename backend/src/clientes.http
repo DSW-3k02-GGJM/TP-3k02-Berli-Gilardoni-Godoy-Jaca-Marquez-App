@@ -1,11 +1,11 @@
 ### Obtener todos los clientes
-GET http://localhost:8000/api/clientes
+GET http://localhost:3000/api/clientes
 
 ### Obtener un cliente
-GET http://localhost:8000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
+GET http://localhost:3000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
 
 ### Crear un cliente
-POST http://localhost:8000/api/clientes
+POST http://localhost:3000/api/clientes
 Content-Type: application/json
 
 {
@@ -20,10 +20,11 @@ Content-Type: application/json
     "nacionalidad": "Paraguayo"
 }
 
-### Modificar un cliente
+
 ### PUT => Modificaciones completas (Recurso completo e idempotente)
 ### PATCH => Modificaciones parciales o completas
-PUT http://localhost:8000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
+### Modificar un cliente (PUT)
+PUT http://localhost:3000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
 Content-Type: application/json
 
 {
@@ -33,10 +34,27 @@ Content-Type: application/json
       "apellido": "Marquez",
       "fechaNacimiento": "26/02/2024",
       "mail": "matiasmarquesito@gmail.com",
-      "domicilio": "Machuchi 2145",
+      "domicilio": "Mac
+      uchi 2145",
       "telefonos": [
         "2453243",
         "1252993525"
       ],
       "nacionalidad": "Argentino"
+}
+
+### Modificar un cliente (PATCH)
+PATCH  http://localhost:3000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
+Content-Type: application/json
+
+{
+      "tipoDoc": "DNI",
+      "nroDoc": "44213356",
+      "fechaNacimiento": "26/02/2024",
+      "mail": "matiasmarquesito@gmail.com",
+      "domicilio": "Machuchi 2145",
+      "telefonos": [
+        "2453243",
+        "1252993525"
+      ]
 }

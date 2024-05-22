@@ -18,6 +18,11 @@ function sanitizedClienteInput(req, res, next) {
         nacionalidad: req.body.nacionalidad
     };
     // Más validaciones
+    Object.keys(req.body.sanitizedInput).forEach((key) => {
+        if (req.body.sanitizedInput[key] === undefined) {
+            delete req.body.sanitizedInput[key];
+        }
+    });
     next();
 }
 app.get('/api/clientes', (req, res) => {
@@ -44,12 +49,20 @@ app.put('/api/clientes/:id', sanitizedClienteInput, (req, res) => {
     clientes[clienteIdx] = { ...clientes[clienteIdx], ...req.body.sanitizedInput };
     res.status(200).send({ message: 'Cliente modificado correctamente', data: clientes[clienteIdx] });
 });
+app.patch('/api/clientes/:id', sanitizedClienteInput, (req, res) => {
+    const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id);
+    if (clienteIdx === -1) {
+        res.status(404).send({ message: 'Cliente No Encontrado' });
+    }
+    clientes[clienteIdx] = { ...clientes[clienteIdx], ...req.body.sanitizedInput };
+    res.status(200).send({ message: 'Cliente modificado correctamente', data: clientes[clienteIdx] });
+});
 app.use('/', (req, res) => {
     //res.send('<h1>Hola</h1>');
     res.json({ message: '<h1>Hola</h1>' });
 });
-app.listen(8000, () => {
-    console.log("Servidor operando en http//:localhost:8000/"); //Si no aparece con este link probar con 'localhost:8000'
+app.listen(3000, () => {
+    console.log("Servidor operando en http//:localhost:3000/"); //Si no aparece con este link probar con 'localhost:8000'
 });
 //console.log("test!!");
 //# sourceMappingURL=app.js.map
