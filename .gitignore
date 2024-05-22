@@ -4,26 +4,47 @@ coverage
 # API keys and secrets
 .env
 
-# dependency directory
-node_modules
+## built vscode extensions
+*.vsix
 
-# OS metadata
-.DS_Store
-Thumbs.db
-
-# ignore built ts files
+# Compiled output
 dist/**/*
+dist
+tmp
+out-tsc
+bazel-out
 
-# vscode
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-!.vscode/*.code-snippets
+.history/*
 
-## local jistory for vscode
-.history/
+# Miscellaneous
+.angular/cache
+.sass-cache/
+connect.lock
+coverage
+libpeerconnection.log
+testem.log
+typings
 
-## built vscode extensions
-*.vsix
+# System files
+.DS_Store
+Thumbs.db

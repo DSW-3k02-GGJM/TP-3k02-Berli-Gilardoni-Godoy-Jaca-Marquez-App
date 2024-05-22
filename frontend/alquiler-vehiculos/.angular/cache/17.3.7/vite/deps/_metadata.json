@@ -1,0 +1,34 @@
+{
+  "hash": "10fa912c",
+  "configHash": "8618e990",
+  "lockfileHash": "3d3bb183",
+  "browserHash": "05810c41",
+  "optimized": {
+    "@angular/core": {
+      "src": "../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "5b807243",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "121042d8",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "ee63afca",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-P5WB54LL": {
+      "file": "chunk-P5WB54LL.js"
+    },
+    "chunk-BNOYPYPL": {
+      "file": "chunk-BNOYPYPL.js"
+    }
+  }
+}
