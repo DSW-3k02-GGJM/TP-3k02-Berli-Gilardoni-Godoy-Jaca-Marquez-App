@@ -28,19 +28,18 @@ PUT http://localhost:3000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
 Content-Type: application/json
 
 {
-      "tipoDoc": "DNI",
-      "nroDoc": "44213356",
-      "nombre": "Matias",
-      "apellido": "Marquez",
-      "fechaNacimiento": "26/02/2024",
-      "mail": "matiasmarquesito@gmail.com",
-      "domicilio": "Mac
-      uchi 2145",
-      "telefonos": [
-        "2453243",
-        "1252993525"
-      ],
-      "nacionalidad": "Argentino"
+  "tipoDoc": "DNI",
+  "nroDoc": "44213356",
+  "nombre": "Matias",
+  "apellido": "Marquez",
+  "fechaNacimiento": "26/02/2024",
+  "mail": "matiasmarquesito@gmail.com",
+  "domicilio": "Macuchi 2145",
+  "telefonos": [
+    "2453243",
+    "1252993525"
+  ],
+  "nacionalidad": "Argentino"
 }
 
 ### Modificar un cliente (PATCH)
@@ -58,3 +57,6 @@ Content-Type: application/json
         "1252993525"
       ]
 }
+
+### Borrar un cliente
+DELETE http://localhost:3000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d

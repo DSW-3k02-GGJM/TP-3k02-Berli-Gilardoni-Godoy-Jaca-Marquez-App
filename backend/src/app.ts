@@ -47,7 +47,7 @@ app.get('/api/clientes',(req,res)=>{
 app.get('/api/clientes/:id',(req,res)=>{
     const cliente = clientes.find((cliente) => cliente.id === req.params.id)
     if(!cliente){
-        res.status(404).send({message:'Cliente No Encontrado'})
+        return res.status(404).send({message:'Cliente No Encontrado'})
     }
     res.json({data: cliente})
 })
@@ -58,38 +58,56 @@ app.post('/api/clientes', sanitizedClienteInput, (req,res)=>{
     const cliente = new Cliente(input.tipoDoc,input.nroDoc,input.nombre,input.apellido,input.fechaNacimiento,input.mail,input.domicilio,input.telefonos,input.nacionalidad)
 
     clientes.push(cliente)
-    res.status(201).send({message: 'Cliente creado', data: cliente})
+    return res.status(201).send({message: 'Cliente creado', data: cliente})
 })
 
 app.put('/api/clientes/:id',sanitizedClienteInput ,(req,res)=>{
     const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id)
 
     if(clienteIdx===-1){
-        res.status(404).send({message:'Cliente No Encontrado'})
+        return res.status(404).send({message:'Cliente No Encontrado'})
     }
 
-    clientes[clienteIdx] = {...clientes[clienteIdx], ...req.body.sanitizedInput}
+    Object.assign(clientes[clienteIdx], req.body.sanitizedInput)
 
-    res.status(200).send({message: 'Cliente modificado correctamente', data:clientes[clienteIdx]})
+    return res.status(200).send({message: 'Cliente modificado correctamente', data:clientes[clienteIdx]})
 })
 
 app.patch('/api/clientes/:id',sanitizedClienteInput ,(req,res)=>{
     const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id)
 
     if(clienteIdx===-1){
-        res.status(404).send({message:'Cliente No Encontrado'})
+        return res.status(404).send({message:'Cliente No Encontrado'})
     }
 
-    clientes[clienteIdx] = {...clientes[clienteIdx], ...req.body.sanitizedInput}
+    Object.assign(clientes[clienteIdx], req.body.sanitizedInput)
+    //clientes[clienteIdx] = {...clientes[clienteIdx], ...req.body.sanitizedInput}
 
-    res.status(200).send({message: 'Cliente modificado correctamente', data:clientes[clienteIdx]})
+    return res.status(200).send({message: 'Cliente modificado correctamente', data:clientes[clienteIdx]})
 })
 
+app.delete('/api/clientes/:id',(req,res)=>{
+    const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id)
+
+    if(clienteIdx===-1){
+        res.status(404).send({message:'Cliente No Encontrado'})
+    }
+    else {
+    clientes.splice(clienteIdx,1)
+    res.status(200).send({message: 'Cliente borrado correctamente'})
+    }
+})
+
+app.use((_, res) => {
+    return res.status(404).send({message: 'Recurso no encontrado'})
+});
+
+/*
 app.use('/', (req, res) => {
     //res.send('<h1>Hola</h1>');
     res.json({ message: '<h1>Hola</h1>'});
 });
-
+*/
 
 app.listen(3000, () => {
     console.log("Servidor operando en http//:localhost:3000/"); //Si no aparece con este link probar con 'localhost:8000'
