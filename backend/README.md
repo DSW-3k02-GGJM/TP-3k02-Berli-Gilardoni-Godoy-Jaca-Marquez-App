@@ -7,13 +7,13 @@ Parandose en la carpeta 'backend' escribimos los siguientes comandos en consola:
 
 * O con npm
 ```bash
-   npm install --save-dev typescript@5.1.3
-   npm install --save-dev tsc-watch@6.0.4
+   npm install --save-dev typescript@5.4.5
+   npm install --save-dev tsc-watch@6.2.0
 ```
 * Con pnpm
 ```bash
-   pnpm add -D typescript@5.1.3
-   pnpm add -D tsc-watch@6.0.4
+   pnpm add -D typescript@5.4.5
+   pnpm add -D tsc-watch@6.2.0
 ```
 2. Configuramos vscode con estas settings:
    
@@ -54,8 +54,8 @@ Parandose en la carpeta 'backend' escribimos los siguientes comandos en consola:
 ```
 * O con pnpm
 ```bash
-   pnpm add -D typescript@5.1.3
-   pnpm add -D tsc-watch@6.0.4
+   pnpm add -D typescript@5.4.5
+   pnpm add -D tsc-watch@6.2.0
 ```
 
 ### Ejecución con configuración
