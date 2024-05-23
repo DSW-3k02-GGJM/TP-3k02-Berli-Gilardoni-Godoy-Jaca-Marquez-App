@@ -1,6 +1,7 @@
-import crypto from 'node:crypto';
 export class Cliente {
-    constructor(tipoDoc, nroDoc, nombre, apellido, fechaNacimiento, mail, domicilio, telefonos, nacionalidad, id = crypto.randomUUID()) {
+    constructor(tipoDoc, nroDoc, nombre, apellido, fechaNacimiento, mail, domicilio, telefonos, nacionalidad
+    //public id = crypto.randomUUID()
+    ) {
         this.tipoDoc = tipoDoc;
         this.nroDoc = nroDoc;
         this.nombre = nombre;
@@ -10,7 +11,6 @@ export class Cliente {
         this.domicilio = domicilio;
         this.telefonos = telefonos;
         this.nacionalidad = nacionalidad;
-        this.id = id;
     }
 }
 //# sourceMappingURL=cliente.js.map

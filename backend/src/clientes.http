@@ -2,7 +2,7 @@
 GET http://localhost:3000/api/clientes
 
 ### Obtener un cliente
-GET http://localhost:3000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
+GET http://localhost:3000/api/clientes/44213356
 
 ### Crear un cliente
 POST http://localhost:3000/api/clientes
@@ -24,7 +24,7 @@ Content-Type: application/json
 ### PUT => Modificaciones completas (Recurso completo e idempotente)
 ### PATCH => Modificaciones parciales o completas
 ### Modificar un cliente (PUT)
-PUT http://localhost:3000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
+PUT http://localhost:3000/api/clientes/44213356
 Content-Type: application/json
 
 {
@@ -43,14 +43,14 @@ Content-Type: application/json
 }
 
 ### Modificar un cliente (PATCH)
-PATCH  http://localhost:3000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
+PATCH  http://localhost:3000/api/clientes/44213356
 Content-Type: application/json
 
 {
       "tipoDoc": "DNI",
       "nroDoc": "44213356",
       "fechaNacimiento": "26/02/2024",
-      "mail": "matiasmarquesito@gmail.com",
+      "mail": "matiasmaaaaaaaaaaarquesito@gmail.com",
       "domicilio": "Machuchi 2145",
       "telefonos": [
         "2453243",
@@ -59,4 +59,4 @@ Content-Type: application/json
 }
 
 ### Borrar un cliente
-DELETE http://localhost:3000/api/clientes/06fcac53-6f08-4516-906b-cdf1949ac01d
+DELETE http://localhost:3000/api/clientes/44213356

@@ -3,7 +3,7 @@ import { Cliente } from './cliente.js';
 const app = express();
 app.use(express.json());
 const clientes = [
-    new Cliente('DNI', '44213356', 'Matias', 'Marquez', '26/02/2024', 'matiasddae@gmail.com', 'Colombres 2145', ['2453243', '3412993525'], 'Argentino', "06fcac53-6f08-4516-906b-cdf1949ac01d")
+    new Cliente('DNI', '44213356', 'Matias', 'Marquez', '26/02/2024', 'matiasddae@gmail.com', 'Colombres 2145', ['2453243', '3412993525'], 'Argentino')
 ];
 function sanitizedClienteInput(req, res, next) {
     req.body.sanitizedInput = {
@@ -28,8 +28,8 @@ function sanitizedClienteInput(req, res, next) {
 app.get('/api/clientes', (req, res) => {
     res.json({ data: clientes });
 });
-app.get('/api/clientes/:id', (req, res) => {
-    const cliente = clientes.find((cliente) => cliente.id === req.params.id);
+app.get('/api/clientes/:nroDoc', (req, res) => {
+    const cliente = clientes.find((cliente) => cliente.nroDoc === req.params.nroDoc);
     if (!cliente) {
         return res.status(404).send({ message: 'Cliente No Encontrado' });
     }
@@ -41,16 +41,16 @@ app.post('/api/clientes', sanitizedClienteInput, (req, res) => {
     clientes.push(cliente);
     return res.status(201).send({ message: 'Cliente creado', data: cliente });
 });
-app.put('/api/clientes/:id', sanitizedClienteInput, (req, res) => {
-    const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id);
+app.put('/api/clientes/:nroDoc', sanitizedClienteInput, (req, res) => {
+    const clienteIdx = clientes.findIndex((cliente) => cliente.nroDoc === req.params.nroDoc);
     if (clienteIdx === -1) {
         return res.status(404).send({ message: 'Cliente No Encontrado' });
     }
     Object.assign(clientes[clienteIdx], req.body.sanitizedInput);
     return res.status(200).send({ message: 'Cliente modificado correctamente', data: clientes[clienteIdx] });
 });
-app.patch('/api/clientes/:id', sanitizedClienteInput, (req, res) => {
-    const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id);
+app.patch('/api/clientes/:nroDoc', sanitizedClienteInput, (req, res) => {
+    const clienteIdx = clientes.findIndex((cliente) => cliente.nroDoc === req.params.nroDoc);
     if (clienteIdx === -1) {
         return res.status(404).send({ message: 'Cliente No Encontrado' });
     }
@@ -58,8 +58,8 @@ app.patch('/api/clientes/:id', sanitizedClienteInput, (req, res) => {
     //clientes[clienteIdx] = {...clientes[clienteIdx], ...req.body.sanitizedInput}
     return res.status(200).send({ message: 'Cliente modificado correctamente', data: clientes[clienteIdx] });
 });
-app.delete('/api/clientes/:id', (req, res) => {
-    const clienteIdx = clientes.findIndex((cliente) => cliente.id === req.params.id);
+app.delete('/api/clientes/:nroDoc', (req, res) => {
+    const clienteIdx = clientes.findIndex((cliente) => cliente.nroDoc === req.params.nroDoc);
     if (clienteIdx === -1) {
         res.status(404).send({ message: 'Cliente No Encontrado' });
     }
