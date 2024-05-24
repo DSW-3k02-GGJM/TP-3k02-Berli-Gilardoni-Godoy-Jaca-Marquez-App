@@ -9,7 +9,7 @@ export class Cliente{
         public fechaNacimiento: string,
         public mail: string,
         public domicilio: string,
-        public telefonos: string[],
+        public telefono: string,
         public nacionalidad: string
         //public id = crypto.randomUUID()
     ) {}
