@@ -13,7 +13,7 @@ const clientes = [
         '26/02/2024',
         'matiasddae@gmail.com',
         'Colombres 2145',
-        ['2453243','3412993525'],
+        '2453243',
         'Argentino'
     )
 ]
@@ -27,7 +27,7 @@ function sanitizedClienteInput(req: Request, res: Response, next:NextFunction){
         fechaNacimiento: req.body.fechaNacimiento,
         mail: req.body.mail,
         domicilio: req.body.domicilio,
-        telefonos: req.body.telefonos,
+        telefono: req.body.telefono,
         nacionalidad: req.body.nacionalidad
     }
     // Más validaciones
@@ -54,7 +54,7 @@ app.get('/api/clientes/:nroDoc',(req,res)=>{
 app.post('/api/clientes', sanitizedClienteInput, (req,res)=>{
     const input = req.body.sanitizedInput
 
-    const cliente = new Cliente(input.tipoDoc,input.nroDoc,input.nombre,input.apellido,input.fechaNacimiento,input.mail,input.domicilio,input.telefonos,input.nacionalidad)
+    const cliente = new Cliente(input.tipoDoc,input.nroDoc,input.nombre,input.apellido,input.fechaNacimiento,input.mail,input.domicilio,input.telefono,input.nacionalidad)
 
     clientes.push(cliente)
     return res.status(201).send({message: 'Cliente creado', data: cliente})
