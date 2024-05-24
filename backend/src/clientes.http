@@ -16,7 +16,7 @@ Content-Type: application/json
     "fechaNacimiento": "27/05/2007",
     "mail": "mjgodo@gmail.com",
     "domicilio": "Pellegrini 1302",
-    "telefonos": ["4345648","3415642126"],
+    "telefono": "4345648",
     "nacionalidad": "Paraguayo"
 }
 
@@ -35,10 +35,7 @@ Content-Type: application/json
   "fechaNacimiento": "26/02/2024",
   "mail": "matiasmarquesito@gmail.com",
   "domicilio": "Macuchi 2145",
-  "telefonos": [
-    "2453243",
-    "1252993525"
-  ],
+  "telefono": "2453243",
   "nacionalidad": "Argentino"
 }
 
@@ -52,10 +49,7 @@ Content-Type: application/json
       "fechaNacimiento": "26/02/2024",
       "mail": "matiasmaaaaaaaaaaarquesito@gmail.com",
       "domicilio": "Machuchi 2145",
-      "telefonos": [
-        "2453243",
-        "1252993525"
-      ]
+      "telefonos": "1252993525"
 }
 
 ### Borrar un cliente
