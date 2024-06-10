@@ -28,6 +28,11 @@ Parandose en la carpeta 'backend' escribimos los siguientes comandos en consola:
    pnpm add -E -D typescript tsc-watch @types/express @types/node
 ```
 
+4. Dependencias de MongoDB:
+```bash
+   pnpm add -E mongodb
+```
+
 ## Compilación y ejecución de la app (sin configuración)
 ### Compilación
 1. Desde la carpeta 'backend' abrir una consola.
