@@ -2,29 +2,29 @@
 GET http://localhost:3000/api/clientes
 
 ### Obtener un cliente
-GET http://localhost:3000/api/clientes/44213356
+GET http://localhost:3000/api/clientes/666753a0cccba6d092cdcdf7
 
-### Crear un cliente
+### Crear un cliente (Ya creado)
 POST http://localhost:3000/api/clientes
 Content-Type: application/json
 
 {
     "tipoDoc": "DNI",
-    "nroDoc": "34346437",
-    "nombre": "Marcos",
-    "apellido": "Godoy",
-    "fechaNacimiento": "27/05/2007",
-    "mail": "mjgodo@gmail.com",
-    "domicilio": "Pellegrini 1302",
-    "telefono": "4345648",
-    "nacionalidad": "Paraguayo"
+    "nroDoc": "12463545",
+    "nombre": "Cristobal",
+    "apellido": "Colón",
+    "fechaNacimiento": "02/10/2024",
+    "mail": "cristobalito@gmail.com",
+    "domicilio": "Ayacucho 1023",
+    "telefono": "12334122",
+    "nacionalidad": "Tucumano"
 }
 
 
 ### PUT => Modificaciones completas (Recurso completo e idempotente)
 ### PATCH => Modificaciones parciales o completas
 ### Modificar un cliente (PUT)
-PUT http://localhost:3000/api/clientes/44213356
+PUT http://localhost:3000/api/clientes/666753a0cccba6d092cdcdf7
 Content-Type: application/json
 
 {
@@ -40,7 +40,7 @@ Content-Type: application/json
 }
 
 ### Modificar un cliente (PATCH)
-PATCH  http://localhost:3000/api/clientes/44213356
+PATCH  http://localhost:3000/api/clientes/666753a0cccba6d092cdcdf7
 Content-Type: application/json
 
 {
@@ -53,4 +53,4 @@ Content-Type: application/json
 }
 
 ### Borrar un cliente
-DELETE http://localhost:3000/api/clientes/44213356
+DELETE http://localhost:3000/api/clientes/66675097871c807bfcac79b3

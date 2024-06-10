@@ -25,30 +25,29 @@ function sanitizedClienteInput(req: Request, res: Response, next:NextFunction){
     next()
 }
 
-function findAll(req: Request, res: Response) {
-    res.json({data: repository.findAll()})
+async function findAll(req: Request, res: Response) {
+    res.json({data: await repository.findAll()})
 }
 
-function findOne(req: Request, res: Response) {
-    const cliente = repository.findOne({id: req.params.id}) 
+async function findOne(req: Request, res: Response) {
+    const cliente = await repository.findOne({id: req.params.id}) 
     if(!cliente){
         return res.status(404).send({message:'Cliente No Encontrado'})
     }
     res.json({data: cliente})
 }
 
-function add(req: Request, res: Response) {
+async function add(req: Request, res: Response) {
     const input = req.body.sanitizedInput
 
     const clienteInput = new Cliente(input.tipoDoc,input.nroDoc,input.nombre,input.apellido,input.fechaNacimiento,input.mail,input.domicilio,input.telefono,input.nacionalidad)
 
-    const cliente = repository.add(clienteInput)
+    const cliente = await repository.add(clienteInput)
     return res.status(201).send({message: 'Cliente creado', data: cliente})
 }
 
-function update(req: Request, res: Response) {
-    req.body.sanitizedInput.id = req.params.id
-    const cliente = repository.update(req.body.sanitizedInput)
+async function update(req: Request, res: Response) {
+    const cliente = await repository.update(req.params.id,req.body.sanitizedInput)
 
     if(!cliente){
         return res.status(404).send({message:'Cliente No Encontrado'})
@@ -57,8 +56,8 @@ function update(req: Request, res: Response) {
     return res.status(200).send({message: 'Cliente modificado correctamente', data: cliente})
 }
 
-function remove(req: Request, res: Response) {
-    const cliente = repository.delete({id: req.params.id})
+async function remove(req: Request, res: Response) {
+    const cliente = await repository.delete({id: req.params.id})
 
     if(!cliente){
         res.status(404).send({message:'Cliente No Encontrado'})

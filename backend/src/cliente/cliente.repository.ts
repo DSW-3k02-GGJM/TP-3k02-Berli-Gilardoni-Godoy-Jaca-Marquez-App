@@ -1,51 +1,34 @@
 import { Repository } from "../shared/repository.js";
 import { Cliente } from "./cliente.entity.js";
+import { db } from "../shared/db/conn.js";
+import { ObjectId } from "mongodb";
 
-const clientes = [
-    new Cliente(
-        'DNI',
-        '44213356',
-        'Matias',
-        'Marquez',
-        '26/02/2024',
-        'matiasddae@gmail.com',
-        'Colombres 2145',
-        '2453243',
-        'Argentino'
-    )
-]
+const clientes = db.collection<Cliente>('clientes')
 
 export class ClienteRepository implements Repository<Cliente>{
     
-    public findAll(): Cliente[] | undefined {
-        return clientes
+    public async findAll(): Promise<Cliente[] | undefined> {
+        return await clientes.find().toArray()
     }
 
-    public findOne(item: { id: string; }): Cliente | undefined {
-        return clientes.find((cliente) => cliente.nroDoc === item.id)
+    public async findOne(item: { id: string; }): Promise<Cliente | undefined> {
+        const _id = new ObjectId(item.id)
+        return (await clientes.findOne({_id})) || undefined
+        //return await clientesArray.find((cliente) => cliente.nroDoc === item.id)
     }
 
-    public add(item: Cliente): Cliente | undefined {
-        clientes.push(item)
+    public async add(item: Cliente): Promise<Cliente | undefined> {
+        item._id = (await clientes.insertOne(item)).insertedId
         return item
     }
 
-    public update(item: Cliente): Cliente | undefined {
-        const clienteIdx = clientes.findIndex((cliente) => cliente.nroDoc === item.nroDoc)
-
-    if(clienteIdx!==-1){
-        Object.assign(clientes[clienteIdx], item)
-    }
-        return clientes[clienteIdx]
+    public async update(id:string,item: Cliente): Promise<Cliente | undefined> {
+        const _id = new ObjectId(id)
+        return (await clientes.findOneAndUpdate({_id}, { $set: item },{returnDocument:'after'})) || undefined
     }
 
-    public delete(item: { id: string; }): Cliente | undefined {
-        const clienteIdx = clientes.findIndex((cliente) => cliente.nroDoc === item.id)
-
-        if(clienteIdx!==-1){
-            const deletedCliente = clientes[clienteIdx]
-            clientes.splice(clienteIdx,1)
-            return deletedCliente
-        }
+    public async delete(item: { id: string; }): Promise<Cliente | undefined> {
+        const _id = new ObjectId(item.id)
+        return (await clientes.findOneAndDelete({_id})) || undefined
     }
 }
