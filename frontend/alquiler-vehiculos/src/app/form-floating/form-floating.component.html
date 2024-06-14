@@ -1,0 +1,65 @@
+<h2 class="titulo-registro">Registro</h2>
+<section class="form">
+  <form id="userForm" class="border border-dark border-3 rounded">
+    <app-form-floating-textfield
+      [type]="'text'"
+      [idfor]="'nombre'"
+      [placeholder]="'Ignacio'"
+      [labelText]="'Nombre'"
+    ></app-form-floating-textfield>
+    <hr />
+    <app-form-floating-textfield
+      [type]="'text'"
+      [idfor]="'apellido'"
+      [placeholder]="'Perez'"
+      [labelText]="'Apellido'"
+    ></app-form-floating-textfield>
+    <hr />
+    <app-form-floating-select
+      [selectText]="'Tipo Documento'"
+      [options]="['DNI', 'Pasaporte', 'Libreta']"
+    ></app-form-floating-select>
+    <hr />
+    <app-form-floating-textfield
+      [type]="'text'"
+      [idfor]="'documento'"
+      [placeholder]="'23456789'"
+      [labelText]="'Documento'"
+    ></app-form-floating-textfield>
+    <hr />
+    <app-form-floating-textfield
+      [type]="'email'"
+      [idfor]="'email'"
+      [placeholder]="'name@example.com'"
+      [labelText]="'Email'"
+    ></app-form-floating-textfield>
+    <hr />
+    <app-date-picker></app-date-picker>
+    <hr />
+    <app-form-floating-textfield
+      [type]="'text'"
+      [idfor]="'domicilio'"
+      [placeholder]="'Rodriguez 891'"
+      [labelText]="'Direccion'"
+    ></app-form-floating-textfield>
+    <hr />
+    <app-form-floating-textfield
+      [type]="'text'"
+      [idfor]="'telefono'"
+      [placeholder]="'5493412345678'"
+      [labelText]="'Telefono'"
+    ></app-form-floating-textfield>
+    <hr />
+    <app-form-floating-textfield
+      [type]="'text'"
+      [idfor]="'nacionalidad'"
+      [placeholder]="'Argentino'"
+      [labelText]="'Nacionalidad'"
+    ></app-form-floating-textfield>
+    <hr />
+    <div class="d-flex lign-items-center justify-content-end me-3">
+      <button type="submit" class="btn btn-primary" disabled>Registrar</button>
+    </div>
+  </form>
+</section>
+<div class="footer">BGGJM - Alquiler de Vehiculos</div>

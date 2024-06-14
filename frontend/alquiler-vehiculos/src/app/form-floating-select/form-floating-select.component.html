@@ -1,0 +1,6 @@
+<select class="form-select mt-3">
+  <option selected>{{ selectText }}</option>
+  <option *ngFor="let option of options" [value]="option">
+    {{ option }}
+  </option>
+</select>
