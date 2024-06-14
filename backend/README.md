@@ -28,11 +28,11 @@ Parandose en la carpeta 'backend' escribimos los siguientes comandos en consola:
    pnpm add -E -D typescript tsc-watch @types/express @types/node
 ```
 
-4. Dependencias de MongoDB:
+4. Dependencias de MikroORM:
 ```bash
-   pnpm add -E mongodb
+   pnpm add -E @mikro-orm/core
+   pnpm add -E reflect-metadata
 ```
-*Nota: Te va a decir que no se puede conectar a la base de datos. Esto es porque hay que cambiar en 'shared/db/conn.ts' el string 'mongodb://127.0.0.1:27017' por una conexión correcta. (Pedisela a Mati)
 
 ## Compilación y ejecución de la app (sin configuración)
 ### Compilación

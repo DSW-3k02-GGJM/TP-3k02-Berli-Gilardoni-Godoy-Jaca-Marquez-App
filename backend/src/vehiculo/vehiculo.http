@@ -1,0 +1,71 @@
+### Obtener todos los vehiculos
+http://localhost:3000/api/vehiculos
+
+
+### Crear un vehiculo
+# @name createVehiculo
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+    "patente": "OAS135",
+    "añoFabricacion": "2010",
+    "vehiculoModelo": 1,
+    "clientes": [1,2],
+}
+
+### ID
+@id = {{createVehiculo.response.body.data.id}}
+
+### Obtener un vehiculo
+http://localhost:3000/api/vehiculos/{{id}}
+
+### Modificar un vehiculo
+PUT http://localhost:3000/api/vehiculos/{{id}}
+Content-Type: application/json
+
+{
+    "patente": "POP135",
+    "añoFabricacion": "2014",
+    "vehiculoModelo": 1,
+    "clientes": [1],
+}
+
+### Crear un vehiculo
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+    "patente": "COC567",
+    "añoFabricacion": "2000",
+    "vehiculoModelo": 3,
+    "clientes": [1],
+}
+
+### Crear un vehiculo para eliminar
+# @name createVehiculoToDelete
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+    "patente": "RTY123",
+    "añoFabricacion": "2003",
+    "vehiculoModelo": 3,
+    "clientes": [1],
+}
+### Eliminar un vehiculo
+@idToDelete = {{createVehiculoToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/vehiculos/{{idToDelete}}
+
+### Modificar un vehiculo
+PATCH http://localhost:3000/api/vehiculos/{{idToDelete}}
+Content-Type: application/json
+
+{
+    "añoFabricacion": "1900",
+    "vehiculoModelo": 4,
+    "clientes": [1],
+}
+
+### Eliminar un vehiculo
+DELETE http://localhost:3000/api/vehiculos/{{idToDelete}}
