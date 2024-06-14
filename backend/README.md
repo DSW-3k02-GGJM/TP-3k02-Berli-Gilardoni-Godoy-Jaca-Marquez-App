@@ -31,6 +31,8 @@ Parandose en la carpeta 'backend' escribimos los siguientes comandos en consola:
 4. Dependencias de MikroORM:
 ```bash
    pnpm add -E @mikro-orm/core
+   pnpm add -E @mikro-orm/mysql
+   pnpm add -E @mikro-orm/sql-highlighter
    pnpm add -E reflect-metadata
 ```
 
