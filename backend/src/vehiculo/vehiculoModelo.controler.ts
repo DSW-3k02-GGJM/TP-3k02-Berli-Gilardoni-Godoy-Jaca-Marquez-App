@@ -15,7 +15,7 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
   try {
-    const id = Number.parseInt(req.params.id)
+    const id = req.params.id
     const vehiculoModelo = await em.findOneOrFail(VehiculoModelo, { id })
     res.status(200).json({ message: 'Se ha encontrado el modelo de vehiculo', data: vehiculoModelo })
   } catch (error: any) {
@@ -35,7 +35,7 @@ async function add(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
   try {
-    const id = Number.parseInt(req.params.id)
+    const id = req.params.id
     const vehiculoModelo = em.getReference(VehiculoModelo, id)
     em.assign(vehiculoModelo, req.body)
     await em.flush()
@@ -47,7 +47,7 @@ async function update(req: Request, res: Response) {
 
 async function remove(req: Request, res: Response) {
   try {
-    const id = Number.parseInt(req.params.id)
+    const id = req.params.id
     const vehiculoModelo = em.getReference(VehiculoModelo, id)
     await em.removeAndFlush(vehiculoModelo)
     res.status(200).send({ message: 'Modelo de vehiculo eliminado' })

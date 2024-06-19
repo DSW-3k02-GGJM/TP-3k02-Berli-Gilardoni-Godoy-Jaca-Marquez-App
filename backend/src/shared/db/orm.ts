@@ -1,12 +1,16 @@
 import { MikroORM } from "@mikro-orm/core";
-import { SqlHighlighter } from "@mikro-orm/sql-highlighter";
+import { MongoHighlighter } from "@mikro-orm/mongo-highlighter";
+import { MongoDriver } from "@mikro-orm/mongodb";
+//import { SqlHighlighter } from "@mikro-orm/sql-highlighter";
 
 export const orm = await MikroORM.init({
     entities: ['dist/**/*.entity.js'],
     entitiesTs: ['src/**/*.entity.ts'],
     dbName: 'alquilerVehiculos',
+    driver: MongoDriver,
     //type: 'mysql'
-    clientUrl: 'mysql://dsw:dsw:@localhost:3306/alquilerVehiculos',
+    clientUrl: 'aca va la conexion a mongodb',
+    highlighter: new MongoHighlighter,
     debug: true,
     schemaGenerator: { //never in production
         disableForeignKeys: true,

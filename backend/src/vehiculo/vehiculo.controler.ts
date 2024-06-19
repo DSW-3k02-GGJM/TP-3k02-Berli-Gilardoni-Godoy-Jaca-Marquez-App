@@ -31,7 +31,7 @@ async function findAll(req: Request, res: Response) {
     
   async function findOne(req: Request, res: Response) {
     try {
-      const id = Number.parseInt(req.params.id)
+      const id = req.params.id
       const vehiculo = await em.findOneOrFail(Vehiculo,{ id },{ populate: ['vehiculoModelo', 'clientes'] }
       )
       res.status(200).json({ message: 'Vehiculo encontrado', data: vehiculo })
@@ -52,7 +52,7 @@ async function add(req: Request, res: Response) {
   
   async function update(req: Request, res: Response) {
     try {
-      const id = Number.parseInt(req.params.id)
+      const id = req.params.id
       const vehiculoToUpdate = await em.findOneOrFail(Vehiculo, { id })
       em.assign(vehiculoToUpdate, req.body.sanitizedInput)
       await em.flush()
@@ -64,7 +64,7 @@ async function add(req: Request, res: Response) {
   
   async function remove(req: Request, res: Response) {
     try {
-      const id = Number.parseInt(req.params.id)
+      const id = req.params.id
       const vehiculo = em.getReference(Vehiculo, id)
       await em.removeAndFlush(vehiculo)
     } catch (error: any) {
