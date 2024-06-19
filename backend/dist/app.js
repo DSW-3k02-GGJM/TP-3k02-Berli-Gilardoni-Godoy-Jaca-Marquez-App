@@ -13,8 +13,8 @@ app.use((req, res, next) => {
 });
 //antes de las rutas y middlewares de negocio
 app.use('/api/clientes', clienteRouter);
-app.use('/api/vehiculos', vehiculoRouter);
 app.use('/api/vehiculos/modelos', vehiculoModeloRouter);
+app.use('/api/vehiculos', vehiculoRouter);
 app.use((_, res) => {
     return res.status(404).send({ message: 'Recurso no encontrado' });
 });

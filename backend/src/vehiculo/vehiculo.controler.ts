@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import { orm } from '../shared/db/orm.js'
 import { Vehiculo } from './vehiculo.entity.js'
+import { ObjectId } from "@mikro-orm/mongodb"
 
 const em = orm.em
 
@@ -31,8 +32,8 @@ async function findAll(req: Request, res: Response) {
     
   async function findOne(req: Request, res: Response) {
     try {
-      const id = req.params.id
-      const vehiculo = await em.findOneOrFail(Vehiculo,{ id },{ populate: ['vehiculoModelo', 'clientes'] }
+      const _id = new ObjectId(req.params.id)
+      const vehiculo = await em.findOneOrFail(Vehiculo,{ _id },{ populate: ['vehiculoModelo', 'clientes'] }
       )
       res.status(200).json({ message: 'Vehiculo encontrado', data: vehiculo })
     } catch (error: any) {
@@ -52,8 +53,8 @@ async function add(req: Request, res: Response) {
   
   async function update(req: Request, res: Response) {
     try {
-      const id = req.params.id
-      const vehiculoToUpdate = await em.findOneOrFail(Vehiculo, { id })
+      const _id = new ObjectId(req.params.id)
+      const vehiculoToUpdate = await em.findOneOrFail(Vehiculo, { _id })
       em.assign(vehiculoToUpdate, req.body.sanitizedInput)
       await em.flush()
       res.status(200).json({ message: 'Vehiculo actualizado', data: vehiculoToUpdate })
@@ -64,8 +65,8 @@ async function add(req: Request, res: Response) {
   
   async function remove(req: Request, res: Response) {
     try {
-      const id = req.params.id
-      const vehiculo = em.getReference(Vehiculo, id)
+      const _id = new ObjectId(req.params.id)
+      const vehiculo = em.getReference(Vehiculo, _id)
       await em.removeAndFlush(vehiculo)
     } catch (error: any) {
       res.status(500).json({ message: error.message })

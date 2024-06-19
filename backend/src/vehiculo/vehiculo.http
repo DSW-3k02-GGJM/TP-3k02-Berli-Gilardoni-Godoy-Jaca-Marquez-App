@@ -2,7 +2,7 @@
 http://localhost:3000/api/vehiculos
 
 
-### Crear un vehiculo
+### Crear un vehiculo (creado)
 # @name createVehiculo
 POST http://localhost:3000/api/vehiculos
 Content-Type: application/json
@@ -10,8 +10,7 @@ Content-Type: application/json
 {
     "patente": "OAS135",
     "añoFabricacion": "2010",
-    "vehiculoModelo": 1,
-    "clientes": [1,2],
+    "vehiculoModelo": "6672dcd9690fa97bf865ba50"
 }
 
 ### ID
@@ -27,19 +26,17 @@ Content-Type: application/json
 {
     "patente": "POP135",
     "añoFabricacion": "2014",
-    "vehiculoModelo": 1,
-    "clientes": [1],
+    "vehiculoModelo": "6aaa672dcd9690fa97bf865ba50"
 }
 
-### Crear un vehiculo
+### Crear un vehiculo (creado)
 POST http://localhost:3000/api/vehiculos
 Content-Type: application/json
 
 {
     "patente": "COC567",
     "añoFabricacion": "2000",
-    "vehiculoModelo": 3,
-    "clientes": [1],
+    "vehiculoModelo": "6672e349fef3f29635e4a465"
 }
 
 ### Crear un vehiculo para eliminar
@@ -50,10 +47,9 @@ Content-Type: application/json
 {
     "patente": "RTY123",
     "añoFabricacion": "2003",
-    "vehiculoModelo": 3,
-    "clientes": [1],
+    "vehiculoModelo": "6672e34efef3f29635e4a466"
 }
-### Eliminar un vehiculo
+### Crear un un vehiculo para eliminar
 @idToDelete = {{createVehiculoToDelete.response.body.data.id}}
 DELETE http://localhost:3000/api/vehiculos/{{idToDelete}}
 
@@ -63,8 +59,7 @@ Content-Type: application/json
 
 {
     "añoFabricacion": "1900",
-    "vehiculoModelo": 4,
-    "clientes": [1],
+    "vehiculoModelo": "6672e349fef3f29635e4a465"
 }
 
 ### Eliminar un vehiculo

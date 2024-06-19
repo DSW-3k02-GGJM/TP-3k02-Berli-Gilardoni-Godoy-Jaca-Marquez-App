@@ -1,7 +1,7 @@
 ### Obtener todos los clientes
 GET http://localhost:3000/api/clientes
 
-### Crear un cliente
+### Crear un cliente (creado)
 # @name createCliente
 POST http://localhost:3000/api/clientes
 Content-Type: application/json
@@ -16,7 +16,7 @@ Content-Type: application/json
     "domicilio": "Ayacucho 1023",
     "telefono": "12334122",
     "nacionalidad": "Tucumano",
-    "vehiculos": [1]
+    "vehiculos": ["6672e731479ae01adbdcb4fe"]
 }
 
 ### ID
@@ -42,7 +42,7 @@ Content-Type: application/json
   "domicilio": "Macuchi 2145",
   "telefono": "2453243",
   "nacionalidad": "Argentino",
-  "vehiculos": [1]
+  "vehiculos": ["6672e731479ae01adbdcb4fe"]
 }
 
 ### Modificar un cliente (PATCH)
@@ -73,12 +73,9 @@ Content-Type: application/json
     "domicilio": "Alvear 1023",
     "telefono": "123564213",
     "nacionalidad": "Chileno",
-    "vehiculos": [1]
+    "vehiculos": ["6672e934479ae01adbdcb4ff"]
 }
 
 ### Eliminar un vehiculo
 @idToDelete = {{createVehiculoToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/clientes/{{idToDelete}}
-
-### Borrar un cliente
 DELETE http://localhost:3000/api/clientes/{{idToDelete}}

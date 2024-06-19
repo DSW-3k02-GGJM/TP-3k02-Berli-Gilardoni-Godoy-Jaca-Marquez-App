@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import { Cliente } from "./cliente.entity.js"
 import { orm } from "../shared/db/orm.js"
+import { ObjectId } from "@mikro-orm/mongodb"
 
 const em = orm.em
 
@@ -14,7 +15,8 @@ function sanitizedClienteInput(req: Request, res: Response, next:NextFunction){
         mail: req.body.mail,
         domicilio: req.body.domicilio,
         telefono: req.body.telefono,
-        nacionalidad: req.body.nacionalidad
+        nacionalidad: req.body.nacionalidad,
+        vehiculos: req.body.vehiculos,
     }
     // Más validaciones
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -36,8 +38,8 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
   try {
-    const id = req.params.id
-    const cliente = await em.findOneOrFail(Cliente, { id } , { populate: ['vehiculos'] })
+    const _id = new ObjectId(req.params.id)
+    const cliente = await em.findOneOrFail(Cliente, { _id } , { populate: ['vehiculos'] })
     res.status(200).json({ message: 'Cliente encontrado', data: cliente })
   } catch (error: any) {
     res.status(500).json({ message: error.message })
@@ -56,8 +58,8 @@ async function add(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
   try {
-    const id = req.params.id
-    const cliente = em.getReference(Cliente, id)
+    const _id = new ObjectId(req.params.id)
+    const cliente = em.getReference(Cliente, _id)
     em.assign(cliente, req.body.sanitizedInput)
     await em.flush()
     res.status(200).json({ message: 'Cliente actualizado' })
@@ -68,8 +70,8 @@ async function update(req: Request, res: Response) {
 
 async function remove(req: Request, res: Response) {
   try {
-    const id = req.params.id
-    const cliente = em.getReference(Cliente, id)
+    const _id = new ObjectId(req.params.id)
+    const cliente = em.getReference(Cliente, _id)
     await em.removeAndFlush(cliente)
     res.status(200).send({ message: 'Cliente eliminado' })
   } catch (error: any) {

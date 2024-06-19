@@ -1,7 +1,7 @@
 ### Obtener todos los modelos de vehiculos
 GET http://localhost:3000/api/vehiculos/modelos
 
-### Crear un modelo de vehiculo
+### Crear un modelo de vehiculo (creado)
 # @name createModeloVehiculo
 POST http://localhost:3000/api/vehiculos/modelos
 Content-Type: application/json
@@ -29,7 +29,7 @@ Content-Type: application/json
     "cantPasajeros": 30
 }
 
-### POST2
+### POST2 (creado)
 POST http://localhost:3000/api/vehiculos/modelos
 Content-Type: application/json
 
@@ -39,7 +39,7 @@ Content-Type: application/json
     "cantPasajeros": 10
 }
 
-### POST3
+### POST3 (creado)
 POST http://localhost:3000/api/vehiculos/modelos
 Content-Type: application/json
 
@@ -55,7 +55,7 @@ POST http://localhost:3000/api/vehiculos/modelos
 Content-Type: application/json
 
 {
-    "nombre": "Audi A4",
+    "nombre": "Audi AAAAAAA4",
     "tipoTransmision": "manual",
     "cantPasajeros": 5
 }
