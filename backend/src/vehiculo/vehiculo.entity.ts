@@ -14,6 +14,6 @@ export class Vehiculo extends BaseEntity{
     @ManyToOne(() => VehiculoModelo, {nullable: false})
     vehiculoModelo!: Rel<VehiculoModelo>
 
-    @ManyToMany(() => Cliente, (cliente) => cliente.vehiculos)
+    @ManyToMany(() => Cliente, (cliente) => cliente.vehiculos, {nullable: false})
     clientes!: Cliente[]
 }

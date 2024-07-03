@@ -38,8 +38,8 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
   try {
-    const _id = new ObjectId(req.params.id)
-    const cliente = await em.findOneOrFail(Cliente, { _id } , { populate: ['vehiculos'] })
+    const id = req.params.id
+    const cliente = await em.findOneOrFail(Cliente, { id } , { populate: ['vehiculos'] })
     res.status(200).json({ message: 'Cliente encontrado', data: cliente })
   } catch (error: any) {
     res.status(500).json({ message: error.message })
