@@ -9,7 +9,7 @@ export const orm = await MikroORM.init({
     dbName: 'alquilerVehiculos',
     driver: MongoDriver,
     //type: 'mysql'
-    clientUrl: 'aca va la conexion a mongodb',
+    clientUrl: 'mongodb+srv://conection:86X0nXAM1SKhSLUr@cluster0.yrhhwtw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
     highlighter: new MongoHighlighter,
     debug: true,
     schemaGenerator: { //never in production
