@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { Cliente } from "./cliente.entity.js"
-import { orm } from "../shared/db/orm.js"
+import { orm } from "../shared/orm.js"
 import { ObjectId } from "@mikro-orm/mongodb"
 
 const em = orm.em

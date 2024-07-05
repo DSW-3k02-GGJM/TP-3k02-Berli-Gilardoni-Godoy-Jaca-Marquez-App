@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
 import { clienteRouter } from './cliente/cliente.routes.js';
-import { orm } from './shared/db/orm.js';
+import { orm } from './shared/orm.js';
 import { RequestContext } from '@mikro-orm/core';
 import { vehiculoRouter } from './vehiculo/vehiculo.routes.js';
 import { vehiculoModeloRouter } from './vehiculo/vehiculoModelo.routes.js';
@@ -20,7 +20,7 @@ app.use((_, res) => {
 });
 // await syncSchema() //never in production
 app.listen(3000, () => {
-    console.log("Servidor operando en http//:localhost:3000/"); //Si no aparece con este link probar con 'localhost:8000'
+    console.log("Servidor operando en http://localhost:3000/"); //Si no aparece con este link probar con 'localhost:8000'
 });
 //console.log("test!!");
 /*

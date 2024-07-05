@@ -1,6 +1,6 @@
 import { Cascade, Collection, Entity, OneToMany, Property, /*Cascade*/ } from "@mikro-orm/core"
 import { Vehiculo } from "./vehiculo.entity.js"
-import { BaseEntity } from "../shared/db/baseEntity.entity.js"
+import { BaseEntity } from "../shared/baseEntity.entity.js"
 
 @Entity()
 export class VehiculoModelo extends BaseEntity { 

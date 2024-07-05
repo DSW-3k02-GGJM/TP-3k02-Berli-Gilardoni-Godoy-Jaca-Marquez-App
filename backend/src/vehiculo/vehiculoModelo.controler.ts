@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { orm } from '../shared/db/orm.js'
+import { orm } from '../shared/orm.js'
 import { VehiculoModelo } from './vehiculoModelo.entity.js'
 import { ObjectId } from '@mikro-orm/mongodb'
 

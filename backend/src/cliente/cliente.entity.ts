@@ -1,5 +1,5 @@
 import { Cascade, Collection, DateTimeType, Entity, ManyToMany, Property } from '@mikro-orm/core'
-import { BaseEntity } from '../shared/db/baseEntity.entity.js'
+import { BaseEntity } from '../shared/baseEntity.entity.js'
 import { Vehiculo } from '../vehiculo/vehiculo.entity.js'
 //import crypto from 'node:crypto'
 

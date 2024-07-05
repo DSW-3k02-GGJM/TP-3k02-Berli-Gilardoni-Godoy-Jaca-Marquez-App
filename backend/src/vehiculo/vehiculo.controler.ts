@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import { orm } from '../shared/db/orm.js'
+import { orm } from '../shared/orm.js'
 import { Vehiculo } from './vehiculo.entity.js'
 import { ObjectId } from "@mikro-orm/mongodb"
 

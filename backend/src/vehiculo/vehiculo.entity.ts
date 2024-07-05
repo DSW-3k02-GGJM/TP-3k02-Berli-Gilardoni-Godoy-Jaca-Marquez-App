@@ -1,5 +1,5 @@
 import { Entity, Property, ManyToMany, ManyToOne, Rel } from "@mikro-orm/core";
-import { BaseEntity } from "../shared/db/baseEntity.entity.js";
+import { BaseEntity } from "../shared/baseEntity.entity.js";
 import { VehiculoModelo } from "./vehiculoModelo.entity.js";
 import { Cliente } from "../cliente/cliente.entity.js";
 
