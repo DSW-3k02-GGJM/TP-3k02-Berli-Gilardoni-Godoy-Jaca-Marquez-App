@@ -9,7 +9,7 @@ function sanitizedVehiculoInput(req: Request, res: Response, next:NextFunction){
         patente: req.body.patente,
         añoFabricacion: req.body.añoFabricacion,
         vehiculoModelo: req.body.vehiculoModelo,
-        clientes: req.body.clientes,
+        alquileres: req.body.alquileres,
     }
     // Más validaciones
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -22,7 +22,7 @@ function sanitizedVehiculoInput(req: Request, res: Response, next:NextFunction){
 
 async function findAll(req: Request, res: Response) {
     try {
-      const vehiculos = await em.find(Vehiculo, {}, { populate: ['vehiculoModelo', 'clientes'] })
+      const vehiculos = await em.find(Vehiculo, {}, { populate: ['vehiculoModelo', 'alquileres'] })
       res.status(200).json({ message: 'Todos los vehiculos encontrados', data: vehiculos })
     } catch (error: any) {
       res.status(500).json({ message: error.message })
@@ -32,7 +32,7 @@ async function findAll(req: Request, res: Response) {
   async function findOne(req: Request, res: Response) {
     try {
       const id = req.params.id
-      const vehiculo = await em.findOneOrFail(Vehiculo,{ id },{ populate: ['vehiculoModelo', 'clientes'] }
+      const vehiculo = await em.findOneOrFail(Vehiculo,{ id },{ populate: ['vehiculoModelo', 'alquileres'] }
       )
       res.status(200).json({ message: 'Vehiculo encontrado', data: vehiculo })
     } catch (error: any) {

@@ -1,6 +1,6 @@
-import { Cascade, Collection, DateTimeType, Entity, ManyToMany, Property } from '@mikro-orm/core'
+import { Cascade, Collection, DateTimeType, Entity, OneToMany, Property } from '@mikro-orm/core'
 import { BaseEntity } from '../shared/db/baseEntity.entity.js'
-import { Vehiculo } from '../vehiculo/vehiculo.entity.js'
+import { Alquiler } from './alquiler.entity.js'
 //import crypto from 'node:crypto'
 
 @Entity()
@@ -32,8 +32,8 @@ export class Cliente extends BaseEntity {
     @Property({nullable: false})
     nacionalidad!: string
 
-    @ManyToMany(()=>Vehiculo, (vehiculo) => vehiculo.clientes, {cascade: [Cascade.ALL], owner: true})
-    vehiculos = new Collection<Vehiculo>(this)
+    @OneToMany(() => Alquiler, alquiler => alquiler.cliente, {cascade: [Cascade.ALL]})
+    alquileres = new Collection<Alquiler>(this)
 }
 
 /*

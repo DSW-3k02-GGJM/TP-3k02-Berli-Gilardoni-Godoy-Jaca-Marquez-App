@@ -15,8 +15,7 @@ Content-Type: application/json
     "mail": "cristobalito@gmail.com",
     "domicilio": "Ayacucho 1023",
     "telefono": "12334122",
-    "nacionalidad": "Tucumano",
-    "vehiculos": ["66956520f9cede3d7c494759"]
+    "nacionalidad": "Tucumano"
 }
 
 ### ID
@@ -41,8 +40,7 @@ Content-Type: application/json
   "mail": "matiasmarquesito@gmail.com",
   "domicilio": "Macuchi 2145",
   "telefono": "2453243",
-  "nacionalidad": "Argentino",
-  "vehiculos": ["66956520f9cede3d7c494759"]
+  "nacionalidad": "Argentino"
 }
 
 ### Modificar un cliente (PATCH)
@@ -72,10 +70,25 @@ Content-Type: application/json
     "mail": "chuchichuchi@gmail.com",
     "domicilio": "Alvear 1023",
     "telefono": "123564213",
-    "nacionalidad": "Chileno",
-    "vehiculos": ["669564f4f9cede3d7c494758"]
+    "nacionalidad": "Chileno"
 }
 
 ### Eliminar un cliente
 @idToDelete = {{createClienteToDelete.response.body.data.id}}
 DELETE http://localhost:3000/api/clientes/{{idToDelete}}
+
+### Crear un cliente (creado)
+POST http://localhost:3000/api/clientes
+Content-Type: application/json
+
+{
+    "tipoDoc": "DNI",
+    "nroDoc": "44455545",
+    "nombre": "Lucio",
+    "apellido": "Gilla",
+    "fechaNacimiento": "12/12/2002",
+    "mail": "Lcuicioto@gmail.com",
+    "domicilio": "Ñandu 103",
+    "telefono": "143664122",
+    "nacionalidad": "Tano"
+}

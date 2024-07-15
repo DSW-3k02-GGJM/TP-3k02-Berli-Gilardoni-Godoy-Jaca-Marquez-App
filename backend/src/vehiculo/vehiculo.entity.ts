@@ -1,7 +1,7 @@
-import { Entity, Property, ManyToMany, ManyToOne, Rel } from "@mikro-orm/core";
+import { Entity, Property, OneToMany, ManyToOne, Rel, Cascade, Collection } from "@mikro-orm/core";
 import { BaseEntity } from "../shared/db/baseEntity.entity.js";
 import { VehiculoModelo } from "./vehiculoModelo.entity.js";
-import { Cliente } from "../cliente/cliente.entity.js";
+import { Alquiler } from "../cliente/alquiler.entity.js";
 
 @Entity()
 export class Vehiculo extends BaseEntity{
@@ -14,6 +14,6 @@ export class Vehiculo extends BaseEntity{
     @ManyToOne(() => VehiculoModelo, {nullable: false})
     vehiculoModelo!: Rel<VehiculoModelo>
 
-    @ManyToMany(() => Cliente, (cliente) => cliente.vehiculos, {nullable: false})
-    clientes!: Cliente[]
+    @OneToMany(() => Alquiler, alquiler => alquiler.vehiculo, {cascade: [Cascade.ALL]})
+    alquileres = new Collection<Alquiler>(this)
 }

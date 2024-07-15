@@ -5,6 +5,7 @@ import { orm } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 import { vehiculoRouter } from './vehiculo/vehiculo.routes.js'
 import { vehiculoModeloRouter } from './vehiculo/vehiculoModelo.routes.js'
+import { alquilerRouter } from './cliente/alquiler.route.js'
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.use((req, res, next) => {
 
 //antes de las rutas y middlewares de negocio
 
+app.use('/api/alquileres', alquilerRouter)
 app.use('/api/clientes', clienteRouter)
 app.use('/api/vehiculos/modelos', vehiculoModeloRouter)
 app.use('/api/vehiculos', vehiculoRouter)
