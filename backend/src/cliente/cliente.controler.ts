@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { Cliente } from "./cliente.entity.js"
 import { orm } from "../shared/db/orm.js"
-import { ObjectId } from "@mikro-orm/mongodb"
 
 const em = orm.em
 
@@ -58,8 +57,8 @@ async function add(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
   try {
-    const _id = new ObjectId(req.params.id)
-    const cliente = em.getReference(Cliente, _id)
+    const id = req.params.id
+    const cliente = em.getReference(Cliente, id)
     em.assign(cliente, req.body.sanitizedInput)
     await em.flush()
     res.status(200).json({ message: 'Cliente actualizado' })
@@ -70,8 +69,8 @@ async function update(req: Request, res: Response) {
 
 async function remove(req: Request, res: Response) {
   try {
-    const _id = new ObjectId(req.params.id)
-    const cliente = em.getReference(Cliente, _id)
+    const id = req.params.id
+    const cliente = em.getReference(Cliente, id)
     await em.removeAndFlush(cliente)
     res.status(200).send({ message: 'Cliente eliminado' })
   } catch (error: any) {

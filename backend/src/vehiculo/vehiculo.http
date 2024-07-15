@@ -10,7 +10,7 @@ Content-Type: application/json
 {
     "patente": "OAS135",
     "añoFabricacion": "2010",
-    "vehiculoModelo": "6672dcd9690fa97bf865ba50"
+    "vehiculoModelo": "66956461f9cede3d7c494754"
 }
 
 ### ID
@@ -26,7 +26,7 @@ Content-Type: application/json
 {
     "patente": "POP135",
     "añoFabricacion": "2014",
-    "vehiculoModelo": "6aaa672dcd9690fa97bf865ba50"
+    "vehiculoModelo": "66956461f9cede3d7c494754"
 }
 
 ### Crear un vehiculo (creado)
@@ -36,7 +36,7 @@ Content-Type: application/json
 {
     "patente": "COC567",
     "añoFabricacion": "2000",
-    "vehiculoModelo": "6672e349fef3f29635e4a465"
+    "vehiculoModelo": "6695646ef9cede3d7c494755"
 }
 
 ### Crear un vehiculo para eliminar
@@ -47,7 +47,7 @@ Content-Type: application/json
 {
     "patente": "RTY123",
     "añoFabricacion": "2003",
-    "vehiculoModelo": "6672e34efef3f29635e4a466"
+    "vehiculoModelo": "66956471f9cede3d7c494756"
 }
 ### Crear un un vehiculo para eliminar
 @idToDelete = {{createVehiculoToDelete.response.body.data.id}}
