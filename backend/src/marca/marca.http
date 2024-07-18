@@ -7,11 +7,11 @@ POST http://localhost:3000/api/marcas
 Content-Type: application/json
 
 {
-    "nombre": "Renault",
+    "nombre": "Renault"
 }
 
 ### ID
-@id = {{createMarca.response.body.data.id}} 
+@id = {{createMarca.response.body.data.id}}
 # esto no se bien q es despues lo arreglo
 
 ### Obtener una Marca

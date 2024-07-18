@@ -6,6 +6,7 @@ import { RequestContext } from '@mikro-orm/core';
 import { vehiculoRouter } from './vehiculo/vehiculo.routes.js';
 import { vehiculoModeloRouter } from './vehiculo/vehiculoModelo.routes.js';
 import { alquilerRouter } from './cliente/alquiler.route.js';
+import { marcaRouter } from './marca/marca.routes.js';
 const app = express();
 app.use(express.json());
 //luego de los middlewares base
@@ -17,6 +18,7 @@ app.use('/api/alquileres', alquilerRouter);
 app.use('/api/clientes', clienteRouter);
 app.use('/api/vehiculos/modelos', vehiculoModeloRouter);
 app.use('/api/vehiculos', vehiculoRouter);
+app.use('/api/marcas', marcaRouter);
 app.use((_, res) => {
     return res.status(404).send({ message: 'Recurso no encontrado' });
 });

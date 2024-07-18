@@ -9,7 +9,9 @@ Content-Type: application/json
 {
     "nombre": "Audi A4",
     "tipoTransmision": "manual",
-    "cantPasajeros": 5
+    "cantPasajeros": 5,
+    // agrego una marca
+    //"marca": 1232123
 }
 
 ### ID
