@@ -7,7 +7,7 @@ import { VehiculoModelo } from '../vehiculo/vehiculoModelo.entity.js'
 export class Marca extends BaseEntity {
 
     @Property({nullable: false, unique:true})
-    nroDoc!: string
+    nombre!: string
 
     /*
     @OneToMany(() => VehiculoModelo, vehiculoModelo => vehiculoModelo.marca, { cascade: true })
