@@ -1,0 +1,94 @@
+### Obtener todos los clientes
+GET http://localhost:3000/api/clientes
+
+### Crear un cliente (creado)
+# @name createCliente
+POST http://localhost:3000/api/clientes
+Content-Type: application/json
+
+{
+    "tipoDoc": "DNI",
+    "nroDoc": "12463545",
+    "nombre": "Cristobal",
+    "apellido": "Colón",
+    "fechaNacimiento": "02/10/2024",
+    "mail": "cristobalito@gmail.com",
+    "domicilio": "Ayacucho 1023",
+    "telefono": "12334122",
+    "nacionalidad": "Tucumano"
+}
+
+### ID
+@id = {{createCliente.response.body.data.id}}
+
+### Obtener un cliente
+# @name createCliente
+GET http://localhost:3000/api/clientes/{{id}}
+
+### PUT => Modificaciones completas (Recurso completo e idempotente)
+### PATCH => Modificaciones parciales o completas
+### Modificar un cliente (PUT)
+PUT http://localhost:3000/api/clientes/{{id}}
+Content-Type: application/json
+
+{
+  "tipoDoc": "DNI",
+  "nroDoc": "44213356",
+  "nombre": "Matias",
+  "apellido": "Marquez",
+  "fechaNacimiento": "26/02/2024",
+  "mail": "matiasmarquesito@gmail.com",
+  "domicilio": "Macuchi 2145",
+  "telefono": "2453243",
+  "nacionalidad": "Argentino"
+}
+
+### Modificar un cliente (PATCH)
+PATCH  http://localhost:3000/api/clientes/{{id}}
+Content-Type: application/json
+
+{
+  "tipoDoc": "DNI",
+  "nroDoc": "44213356",
+  "fechaNacimiento": "26/02/2024",
+  "mail": "matiasmaaaaaaaaaaarquesito@gmail.com",
+  "domicilio": "Machuchi 2145",
+  "telefonos": "1252993525"
+}
+
+### Crear un cliente para eliminar
+# @name createClienteToDelete
+POST http://localhost:3000/api/clientes
+Content-Type: application/json
+
+{
+    "tipoDoc": "DNI",
+    "nroDoc": "55432234",
+    "nombre": "Pachuchi",
+    "apellido": "Cuchuchi",
+    "fechaNacimiento": "02/02/2050",
+    "mail": "chuchichuchi@gmail.com",
+    "domicilio": "Alvear 1023",
+    "telefono": "123564213",
+    "nacionalidad": "Chileno"
+}
+
+### Eliminar un cliente
+@idToDelete = {{createClienteToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/clientes/{{idToDelete}}
+
+### Crear un cliente (creado)
+POST http://localhost:3000/api/clientes
+Content-Type: application/json
+
+{
+    "tipoDoc": "DNI",
+    "nroDoc": "44455545",
+    "nombre": "Lucio",
+    "apellido": "Gilla",
+    "fechaNacimiento": "12/12/2002",
+    "mail": "Lcuicioto@gmail.com",
+    "domicilio": "Ñandu 103",
+    "telefono": "143664122",
+    "nacionalidad": "Tano"
+}

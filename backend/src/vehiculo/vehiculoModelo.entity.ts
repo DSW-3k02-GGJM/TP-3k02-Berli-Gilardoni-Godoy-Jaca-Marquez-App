@@ -1,6 +1,7 @@
-import { Cascade, Collection, Entity, OneToMany, Property, /*Cascade*/ } from "@mikro-orm/core"
+import { Cascade, Collection, Entity, OneToMany, Property, ManyToOne, /*Cascade*/ } from "@mikro-orm/core"
 import { Vehiculo } from "./vehiculo.entity.js"
 import { BaseEntity } from "../shared/db/baseEntity.entity.js"
+import { Marca } from "../marca/marca.entity.js"
 
 @Entity()
 export class VehiculoModelo extends BaseEntity { 
@@ -15,4 +16,8 @@ export class VehiculoModelo extends BaseEntity {
 
     @OneToMany(() => Vehiculo, vehiculo => vehiculo.vehiculoModelo, {cascade: [Cascade.ALL]})
     vehiculos = new Collection<Vehiculo>(this)
+
+    // Agrego la relacion a marca
+    @ManyToOne(() => Marca, { nullable: false })
+    marca!: Marca;
 }
