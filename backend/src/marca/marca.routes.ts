@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { sanitizedClienteInput, findAll, findOne, add, update, remove } from "./marca.controler.js";
+import { sanitizedMarcaInput, findAll, findOne, add, update, remove } from "./marca.controler.js";
 
-export const clienteRouter = Router()
+export const marcaRouter = Router()
 
-clienteRouter.get('/', findAll)
-clienteRouter.get('/:id', findOne)
-clienteRouter.post('/', sanitizedClienteInput , add)
-clienteRouter.put('/:id', sanitizedClienteInput , update)
-clienteRouter.patch('/:id', sanitizedClienteInput , update)
-clienteRouter.delete('/:id', remove)
+marcaRouter.get('/', findAll)
+marcaRouter.get('/:id', findOne)
+marcaRouter.post('/', sanitizedMarcaInput , add)
+marcaRouter.put('/:id', sanitizedMarcaInput , update)
+marcaRouter.patch('/:id', sanitizedMarcaInput , update)
+marcaRouter.delete('/:id', remove)

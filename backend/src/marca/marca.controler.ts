@@ -1,67 +1,63 @@
 import { Request, Response, NextFunction } from "express"
-import { Cliente } from "./marca.entity.js"
+import { Marca } from "./marca.entity.js"
 import { orm } from "../shared/db/orm.js"
 
 const em = orm.em
 
-function sanitizedClienteInput(req: Request, res: Response, next:NextFunction){
-    req.body.sanitizedInput = {
-        tipoDoc: req.body.tipoDoc,
-        nroDoc: req.body.nroDoc,
-        nombre: req.body.nombre,
-        apellido: req.body.apellido,
-        fechaNacimiento: req.body.fechaNacimiento,
-        mail: req.body.mail,
-        domicilio: req.body.domicilio,
-        telefono: req.body.telefono,
-        nacionalidad: req.body.nacionalidad,
-        alquileres: req.body.alquileres,
-    }
-    // Más validaciones
-    Object.keys(req.body.sanitizedInput).forEach((key) => {
-        if (req.body.sanitizedInput[key] === undefined) {
-            delete req.body.sanitizedInput[key]
-        }
-    })
-    next()
+function sanitizedMarcaInput(req: Request, res: Response, next: NextFunction) {
+  // 1. Creación del objeto `sanitizedInput` en `req.body`
+  req.body.sanitizedInput = {
+      nombre: req.body.nombre, // Copia el campo `nombre` del cuerpo de la solicitud
+      //alquileres: req.body.alquileres,
+      modelos: req.body.modelos, // Copia el campo `modelos` del cuerpo de la solicitud
+  };
+  // 2. Eliminación de claves indefinidas en `sanitizedInput`
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+      if (req.body.sanitizedInput[key] === undefined) {
+          delete req.body.sanitizedInput[key]; // Elimina la clave si el valor es `undefined`
+      }
+  });
+  // 3. Llamada al siguiente middleware o controlador
+  next();
 }
 
 async function findAll(req: Request, res: Response) {
   try {
-    const clientes = await em.find(Cliente, {} , { populate: ['alquileres'] })
-    res.status(200).json({ message: 'Todos los clientes encontrados', data: clientes })
+    // Consulta para encontrar todas las marcas con sus modelos de vehículos
+    const marcas = await em.find(Marca, {}, { populate: ['modelos'] });
+    res.status(200).json({ message: 'Todas las marcas encontradas', data: marcas });
   } catch (error: any) {
-    res.status(500).json({ message: error.message })
+      res.status(500).json({ message: error.message });
   }
 }
 
 async function findOne(req: Request, res: Response) {
-  try {
+ try {
     const id = req.params.id
-    const cliente = await em.findOneOrFail(Cliente, { id } , { populate: ['alquileres'] })
-    res.status(200).json({ message: 'Cliente encontrado', data: cliente })
-  } catch (error: any) {
+    const marca = await em.findOneOrFail(Marca, { id }, { populate: ['modelos'] })
+    res.status(200).json({ message: 'Marca no encontrada', data: marca }) 
+ } catch (error: any) {
     res.status(500).json({ message: error.message })
-  }
+ }
 }
 
 async function add(req: Request, res: Response) {
   try {
-    const cliente = em.create(Cliente, req.body.sanitizedInput)
+    const marca = em.create(Marca, req.body.sanitizedInput)
     await em.flush()
-    res.status(201).json({ message: 'Cliente creado', data: cliente })
+    res.status(201).json({ message: 'Marca creada', data: marca })
   } catch (error: any) {
     res.status(500).json({ message: error.message })
-  }
+ }
 }
 
 async function update(req: Request, res: Response) {
   try {
     const id = req.params.id
-    const cliente = em.getReference(Cliente, id)
-    em.assign(cliente, req.body.sanitizedInput)
+    const marca = em.getReference(Marca, id)
+    em.assign(marca, req.body.sanitizedInput)
     await em.flush()
-    res.status(200).json({ message: 'Cliente actualizado' })
+    res.status(200).json({ message: 'Marca actualizada' })
   } catch (error: any) {
     res.status(500).json({ message: error.message })
   }
@@ -70,12 +66,12 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
   try {
     const id = req.params.id
-    const cliente = em.getReference(Cliente, id)
-    await em.removeAndFlush(cliente)
-    res.status(200).send({ message: 'Cliente eliminado' })
+    const marca = em.getReference(Marca, id)
+    await em.removeAndFlush(marca)
+    res.status(200).send({ message: 'Marca eliminada' })
   } catch (error: any) {
     res.status(500).json({ message: error.message })
   }
 }
 
-export { sanitizedClienteInput, findAll, findOne, add, update, remove }
+export { sanitizedMarcaInput, findAll, findOne, add, update, remove }
