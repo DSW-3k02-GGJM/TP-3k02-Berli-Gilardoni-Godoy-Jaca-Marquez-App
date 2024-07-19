@@ -25,7 +25,7 @@ PUT http://localhost:3000/api/marcas/{{id}}
 Content-Type: application/json
 
 {
-  "nombre": "Fiat",
+  "nombre": "Fiat"
 }
 
 ### Modificar una marca (PATCH)
@@ -42,7 +42,7 @@ POST http://localhost:3000/api/marcas
 Content-Type: application/json
 
 {
-    "nombre": "Fiat",
+    "nombre": "Fiat"
 }
 
 ### Eliminar una marca
