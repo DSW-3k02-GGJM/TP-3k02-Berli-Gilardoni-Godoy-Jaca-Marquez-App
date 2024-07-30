@@ -1,0 +1,65 @@
+### GET ALL
+GET http://localhost:3000/api/sucursales
+
+### POST
+# @name createSucursal
+POST http://localhost:3000/api/sucursales
+Content-Type: application/json
+
+{
+    "nombre": "Rosario Norte",
+    "domicilio": "Rondeau 1200",
+    "telefono": "3416259147"
+}
+
+### ID
+@id = {{createSucursal.response.body.data.id}}
+
+### GET ONE
+GET http://localhost:3000/api/sucursales/{{id}}
+
+
+### PUT
+PUT  http://localhost:3000/api/sucursales/{{id}}
+Content-Type: application/json
+
+{
+    "nombre": "Rosario Sur",
+    "domicilio": "San Martin 5100",
+    "telefono": "3415367981"
+}
+
+### POST 2
+POST http://localhost:3000/api/sucursales
+Content-Type: application/json
+
+{
+    "nombre": "Rosario Oeste",
+    "domicilio": "Eva Peron 6400",
+    "telefono": "3413678231"
+}
+
+### POST 3
+POST http://localhost:3000/api/sucursales
+Content-Type: application/json
+
+{
+    "nombre": "Rosario Centro",
+    "domicilio": "Ovidio Lagos 900",
+    "telefono": "3417214794"
+}
+
+### POST to DELETE
+# @name createColorToDelete
+POST http://localhost:3000/api/sucursales
+Content-Type: application/json
+
+{
+    "nombre": "Funes",
+    "domicilio": "Fuerza Aerea 3500",
+    "telefono": "3416732893"
+}
+
+### DELETE
+@idToDelete = {{createColorToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/sucursales/{{idToDelete}}

@@ -1,0 +1,63 @@
+### GET ALL
+http://localhost:3000/api/alquileres
+
+### POST
+# @name createAlquiler
+POST http://localhost:3000/api/alquileres
+Content-Type: application/json
+
+{
+    "fechaInicio": "2023-08-16",
+    "fechaFinPactada": "2023-08-20",
+    "kmIniciales": 10000,
+    "cliente": 1,
+    "vehiculo": 1
+}
+
+### ID
+@id = {{createAlquiler.response.body.data.id}}
+
+### GET ONE
+http://localhost:3000/api/alquileres/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/alquileres/{{id}}
+Content-Type: application/json
+
+{
+    "fechaInicio": "2023-08-16",
+    "fechaFinPactada": "2023-08-20",
+    "kmIniciales": 30000,
+    "cliente": 1,
+    "vehiculo": 1
+}
+
+### POST 2
+POST http://localhost:3000/api/alquileres
+Content-Type: application/json
+
+{
+    "fechaInicio": "2023-08-28",
+    "fechaFinPactada": "2023-09-02",
+    "kmIniciales": 15000,
+    "cliente": 2,
+    "vehiculo": 2
+}
+
+### POST to DELETE
+# @name createAlquilerToDelete
+POST http://localhost:3000/api/alquileres
+Content-Type: application/json
+
+{
+    "fechaInicio": "2023-09-12",
+    "fechaFinPactada": "2023-09-17",
+    "kmIniciales": 20000,
+    "cliente": 7,
+    "vehiculo": 5
+}
+
+### DELETE
+@idToDelete = {{createAlquilerToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/alquileres/{{idToDelete}}
+

@@ -1,81 +1,79 @@
-### Obtener todos los clientes
+### GET ALL
 GET http://localhost:3000/api/clientes
 
-### Crear un cliente (creado)
+### POST
 # @name createCliente
 POST http://localhost:3000/api/clientes
 Content-Type: application/json
 
 {
-    "tipoDoc": "DNI",
-    "nroDoc": "12463545",
-    "nombre": "Cristobal",
-    "apellido": "Colón",
-    "fechaNacimiento": "02/10/2024",
-    "mail": "cristobalito@gmail.com",
-    "domicilio": "Ayacucho 1023",
-    "telefono": "12334122",
-    "nacionalidad": "Tucumano",
-    "vehiculos": ["6672e731479ae01adbdcb4fe"]
+  "tipoDoc": "DNI",
+  "nroDoc": "34617640",
+  "nombre": "Juan",
+  "apellido": "Perez",
+  "fechaNacimiento": "1980-01-01",
+  "mail": "juan.perez@gmail.com",
+  "domicilio": "Ayacucho 1023",
+  "telefono": "3416893525",
+  "nacionalidad": "Argentina"
 }
 
 ### ID
 @id = {{createCliente.response.body.data.id}}
 
-### Obtener un cliente
+### GET ONE
 # @name createCliente
 GET http://localhost:3000/api/clientes/{{id}}
 
-### PUT => Modificaciones completas (Recurso completo e idempotente)
-### PATCH => Modificaciones parciales o completas
-### Modificar un cliente (PUT)
+### PUT
 PUT http://localhost:3000/api/clientes/{{id}}
 Content-Type: application/json
 
 {
   "tipoDoc": "DNI",
-  "nroDoc": "44213356",
-  "nombre": "Matias",
-  "apellido": "Marquez",
-  "fechaNacimiento": "26/02/2024",
-  "mail": "matiasmarquesito@gmail.com",
-  "domicilio": "Macuchi 2145",
-  "telefono": "2453243",
-  "nacionalidad": "Argentino",
-  "vehiculos": ["6672e731479ae01adbdcb4fe"]
+  "nroDoc": "34617640",
+  "nombre": "Juan",
+  "apellido": "Perez",
+  "fechaNacimiento": "1980-01-01",
+  "mail": "juan.perez@hotmail.com",
+  "domicilio": "Ayacucho 2431",
+  "telefono": "3416893525",
+  "nacionalidad": "Argentina"
 }
 
-### Modificar un cliente (PATCH)
-PATCH  http://localhost:3000/api/clientes/{{id}}
-Content-Type: application/json
-
-{
-  "tipoDoc": "DNI",
-  "nroDoc": "44213356",
-  "fechaNacimiento": "26/02/2024",
-  "mail": "matiasmaaaaaaaaaaarquesito@gmail.com",
-  "domicilio": "Machuchi 2145",
-  "telefonos": "1252993525"
-}
-
-### Crear un vehiculo para eliminar
-# @name createVehiculoToDelete
+### POST 2
 POST http://localhost:3000/api/clientes
 Content-Type: application/json
 
 {
-    "tipoDoc": "DNI",
-    "nroDoc": "55432234",
-    "nombre": "Pachuchi",
-    "apellido": "Cuchuchi",
-    "fechaNacimiento": "02/02/2050",
-    "mail": "chuchichuchi@gmail.com",
-    "domicilio": "Alvear 1023",
-    "telefono": "123564213",
-    "nacionalidad": "Chileno",
-    "vehiculos": ["6672e934479ae01adbdcb4ff"]
+  "tipoDoc": "Pasaporte",
+  "nroDoc": "AB1234567",
+  "nombre": "Peter",
+  "apellido": "Griffin",
+  "fechaNacimiento": "1975-03-28",
+  "mail": "peter.griffin@yahoo.com",
+  "domicilio": "24 Cottrill St.",
+  "telefono": "3055551212",
+  "nacionalidad": "Estados Unidos"
 }
 
-### Eliminar un vehiculo
-@idToDelete = {{createVehiculoToDelete.response.body.data.id}}
+### POST to DELETE
+# @name createClienteToDelete
+POST http://localhost:3000/api/clientes
+Content-Type: application/json
+
+{
+  "tipoDoc": "DNI",
+  "nroDoc": "21375376",
+  "nombre": "Ana",
+  "apellido": "Garcia",
+  "fechaNacimiento": "1990-02-15",
+  "mail": "ana.garcia@hotmail.com",
+  "domicilio": "Laprida 742",
+  "telefono": "3413528690",
+  "nacionalidad": "Argentina"
+}
+
+### DELETE
+@idToDelete = {{createClienteToDelete.response.body.data.id}}
 DELETE http://localhost:3000/api/clientes/{{idToDelete}}

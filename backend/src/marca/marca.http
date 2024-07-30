@@ -1,0 +1,54 @@
+### GET ALL
+GET http://localhost:3000/api/marcas
+
+### POST
+# @name createMarca
+POST http://localhost:3000/api/marcas
+Content-Type: application/json
+
+{
+  "nombre": "Toyota"
+}
+
+### ID
+@id = {{createMarca.response.body.data.id}}
+
+### GET ONE
+GET http://localhost:3000/api/marcas/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/marcas/{{id}}
+Content-Type: application/json
+
+{
+  "nombre": "Fiat"
+}
+
+### POST 2
+POST http://localhost:3000/api/marcas
+Content-Type: application/json
+
+{
+  "nombre": "Honda"
+}
+
+### POST 3
+POST http://localhost:3000/api/marcas
+Content-Type: application/json
+
+{
+  "nombre": "Ford"
+}
+
+### POST to DELETE
+# @name createMarcaToDelete
+POST http://localhost:3000/api/marcas
+Content-Type: application/json
+
+{
+  "nombre": "Chevrolet"
+}
+
+### DELETE
+@idToDelete = {{createMarcaToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/marcas/{{idToDelete}}

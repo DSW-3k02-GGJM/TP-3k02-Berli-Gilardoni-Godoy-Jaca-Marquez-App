@@ -1,66 +1,67 @@
-### Obtener todos los vehiculos
+### GET ALL
 http://localhost:3000/api/vehiculos
 
 
-### Crear un vehiculo (creado)
+### POST
 # @name createVehiculo
 POST http://localhost:3000/api/vehiculos
 Content-Type: application/json
 
 {
     "patente": "OAS135",
-    "añoFabricacion": "2010",
-    "vehiculoModelo": "6672dcd9690fa97bf865ba50"
+    "anioFabricacion": "2010",
+    "kmRecorridos": "2500",
+    "sucursal": 1,
+    "color": 2,
+    "modelo": 1
 }
 
 ### ID
 @id = {{createVehiculo.response.body.data.id}}
 
-### Obtener un vehiculo
+### GET ONE
 http://localhost:3000/api/vehiculos/{{id}}
 
-### Modificar un vehiculo
+### PUT
 PUT http://localhost:3000/api/vehiculos/{{id}}
 Content-Type: application/json
 
 {
     "patente": "POP135",
-    "añoFabricacion": "2014",
-    "vehiculoModelo": "6aaa672dcd9690fa97bf865ba50"
+    "anioFabricacion": "2014",
+    "kmRecorridos": "2500",
+    "sucursal": 1,
+    "color": 2,
+    "modelo": 1
 }
 
-### Crear un vehiculo (creado)
+### POST 2
 POST http://localhost:3000/api/vehiculos
 Content-Type: application/json
 
 {
     "patente": "COC567",
-    "añoFabricacion": "2000",
-    "vehiculoModelo": "6672e349fef3f29635e4a465"
+    "anioFabricacion": "2000",
+    "kmRecorridos": 13000,
+    "sucursal": 3,
+    "color": 1,
+    "modelo": 3
 }
 
-### Crear un vehiculo para eliminar
+### POST to DELETE
 # @name createVehiculoToDelete
 POST http://localhost:3000/api/vehiculos
 Content-Type: application/json
 
 {
     "patente": "RTY123",
-    "añoFabricacion": "2003",
-    "vehiculoModelo": "6672e34efef3f29635e4a466"
+    "anioFabricacion": "2003",
+    "kmRecorridos": 8600,
+    "sucursal": 5,
+    "color": 3,
+    "modelo": 2
 }
-### Crear un un vehiculo para eliminar
+
+### DELETE
 @idToDelete = {{createVehiculoToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/vehiculos/{{idToDelete}}
-
-### Modificar un vehiculo
-PATCH http://localhost:3000/api/vehiculos/{{idToDelete}}
-Content-Type: application/json
-
-{
-    "añoFabricacion": "1900",
-    "vehiculoModelo": "6672e349fef3f29635e4a465"
-}
-
-### Eliminar un vehiculo
 DELETE http://localhost:3000/api/vehiculos/{{idToDelete}}
