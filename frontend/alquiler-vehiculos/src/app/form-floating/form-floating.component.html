@@ -1,64 +1,135 @@
 <h2 class="titulo-registro">Registro</h2>
 <section class="form">
-  <form id="userForm" class="border border-dark border-3 rounded">
-    <app-form-floating-textfield
-      [type]="'text'"
-      [idfor]="'nombre'"
-      [placeholder]="'Ignacio'"
-      [labelText]="'Nombre'"
-    ></app-form-floating-textfield>
-    <hr />
-    <app-form-floating-textfield
-      [type]="'text'"
-      [idfor]="'apellido'"
-      [placeholder]="'Perez'"
-      [labelText]="'Apellido'"
-    ></app-form-floating-textfield>
-    <hr />
-    <app-form-floating-select
+  <form
+    id="userForm"
+    class="border border-dark border-3 rounded"
+    (ngSubmit)="onSubmit()"
+  >
+    <!-- <app-form-floating-select
       [selectText]="'Tipo Documento'"
       [options]="['DNI', 'Pasaporte', 'Libreta']"
+      name="tipoDoc"
+      [(ngModel)]="tipoDoc"
     ></app-form-floating-select>
     <hr />
     <app-form-floating-textfield
-      [type]="'text'"
-      [idfor]="'documento'"
-      [placeholder]="'23456789'"
       [labelText]="'Documento'"
+      [type]="'text'"
+      [idfor]="'nroDoc'"
+      name="nroDoc"
+      [(ngModel)]="nroDoc"
     ></app-form-floating-textfield>
     <hr />
     <app-form-floating-textfield
+      [labelText]="'Nombre'"
+      [type]="'text'"
+      [idfor]="'nombre'"
+      name="nombre"
+      [(ngModel)]="nombre"
+    ></app-form-floating-textfield>
+    <hr />
+    <app-form-floating-textfield
+      [labelText]="'Apellido'"
+      [type]="'text'"
+      [idfor]="'apellido'"
+      name="apellido"
+      [(ngModel)]="apellido"
+    ></app-form-floating-textfield>
+    <hr />
+    <app-form-floating-textfield
+      [labelText]="'Mail'"
       [type]="'email'"
-      [idfor]="'email'"
-      [placeholder]="'name@example.com'"
-      [labelText]="'Email'"
+      [idfor]="'mail'"
+      name="mail"
+      [(ngModel)]="mail"
     ></app-form-floating-textfield>
     <hr />
-    <app-date-picker></app-date-picker>
+    <app-date-picker [(ngModel)]="fechaNacimiento"></app-date-picker>
     <hr />
     <app-form-floating-textfield
+      [labelText]="'Domicilio'"
       [type]="'text'"
       [idfor]="'domicilio'"
-      [placeholder]="'Rodriguez 891'"
-      [labelText]="'Direccion'"
+      name="domicilio"
+      [(ngModel)]="domicilio"
     ></app-form-floating-textfield>
     <hr />
     <app-form-floating-textfield
+      [labelText]="'Telefono'"
       [type]="'text'"
       [idfor]="'telefono'"
-      [placeholder]="'5493412345678'"
-      [labelText]="'Telefono'"
+      name="telefono"
+      [(ngModel)]="telefono"
     ></app-form-floating-textfield>
     <hr />
     <app-form-floating-textfield
       [type]="'text'"
       [idfor]="'nacionalidad'"
-      [placeholder]="'Argentino'"
       [labelText]="'Nacionalidad'"
+      name="nacionalidad"
+      [(ngModel)]="nacionalidad"
     ></app-form-floating-textfield>
+    <hr /> -->
+    <select name="tipoDoc" [(ngModel)]="tipoDoc">
+      <option value="" disabled selected>Tipo Documento</option>
+      <option value="DNI">DNI</option>
+      <option value="Pasaporte">Pasaporte</option>
+      <option value="Libreta">Libreta</option>
+    </select>
     <hr />
-    <div class="d-flex lign-items-center justify-content-end me-3">
-      <button type="submit" class="btn btn-primary" disabled>Registrar</button>
+    <input
+      type="text"
+      placeholder="Numero Documento"
+      name="nroDoc"
+      [(ngModel)]="nroDoc"
+    />
+    <hr />
+    <input
+      type="text"
+      placeholder="Nombre"
+      name="nombre"
+      [(ngModel)]="nombre"
+    />
+    <hr />
+    <input
+      type="text"
+      placeholder="Apellido"
+      name="apellido"
+      [(ngModel)]="apellido"
+    />
+    <hr />
+    <input type="text" placeholder="Mail" name="mail" [(ngModel)]="mail" />
+    <hr />
+    <input
+      type="text"
+      placeholder="Fecha Nacimiento"
+      name="fechaNacimiento"
+      [(ngModel)]="fechaNacimiento"
+    />
+    <hr />
+    <input
+      type="text"
+      placeholder="Domicilio"
+      name="domicilio"
+      [(ngModel)]="domicilio"
+    />
+    <hr />
+    <input
+      type="text"
+      placeholder="Telefono"
+      name="telefono"
+      [(ngModel)]="telefono"
+    />
+    <hr />
+    <input
+      type="text"
+      placeholder="Nacionalidad"
+      name="nacionalidad"
+      [(ngModel)]="nacionalidad"
+    />
+    <hr />
+    <div class="d-flex align-items-center justify-content-end me-3">
+      <button type="submit" class="btn btn-primary">Registrar</button>
     </div>
   </form>
 </section>

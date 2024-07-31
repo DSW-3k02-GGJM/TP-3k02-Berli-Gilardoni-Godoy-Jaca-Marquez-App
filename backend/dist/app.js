@@ -14,6 +14,17 @@ const app = express();
 app.use(express.json());
 // luego de los middlewares base
 app.use((req, res, next) => {
+    /*
+    Cuando se realiza una solicitud a, por ejemplo, http://localhost:3000/api/vehiculos,
+    desde la aplicacion Angular (que está ejecutandose en el puerto 4200), la API no está
+    configurada para permitir solicitudes CORS (forma de permitir que un sitio web acceda
+    a recursos de otro sitio web desde un navegador), por lo que obtiene HttpErrorResponse
+    con un estado de 0 y un error desconocido. Al agregar los siguientes encabezados, será
+    posible realizar solicitudes desde cualquier origen.
+    */
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Accept-Language, Accept-Encoding');
     RequestContext.create(orm.em, next);
 });
 // antes de las rutas y middlewares de negocio
