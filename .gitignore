@@ -44,6 +44,7 @@ connect.lock
 libpeerconnection.log
 testem.log
 typings
+pnpm-lock.yaml
 
 # System files
 .DS_Store

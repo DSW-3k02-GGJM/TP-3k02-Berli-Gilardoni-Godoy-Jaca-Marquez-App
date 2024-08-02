@@ -1,13 +1,13 @@
-### Obtener todas las marcas
+### GET ALL
 GET http://localhost:3000/api/marcas
 
-### Crear una marca (creado)
+### POST
 # @name createMarca
 POST http://localhost:3000/api/marcas
 Content-Type: application/json
 
 {
-    "nombre": "Renault"
+  "nombre": "Toyota"
 }
 
 ### ID
@@ -28,39 +28,31 @@ Content-Type: application/json
   "nombre": "Fiat"
 }
 
-### Modificar una marca (PATCH)
-PATCH  http://localhost:3000/api/marcas/{{id}}
+### POST 2
+POST http://localhost:3000/api/marcas
 Content-Type: application/json
 
 {
-  "nombre": "Toyota"
+  "nombre": "Honda"
 }
 
-### Crear una marca para eliminar
+### POST 3
+POST http://localhost:3000/api/marcas
+Content-Type: application/json
+
+{
+  "nombre": "Ford"
+}
+
+### POST to DELETE
 # @name createMarcaToDelete
 POST http://localhost:3000/api/marcas
 Content-Type: application/json
 
 {
-    "nombre": "Fiat"
+  "nombre": "Chevrolet"
 }
 
-### Eliminar una marca
+### DELETE
 @idToDelete = {{createMarcaToDelete.response.body.data.id}}
 DELETE http://localhost:3000/api/marcas/{{idToDelete}}
-
-### Crear una marca (creado)
-POST http://localhost:3000/api/marcas
-Content-Type: application/json
-
-{
-    "nombre": "Ford"
-}
-
-### Crear una marca (creado)
-POST http://localhost:3000/api/marcas
-Content-Type: application/json
-
-{
-    "nombre": "Audi"
-}

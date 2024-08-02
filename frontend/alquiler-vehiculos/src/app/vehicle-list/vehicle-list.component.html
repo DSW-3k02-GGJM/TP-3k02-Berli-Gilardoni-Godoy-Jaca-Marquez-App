@@ -2,10 +2,12 @@
   <h2 class="mt-3 ms-4 titulo-vehiculos">Nuestros vehiculos</h2>
   <section class="vehicle-list">
     <app-vehicle-card
-      *ngFor="let vehiculo of vehiculos"
-      [modelo]="vehiculo.modelo"
-      [descripcion]="vehiculo.descripcion"
-      [imagen]="vehiculo.imagen"
+      *ngFor="let vehiculo of response"
+      [modelo]="vehiculo.modelo.nombre"
+      [descripcion]="vehiculo.modelo.categoria.descripcion"
+      [imagen]="
+        'https://http2.mlstatic.com/D_NQ_NP_642000-MLA70518447599_072023-O.webp'
+      "
     ></app-vehicle-card>
   </section>
   <div class="footer">BGGJM - Alquiler de Vehiculos</div>

@@ -1,0 +1,75 @@
+### GET ALL
+GET http://localhost:3000/api/modelos
+
+### POST
+# @name createModelo
+POST http://localhost:3000/api/modelos
+Content-Type: application/json
+
+{
+    "nombre": "Toyota Corolla",
+    "tipoTransmision": "Automatica",
+    "cantPasajeros": 5,
+    "categoria": 1,
+    "marca": 1
+}
+
+### ID
+@id = {{createModelo.response.body.data.id}}
+
+### GET ONE
+GET http://localhost:3000/api/modelos/{{id}}
+
+
+### PUT
+PUT  http://localhost:3000/api/modelos/{{id}}
+Content-Type: application/json
+
+{
+    "nombre": "Toyota Corolla",
+    "tipoTransmision": "Automatica",
+    "cantPasajeros": 6,
+    "categoria": 1,
+    "marca": 1
+}
+
+### POST 2
+POST http://localhost:3000/api/modelos
+Content-Type: application/json
+
+{
+    "nombre": "Honda Civic",
+    "tipoTransmision": "Manual",
+    "cantPasajeros": 4,
+    "categoria": 1,
+    "marca": 2
+}
+
+### POST 3
+POST http://localhost:3000/api/modelos
+Content-Type: application/json
+
+{
+    "nombre": "Ford F-150",
+    "tipoTransmision": "Automatica",
+    "cantPasajeros": 6,
+    "categoria": 2,
+    "marca": 3
+}
+
+### POST to DELETE
+# @name createModeloToDelete
+POST http://localhost:3000/api/modelos
+Content-Type: application/json
+
+{
+    "nombre": "Chevrolet Silverado",
+    "tipoTransmision": "Automatica",
+    "cantPasajeros": 4,
+    "categoria": 2,
+    "marca": 5
+}
+
+### DELETE
+@idToDelete = {{createModeloToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/modelos/{{idToDelete}}

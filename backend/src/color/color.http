@@ -1,0 +1,55 @@
+### GET ALL
+GET http://localhost:3000/api/colores
+
+### POST
+# @name createColor
+POST http://localhost:3000/api/colores
+Content-Type: application/json
+
+{
+    "nombre": "Azul"
+}
+
+### ID
+@id = {{createColor.response.body.data.id}}
+
+### GET ONE
+GET http://localhost:3000/api/colores/{{id}}
+
+
+### PUT
+PUT  http://localhost:3000/api/colores/{{id}}
+Content-Type: application/json
+
+{
+    "nombre": "Rojo"
+}
+
+### POST 2
+POST http://localhost:3000/api/colores
+Content-Type: application/json
+
+{
+    "nombre": "Amarillo"
+}
+
+### POST 3
+POST http://localhost:3000/api/colores
+Content-Type: application/json
+
+{
+    "nombre": "Negro"
+}
+
+### POST to DELETE
+# @name createColorToDelete
+POST http://localhost:3000/api/colores
+Content-Type: application/json
+
+{
+    "nombre": "Blanco"
+}
+
+### DELETE
+@idToDelete = {{createColorToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/colores/{{idToDelete}}
