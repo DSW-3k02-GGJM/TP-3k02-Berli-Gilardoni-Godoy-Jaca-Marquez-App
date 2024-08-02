@@ -12,11 +12,15 @@ Content-Type: application/json
 
 ### ID
 @id = {{createMarca.response.body.data.id}}
+# esto no se bien q es despues lo arreglo
 
-### GET ONE
+### Obtener una Marca
 GET http://localhost:3000/api/marcas/{{id}}
 
-### PUT
+### PUT => Modificaciones completas (Recurso completo e idempotente)
+### PATCH => Modificaciones parciales o completas
+
+### Modificar una marca (PUT)
 PUT http://localhost:3000/api/marcas/{{id}}
 Content-Type: application/json
 

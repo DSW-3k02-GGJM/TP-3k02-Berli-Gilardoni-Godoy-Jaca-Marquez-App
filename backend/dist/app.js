@@ -36,6 +36,7 @@ app.use('/api/marcas', marcaRouter);
 app.use('/api/modelos', modeloRouter);
 app.use('/api/sucursales', sucursalRouter);
 app.use('/api/vehiculos', vehiculoRouter);
+app.use('/api/marcas', marcaRouter);
 app.use((_, res) => {
     return res.status(404).send({ message: 'Recurso no encontrado' });
 });
