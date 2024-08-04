@@ -49,4 +49,9 @@ pnpm-lock.yaml
 # System files
 .DS_Store
 Thumbs.db
-/backend/dist
+
+# Agregados
+backend/dist
+*.tsbuildinfo
+*.vite/deps/
+*.angular/cache/
