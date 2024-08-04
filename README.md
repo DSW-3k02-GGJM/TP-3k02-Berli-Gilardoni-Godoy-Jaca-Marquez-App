@@ -1,6 +1,6 @@
 # TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App
 
-# Propuesta TP DSW (Colocada acá temporalmente)
+# Propuesta TP DSW
 
 ## Grupo
 
