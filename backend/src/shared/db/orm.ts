@@ -22,7 +22,7 @@ export const syncSchema = async () => {
   const generator = orm.getSchemaGenerator();
   /*
   await generator.dropSchema()
-  await generator.createScehma()
+  await generator.createSchema()
   */
   await generator.updateSchema();
 };

@@ -53,5 +53,6 @@ Thumbs.db
 # Agregados
 backend/dist
 *.tsbuildinfo
-*.vite/deps/
-*.angular/cache/
+*/vite/deps/
+*.angular/cache/**
+*.vscode/

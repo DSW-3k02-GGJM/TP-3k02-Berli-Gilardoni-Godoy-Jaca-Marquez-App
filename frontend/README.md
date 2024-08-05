@@ -1,27 +1,35 @@
-# AlquilerVehiculos
+# TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-FE-App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
+## Instalación de dependencias
 
-## Development server
+Dentro de la carpeta 'frontend', ejecutar el siguiente comando en consola:
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```bash
+   npm install
+```
 
-## Code scaffolding
+## Compilación y ejecución de la app (sin configuración)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Compilación
 
-## Build
+1. Desde la carpeta 'frontend', abrir una consola.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+2. Ejecutar el siguiente comando:
 
-## Running unit tests
+```bash
+   ng build
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Ejecución
 
-## Running end-to-end tests
+Antes de ejecutar el frontend, tener en ejecución el backend para obtener y guardar la información deseada. Luego:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1. Desde la carpeta 'frontend', abrir una consola.
 
-## Further help
+2. Ejecutar el siguiente comando:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+   ng serve -o
+```
+
+- El parámetro `-o` permite abrir la aplicación en el navegador por defecto.
