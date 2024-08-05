@@ -8,7 +8,7 @@ Dentro de la carpeta 'frontend', ejecutar el siguiente comando en consola:
    npm install
 ```
 
-## Compilación y ejecución de la app (sin configuración)
+## Compilación y ejecución de la app
 
 ### Compilación
 
