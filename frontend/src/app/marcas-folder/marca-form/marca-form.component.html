@@ -1,0 +1,33 @@
+<div class="titulo text-white d-flex justify-content-between mt-3 ms-4">
+  <h2 class="nueva-marca">Nueva Marca</h2>
+  <button class="volver btn btn-secondary" (click)="navigateToMarcas()">
+    Volver
+  </button>
+</div>
+
+<!-- Sección que contiene el formulario -->
+<section class="form">
+  <form
+    id="userForm"
+    class="border border-dark border-3 rounded"
+    (ngSubmit)="onSubmit()" 
+  > <!-- Evento de envío del formulario, llama al método onSubmit() -->
+    <hr/>
+    <!-- Campo de entrada para el nombre -->
+    <input
+      type="text"
+      placeholder="Nombre"
+      name="nombre"
+      [(ngModel)]="nombre"
+    /> <!--enlace bidireccional de datos entre la vista y el modelo-->
+    <hr/>
+    <!-- Contenedor para el botón de envío, alineado a la derecha -->
+    <div class="d-flex align-items-center justify-content-end me-3">
+      <button type="submit" class="btn btn-primary">Registrar</button>
+      <!-- Botón de envío del formulario, estilizado como botón primario -->
+    </div>
+  </form>
+</section>
+
+<!-- Pie de página con mensaje de derechos reservados -->
+<div class="footer">BGGJM - Alquiler de Vehiculos</div>
