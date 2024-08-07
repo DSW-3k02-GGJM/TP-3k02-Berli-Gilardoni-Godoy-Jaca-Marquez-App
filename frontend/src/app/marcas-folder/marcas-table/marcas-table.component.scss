@@ -1,11 +1,20 @@
-/* Estilo para la tabla con la clase 'marcas-table' */
 .marcas-table {
-  position: relative; /* Permite posicionar elementos hijos absolutamente en relación con esta tabla */
+  position: relative;
 }
 
-/* Estilo para las celdas dentro de la tabla con la clase 'marcas-table' */
 .marcas-table td {
-  vertical-align: middle; /* Centra verticalmente el contenido de las celdas */
-  word-wrap: break-word; /* Permite que las palabras largas se ajusten dentro de la celda */
+  vertical-align: middle;
+  word-wrap: break-word;
+}
+
+.actions-column {
+  width: 100px; /* Ajusta el ancho de la columna de acciones según sea necesario */
+  text-align: center; /* Centra los botones dentro de la celda */
+}
+
+.actions-column .btn {
+  margin: 0 4px; /* Reduce el margen entre los botones */
+  padding: 2px 4px; /* Ajusta el tamaño del botón */
+  font-size: 14px; /* Tamaño de fuente más pequeño para los botones */
 }
 

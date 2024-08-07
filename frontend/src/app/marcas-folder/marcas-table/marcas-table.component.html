@@ -1,28 +1,21 @@
-<!-- Tabla con estilo oscuro y bordes -->
 <table class="table table-dark table-hover table-bordered table-sm border border-white text-center marcas-table">
-  <!-- Encabezado de la tabla -->
   <thead>
     <tr class="text-danger"> <!-- Fila del encabezado con texto rojo -->
-      <th>Nombre</th> <!-- Título de la columna -->
+      <th>Marca</th>
+      <th>Acciones</th>
     </tr>
   </thead>
-  <!-- Cuerpo de la tabla -->
   <tbody>
     <!-- Itera sobre la lista de marcas -->
     <tr *ngFor="let marca of marcas" class="bg-danger"> <!-- Fila con fondo rojo -->
       <td>{{ marca.nombre }}</td> <!-- Muestra el nombre de la marca -->
-      <td>
-        <!-- Contenedor para botones -->
-        <div class="d-flex justify-content-around">
-          <!-- Botón para editar la marca -->
-          <button class="btn btn-dark fs-5" (click)="editMarca(marca)">
-            ✏️
-          </button>
-          <!-- Botón para eliminar la marca -->
-          <button class="btn btn-dark fs-5" (click)="deleteMarca(marca)">
-            ❌
-          </button>
-        </div>
+      <td class="actions-column">
+        <button class="btn btn-dark btn-sm" (click)="editMarca(marca)">
+          ✏️
+        </button>
+        <button class="btn btn-dark btn-sm" (click)="deleteMarca(marca)">
+          ❌
+        </button>
       </td>
     </tr>
   </tbody>

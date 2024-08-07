@@ -1,10 +1,6 @@
 #userForm {
-  background-color: white;
+  background-color: black;
   padding-bottom: 1em;
-}
-
-#fechaNacimiento {
-  margin-left: 1.8em;
 }
 
 .nueva-marca {
@@ -17,4 +13,40 @@
 
 .form {
   padding: 0.5em 2em 2em 2em;
+}
+
+/* Estilos para el contenedor del formulario */
+.form-style {
+  background-color: #495057; /* Un color de fondo oscuro (gris oscuro) */
+  color: #ffffff; /* Texto blanco para el contraste */
+  padding: 20px; /* Espaciado interno del formulario */
+  border-radius: 5px; /* Bordes redondeados */
+  border: 1px solid #6c757d; /* Borde gris oscuro para el contenedor */
+}
+
+/* Estilos para el campo de entrada dentro del contenedor */
+.form-style input.form-control {
+  background-color: #343a40; /* Fondo más oscuro para el campo de entrada */
+  color: #ffffff; /* Texto blanco en el campo de entrada */
+  border: 1px solid #6c757d; /* Borde gris oscuro para el campo de entrada */
+  border-radius: 3px; /* Bordes ligeramente redondeados para el campo de entrada */
+  padding: 10px; /* Espaciado interno del campo de entrada */
+}
+
+.form-style input.form-control::placeholder {
+  color: #adb5bd; /* Color del texto del placeholder */
+}
+
+/* Estilo para el pie de página */
+.footer {
+  text-align: center; /* Centra el texto del pie de página */
+  padding: 10px; /* Espaciado interno del pie de página */
+  background-color: #343a40; /* Fondo oscuro para el pie de página */
+  color: #ffffff; /* Texto blanco */
+  margin-top: 20px; /* Margen superior para separar del contenido anterior */
+}
+
+/* Estilo para el contenedor del título */
+.titulo {
+  margin-bottom: 20px; /* Espaciado inferior para separar el título del formulario */
 }

@@ -35,8 +35,7 @@ export class MarcasComponent implements OnInit {
   fillData() {
     // Llama al servicio para obtener todos los datos de marcas
     this.apiService.getAll('marcas').subscribe((response) => {
-      this.marcas = response.data;
-      // Asigna los datos obtenidos a la lista de marcas
+      this.marcas = response.data; // Asigna los datos obtenidos a la lista de marcas
     });
   }
 
