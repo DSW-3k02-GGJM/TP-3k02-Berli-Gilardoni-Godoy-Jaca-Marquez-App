@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormFloatingComponent } from './form-floating.component';
+import { ClientsTableComponent } from './clients-table.component';
 
-describe('FormFloatingComponent', () => {
-  let component: FormFloatingComponent;
-  let fixture: ComponentFixture<FormFloatingComponent>;
+describe('ClientsTableComponent', () => {
+  let component: ClientsTableComponent;
+  let fixture: ComponentFixture<ClientsTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormFloatingComponent]
+      imports: [ClientsTableComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(FormFloatingComponent);
+
+    fixture = TestBed.createComponent(ClientsTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

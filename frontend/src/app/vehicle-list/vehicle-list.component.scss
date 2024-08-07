@@ -13,17 +13,6 @@
   margin: 1em 0;
 }
 
-.footer {
-  background-color: #337ab7;
-  color: #fff;
-  padding: 0.1em;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 1;
-}
-
 @media (max-width: 440px) {
   .movie-list {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

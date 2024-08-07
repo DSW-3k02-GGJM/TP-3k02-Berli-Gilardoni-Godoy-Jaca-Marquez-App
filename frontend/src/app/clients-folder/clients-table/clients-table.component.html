@@ -1,0 +1,39 @@
+<table
+  class="table table-dark table-hover table-bordered table-sm border border-white text-center clients-table"
+>
+  <thead>
+    <tr class="text-danger">
+      <th>Tipo Doc.</th>
+      <th>Nro. Doc.</th>
+      <th>Apellido y Nombre</th>
+      <th>Fecha de Nacimiento</th>
+      <th>Mail</th>
+      <th>Domicilio</th>
+      <th>Telefono</th>
+      <th>Nacionalidad</th>
+      <th>Mas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let client of clients" class="bg-danger">
+      <td>{{ client.tipoDoc }}</td>
+      <td>{{ client.nroDoc }}</td>
+      <td>{{ client.apellido + ", " + client.nombre }}</td>
+      <td>{{ formatBirthDate(client.fechaNacimiento) }}</td>
+      <td>{{ client.mail }}</td>
+      <td>{{ client.domicilio }}</td>
+      <td>{{ client.telefono }}</td>
+      <td>{{ client.nacionalidad }}</td>
+      <td>
+        <div class="d-flex justify-content-around">
+          <button class="btn btn-dark fs-5" (click)="editClient(client)">
+            ✏️
+          </button>
+          <button class="btn btn-dark fs-5" (click)="deleteClient(client)">
+            ❌
+          </button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
