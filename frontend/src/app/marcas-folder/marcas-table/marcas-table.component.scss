@@ -1,0 +1,11 @@
+/* Estilo para la tabla con la clase 'marcas-table' */
+.marcas-table {
+  position: relative; /* Permite posicionar elementos hijos absolutamente en relación con esta tabla */
+}
+
+/* Estilo para las celdas dentro de la tabla con la clase 'marcas-table' */
+.marcas-table td {
+  vertical-align: middle; /* Centra verticalmente el contenido de las celdas */
+  word-wrap: break-word; /* Permite que las palabras largas se ajusten dentro de la celda */
+}
+
