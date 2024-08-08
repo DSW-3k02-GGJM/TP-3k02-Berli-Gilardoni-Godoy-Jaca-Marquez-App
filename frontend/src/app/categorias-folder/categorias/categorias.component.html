@@ -1,1 +1,15 @@
-<p>categorias works!</p>
+<div class="lista text-white">
+    <div class="titulo d-flex justify-content-between mt-3 me-5">
+      <h2 class="nuestros">Nuestras categorias</h2>
+      <button class="btn btn-primary" (click)="navigateToNewCategoria()">
+        + Nuevo
+      </button>
+    </div>
+    <section #tableContainer class="client-list mt-3 mx-5">
+      <app-categorias-table
+        [categorias]="categorias"
+        (categoriaDeleted)="onCategoriaDeleted($event)"
+      ></app-categorias-table>
+    </section>
+    <div #footer class="footer">BGGJM - Alquiler de Vehiculos</div>
+  </div>
