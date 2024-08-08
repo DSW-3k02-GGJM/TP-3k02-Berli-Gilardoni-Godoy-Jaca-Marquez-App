@@ -58,25 +58,27 @@ Si se quiere configurar el VSCode para ejecutar con botones, seguir los siguient
 
 ```json
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "build",
-      "request": "launch",
-      "runtimeArgs": ["build"],
-      "runtimeExecutable": "pnpm",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node"
-    },
-    {
-      "name": "start:dev",
-      "request": "launch",
-      "runtimeArgs": ["start:dev"],
-      "runtimeExecutable": "pnpm",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node"
-    }
-  ]
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "buildBackEnd",
+        "request": "launch",
+        "cwd": "${workspaceFolder}/backend",
+        "runtimeArgs": ["build"],
+        "runtimeExecutable": "pnpm",
+        "skipFiles": ["<node_internals>/**"],
+        "type": "node",
+      },
+      {
+        "name": "startBackEnd:dev",
+        "request": "launch",
+        "cwd": "${workspaceFolder}/backend",
+        "runtimeArgs": ["start:dev"],
+        "runtimeExecutable": "pnpm",
+        "skipFiles": ["<node_internals>/**"],
+        "type": "node",
+      }
+    ]
 }
 ```
 
