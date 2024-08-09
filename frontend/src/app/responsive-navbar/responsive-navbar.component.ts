@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-responsive-navbar',
   standalone: true,
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterLink],
   templateUrl: './responsive-navbar.component.html',
   styleUrl: './responsive-navbar.component.scss',
 })

@@ -3,15 +3,15 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ClientConfirmDeletionComponent } from '../client-confirm-deletion/client-confirm-deletion.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 
 @Component({
   selector: 'app-clients-table',
   standalone: true,
   templateUrl: './clients-table.component.html',
   styleUrl: './clients-table.component.scss',
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, ConfirmDeletionComponent],
   providers: [ApiService],
 })
 export class ClientsTableComponent {
@@ -21,7 +21,7 @@ export class ClientsTableComponent {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private dialog: MatDialog
+    private modalService: NgbModal
   ) {}
 
   formatBirthDate(fechaNacimientoDB: string): string {
@@ -46,25 +46,21 @@ export class ClientsTableComponent {
   }
 
   deleteClient(client: any): void {
-    console.log(client);
-    const dialogRef = this.dialog.open(ClientConfirmDeletionComponent, {
-      data: {
-        title: 'Eliminar cliente',
-        message: `¿Estás seguro de eliminar al cliente ${
-          client.apellido + ', ' + client.nombre
-        }?`,
-      },
-    });
+    const modalRef = this.modalService.open(ConfirmDeletionComponent);
+    modalRef.componentInstance.title = 'Eliminar cliente';
+    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar al cliente ${client.apellido}, ${client.nombre}?`;
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.apiService
-          .delete('clientes', Number(client.id))
-          .subscribe((response) => {
-            console.log(response);
-            this.clientDeleted.emit(client.id);
-          });
-      }
-    });
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          this.apiService
+            .delete('clientes', Number(client.id))
+            .subscribe((response) => {
+              this.clientDeleted.emit(client.id);
+            });
+        }
+      },
+      () => {}
+    );
   }
 }

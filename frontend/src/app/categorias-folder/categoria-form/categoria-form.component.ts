@@ -1,35 +1,45 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ApiService } from '../../service/api.service.js';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { ApiService } from '../../service/api.service.js';
+import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/categoria-created-or-modified.service';
 
 @Component({
   selector: 'app-categoria-form',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   templateUrl: './categoria-form.component.html',
   styleUrl: './categoria-form.component.scss',
+  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
 })
-export class CategoriaFormComponent {
+export class CategoriaFormComponent implements OnInit {
   action: string = '';
   currentCategoriaId: any;
+
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private categoriaCreatedOrModifiedService: CategoriaCreatedOrModifiedService
   ) {}
 
   categoriaForm = new FormGroup({
-    nombre : new FormControl('', [Validators.required]),
-    descripcion : new FormControl('', [Validators.required]),
-    precioPorDia : new FormControl('', [Validators.required]),
-    valorDeposito : new FormControl('', [Validators.required]),
-  })
+    nombre: new FormControl('', [Validators.required]),
+    descripcion: new FormControl('', [Validators.required]),
+    precioPorDia: new FormControl('', [Validators.required]),
+    valorDeposito: new FormControl('', [Validators.required]),
+  });
 
   ngOnInit(): void {
+    this.categoriaCreatedOrModifiedService.isDataLoaded = false;
+
     this.activatedRoute.params.subscribe((params) => {
       if (params.id) {
         this.apiService
@@ -47,12 +57,20 @@ export class CategoriaFormComponent {
 
   onSubmit() {
     if (this.action == 'Create') {
-      this.apiService.create('categorias', this.categoriaForm.value).subscribe((response) => {});
+      this.apiService
+        .create('categorias', this.categoriaForm.value)
+        .subscribe((response) => {
+          this.categoriaCreatedOrModifiedService.notifyCategoriaCreatedOrModified();
+        });
     } else if (this.action == 'Edit') {
       this.apiService
         .update('categorias', this.currentCategoriaId, this.categoriaForm.value)
-        .subscribe((response) => {});
+        .subscribe((response) => {
+          this.categoriaCreatedOrModifiedService.notifyCategoriaCreatedOrModified();
+        });
     }
+    this.categoriaCreatedOrModifiedService.isDataLoaded = true;
+    this.navigateToCategorias();
   }
 
   navigateToCategorias(): void {

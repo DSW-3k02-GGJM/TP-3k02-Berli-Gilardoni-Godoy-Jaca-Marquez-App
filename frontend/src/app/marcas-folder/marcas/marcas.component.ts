@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { MarcasTableComponent } from '../marcas-table/marcas-table.component';
+import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca-created-or-modified.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-marcas',
@@ -15,15 +17,23 @@ import { MarcasTableComponent } from '../marcas-table/marcas-table.component';
 })
 export class MarcasComponent implements OnInit {
   marcas: any[] = []; // Lista de marcas a mostrar en la vista
+  private subscription?: Subscription;
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private router: Router // Servicio para manejar la navegación
+    private router: Router, // Servicio para manejar la navegación
+    private marcaCreatedOrModifiedService: MarcaCreatedOrModifiedService
   ) {}
 
   ngOnInit(): void {
     // Se ejecuta al inicializar el componente
     this.fillData(); // Llama al método para llenar los datos de marcas
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   onMarcaDeleted(marcaId: number): void {
@@ -33,9 +43,21 @@ export class MarcasComponent implements OnInit {
   }
 
   fillData() {
-    // Llama al servicio para obtener todos los datos de marcas
+    this.subscription =
+      this.marcaCreatedOrModifiedService.marcaCreatedOrModified.subscribe(
+        () => {
+          this.loadData();
+        }
+      );
+
+    if (!this.marcaCreatedOrModifiedService.isDataLoaded) {
+      this.loadData();
+    }
+  }
+
+  loadData() {
     this.apiService.getAll('marcas').subscribe((response) => {
-      this.marcas = response.data; // Asigna los datos obtenidos a la lista de marcas
+      this.marcas = response.data;
     });
   }
 
@@ -44,4 +66,3 @@ export class MarcasComponent implements OnInit {
     this.router.navigate(['/marcas/creacion']);
   }
 }
-

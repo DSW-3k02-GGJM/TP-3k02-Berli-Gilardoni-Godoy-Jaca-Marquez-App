@@ -3,18 +3,17 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { MatDialog } from '@angular/material/dialog';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component.js';
 
 @Component({
   selector: 'app-categorias-table',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, ConfirmDeletionComponent],
   templateUrl: './categorias-table.component.html',
   styleUrl: './categorias-table.component.scss',
+  imports: [CommonModule, HttpClientModule, ConfirmDeletionComponent],
   providers: [ApiService],
 })
-
 export class CategoriasTableComponent {
   @Input() categorias!: any[];
   @Output() categoriaDeleted = new EventEmitter();
@@ -22,7 +21,7 @@ export class CategoriasTableComponent {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private dialog: MatDialog
+    private modalService: NgbModal
   ) {}
 
   editCategoria(categoria: any): void {
@@ -30,25 +29,21 @@ export class CategoriasTableComponent {
   }
 
   deleteCategoria(categoria: any): void {
-    console.log(categoria);
-    const dialogRef = this.dialog.open(ConfirmDeletionComponent, {
-      data: {
-        title: 'Eliminar categoria',
-        message: `¿Estás seguro de eliminar a la categoría ${
-          categoria.nombre
-        }?`,
+    const modalRef = this.modalService.open(ConfirmDeletionComponent);
+    modalRef.componentInstance.title = 'Eliminar categoria';
+    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar la categoria ${categoria.nombre}?`;
+
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          this.apiService
+            .delete('categorias', Number(categoria.id))
+            .subscribe((response) => {
+              this.categoriaDeleted.emit(categoria.id);
+            });
+        }
       },
-    });
-  
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.apiService
-          .delete('categorias', Number(categoria.id))
-          .subscribe((response) => {
-            console.log(response);
-            this.categoriaDeleted.emit(categoria.id);
-          });
-      }
-    });
+      () => {}
+    );
   }
 }

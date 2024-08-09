@@ -7,19 +7,21 @@
   align-items: center;
   width: 100%;
 }
+
 h1 {
   font-size: 3rem;
   color: #333;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  // margin-bottom: 1rem;
 }
+
 p {
   font-size: 1.5rem;
   color: #666;
   text-align: center;
   margin-bottom: 1rem;
 }
+
 .subtitulo-home-page {
   color: #fff;
 }
@@ -66,22 +68,10 @@ p {
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
   flex: 1 1 300px;
-  margin-bottom: 1rem;
 }
 
 .testimonial p {
   font-size: 1.3em;
-}
-
-.footer {
-  background-color: #337ab7;
-  color: #fff;
-  padding: 0.1em;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 1;
 }
 
 @media (max-width: 700px) {

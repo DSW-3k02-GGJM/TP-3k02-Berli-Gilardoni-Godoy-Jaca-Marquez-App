@@ -1,19 +1,21 @@
-html,
-body {
-  height: 100%;
+/* Estilos para el contenedor del formulario */
+.form-style {
+  background-color: #000; /* Un color de fondo oscuro (gris oscuro) */
+  color: #ffffff; /* Texto blanco para el contraste */
+  padding: 20px; /* Espaciado interno del formulario */
+  border-radius: 5px; /* Bordes redondeados */
+  border: 1px solid #6c757d; /* Borde gris oscuro para el contenedor */
 }
 
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+/* Estilos para el campo de entrada dentro del contenedor */
+.form-style input {
+  background-color: #212529; /* Fondo más oscuro para el campo de entrada */
+  color: #ffffff; /* Texto blanco en el campo de entrada */
+  border: 1px solid #6c757d; /* Borde gris oscuro para el campo de entrada */
+  border-radius: 6px; /* Bordes ligeramente redondeados para el campo de entrada */
+  padding: 10px; /* Espaciado interno del campo de entrada */
 }
 
-.footer {
-  background-color: #337ab7;
-  color: #fff;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+.form-style input::placeholder {
+  color: #ffffff; /* Color del texto del placeholder */
 }

@@ -1,27 +1,55 @@
-<div class="titulo text-white d-flex justify-content-between mt-3 ms-4">
-    <h2 class="nueva-categoria">Nueva Categoria</h2>
-    <button class="volver btn btn-secondary" (click)="navigateToCategorias()">
-      Volver
-    </button>
+<div class="titulo text-white d-flex justify-content-between pt-3 ms-4">
+  <h2 class="nueva-categoria">Nueva Categoria</h2>
+  <button class="volver btn btn-secondary" (click)="navigateToCategorias()">
+    Volver
+  </button>
 </div>
-<section class="form" >
-    <form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()" class="border border-dark border-3 rounded">
-        <label for="nombre">Nombre: </label>
-        <input id="nombre" type="text" formControlName="nombre">
-        <hr />
-    
-        <label for="descripcion">Descripcion: </label>
-        <input id="descripcion" type="text" formControlName="descripcion">
-        <hr />
-    
-        <label for="precioPorDia">Precio por día: </label>
-        <input id="precioPorDia" type="number" formControlName="precioPorDia">
-        <hr />
-    
-        <label for="valorDeposito">Valor depósito: </label>
-        <input id="valorDeposito" type="number" formControlName="valorDeposito">
-        <hr />
+<section class="form">
+  <form
+    id="categoriaForm"
+    [formGroup]="categoriaForm"
+    (ngSubmit)="onSubmit()"
+    class="border border-dark border-3 rounded mt-2 form-style"
+  >
+    <input
+      id="nombre"
+      type="text"
+      formControlName="nombre"
+      placeholder="Nombre"
+    />
+    <hr />
 
-        <button type="submit" [disabled]="!categoriaForm.valid">Submit</button>
-    </form>
+    <input
+      id="descripcion"
+      type="text"
+      formControlName="descripcion"
+      placeholder="Descripcion"
+    />
+    <hr />
+
+    <input
+      id="precioPorDia"
+      type="number"
+      formControlName="precioPorDia"
+      placeholder="Precio por Dia"
+    />
+    <hr />
+
+    <input
+      id="valorDeposito"
+      type="number"
+      formControlName="valorDeposito"
+      placeholder="Valor Deposito"
+    />
+    <hr />
+    <div class="d-flex align-items-center justify-content-end me-3">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!categoriaForm.valid"
+      >
+        Registrar
+      </button>
+    </div>
+  </form>
 </section>

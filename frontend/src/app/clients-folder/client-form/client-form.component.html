@@ -1,4 +1,4 @@
-<div class="titulo text-white d-flex justify-content-between mt-3 ms-4">
+<div class="titulo text-white d-flex justify-content-between pt-3 ms-4">
   <h2 class="nuevo-cliente">Nuevo Cliente</h2>
   <button class="volver btn btn-secondary" (click)="navigateToClients()">
     Volver
@@ -6,136 +6,90 @@
 </div>
 <section class="form">
   <form
-    id="userForm"
-    class="border border-dark border-3 rounded"
+    id="clientForm"
+    [formGroup]="clientForm"
     (ngSubmit)="onSubmit()"
+    class="border border-dark border-3 rounded mt-2 form-style"
   >
-    <!-- <app-form-floating-select
-      [selectText]="'Tipo Documento'"
-      [options]="['DNI', 'Pasaporte', 'Libreta']"
-      name="tipoDoc"
-      [(ngModel)]="tipoDoc"
-    ></app-form-floating-select>
-    <hr />
-    <app-form-floating-textfield
-      [labelText]="'Documento'"
-      [type]="'text'"
-      [idfor]="'nroDoc'"
-      name="nroDoc"
-      [(ngModel)]="nroDoc"
-    ></app-form-floating-textfield>
-    <hr />
-    <app-form-floating-textfield
-      [labelText]="'Nombre'"
-      [type]="'text'"
-      [idfor]="'nombre'"
-      name="nombre"
-      [(ngModel)]="nombre"
-    ></app-form-floating-textfield>
-    <hr />
-    <app-form-floating-textfield
-      [labelText]="'Apellido'"
-      [type]="'text'"
-      [idfor]="'apellido'"
-      name="apellido"
-      [(ngModel)]="apellido"
-    ></app-form-floating-textfield>
-    <hr />
-    <app-form-floating-textfield
-      [labelText]="'Mail'"
-      [type]="'email'"
-      [idfor]="'mail'"
-      name="mail"
-      [(ngModel)]="mail"
-    ></app-form-floating-textfield>
-    <hr />
-    <app-date-picker [(ngModel)]="fechaNacimiento"></app-date-picker>
-    <hr />
-    <app-form-floating-textfield
-      [labelText]="'Domicilio'"
-      [type]="'text'"
-      [idfor]="'domicilio'"
-      name="domicilio"
-      [(ngModel)]="domicilio"
-    ></app-form-floating-textfield>
-    <hr />
-    <app-form-floating-textfield
-      [labelText]="'Telefono'"
-      [type]="'text'"
-      [idfor]="'telefono'"
-      name="telefono"
-      [(ngModel)]="telefono"
-    ></app-form-floating-textfield>
-    <hr />
-    <app-form-floating-textfield
-      [type]="'text'"
-      [idfor]="'nacionalidad'"
-      [labelText]="'Nacionalidad'"
-      name="nacionalidad"
-      [(ngModel)]="nacionalidad"
-    ></app-form-floating-textfield>
-    <hr /> -->
-    <select name="tipoDoc" [(ngModel)]="tipoDoc">
+    <select
+      id="tipoDoc"
+      formControlName="tipoDoc"
+      class="form-select bg-dark text-white border border-secondary w-auto"
+    >
       <option value="" disabled selected>Tipo Documento</option>
       <option value="DNI">DNI</option>
       <option value="Pasaporte">Pasaporte</option>
       <option value="Libreta">Libreta</option>
     </select>
     <hr />
+
     <input
+      id="nroDoc"
       type="text"
+      formControlName="nroDoc"
       placeholder="Numero Documento"
-      name="nroDoc"
-      [(ngModel)]="nroDoc"
     />
     <hr />
+
     <input
+      id="nombre"
       type="text"
+      formControlName="nombre"
       placeholder="Nombre"
-      name="nombre"
-      [(ngModel)]="nombre"
     />
     <hr />
+
     <input
+      id="apellido"
       type="text"
+      formControlName="apellido"
       placeholder="Apellido"
-      name="apellido"
-      [(ngModel)]="apellido"
     />
     <hr />
-    <input type="text" placeholder="Mail" name="mail" [(ngModel)]="mail" />
+
+    <input id="mail" type="email" formControlName="mail" placeholder="Mail" />
     <hr />
+
     <input
-      type="text"
-      placeholder="Fecha Nacimiento"
-      name="fechaNacimiento"
-      [(ngModel)]="fechaNacimiento"
+      id="fechaNacimiento"
+      type="date"
+      formControlName="fechaNacimiento"
+      placeholder="Fecha de Nacimiento"
     />
     <hr />
+
     <input
+      id="domicilio"
       type="text"
+      formControlName="domicilio"
       placeholder="Domicilio"
-      name="domicilio"
-      [(ngModel)]="domicilio"
     />
     <hr />
+
     <input
-      type="text"
+      id="telefono"
+      type="number"
+      formControlName="telefono"
       placeholder="Telefono"
-      name="telefono"
-      [(ngModel)]="telefono"
     />
     <hr />
+
     <input
+      id="nacionalidad"
       type="text"
+      formControlName="nacionalidad"
       placeholder="Nacionalidad"
-      name="nacionalidad"
-      [(ngModel)]="nacionalidad"
     />
     <hr />
+
     <div class="d-flex align-items-center justify-content-end me-3">
-      <button type="submit" class="btn btn-primary">Registrar</button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!clientForm.valid"
+      >
+        Registrar
+      </button>
     </div>
   </form>
 </section>
-<div class="footer">BGGJM - Alquiler de Vehiculos</div>

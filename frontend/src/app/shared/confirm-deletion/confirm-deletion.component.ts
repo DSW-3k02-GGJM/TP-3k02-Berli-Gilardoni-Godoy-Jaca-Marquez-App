@@ -1,21 +1,16 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {
-  MatDialogContent,
-  MatDialogActions,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { Component, Input } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-confirm-deletion',
+  standalone: true,
+  imports: [],
   templateUrl: './confirm-deletion.component.html',
   styleUrl: './confirm-deletion.component.scss',
-  standalone: true,
-  imports: [MatDialogContent, MatDialogActions, MatDialogModule],
 })
 export class ConfirmDeletionComponent {
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmDeletionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  @Input() title: string = '';
+  @Input() message: string = '';
+
+  constructor(public activeModal: NgbActiveModal) {}
 }

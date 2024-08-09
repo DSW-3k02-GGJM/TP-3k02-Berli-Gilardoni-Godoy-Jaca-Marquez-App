@@ -1,7 +1,18 @@
-* {
-  margin: 0;
+main {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   background-image: url("https://www.fffuel.co/images/tttexture/thumb-353.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  min-height: 85vh;
+}
+
+footer {
+  background-color: #337ab7;
+  color: #fff;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
