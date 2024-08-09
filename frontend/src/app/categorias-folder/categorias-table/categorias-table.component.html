@@ -1,3 +1,10 @@
+<input
+  type="text"
+  class="form-control mb-3"
+  name="filterPost"
+  placeholder="Buscar por Nombre..."
+  [(ngModel)]="filterRows"
+/>
 <table
   class="table table-dark table-hover table-bordered table-sm border border-white text-center categorias-table"
 >
@@ -12,7 +19,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let categoria of categorias">
+    <tr *ngFor="let categoria of categorias | filter : filterRows">
       <td>{{ categoria.id }}</td>
       <td>{{ categoria.nombre }}</td>
       <td>{{ categoria.descripcion }}</td>

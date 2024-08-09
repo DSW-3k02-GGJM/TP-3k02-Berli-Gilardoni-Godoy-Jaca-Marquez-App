@@ -1,3 +1,10 @@
+<input
+  type="text"
+  class="form-control mb-3"
+  name="filterPost"
+  placeholder="Buscar por Nombre..."
+  [(ngModel)]="filterRows"
+/>
 <table
   class="table table-dark table-hover table-bordered table-sm border border-white text-center marcas-table"
 >
@@ -9,7 +16,7 @@
   </thead>
   <tbody>
     <!-- Itera sobre la lista de marcas -->
-    <tr *ngFor="let marca of marcas">
+    <tr *ngFor="let marca of marcas | filter : filterRows">
       <td>{{ marca.nombre }}</td>
       <!-- Muestra el nombre de la marca -->
       <td class="actions-column">

@@ -4,19 +4,28 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component.js';
+import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
+import { FilterPipe } from '../../shared/filter/filter.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-categorias-table',
   standalone: true,
   templateUrl: './categorias-table.component.html',
   styleUrl: './categorias-table.component.scss',
-  imports: [CommonModule, HttpClientModule, ConfirmDeletionComponent],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    ConfirmDeletionComponent,
+    FilterPipe,
+    FormsModule,
+  ],
   providers: [ApiService],
 })
 export class CategoriasTableComponent {
   @Input() categorias!: any[];
   @Output() categoriaDeleted = new EventEmitter();
+  filterRows = '';
 
   constructor(
     private apiService: ApiService,

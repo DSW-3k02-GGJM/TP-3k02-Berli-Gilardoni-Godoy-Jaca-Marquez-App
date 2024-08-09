@@ -5,18 +5,27 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
+import { FilterPipe } from '../../shared/filter/filter.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-clients-table',
   standalone: true,
   templateUrl: './clients-table.component.html',
   styleUrl: './clients-table.component.scss',
-  imports: [CommonModule, HttpClientModule, ConfirmDeletionComponent],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    ConfirmDeletionComponent,
+    FilterPipe,
+    FormsModule,
+  ],
   providers: [ApiService],
 })
 export class ClientsTableComponent {
   @Input() clients!: any[];
   @Output() clientDeleted = new EventEmitter();
+  filterRows = '';
 
   constructor(
     private apiService: ApiService,

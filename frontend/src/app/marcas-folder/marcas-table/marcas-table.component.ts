@@ -5,18 +5,27 @@ import { HttpClientModule } from '@angular/common/http'; // Módulo para hacer s
 import { ApiService } from '../../service/api.service'; // Servicio para manejar la API
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component.js';
+import { FilterPipe } from '../../shared/filter/filter.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-marcas-table',
   standalone: true, // Permite que el componente se use sin necesidad de un módulo Angular tradicional
   templateUrl: './marcas-table.component.html', // Ruta del archivo de plantilla HTML
   styleUrl: './marcas-table.component.scss', // Ruta del archivo de estilos SCSS
-  imports: [CommonModule, HttpClientModule, ConfirmDeletionComponent], // Importaciones necesarias para el componente
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    ConfirmDeletionComponent,
+    FilterPipe,
+    FormsModule,
+  ], // Importaciones necesarias para el componente
   providers: [ApiService], // Proporciona el servicio ApiService a este componente
 })
 export class MarcasTableComponent {
   @Input() marcas!: any[]; // Entrada de datos: lista de marcas
   @Output() marcaDeleted = new EventEmitter(); // Evento que emite el ID de la marca eliminada
+  filterRows = '';
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
