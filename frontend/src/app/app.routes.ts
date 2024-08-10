@@ -9,6 +9,8 @@ import { MarcaFormComponent } from './marcas-folder/marca-form/marca-form.compon
 import { ColorsComponent } from './colors-folder/colors/colors.component';
 import { ColorFormComponent } from './colors-folder/color-form/color-form.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
+import {SucursalesFormComponent} from "./sucursales-folder/sucursales-form/sucursales-form.component";
+import {SucursalesComponent} from "./sucursales-folder/sucursales/sucursales.component";
 import { ModelosComponent } from './modelos-folder/modelos/modelos.component';
 import { ModeloFormComponent } from './modelos-folder/modelo-form/modelo-form.component';
 
@@ -30,5 +32,8 @@ export const routes: Routes = [
   { path: 'modelos/creacion', component: ModeloFormComponent },
   { path: 'modelos/modificacion/:id', component: ModeloFormComponent },
   { path: 'vehiculos', component: VehicleListComponent },
+  { path: 'sucursales', component: SucursalesComponent },
+  { path: 'sucursales/creacion', component: SucursalesFormComponent },
+  { path: 'sucursales/modificacion/:id', component: SucursalesFormComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
