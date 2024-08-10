@@ -15,6 +15,7 @@
       <th>Cantidad de Pasajeros</th>
       <th>Categoría</th>
       <th>Marca</th>
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
@@ -22,14 +23,14 @@
       <td>{{ modelo.nombre }}</td>
       <td>{{ modelo.tipoTransmision }}</td>
       <td>{{ modelo.cantPasajeros }}</td>
-      <td>{{ modelo.categoria }}</td>
-      <td>{{ modelo.marca }}</td>
+      <td>{{ modelo.categoria.nombre }}</td>
+      <td>{{ modelo.marca.nombre }}</td>
       <td>
         <div class="d-flex justify-content-around">
-          <button class="btn btn-dark fs-5" (click)="editMarca(marca)">
+          <button class="btn btn-dark fs-5" (click)="editModelo(modelo)">
             ✏️
           </button>
-          <button class="btn btn-dark fs-5" (click)="deleteMarca(marca)">
+          <button class="btn btn-dark fs-5" (click)="deleteModelo(modelo)">
             ❌
           </button>
         </div>

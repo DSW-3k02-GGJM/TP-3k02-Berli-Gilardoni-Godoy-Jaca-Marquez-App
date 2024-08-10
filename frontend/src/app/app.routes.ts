@@ -7,6 +7,8 @@ import { CategoriaFormComponent } from './categorias-folder/categoria-form/categ
 import { MarcasComponent } from './marcas-folder/marcas/marcas.component';
 import { MarcaFormComponent } from './marcas-folder/marca-form/marca-form.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
+import { ModelosComponent } from './modelos-folder/modelos/modelos.component';
+import { ModeloFormComponent } from './modelos-folder/modelo-form/modelo-form.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -19,6 +21,9 @@ export const routes: Routes = [
   { path: 'marcas', component: MarcasComponent },
   { path: 'marcas/creacion', component: MarcaFormComponent },
   { path: 'marcas/modificacion/:id', component: MarcaFormComponent },
+  { path: 'modelos', component: ModelosComponent },
+  { path: 'modelos/creacion', component: ModeloFormComponent },
+  { path: 'modelos/modificacion/:id', component: ModeloFormComponent },
   { path: 'vehiculos', component: VehicleListComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];

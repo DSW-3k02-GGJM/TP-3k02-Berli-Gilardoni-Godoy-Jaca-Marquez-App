@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ModelosTableComponent } from '../modelos-table/modelos-table.component';
-import { ModeloCreatedOrModifiedService } from '../client-created-or-modified/client-created-or-modified.service';
+import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo-created-or-modified.service';
 import { Subscription } from 'rxjs';
 
 @Component({
