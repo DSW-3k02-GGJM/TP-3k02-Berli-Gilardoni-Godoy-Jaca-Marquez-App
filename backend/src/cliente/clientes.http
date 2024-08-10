@@ -57,6 +57,22 @@ Content-Type: application/json
   "nacionalidad": "Estados Unidos"
 }
 
+### POST 3
+POST http://localhost:3000/api/clientes
+Content-Type: application/json
+
+{
+  "tipoDoc": "Pasaporte",
+  "nroDoc": "BA45678932",
+  "nombre": "Lionel",
+  "apellido": "Messi",
+  "fechaNacimiento": "1965-03-18",
+  "mail": "d10s@gmail.com",
+  "domicilio": "Miami 123",
+  "telefono": "305555231",
+  "nacionalidad": "Argentino"
+}
+
 ### POST to DELETE
 # @name createClienteToDelete
 POST http://localhost:3000/api/clientes

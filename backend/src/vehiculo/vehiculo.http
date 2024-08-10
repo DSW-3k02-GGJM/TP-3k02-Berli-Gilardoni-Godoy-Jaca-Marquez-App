@@ -48,6 +48,19 @@ Content-Type: application/json
     "modelo": 3
 }
 
+### POST 3
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+    "patente": "AAA333",
+    "anioFabricacion": "2020",
+    "kmRecorridos": 10,
+    "sucursal": 2,
+    "color": 2,
+    "modelo": 3
+}
+
 ### POST to DELETE
 # @name createVehiculoToDelete
 POST http://localhost:3000/api/vehiculos
@@ -59,6 +72,20 @@ Content-Type: application/json
     "kmRecorridos": 8600,
     "sucursal": 5,
     "color": 3,
+    "modelo": 2
+}
+
+### POST to DELETE
+# @name createVehiculoToDelete
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+    "patente": "RTT111",
+    "anioFabricacion": "2000",
+    "kmRecorridos": 200,
+    "sucursal": 2,
+    "color": 2,
     "modelo": 2
 }
 
