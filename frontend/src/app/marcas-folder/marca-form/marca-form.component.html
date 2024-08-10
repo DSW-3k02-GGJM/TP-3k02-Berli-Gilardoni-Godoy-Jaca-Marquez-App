@@ -1,5 +1,7 @@
 <!-- Contenedor del título y el botón "Volver" -->
-<div class="titulo text-white d-flex justify-content-between mt-3 ms-4">
+<div
+  class="titulo text-white d-flex align-items-center justify-content-between pt-3 ms-4"
+>
   <h2 class="nueva-marca">Nueva Marca</h2>
   <button class="volver btn btn-secondary" (click)="navigateToMarcas()">
     Volver
@@ -9,28 +11,29 @@
 <!-- Sección que contiene el formulario -->
 <section class="form">
   <form
-    id="userForm"
-    class="border border-dark border-3 rounded form-style"
+    id="marcaForm"
+    [formGroup]="marcaForm"
     (ngSubmit)="onSubmit()"
+    class="border border-dark border-3 rounded mt-2 form-style"
   >
-  <h1 class="nueva-marca" style="font-size: 20px;">Ingresar Nueva Marca</h1>
-
-    <hr/>
     <!-- Campo de entrada para el nombre -->
     <input
+      id="nombre"
       type="text"
-      placeholder="Nombre de la Marca"
-      name="nombre"
-      [(ngModel)]="nombre"
-      class="form-control"
+      formControlName="nombre"
+      placeholder="Nombre"
     />
-    <hr/>
+    <hr />
+
     <!-- Contenedor para el botón de envío, alineado a la derecha -->
     <div class="d-flex align-items-center justify-content-end me-3">
-      <button type="submit" class="btn btn-primary">Registrar</button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!marcaForm.valid"
+      >
+        Registrar
+      </button>
     </div>
   </form>
 </section>
-
-<div class="footer">BGGJM - Alquiler de Vehiculos</div>
-

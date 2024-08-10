@@ -1,3 +1,10 @@
+<input
+  type="text"
+  class="form-control mb-3"
+  name="filterPost"
+  placeholder="Buscar por Nombre..."
+  [(ngModel)]="filterRows"
+/>
 <table
   class="table table-dark table-hover table-bordered table-sm border border-white text-center clients-table"
 >
@@ -15,7 +22,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let client of clients" class="bg-danger">
+    <tr *ngFor="let client of clients | filter : filterRows">
       <td>{{ client.tipoDoc }}</td>
       <td>{{ client.nroDoc }}</td>
       <td>{{ client.apellido + ", " + client.nombre }}</td>

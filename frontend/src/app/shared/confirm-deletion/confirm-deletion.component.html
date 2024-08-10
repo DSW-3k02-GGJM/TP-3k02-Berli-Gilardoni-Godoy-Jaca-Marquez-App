@@ -1,0 +1,27 @@
+<div class="border border-1 border-white rounded-pill">
+  <div class="modal-header d-flex justify-content-between bg-dark text-white">
+    <h5 class="modal-title">{{ title }}</h5>
+    <button type="button" class="btn" (click)="activeModal.dismiss()">
+      <span class="fs-2">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body fw-medium bg-dark modal-text">
+    {{ message }}
+  </div>
+  <div class="modal-footer bg-dark modal-text">
+    <button
+      type="button"
+      class="btn btn-secondary border border-1 border-white"
+      (click)="activeModal.dismiss()"
+    >
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger border border-1 border-white"
+      (click)="activeModal.close(true)"
+    >
+      Confirmar
+    </button>
+  </div>
+</div>

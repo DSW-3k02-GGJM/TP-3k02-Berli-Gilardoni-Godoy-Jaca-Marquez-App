@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ClientsTableComponent } from '../clients-table/clients-table.component';
+import { ClientCreatedOrModifiedService } from '../client-created-or-modified/client-created-or-modified.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-clients',
@@ -15,11 +17,22 @@ import { ClientsTableComponent } from '../clients-table/clients-table.component'
 })
 export class ClientsComponent implements OnInit {
   clients: any[] = [];
+  private subscription?: Subscription;
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private clientCreatedOrModifiedService: ClientCreatedOrModifiedService
+  ) {}
 
   ngOnInit(): void {
     this.fillData();
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   onClientDeleted(clientId: number): void {
@@ -27,6 +40,19 @@ export class ClientsComponent implements OnInit {
   }
 
   fillData() {
+    this.subscription =
+      this.clientCreatedOrModifiedService.clientCreatedOrModified.subscribe(
+        () => {
+          this.loadData();
+        }
+      );
+
+    if (!this.clientCreatedOrModifiedService.isDataLoaded) {
+      this.loadData();
+    }
+  }
+
+  loadData() {
     this.apiService.getAll('clientes').subscribe((response) => {
       this.clients = response.data;
     });

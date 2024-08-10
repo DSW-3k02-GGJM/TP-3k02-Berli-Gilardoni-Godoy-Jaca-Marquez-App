@@ -8,13 +8,5 @@
 }
 
 .actions-column {
-  width: 100px; /* Ajusta el ancho de la columna de acciones según sea necesario */
-  text-align: center; /* Centra los botones dentro de la celda */
+  width: 200px; /* Ajusta el ancho de la columna de acciones según sea necesario */
 }
-
-.actions-column .btn {
-  margin: 0 4px; /* Reduce el margen entre los botones */
-  padding: 2px 4px; /* Ajusta el tamaño del botón */
-  font-size: 14px; /* Tamaño de fuente más pequeño para los botones */
-}
-
