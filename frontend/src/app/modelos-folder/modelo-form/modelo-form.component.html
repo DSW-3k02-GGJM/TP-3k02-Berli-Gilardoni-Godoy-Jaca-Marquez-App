@@ -1,0 +1,81 @@
+<div class="titulo text-white d-flex justify-content-between pt-3 ms-4">
+  <h2 class="nuevo-modelo">Nuevo Modelo</h2>
+  <button class="volver btn btn-secondary" (click)="navigateToModelos()">
+    Volver
+  </button>
+</div>
+<section class="form">
+  <form
+    id="modeloForm"
+    [formGroup]="modeloForm"
+    (ngSubmit)="onSubmit()"
+    class="border border-dark border-3 rounded mt-2 form-style"
+  >
+    
+    <input
+      id="nombre"
+      type="text"
+      formControlName="nombre"
+      placeholder="Nombre del modelo"
+    />
+    <hr />
+
+    <input
+      id="cantPasajeros"
+      type="number"
+      formControlName="cantPasajeros"
+      placeholder="Cantidad maxima de pasajeros"
+    />
+    <hr />
+
+    <select
+      id="tipoTransmision"
+      formControlName="tipoTransmision"
+      class="form-select bg-dark text-white border border-secondary w-auto"
+    >
+      <option value="" disabled>Seleccione Tipo de Transmisión</option>
+      <option value="Manual">Manual</option>
+      <option value="Automatica">Automatica</option>
+      <option value="Hidraulica">Hidraulica</option>
+      <option value="Continuamente Variable">Continuamente Variable</option>
+      <option value="Doble Embrague">Doble Embrague</option>
+    </select>
+    <hr />
+
+    <!-- Categoría -->
+    <select
+      id="categoria"
+      formControlName="categoria"
+      class="form-select bg-dark text-white border border-secondary w-auto"
+    >
+      <option value="" disabled selected>Seleccione Categoría</option>
+      <option *ngFor="let categoria of categorias" [value]="categoria.id">
+        {{ categoria.nombre }}
+      </option>
+    </select>
+    <hr />
+
+    <!-- marca -->
+    <select
+      id="marca"
+      formControlName="marca"
+      class="form-select bg-dark text-white border border-secondary w-auto"
+    >
+      <option value="" disabled selected>Seleccione Marca</option>
+      <option *ngFor="let marca of marcas" [value]="marca.id">
+        {{ marca.nombre }}
+      </option>
+    </select>
+    <hr />
+
+    <div class="d-flex align-items-center justify-content-end me-3">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!modeloForm.valid"
+      >
+        Registrar
+      </button>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,40 @@
+<input
+  type="text"
+  class="form-control mb-3"
+  name="filterPost"
+  placeholder="Buscar por Nombre..."
+  [(ngModel)]="filterRows"
+/>
+<table
+  class="table table-dark table-hover table-bordered table-sm border border-white text-center modelos-table"
+>
+  <thead>
+    <tr class="text-danger">
+      <th>Nombre</th>
+      <th>Tipo de Transmisión</th>
+      <th>Cantidad de Pasajeros</th>
+      <th>Categoría</th>
+      <th>Marca</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let modelo of modelos | filter : filterRows">
+      <td>{{ modelo.nombre }}</td>
+      <td>{{ modelo.tipoTransmision }}</td>
+      <td>{{ modelo.cantPasajeros }}</td>
+      <td>{{ modelo.categoria.nombre }}</td>
+      <td>{{ modelo.marca.nombre }}</td>
+      <td>
+        <div class="d-flex justify-content-around">
+          <button class="btn btn-dark fs-5" (click)="editModelo(modelo)">
+            ✏️
+          </button>
+          <button class="btn btn-dark fs-5" (click)="deleteModelo(modelo)">
+            ❌
+          </button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
