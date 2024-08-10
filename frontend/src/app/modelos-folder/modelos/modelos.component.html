@@ -1,0 +1,14 @@
+<div class="lista-modelos text-white">
+  <div class="titulo d-flex justify-content-between pt-3 me-5">
+    <h2 class="nuestros-modelos">Modelos Disponibles</h2>
+    <button class="btn btn-primary" (click)="navigateToNewModelo()">
+      + Nuevo
+    </button>
+  </div>
+  <section class="modelo-list mt-3 mx-5">
+    <app-modelos-table
+      [modelos]="modelos"
+      (modeloDeleted)="onModeloDeleted($event)"
+    ></app-modelos-table>
+  </section>
+</div>
