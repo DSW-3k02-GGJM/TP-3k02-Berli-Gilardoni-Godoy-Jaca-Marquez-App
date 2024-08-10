@@ -1,0 +1,39 @@
+<!-- Contenedor del título y el botón "Volver" -->
+<div
+  class="titulo text-white d-flex align-items-center justify-content-between pt-3 ms-4"
+>
+  <h2 class="nuevo-color">Nueva Color</h2>
+  <button class="volver btn btn-secondary" (click)="navigateToColors()">
+    Volver
+  </button>
+</div>
+
+<!-- Sección que contiene el formulario -->
+<section class="form">
+  <form
+    id="colorForm"
+    [formGroup]="colorForm"
+    (ngSubmit)="onSubmit()"
+    class="border border-dark border-3 rounded mt-2 form-style"
+  >
+    <!-- Campo de entrada para el nombre -->
+    <input
+      id="nombre"
+      type="text"
+      formControlName="nombre"
+      placeholder="Nombre"
+    />
+    <hr />
+
+    <!-- Contenedor para el botón de envío, alineado a la derecha -->
+    <div class="d-flex align-items-center justify-content-end me-3">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!colorForm.valid"
+      >
+        Registrar
+      </button>
+    </div>
+  </form>
+</section>

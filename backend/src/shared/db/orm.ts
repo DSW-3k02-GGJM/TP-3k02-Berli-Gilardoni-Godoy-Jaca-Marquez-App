@@ -8,8 +8,8 @@ export const orm = await MikroORM.init({
   dbName: 'alquilerVehiculos',
   driver: MySqlDriver,
   //clientUrl: 'mysql://dsw:dsw@127.0.0.1:3307/alquilerVehiculos', //Juan Pablo
-  //clientUrl: 'mysql://dsw:dsw@localhost:3308/alquilerVehiculos', //Nahuel
-  clientUrl: 'mysql://miUsuario:miContraseña@localhost:3306/alquilerVehiculos',// marcos
+  clientUrl: 'mysql://dsw:dsw@localhost:3308/alquilerVehiculos', //Nahuel
+  //clientUrl: 'mysql://miUsuario:miContraseña@localhost:3306/alquilerVehiculos',// marcos
   highlighter: new SqlHighlighter(),
   debug: true,
   schemaGenerator: {
