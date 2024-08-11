@@ -1,7 +1,0 @@
-{
-  "devDependencies": {
-    "@types/connect": "^3.4.38",
-    "@types/http-errors": "^2.0.4",
-    "@types/range-parser": "^1.2.7"
-  }
-}
