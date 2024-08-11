@@ -1,11 +1,11 @@
-<div class="lista text-white">
+<div class="lista-sucursales text-white">
   <div class="titulo d-flex justify-content-between pt-3 me-5">
-    <h2 class="nuestras-sucursales">Nuestras Sucursales</h2>
+    <h2 class="nuestras-sucursales">Nuestras sucursales</h2>
     <button class="btn btn-primary" (click)="navigateToNewSucursal()">
       + Nuevo
     </button>
   </div>
-  <section class="sucursales-list mt-3 mx-5">
+  <section class="sucursal-list mt-3 mx-5">
     <app-sucursales-table
       [sucursales]="sucursales"
       (sucursalDeleted)="onSucursalDeleted($event)"

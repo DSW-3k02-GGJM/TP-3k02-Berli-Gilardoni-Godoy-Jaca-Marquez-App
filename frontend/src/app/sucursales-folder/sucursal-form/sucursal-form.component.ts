@@ -1,20 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import {CommonModule} from "@angular/common";
-import {HttpClientModule} from "@angular/common/http";
-import {SucursalCreatedOrModifiedService} from "../sucursal-created-or-modified/sucursal-created-or-modified.service";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {ApiService} from "../../service/api.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { ApiService } from '../../service/api.service';
+import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/sucursal-created-or-modified.service';
 
 @Component({
-  selector: 'app-sucursales-form',
+  selector: 'app-sucursal-form',
   standalone: true,
+  templateUrl: './sucursal-form.component.html',
+  styleUrl: './sucursal-form.component.scss',
   imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
-  templateUrl: './sucursales-form.component.html',
-  styleUrl: './sucursales-form.component.scss'
 })
-export class SucursalesFormComponent implements OnInit {
+export class SucursalFormComponent implements OnInit {
   action: string = '';
   currentSucursalId: any;
 
@@ -29,7 +34,7 @@ export class SucursalesFormComponent implements OnInit {
     nombre: new FormControl('', [Validators.required]),
     domicilio: new FormControl('', [Validators.required]),
     telefono: new FormControl('', [Validators.required]),
-  })
+  });
 
   ngOnInit(): void {
     this.sucursalCreatedOrModifiedService.isDataLoaded = false;
@@ -69,5 +74,5 @@ export class SucursalesFormComponent implements OnInit {
 
   navigateToSucursales(): void {
     this.router.navigate(['/sucursales']);
-  };
+  }
 }

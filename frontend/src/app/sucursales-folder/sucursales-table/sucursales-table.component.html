@@ -10,29 +10,32 @@
     class="table table-dark table-hover table-bordered table-sm border border-white text-center sucursales-table"
   >
     <thead>
-    <tr class="text-danger">
-      <th>Sucursal</th>
-      <th>Dirección</th>
-      <th>Teléfono</th>
-      <th>Acciones</th>
-    </tr>
+      <tr class="text-danger">
+        <th>Sucursal</th>
+        <th>Dirección</th>
+        <th>Teléfono</th>
+        <th>Acciones</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let sucursal of sucursales | filter : filterRows">
-      <td>{{ sucursal.nombre }}</td>
-      <td>{{ sucursal.domicilio }}</td>
-      <td>{{ sucursal.telefono }}</td>
-      <td>
-        <div class="d-flex justify-content-around">
-          <button class="btn btn-dark fs-5" (click)="editSucursal(sucursal)">
-            ✏️
-          </button>
-          <button class="btn btn-dark fs-5" (click)="deleteSucursal(sucursal)">
-            ❌
-          </button>
-        </div>
-      </td>
-    </tr>
+      <tr *ngFor="let sucursal of sucursales | filter : filterRows">
+        <td>{{ sucursal.nombre }}</td>
+        <td>{{ sucursal.domicilio }}</td>
+        <td>{{ sucursal.telefono }}</td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button class="btn btn-dark fs-5" (click)="editSucursal(sucursal)">
+              ✏️
+            </button>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="deleteSucursal(sucursal)"
+            >
+              ❌
+            </button>
+          </div>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

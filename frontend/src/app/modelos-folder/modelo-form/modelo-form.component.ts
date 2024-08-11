@@ -36,19 +36,19 @@ export class ModeloFormComponent implements OnInit {
     nombre: new FormControl('', [Validators.required]),
     tipoTransmision: new FormControl('', [Validators.required]),
     cantPasajeros: new FormControl('', [Validators.required]),
-    categoria: new FormControl('', [Validators.required]),  // Campo para la categoría
-    marca: new FormControl('', [Validators.required]),  // Campo para la  marca
+    categoria: new FormControl('', [Validators.required]), // Campo para la categoría
+    marca: new FormControl('', [Validators.required]), // Campo para la marca
   });
 
   ngOnInit(): void {
     // Inicializa la variable isDataLoaded en el servicio para indicar que los datos aún no han sido cargados.
     this.modeloCreatedOrModifiedService.isDataLoaded = false;
-  
+
     // Llama al método loadCategorias() para obtener la lista de categorías disponibles desde el backend
     // y almacenarlas en una propiedad del componente para usar en el formulario.
     this.loadCategorias();
     this.loadMarcas();
-  
+
     // Subscríbete a los parámetros de la ruta activa para manejar la lógica dependiendo de si el parámetro 'id' está presente o no.
     this.activatedRoute.params.subscribe((params) => {
       if (params.id) {
@@ -57,17 +57,18 @@ export class ModeloFormComponent implements OnInit {
         this.apiService
           .getOne('modelos', Number(params.id))
           .subscribe((response) => {
+            console.log(response.data);
             // Al recibir la respuesta del backend, actualiza la variable currentModeloId con el ID del modelo.
             this.currentModeloId = response.data.id;
             // Usa el método patchValue para actualizar el formulario con los datos del modelo recibido.
             // Asigna los valores del modelo a los campos del formulario, incluyendo 'categoria' y 'marca'.
             this.modeloForm.patchValue({
               ...response.data,
-              categoria: response.data.categoriaId, // Asume que `categoriaId` es el ID de la categoría seleccionada.
-              marca: response.data.marcaId, // Asume que `marcaId` es el ID de la marca seleccionada.
+              categoria: response.data.categoria.id, // Asume que `categoriaId` es el ID de la categoría seleccionada.
+              marca: response.data.marca.id, // Asume que `marcaId` es el ID de la marca seleccionada.
             });
           });
-  
+
         // Establece la acción como 'Edit' para indicar que estamos editando un modelo existente.
         this.action = 'Edit';
       } else {
@@ -85,12 +86,12 @@ export class ModeloFormComponent implements OnInit {
     });
   }
 
-    // Método para cargar las categorías
-    loadMarcas(): void {
-      this.apiService.getAll('marcas').subscribe((response) => {
-        this.marcas = response.data;
-      });
-    }
+  // Método para cargar las categorías
+  loadMarcas(): void {
+    this.apiService.getAll('marcas').subscribe((response) => {
+      this.marcas = response.data;
+    });
+  }
 
   onSubmit() {
     if (this.action === 'Create') {

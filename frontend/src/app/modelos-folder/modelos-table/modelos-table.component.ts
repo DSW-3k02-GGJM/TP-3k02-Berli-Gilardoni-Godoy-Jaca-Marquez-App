@@ -33,7 +33,6 @@ export class ModelosTableComponent {
     private modalService: NgbModal
   ) {}
 
-
   editModelo(modelo: any): void {
     this.router.navigate(['/modelos/modificacion', modelo.id]);
   }

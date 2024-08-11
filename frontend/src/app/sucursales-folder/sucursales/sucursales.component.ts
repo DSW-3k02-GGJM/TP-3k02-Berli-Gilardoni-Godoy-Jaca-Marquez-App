@@ -1,27 +1,27 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {CommonModule} from "@angular/common";
-import {HttpClientModule} from "@angular/common/http";
-import {ApiService} from "../../service/api.service";
-import {SucursalesTableComponent} from "../sucursales-table/sucursales-table.component";
-import {SucursalCreatedOrModifiedService} from "../sucursal-created-or-modified/sucursal-created-or-modified.service";
-import {Subscription} from "rxjs";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { ApiService } from '../../service/api.service';
+import { SucursalesTableComponent } from '../sucursales-table/sucursales-table.component';
+import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/sucursal-created-or-modified.service';
+import { Subscription } from 'rxjs';
 
 @Component({
-  imports: [CommonModule, HttpClientModule, SucursalesTableComponent],
-  providers: [ApiService],
   selector: 'app-sucursales',
   standalone: true,
-  styleUrl: './sucursales.component.scss',
   templateUrl: './sucursales.component.html',
+  styleUrl: './sucursales.component.scss',
+  imports: [CommonModule, HttpClientModule, SucursalesTableComponent],
+  providers: [ApiService],
 })
 export class SucursalesComponent implements OnInit {
   sucursales: any[] = [];
   private subscription?: Subscription;
 
   constructor(
-    private router: Router,
     private apiService: ApiService,
+    private router: Router,
     private sucursalCreatedOrModifiedService: SucursalCreatedOrModifiedService
   ) {}
 

@@ -1,26 +1,26 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Router} from "@angular/router";
-import {CommonModule} from "@angular/common";
-import {HttpClientModule} from "@angular/common/http";
-import {ApiService} from "../../service/api.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ConfirmDeletionComponent} from "../../shared/confirm-deletion/confirm-deletion.component";
-import {FilterPipe} from "../../shared/filter/filter.pipe";
-import {FormsModule} from "@angular/forms";
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { ApiService } from '../../service/api.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
+import { FilterPipe } from '../../shared/filter/filter.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  imports: [
-    FilterPipe,
-    CommonModule,
-    ConfirmDeletionComponent,
-    FormsModule,
-    HttpClientModule,
-  ],
-  providers: [ApiService],
   selector: 'app-sucursales-table',
   standalone: true,
-  styleUrl: './sucursales-table.component.scss',
   templateUrl: './sucursales-table.component.html',
+  styleUrl: './sucursales-table.component.scss',
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    ConfirmDeletionComponent,
+    FilterPipe,
+    FormsModule,
+  ],
+  providers: [ApiService],
 })
 export class SucursalesTableComponent {
   @Input() sucursales!: any[];
