@@ -57,7 +57,6 @@ export class ModeloFormComponent implements OnInit {
         this.apiService
           .getOne('modelos', Number(params.id))
           .subscribe((response) => {
-            console.log(response.data);
             // Al recibir la respuesta del backend, actualiza la variable currentModeloId con el ID del modelo.
             this.currentModeloId = response.data.id;
             // Usa el método patchValue para actualizar el formulario con los datos del modelo recibido.
