@@ -5,39 +5,41 @@
   placeholder="Buscar por Nombre..."
   [(ngModel)]="filterRows"
 />
-<table
-  class="table table-dark table-hover table-bordered table-sm border border-white text-center categorias-table"
->
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Nombre</th>
-      <th>Descripcion</th>
-      <th>Precio por día</th>
-      <th>Valor depósito</th>
-      <th>Mas</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let categoria of categorias | filter : filterRows">
-      <td>{{ categoria.id }}</td>
-      <td>{{ categoria.nombre }}</td>
-      <td>{{ categoria.descripcion }}</td>
-      <td>{{ categoria.precioPorDia }}</td>
-      <td>{{ categoria.valorDeposito }}</td>
-      <td>
-        <div class="d-flex justify-content-around">
-          <button class="btn btn-dark fs-5" (click)="editCategoria(categoria)">
-            ✏️
-          </button>
-          <button
-            class="btn btn-dark fs-5"
-            (click)="deleteCategoria(categoria)"
-          >
-            ❌
-          </button>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="div-tablas">
+  <table
+    class="table table-dark table-hover table-bordered table-sm border border-white text-center categorias-table"
+  >
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Descripcion</th>
+        <th>Precio por día</th>
+        <th>Valor depósito</th>
+        <th>Mas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let categoria of categorias | filter : filterRows">
+        <td>{{ categoria.id }}</td>
+        <td>{{ categoria.nombre }}</td>
+        <td>{{ categoria.descripcion }}</td>
+        <td>{{ categoria.precioPorDia }}</td>
+        <td>{{ categoria.valorDeposito }}</td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button class="btn btn-dark fs-5" (click)="editCategoria(categoria)">
+              ✏️
+            </button>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="deleteCategoria(categoria)"
+            >
+              ❌
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

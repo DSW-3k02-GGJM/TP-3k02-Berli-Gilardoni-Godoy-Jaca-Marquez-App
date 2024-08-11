@@ -19,3 +19,9 @@
 .form-style input::placeholder {
   color: #ffffff; /* Color del texto del placeholder */
 }
+
+/* Controla el overflow de las tablas*/
+.div-tablas {
+  overflow: auto;
+  margin-bottom: 2vh;
+}

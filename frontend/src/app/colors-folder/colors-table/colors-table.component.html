@@ -5,28 +5,30 @@
   placeholder="Buscar por Nombre..."
   [(ngModel)]="filterRows"
 />
-<table
-  class="table table-dark table-hover table-bordered table-sm border border-white text-center colors-table"
->
-  <thead>
-    <tr class="text-danger">
-      <th>Color</th>
-      <th>Mas</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let color of colors | filter : filterRows">
-      <td>{{ color.nombre }}</td>
-      <td class="actions-column">
-        <div class="d-flex justify-content-around">
-          <button class="btn btn-dark fs-5" (click)="editColor(color)">
-            ✏️
-          </button>
-          <button class="btn btn-dark fs-5" (click)="deleteColor(color)">
-            ❌
-          </button>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="div-tablas">
+  <table
+    class="table table-dark table-hover table-bordered table-sm border border-white text-center colors-table"
+  >
+    <thead>
+      <tr class="text-danger">
+        <th>Color</th>
+        <th>Mas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let color of colors | filter : filterRows">
+        <td>{{ color.nombre }}</td>
+        <td class="actions-column">
+          <div class="d-flex justify-content-around">
+            <button class="btn btn-dark fs-5" (click)="editColor(color)">
+              ✏️
+            </button>
+            <button class="btn btn-dark fs-5" (click)="deleteColor(color)">
+              ❌
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
