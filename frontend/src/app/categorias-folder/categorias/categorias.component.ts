@@ -6,6 +6,9 @@ import { ApiService } from '../../service/api.service.js';
 import { CategoriasTableComponent } from '../categorias-table/categorias-table.component';
 import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/categoria-created-or-modified.service';
 import { Subscription } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CategoriaFormComponent } from '../categoria-form/categoria-form.component.js';
+
 
 @Component({
   selector: 'app-categorias',
@@ -22,7 +25,8 @@ export class CategoriasComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private categoriaCreatedOrModifiedService: CategoriaCreatedOrModifiedService
+    private categoriaCreatedOrModifiedService: CategoriaCreatedOrModifiedService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +64,8 @@ export class CategoriasComponent implements OnInit {
     });
   }
 
-  navigateToNewCategoria(): void {
-    this.router.navigate(['/categorias/creacion']);
+  newCategoria() {
+    const modalRef = this.modalService.open(CategoriaFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Nueva Categoría'
   }
 }

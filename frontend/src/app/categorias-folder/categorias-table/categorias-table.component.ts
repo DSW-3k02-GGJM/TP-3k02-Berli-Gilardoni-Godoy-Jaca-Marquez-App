@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
+import { CategoriaFormComponent } from '../categoria-form/categoria-form.component.js';
 
 @Component({
   selector: 'app-categorias-table',
@@ -34,7 +35,9 @@ export class CategoriasTableComponent {
   ) {}
 
   editCategoria(categoria: any): void {
-    this.router.navigate(['/categorias/modificacion', categoria.id]);
+    const modalRef = this.modalService.open(CategoriaFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Editar Categoría';
+    modalRef.componentInstance.currentCategoriaId = categoria.id;
   }
 
   deleteCategoria(categoria: any): void {

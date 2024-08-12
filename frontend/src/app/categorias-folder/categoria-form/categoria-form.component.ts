@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service.js';
 import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/categoria-created-or-modified.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-categoria-form',
@@ -20,14 +21,15 @@ import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modif
   providers: [ApiService],
 })
 export class CategoriaFormComponent implements OnInit {
+  @Input() title: string = '';
+  @Input() currentCategoriaId: number = -1;
   action: string = '';
-  currentCategoriaId: any;
 
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private categoriaCreatedOrModifiedService: CategoriaCreatedOrModifiedService
+    private categoriaCreatedOrModifiedService: CategoriaCreatedOrModifiedService,
+    public activeModal: NgbActiveModal
   ) {}
 
   categoriaForm = new FormGroup({
@@ -40,22 +42,20 @@ export class CategoriaFormComponent implements OnInit {
   ngOnInit(): void {
     this.categoriaCreatedOrModifiedService.isDataLoaded = false;
 
-    this.activatedRoute.params.subscribe((params) => {
-      if (params.id) {
-        this.apiService
-          .getOne('categorias', Number(params.id))
-          .subscribe((response) => {
-            this.currentCategoriaId = response.data.id;
-            this.categoriaForm.patchValue(response.data);
-          });
-        this.action = 'Edit';
-      } else {
-        this.action = 'Create';
-      }
-    });
+    if (this.currentCategoriaId != -1) {
+      this.apiService
+        .getOne('categorias', Number(this.currentCategoriaId))
+        .subscribe((response) => {
+          this.categoriaForm.patchValue(response.data);
+        });
+      this.action = 'Edit';
+    } else {
+      this.action = 'Create';
+    }
   }
 
   onSubmit() {
+    this.activeModal.close();
     if (this.action == 'Create') {
       this.apiService
         .create('categorias', this.categoriaForm.value)
@@ -70,10 +70,6 @@ export class CategoriaFormComponent implements OnInit {
         });
     }
     this.categoriaCreatedOrModifiedService.isDataLoaded = true;
-    this.navigateToCategorias();
   }
 
-  navigateToCategorias(): void {
-    this.router.navigate(['/categorias']);
-  }
 }
