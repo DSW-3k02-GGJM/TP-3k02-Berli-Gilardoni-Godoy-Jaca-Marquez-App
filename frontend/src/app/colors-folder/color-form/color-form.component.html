@@ -1,39 +1,43 @@
-<!-- Contenedor del título y el botón "Volver" -->
-<div
-  class="titulo text-white d-flex align-items-center justify-content-between pt-3 ms-4"
->
-  <h2 class="nuevo-color">Nuevo Color</h2>
-  <button class="volver btn btn-secondary" (click)="navigateToColors()">
-    Volver
-  </button>
-</div>
+<div class="border border-1 border-white rounded-pill unselectable">
+  <!-- Contenedor del título y el botón "Volver" -->
+  <div class="modal-header d-flex justify-content-between bg-dark text-white">
+    <h2 class="modal-title">{{ title }}</h2>
+  </div>
+  <div class="modal-body fw-medium bg-dark modal-text">
+    <!-- Sección que contiene el formulario -->
+    <section class="form">
+      <form
+        id="colorForm"
+        [formGroup]="colorForm"
+        class="border border-dark border-3 rounded mt-2 form-style"
+      >
+        <!-- Campo de entrada para el nombre -->
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          placeholder="Nombre"
+        />
+        <hr />
 
-<!-- Sección que contiene el formulario -->
-<section class="form">
-  <form
-    id="colorForm"
-    [formGroup]="colorForm"
-    (ngSubmit)="onSubmit()"
-    class="border border-dark border-3 rounded mt-2 form-style"
-  >
-    <!-- Campo de entrada para el nombre -->
-    <input
-      id="nombre"
-      type="text"
-      formControlName="nombre"
-      placeholder="Nombre"
-    />
-    <hr />
-
-    <!-- Contenedor para el botón de envío, alineado a la derecha -->
-    <div class="d-flex align-items-center justify-content-end me-3">
+      </form>
+    </section>
+    <div class="modal-footer bg-dark modal-text">
+      <button
+        type="button"
+        class="btn btn-secondary border border-1 border-white"
+        (click)="activeModal.dismiss()"
+      >
+        Cancelar
+      </button>
       <button
         type="submit"
-        class="btn btn-primary"
+        class="btn btn-primary border border-1 border-white"
+        (click)="onSubmit()"
         [disabled]="!colorForm.valid"
       >
         Registrar
       </button>
     </div>
-  </form>
-</section>
+  </div>
+</div>

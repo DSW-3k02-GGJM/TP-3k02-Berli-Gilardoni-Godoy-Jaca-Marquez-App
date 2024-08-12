@@ -6,6 +6,8 @@ import { ApiService } from '../../service/api.service';
 import { ColorsTableComponent } from '../colors-table/colors-table.component';
 import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color-created-or-modified.service';
 import { Subscription } from 'rxjs';
+import { ColorFormComponent } from '../color-form/color-form.component.js';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-colors',
@@ -21,8 +23,8 @@ export class ColorsComponent implements OnInit {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private router: Router, // Servicio para manejar la navegación
-    private colorCreatedOrModifiedService: ColorCreatedOrModifiedService
+    private colorCreatedOrModifiedService: ColorCreatedOrModifiedService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -61,8 +63,8 @@ export class ColorsComponent implements OnInit {
     });
   }
 
-  navigateToNewColor(): void {
-    // Navega a la página para crear un nuevo color
-    this.router.navigate(['/colores/creacion']);
+  newColor() {
+    const modalRef = this.modalService.open(ColorFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Nuevo Color'
   }
 }

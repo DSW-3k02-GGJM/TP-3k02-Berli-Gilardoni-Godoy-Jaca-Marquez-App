@@ -30,7 +30,6 @@ export class CategoriasTableComponent {
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
     private modalService: NgbModal
   ) {}
 

@@ -24,7 +24,6 @@ export class CategoriasComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
     private categoriaCreatedOrModifiedService: CategoriaCreatedOrModifiedService,
     private modalService: NgbModal
   ) {}

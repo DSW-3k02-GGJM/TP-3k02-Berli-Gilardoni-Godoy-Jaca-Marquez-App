@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color-created-or-modified.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-color-form',
@@ -20,14 +21,15 @@ import { ColorCreatedOrModifiedService } from '../color-created-or-modified/colo
   providers: [ApiService],
 })
 export class ColorFormComponent implements OnInit {
-  action: string = ''; // Acción actual (Create o Edit)
-  currentColorId: any; // Id de la color actual (para edición)
+  @Input() title: string = '';
+  @Input() currentColorId: number = -1;
+  action: string = '';
+
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private router: Router, // Servicio para manejar la navegación
-    private activatedRoute: ActivatedRoute, // Servicio para acceder a los parámetros de la ruta
-    private colorCreatedOrModifiedService: ColorCreatedOrModifiedService
+    private colorCreatedOrModifiedService: ColorCreatedOrModifiedService,
+    public activeModal: NgbActiveModal
   ) {}
 
   colorForm = new FormGroup({
@@ -38,23 +40,20 @@ export class ColorFormComponent implements OnInit {
     this.colorCreatedOrModifiedService.isDataLoaded = false;
 
     // Se ejecuta al inicializar el componente
-    this.activatedRoute.params.subscribe((params) => {
-      if (params.id) {
-        // Si hay un ID en los parámetros, es una edición
-        this.apiService
-          .getOne('colores', Number(params.id)) // Obtiene los datos del color por ID
-          .subscribe((response) => {
-            this.currentColorId = response.data.id; // Guarda el id del color actual
-            this.colorForm.patchValue(response.data);
-          });
-        this.action = 'Edit'; // Establece la acción como 'Edit'
-      } else {
-        this.action = 'Create'; // Establece la acción como 'Create' si no hay ID
-      }
-    });
+    if (this.currentColorId != -1) {
+      this.apiService
+        .getOne('colores', Number(this.currentColorId)) // Obtiene los datos del color por ID
+        .subscribe((response) => {
+          this.colorForm.patchValue(response.data);
+        });
+      this.action = 'Edit'; // Establece la acción como 'Edit'
+    } else {
+      this.action = 'Create'; // Establece la acción como 'Create' si no hay ID
+    }
   }
 
   onSubmit() {
+    this.activeModal.close();
     if (this.action === 'Create') {
       // Si la acción es 'Create', llama al servicio para crear una nuevo color
       this.apiService
@@ -71,10 +70,6 @@ export class ColorFormComponent implements OnInit {
         });
     }
     this.colorCreatedOrModifiedService.isDataLoaded = true;
-    this.navigateToColors();
   }
 
-  navigateToColors(): void {
-    this.router.navigate(['/colores']); // Navega a la lista de colores
-  }
 }
