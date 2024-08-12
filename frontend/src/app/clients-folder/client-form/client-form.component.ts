@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ClientCreatedOrModifiedService } from '../client-created-or-modified/client-created-or-modified.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-client-form',
@@ -20,14 +20,14 @@ import { ClientCreatedOrModifiedService } from '../client-created-or-modified/cl
   providers: [ApiService],
 })
 export class ClientFormComponent implements OnInit {
+  @Input() title: string = '';
+  @Input() currentClientId: number = -1;
   action: string = '';
-  currentClientId: any;
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private clientCreatedOrModifiedService: ClientCreatedOrModifiedService
+    private clientCreatedOrModifiedService: ClientCreatedOrModifiedService,
+    public activeModal: NgbActiveModal
   ) {}
 
   clientForm = new FormGroup({
@@ -45,25 +45,22 @@ export class ClientFormComponent implements OnInit {
   ngOnInit(): void {
     this.clientCreatedOrModifiedService.isDataLoaded = false;
 
-    this.activatedRoute.params.subscribe((params) => {
-      if (params.id) {
-        this.apiService
-          .getOne('clientes', Number(params.id))
-          .subscribe((response) => {
-            this.currentClientId = response.data.id;
-            let fechaNacimientoFormat = this.formatBirthDate(
-              response.data.fechaNacimiento
-            );
-            this.clientForm.patchValue({
-              ...response.data,
-              fechaNacimiento: fechaNacimientoFormat,
-            });
+    if (this.currentClientId != -1) {
+      this.apiService
+        .getOne('clientes', Number(this.currentClientId))
+        .subscribe((response) => {
+          let fechaNacimientoFormat = this.formatBirthDate(
+            response.data.fechaNacimiento
+          );
+          this.clientForm.patchValue({
+            ...response.data,
+            fechaNacimiento: fechaNacimientoFormat,
           });
+        });
         this.action = 'Edit';
       } else {
         this.action = 'Create';
       }
-    });
   }
 
   formatBirthDate(fechaNacimientoDB: string): string {
@@ -84,6 +81,7 @@ export class ClientFormComponent implements OnInit {
   }
 
   onSubmit() {
+    this.activeModal.close();
     if (this.action == 'Create') {
       this.apiService
         .create('clientes', this.clientForm.value)
@@ -98,10 +96,6 @@ export class ClientFormComponent implements OnInit {
         });
     }
     this.clientCreatedOrModifiedService.isDataLoaded = true;
-    this.navigateToClients();
   }
 
-  navigateToClients(): void {
-    this.router.navigate(['/clientes']);
-  }
 }

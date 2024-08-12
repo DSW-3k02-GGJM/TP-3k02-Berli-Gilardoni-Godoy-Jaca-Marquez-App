@@ -6,6 +6,8 @@ import { ApiService } from '../../service/api.service';
 import { ClientsTableComponent } from '../clients-table/clients-table.component';
 import { ClientCreatedOrModifiedService } from '../client-created-or-modified/client-created-or-modified.service';
 import { Subscription } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ClientFormComponent } from '../client-form/client-form.component.js';
 
 @Component({
   selector: 'app-clients',
@@ -22,7 +24,8 @@ export class ClientsComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private clientCreatedOrModifiedService: ClientCreatedOrModifiedService
+    private clientCreatedOrModifiedService: ClientCreatedOrModifiedService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +61,8 @@ export class ClientsComponent implements OnInit {
     });
   }
 
-  navigateToNewClient(): void {
-    this.router.navigate(['/clientes/creacion']);
+  newClient() {
+    const modalRef = this.modalService.open(ClientFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Nuevo Cliente'
   }
 }

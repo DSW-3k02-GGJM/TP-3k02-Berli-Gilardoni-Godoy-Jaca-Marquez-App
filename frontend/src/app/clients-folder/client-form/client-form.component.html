@@ -1,95 +1,102 @@
-<div class="titulo text-white d-flex justify-content-between pt-3 ms-4">
-  <h2 class="nuevo-cliente">Nuevo Cliente</h2>
-  <button class="volver btn btn-secondary" (click)="navigateToClients()">
-    Volver
-  </button>
-</div>
-<section class="form">
-  <form
-    id="clientForm"
-    [formGroup]="clientForm"
-    (ngSubmit)="onSubmit()"
-    class="border border-dark border-3 rounded mt-2 form-style"
-  >
-    <select
-      id="tipoDoc"
-      formControlName="tipoDoc"
-      class="form-select bg-dark text-white border border-secondary w-auto"
-    >
-      <option value="" disabled selected>Tipo Documento</option>
-      <option value="DNI">DNI</option>
-      <option value="Pasaporte">Pasaporte</option>
-      <option value="Libreta">Libreta</option>
-    </select>
-    <hr />
+<div class="border border-1 border-white rounded-pill unselectable">
+  <div class="modal-header d-flex justify-content-between bg-dark text-white">
+    <h2 class="modal-title">{{ title }}</h2>
+  </div>
+  <div class="modal-body fw-medium bg-dark modal-text">
+    <section class="form">
+      <form
+        id="clientForm"
+        [formGroup]="clientForm"
+        class="border border-dark border-3 rounded mt-2 form-style"
+      >
+        <select
+          id="tipoDoc"
+          formControlName="tipoDoc"
+          class="form-select bg-dark text-white border border-secondary w-auto"
+        >
+          <option value="" disabled selected>Tipo Documento</option>
+          <option value="DNI">DNI</option>
+          <option value="Pasaporte">Pasaporte</option>
+          <option value="Libreta">Libreta</option>
+        </select>
+        <hr />
 
-    <input
-      id="nroDoc"
-      type="text"
-      formControlName="nroDoc"
-      placeholder="Numero Documento"
-    />
-    <hr />
+        <input
+          id="nroDoc"
+          type="text"
+          formControlName="nroDoc"
+          placeholder="Numero Documento"
+        />
+        <hr />
 
-    <input
-      id="nombre"
-      type="text"
-      formControlName="nombre"
-      placeholder="Nombre"
-    />
-    <hr />
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          placeholder="Nombre"
+        />
+        <hr />
 
-    <input
-      id="apellido"
-      type="text"
-      formControlName="apellido"
-      placeholder="Apellido"
-    />
-    <hr />
+        <input
+          id="apellido"
+          type="text"
+          formControlName="apellido"
+          placeholder="Apellido"
+        />
+        <hr />
 
-    <input id="mail" type="email" formControlName="mail" placeholder="Mail" />
-    <hr />
+        <input id="mail" type="email" formControlName="mail" placeholder="Mail" />
+        <hr />
 
-    <input
-      id="fechaNacimiento"
-      type="date"
-      formControlName="fechaNacimiento"
-      placeholder="Fecha de Nacimiento"
-    />
-    <hr />
+        <input
+          id="fechaNacimiento"
+          type="date"
+          formControlName="fechaNacimiento"
+          placeholder="Fecha de Nacimiento"
+        />
+        <hr />
 
-    <input
-      id="domicilio"
-      type="text"
-      formControlName="domicilio"
-      placeholder="Domicilio"
-    />
-    <hr />
+        <input
+          id="domicilio"
+          type="text"
+          formControlName="domicilio"
+          placeholder="Domicilio"
+        />
+        <hr />
 
-    <input
-      id="telefono"
-      type="text"
-      formControlName="telefono"
-      placeholder="Telefono"
-    />
-    <hr />
+        <input
+          id="telefono"
+          type="text"
+          formControlName="telefono"
+          placeholder="Telefono"
+        />
+        <hr />
 
-    <input
-      id="nacionalidad"
-      type="text"
-      formControlName="nacionalidad"
-      placeholder="Nacionalidad"
-    />
-    <hr />
-
-    <div class="d-flex align-items-center justify-content-end me-3">
+        <input
+          id="nacionalidad"
+          type="text"
+          formControlName="nacionalidad"
+          placeholder="Nacionalidad"
+        />
+        <hr />
+      </form>
+    </section>
+    <div class="modal-footer bg-dark modal-text">
+      <button
+        type="button"
+        class="btn btn-secondary border border-1 border-white"
+        (click)="activeModal.dismiss()"
+      >
+        Cancelar
+      </button>
       <button
         type="submit"
-        class="btn btn-primary"
+        class="btn btn-primary border border-1 border-white"
+        (click)="onSubmit()"
         [disabled]="!clientForm.valid"
       >
         Registrar
       </button>
     </div>
-  </form>
-</section>
+  </div>
+</div>

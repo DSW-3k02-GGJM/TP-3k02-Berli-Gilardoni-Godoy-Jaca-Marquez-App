@@ -5,7 +5,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service.js';
@@ -27,7 +26,6 @@ export class CategoriaFormComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
     private categoriaCreatedOrModifiedService: CategoriaCreatedOrModifiedService,
     public activeModal: NgbActiveModal
   ) {}

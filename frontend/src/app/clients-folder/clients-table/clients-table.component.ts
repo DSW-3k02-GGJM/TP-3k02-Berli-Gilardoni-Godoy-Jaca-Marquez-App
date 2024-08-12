@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
+import { ClientFormComponent } from '../client-form/client-form.component.js';
 
 @Component({
   selector: 'app-clients-table',
@@ -51,7 +52,9 @@ export class ClientsTableComponent {
   }
 
   editClient(client: any): void {
-    this.router.navigate(['/clientes/modificacion', client.id]);
+    const modalRef = this.modalService.open(ClientFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Editar Cliente';
+    modalRef.componentInstance.currentClientId = client.id;
   }
 
   deleteClient(client: any): void {
