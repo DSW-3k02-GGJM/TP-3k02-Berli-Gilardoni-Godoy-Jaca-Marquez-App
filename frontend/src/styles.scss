@@ -24,4 +24,9 @@
 .div-tablas {
   overflow: auto;
   margin-bottom: 2vh;
+  //user-select: none; /* hace que no se pueda seleccionar el text */
+}
+
+.unselectable {
+  user-select: none;;
 }
