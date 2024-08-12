@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/sucursal-created-or-modified.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-sucursal-form',
@@ -20,14 +21,14 @@ import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modifie
   providers: [ApiService],
 })
 export class SucursalFormComponent implements OnInit {
+  @Input() title: string = '';
+  @Input() currentSucursalId: number = -1;
   action: string = '';
-  currentSucursalId: any;
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private sucursalCreatedOrModifiedService: SucursalCreatedOrModifiedService
+    private sucursalCreatedOrModifiedService: SucursalCreatedOrModifiedService,
+    public activeModal: NgbActiveModal
   ) {}
 
   sucursalForm = new FormGroup({
@@ -39,22 +40,20 @@ export class SucursalFormComponent implements OnInit {
   ngOnInit(): void {
     this.sucursalCreatedOrModifiedService.isDataLoaded = false;
 
-    this.activatedRoute.params.subscribe((params) => {
-      if (params.id) {
-        this.apiService
-          .getOne('sucursales', Number(params.id))
-          .subscribe((response) => {
-            this.currentSucursalId = response.data.id;
-            this.sucursalForm.patchValue(response.data);
-          });
-        this.action = 'Edit';
-      } else {
-        this.action = 'Create';
-      }
-    });
+    if (this.currentSucursalId != -1) {
+      this.apiService
+        .getOne('sucursales', Number(this.currentSucursalId))
+        .subscribe((response) => {
+          this.sucursalForm.patchValue(response.data);
+        });
+      this.action = 'Edit';
+    } else {
+      this.action = 'Create';
+    }
   }
 
   onSubmit() {
+    this.activeModal.close();
     if (this.action == 'Create') {
       this.apiService
         .create('sucursales', this.sucursalForm.value)
@@ -69,10 +68,6 @@ export class SucursalFormComponent implements OnInit {
         });
     }
     this.sucursalCreatedOrModifiedService.isDataLoaded = true;
-    this.navigateToSucursales();
   }
 
-  navigateToSucursales(): void {
-    this.router.navigate(['/sucursales']);
-  }
 }

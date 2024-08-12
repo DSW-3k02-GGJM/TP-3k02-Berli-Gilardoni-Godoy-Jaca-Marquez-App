@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http'; // Módulo para hacer solicitudes HTTP
 import { ApiService } from '../../service/api.service'; // Servicio para manejar la API
@@ -7,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component.js';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
+import { MarcaFormComponent } from '../marca-form/marca-form.component.js';
 
 @Component({
   selector: 'app-marcas-table',
@@ -29,13 +29,14 @@ export class MarcasTableComponent {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private router: Router, // Servicio para manejar la navegación
     private modalService: NgbModal
   ) {}
 
   // Método para navegar a la página de edición de una marca
   editMarca(marca: any): void {
-    this.router.navigate(['/marcas/modificacion', marca.id]);
+    const modalRef = this.modalService.open(MarcaFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Editar Marca';
+    modalRef.componentInstance.currentMarcaId = marca.id;
   }
 
   // Método para eliminar una marca

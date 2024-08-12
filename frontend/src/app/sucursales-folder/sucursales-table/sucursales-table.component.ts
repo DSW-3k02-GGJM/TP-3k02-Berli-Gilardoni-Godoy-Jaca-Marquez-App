@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
+import { SucursalFormComponent } from '../sucursal-form/sucursal-form.component.js';
 
 @Component({
   selector: 'app-sucursales-table',
@@ -34,7 +35,9 @@ export class SucursalesTableComponent {
   ) {}
 
   editSucursal(sucursal: any): void {
-    this.router.navigate(['/sucursales/modificacion', sucursal.id]);
+    const modalRef = this.modalService.open(SucursalFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Editar Sucursal';
+    modalRef.componentInstance.currentSucursalId = sucursal.id;
   }
 
   deleteSucursal(sucursal: any): void {

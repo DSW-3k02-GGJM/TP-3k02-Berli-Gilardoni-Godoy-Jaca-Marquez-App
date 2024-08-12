@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca-created-or-modified.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-marca-form',
@@ -20,14 +20,15 @@ import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marc
   providers: [ApiService],
 })
 export class MarcaFormComponent implements OnInit {
-  action: string = ''; // Acción actual (Create o Edit)
-  currentMarcaId: any; // Id de la marca actual (para edición)
+  @Input() title: string = '';
+  @Input() currentMarcaId: number = -1;
+  action: string = '';
+
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private router: Router, // Servicio para manejar la navegación
-    private activatedRoute: ActivatedRoute, // Servicio para acceder a los parámetros de la ruta
-    private marcaCreatedOrModifiedService: MarcaCreatedOrModifiedService
+    private marcaCreatedOrModifiedService: MarcaCreatedOrModifiedService,
+    public activeModal: NgbActiveModal
   ) {}
 
   marcaForm = new FormGroup({
@@ -38,23 +39,21 @@ export class MarcaFormComponent implements OnInit {
     this.marcaCreatedOrModifiedService.isDataLoaded = false;
 
     // Se ejecuta al inicializar el componente
-    this.activatedRoute.params.subscribe((params) => {
-      if (params.id) {
-        // Si hay un ID en los parámetros, es una edición
-        this.apiService
-          .getOne('marcas', Number(params.id)) // Obtiene los datos de la marca por ID
-          .subscribe((response) => {
-            this.currentMarcaId = response.data.id; // Guarda el id de la marca actual
-            this.marcaForm.patchValue(response.data);
-          });
-        this.action = 'Edit'; // Establece la acción como 'Edit'
-      } else {
-        this.action = 'Create'; // Establece la acción como 'Create' si no hay ID
-      }
-    });
+    if (this.currentMarcaId != -1) {
+      // Si hay un ID en los parámetros, es una edición
+      this.apiService
+        .getOne('marcas', Number(this.currentMarcaId)) // Obtiene los datos de la marca por ID
+        .subscribe((response) => {
+          this.marcaForm.patchValue(response.data);
+        });
+      this.action = 'Edit'; // Establece la acción como 'Edit'
+    } else {
+      this.action = 'Create'; // Establece la acción como 'Create' si no hay ID
+    }
   }
 
   onSubmit() {
+    this.activeModal.close();
     if (this.action === 'Create') {
       // Si la acción es 'Create', llama al servicio para crear una nueva marca
       this.apiService
@@ -71,10 +70,6 @@ export class MarcaFormComponent implements OnInit {
         });
     }
     this.marcaCreatedOrModifiedService.isDataLoaded = true;
-    this.navigateToMarcas();
   }
 
-  navigateToMarcas(): void {
-    this.router.navigate(['/marcas']); // Navega a la lista de marcas
-  }
 }

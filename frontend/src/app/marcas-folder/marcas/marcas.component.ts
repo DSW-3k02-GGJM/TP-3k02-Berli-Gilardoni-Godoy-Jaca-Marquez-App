@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { MarcasTableComponent } from '../marcas-table/marcas-table.component';
 import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca-created-or-modified.service';
 import { Subscription } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MarcaFormComponent } from '../marca-form/marca-form.component.js';
 
 @Component({
   selector: 'app-marcas',
@@ -21,8 +22,8 @@ export class MarcasComponent implements OnInit {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private router: Router, // Servicio para manejar la navegación
-    private marcaCreatedOrModifiedService: MarcaCreatedOrModifiedService
+    private marcaCreatedOrModifiedService: MarcaCreatedOrModifiedService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -61,8 +62,8 @@ export class MarcasComponent implements OnInit {
     });
   }
 
-  navigateToNewMarca(): void {
-    // Navega a la página para crear una nueva marca
-    this.router.navigate(['/marcas/creacion']);
+  newMarca() {
+    const modalRef = this.modalService.open(MarcaFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Nueva Marca'
   }
 }

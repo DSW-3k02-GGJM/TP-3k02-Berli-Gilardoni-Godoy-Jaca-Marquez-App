@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { SucursalesTableComponent } from '../sucursales-table/sucursales-table.component';
 import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/sucursal-created-or-modified.service';
 import { Subscription } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SucursalFormComponent } from '../sucursal-form/sucursal-form.component.js';
 
 @Component({
   selector: 'app-sucursales',
@@ -21,8 +22,8 @@ export class SucursalesComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
-    private sucursalCreatedOrModifiedService: SucursalCreatedOrModifiedService
+    private sucursalCreatedOrModifiedService: SucursalCreatedOrModifiedService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +61,9 @@ export class SucursalesComponent implements OnInit {
     });
   }
 
-  navigateToNewSucursal(): void {
-    this.router.navigate(['/sucursales/creacion']);
+  newSucursal() {
+    const modalRef = this.modalService.open(SucursalFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Nueva Sucursal'
   }
+  
 }
