@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo-created-or-modified.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-modelo-form',
@@ -20,16 +20,16 @@ import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/mo
   providers: [ApiService],
 })
 export class ModeloFormComponent implements OnInit {
+  @Input() title: string = '';
+  @Input() currentModeloId: number = -1;
   action: string = '';
-  currentModeloId: any;
   categorias: any[] = []; // Agrega esta propiedad para almacenar las categorías
   marcas: any[] = [];
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private modeloCreatedOrModifiedService: ModeloCreatedOrModifiedService
+    private modeloCreatedOrModifiedService: ModeloCreatedOrModifiedService,
+    public activeModal: NgbActiveModal
   ) {}
 
   modeloForm = new FormGroup({
@@ -49,33 +49,29 @@ export class ModeloFormComponent implements OnInit {
     this.loadCategorias();
     this.loadMarcas();
 
-    // Subscríbete a los parámetros de la ruta activa para manejar la lógica dependiendo de si el parámetro 'id' está presente o no.
-    this.activatedRoute.params.subscribe((params) => {
-      if (params.id) {
-        // Si el parámetro 'id' está presente en la ruta, significa que estamos en el modo de edición.
-        // Realiza una solicitud al backend para obtener los detalles del modelo con el ID proporcionado.
-        this.apiService
-          .getOne('modelos', Number(params.id))
-          .subscribe((response) => {
-            // Al recibir la respuesta del backend, actualiza la variable currentModeloId con el ID del modelo.
-            this.currentModeloId = response.data.id;
-            // Usa el método patchValue para actualizar el formulario con los datos del modelo recibido.
-            // Asigna los valores del modelo a los campos del formulario, incluyendo 'categoria' y 'marca'.
-            this.modeloForm.patchValue({
-              ...response.data,
-              categoria: response.data.categoria.id, // Asume que `categoriaId` es el ID de la categoría seleccionada.
-              marca: response.data.marca.id, // Asume que `marcaId` es el ID de la marca seleccionada.
-            });
+    if (this.currentModeloId != -1) {
+      // Si el parámetro 'id' está presente en la ruta, significa que estamos en el modo de edición.
+      // Realiza una solicitud al backend para obtener los detalles del modelo con el ID proporcionado.
+      this.apiService
+        .getOne('modelos', Number(this.currentModeloId))
+        .subscribe((response) => {
+          // Usa el método patchValue para actualizar el formulario con los datos del modelo recibido.
+          // Asigna los valores del modelo a los campos del formulario, incluyendo 'categoria' y 'marca'.
+          this.modeloForm.patchValue({
+            ...response.data,
+            categoria: response.data.categoria.id, // Asume que `categoriaId` es el ID de la categoría seleccionada.
+            marca: response.data.marca.id, // Asume que `marcaId` es el ID de la marca seleccionada.
           });
+        });
 
-        // Establece la acción como 'Edit' para indicar que estamos editando un modelo existente.
-        this.action = 'Edit';
-      } else {
-        // Si no hay un parámetro 'id' en la ruta, significa que estamos en el modo de creación de un nuevo modelo.
-        // Establece la acción como 'Create'.
-        this.action = 'Create';
-      }
-    });
+      // Establece la acción como 'Edit' para indicar que estamos editando un modelo existente.
+      this.action = 'Edit';
+    } else {
+      // Si no hay un parámetro 'id' en la ruta, significa que estamos en el modo de creación de un nuevo modelo.
+      // Establece la acción como 'Create'.
+      this.action = 'Create';
+    }
+
   }
 
   // Método para cargar las categorías
@@ -93,6 +89,7 @@ export class ModeloFormComponent implements OnInit {
   }
 
   onSubmit() {
+    this.activeModal.close();
     if (this.action === 'Create') {
       this.apiService
         .create('modelos', this.modeloForm.value)
@@ -107,10 +104,6 @@ export class ModeloFormComponent implements OnInit {
         });
     }
     this.modeloCreatedOrModifiedService.isDataLoaded = true;
-    this.navigateToModelos();
   }
 
-  navigateToModelos(): void {
-    this.router.navigate(['/modelos']);
-  }
 }

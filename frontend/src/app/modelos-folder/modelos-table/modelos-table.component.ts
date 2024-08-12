@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -7,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
+import { ModeloFormComponent } from '../modelo-form/modelo-form.component.js';
 
 @Component({
   selector: 'app-modelos-table',
@@ -29,12 +29,13 @@ export class ModelosTableComponent {
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
     private modalService: NgbModal
   ) {}
 
   editModelo(modelo: any): void {
-    this.router.navigate(['/modelos/modificacion', modelo.id]);
+    const modalRef = this.modalService.open(ModeloFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Editar Modelo';
+    modalRef.componentInstance.currentModeloId = modelo.id;
   }
 
   deleteModelo(modelo: any): void {

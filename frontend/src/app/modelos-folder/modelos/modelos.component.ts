@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ModelosTableComponent } from '../modelos-table/modelos-table.component';
 import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo-created-or-modified.service';
 import { Subscription } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModeloFormComponent } from '../modelo-form/modelo-form.component.js';
 
 @Component({
   selector: 'app-modelos',
@@ -21,8 +22,8 @@ export class ModelosComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
-    private modeloCreatedOrModifiedService: ModeloCreatedOrModifiedService
+    private modeloCreatedOrModifiedService: ModeloCreatedOrModifiedService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +59,8 @@ export class ModelosComponent implements OnInit {
     });
   }
 
-  navigateToNewModelo(): void {
-    this.router.navigate(['/modelos/creacion']);
+  newModelo() {
+    const modalRef = this.modalService.open(ModeloFormComponent, { size: 'l' , centered: true});
+    modalRef.componentInstance.title = 'Nuevo Modelo'
   }
 }
