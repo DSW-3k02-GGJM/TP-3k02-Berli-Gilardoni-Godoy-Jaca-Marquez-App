@@ -13,6 +13,7 @@ import { SucursalFormComponent } from './sucursales-folder/sucursal-form/sucursa
 import { ModelosComponent } from './modelos-folder/modelos/modelos.component';
 import { ModeloFormComponent } from './modelos-folder/modelo-form/modelo-form.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
+import { TestMatiComponent } from './test/test-mati/test-mati.component.js';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -35,5 +36,6 @@ export const routes: Routes = [
   { path: 'modelos/creacion', component: ModeloFormComponent },
   { path: 'modelos/modificacion/:id', component: ModeloFormComponent },
   { path: 'vehiculos', component: VehicleListComponent },
+  { path: 'testMati', component: TestMatiComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
