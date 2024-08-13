@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ClientsTableComponent } from '../clients-table/clients-table.component';
-import { ClientCreatedOrModifiedService } from '../client-created-or-modified/client-created-or-modified.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClientFormComponent } from '../client-form/client-form.component.js';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified.service.js';
 
 @Component({
   selector: 'app-clients',
@@ -23,8 +23,7 @@ export class ClientsComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
-    private clientCreatedOrModifiedService: ClientCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     private modalService: NgbModal
   ) {}
 
@@ -44,13 +43,13 @@ export class ClientsComponent implements OnInit {
 
   fillData() {
     this.subscription =
-      this.clientCreatedOrModifiedService.clientCreatedOrModified.subscribe(
+      this.createdOrModifiedService.createdOrModified.subscribe(
         () => {
           this.loadData();
         }
       );
 
-    if (!this.clientCreatedOrModifiedService.isDataLoaded) {
+    if (!this.createdOrModifiedService.isDataLoaded) {
       this.loadData();
     }
   }

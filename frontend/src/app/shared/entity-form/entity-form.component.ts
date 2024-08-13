@@ -10,18 +10,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreatedOrModifiedService } from '../../shared/created-or-modified.service.js';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 @Component({
-  selector: 'app-client-form',
+  selector: 'app-entity-form',
   standalone: true,
-  templateUrl: './client-form.component.html',
-  styleUrl: './client-form.component.scss',
+  templateUrl: './entity-form.component.html',
+  styleUrl: './entity-form.component.scss',
   imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
 })
-export class ClientFormComponent implements OnInit {
+export class EntityFormComponent implements OnInit {
   @Input() title: string = '';
-  @Input() currentClientId: number = -1;
+  @Input() currentEntityId: number = -1;
+  @Input() entity: string = '';
+  @Input() entityForm: FormGroup = new FormGroup({});
   action: string = '';
 
   constructor(
@@ -30,29 +32,17 @@ export class ClientFormComponent implements OnInit {
     public activeModal: NgbActiveModal
   ) {}
 
-  clientForm = new FormGroup({
-    tipoDoc: new FormControl('', [Validators.required]),
-    nroDoc: new FormControl('', [Validators.required]),
-    nombre: new FormControl('', [Validators.required]),
-    apellido: new FormControl('', [Validators.required]),
-    mail: new FormControl('', [Validators.required]),
-    fechaNacimiento: new FormControl('', [Validators.required]),
-    domicilio: new FormControl('', [Validators.required]),
-    telefono: new FormControl('', [Validators.required]),
-    nacionalidad: new FormControl('', [Validators.required]),
-  });
-
   ngOnInit(): void {
     this.createdOrModifiedService.isDataLoaded = false;
 
-    if (this.currentClientId != -1) {
+    if (this.currentEntityId != -1) {
       this.apiService
-        .getOne('clientes', Number(this.currentClientId))
+        .getOne(this.entity, Number(this.currentEntityId))
         .subscribe((response) => {
           let fechaNacimientoFormat = this.formatBirthDate(
             response.data.fechaNacimiento
           );
-          this.clientForm.patchValue({
+          this.entityForm.patchValue({
             ...response.data,
             fechaNacimiento: fechaNacimientoFormat,
           });
@@ -84,13 +74,13 @@ export class ClientFormComponent implements OnInit {
     this.activeModal.close();
     if (this.action == 'Create') {
       this.apiService
-        .create('clientes', this.clientForm.value)
+        .create(this.entity, this.entityForm.value)
         .subscribe((response) => {
           this.createdOrModifiedService.notifyCreatedOrModified();
         });
     } else if (this.action == 'Edit') {
       this.apiService
-        .update('clientes', this.currentClientId, this.clientForm.value)
+        .update(this.entity, this.currentEntityId, this.entityForm.value)
         .subscribe((response) => {
           this.createdOrModifiedService.notifyCreatedOrModified();
         });

@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class ClientCreatedOrModifiedService {
-  clientCreatedOrModified = new Subject<void>();
+export class CreatedOrModifiedService {
+
+  createdOrModified = new Subject<void>();
   isDataLoaded = false;
 
   get IsDataLoaded(): boolean {
@@ -16,8 +17,8 @@ export class ClientCreatedOrModifiedService {
     this.isDataLoaded = value;
   }
 
-  notifyClientCreatedOrModified() {
-    this.clientCreatedOrModified.next();
+  notifyCreatedOrModified() {
+    this.createdOrModified.next();
   }
 
   resetDataLoaded() {
