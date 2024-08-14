@@ -27,13 +27,13 @@ export class ModelosTableComponent {
   @Output() modeloDeleted = new EventEmitter();
   filterRows = '';
 
-  constructor(
-    private apiService: ApiService,
-    private modalService: NgbModal
-  ) {}
+  constructor(private apiService: ApiService, private modalService: NgbModal) {}
 
   editModelo(modelo: any): void {
-    const modalRef = this.modalService.open(ModeloFormComponent, { size: 'l' , centered: true});
+    const modalRef = this.modalService.open(ModeloFormComponent, {
+      size: 'l',
+      centered: true,
+    });
     modalRef.componentInstance.title = 'Editar Modelo';
     modalRef.componentInstance.currentModeloId = modelo.id;
   }
@@ -41,7 +41,7 @@ export class ModelosTableComponent {
   deleteModelo(modelo: any): void {
     const modalRef = this.modalService.open(ConfirmDeletionComponent);
     modalRef.componentInstance.title = 'Eliminar modelo';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar este modelo?`;
+    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar el modelo ${modelo.nombre}?`;
 
     modalRef.result.then(
       (result) => {
