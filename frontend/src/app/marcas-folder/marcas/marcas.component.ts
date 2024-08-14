@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { MarcasTableComponent } from '../marcas-table/marcas-table.component';
-import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca.service';
+import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/mar.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MarcaFormComponent } from '../marca-form/marca-form.component';

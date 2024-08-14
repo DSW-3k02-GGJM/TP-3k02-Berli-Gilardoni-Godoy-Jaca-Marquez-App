@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service.js';
 import { CategoriasTableComponent } from '../categorias-table/categorias-table.component';
-import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/categoria.service';
+import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/cat.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CategoriaFormComponent } from '../categoria-form/categoria-form.component';

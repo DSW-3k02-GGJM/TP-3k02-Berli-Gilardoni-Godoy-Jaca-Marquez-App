@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo.service';
+import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/mod.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

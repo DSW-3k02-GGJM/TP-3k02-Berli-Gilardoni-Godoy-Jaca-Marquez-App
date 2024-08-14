@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ModelosTableComponent } from '../modelos-table/modelos-table.component';
-import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo.service';
+import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/mod.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModeloFormComponent } from '../modelo-form/modelo-form.component';

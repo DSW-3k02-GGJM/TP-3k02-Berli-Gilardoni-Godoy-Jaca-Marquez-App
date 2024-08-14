@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca.service';
+import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/mar.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

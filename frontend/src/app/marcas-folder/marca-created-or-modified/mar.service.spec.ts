@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MarcaCreatedOrModifiedService } from './marca.service';
+import { MarcaCreatedOrModifiedService } from './mar.service';
 
 describe('MarcaCreatedOrModifiedService', () => {
   let service: MarcaCreatedOrModifiedService;

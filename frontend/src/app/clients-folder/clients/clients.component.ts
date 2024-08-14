@@ -7,7 +7,7 @@ import { ClientsTableComponent } from '../clients-table/clients-table.component'
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClientFormComponent } from '../client-form/client-form.component';
-import { ClientCreatedOrModifiedService } from '../client-created-or-modified/client.service';
+import { ClientCreatedOrModifiedService } from '../client-created-or-modified/cli.service';
 
 @Component({
   selector: 'app-clients',

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ColorsTableComponent } from '../colors-table/colors-table.component';
-import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color.service';
+import { ColorCreatedOrModifiedService } from '../color-created-or-modified/col.service';
 import { Subscription } from 'rxjs';
 import { ColorFormComponent } from '../color-form/color-form.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';

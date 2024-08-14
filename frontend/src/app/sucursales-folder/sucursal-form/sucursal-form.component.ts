@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/sucursal.service';
+import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/suc.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

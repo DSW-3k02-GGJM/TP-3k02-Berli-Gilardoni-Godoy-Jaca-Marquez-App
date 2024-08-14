@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color.service';
+import { ColorCreatedOrModifiedService } from '../color-created-or-modified/col.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
