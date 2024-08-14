@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component.js';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
-import { MarcaFormComponent } from '../marca-form/marca-form.component.js';
+import { MarcaFormComponent } from '../marca-form/marca-form.component';
 
 @Component({
   selector: 'app-marcas-table',
@@ -34,7 +34,10 @@ export class MarcasTableComponent {
 
   // Método para navegar a la página de edición de una marca
   editMarca(marca: any): void {
-    const modalRef = this.modalService.open(MarcaFormComponent, { size: 'l' , centered: true});
+    const modalRef = this.modalService.open(MarcaFormComponent, {
+      size: 'l',
+      centered: true,
+    });
     modalRef.componentInstance.title = 'Editar Marca';
     modalRef.componentInstance.currentMarcaId = marca.id;
   }

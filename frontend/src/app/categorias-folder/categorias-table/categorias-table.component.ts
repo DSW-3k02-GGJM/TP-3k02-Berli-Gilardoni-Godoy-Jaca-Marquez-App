@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
-import { CategoriaFormComponent } from '../categoria-form/categoria-form.component.js';
+import { CategoriaFormComponent } from '../categoria-form/categoria-form.component';
 
 @Component({
   selector: 'app-categorias-table',

@@ -5,11 +5,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color-created-or-modified.service';
+import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -24,7 +23,6 @@ export class ColorFormComponent implements OnInit {
   @Input() title: string = '';
   @Input() currentColorId: number = -1;
   action: string = '';
-
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
@@ -71,5 +69,4 @@ export class ColorFormComponent implements OnInit {
     }
     this.colorCreatedOrModifiedService.isDataLoaded = true;
   }
-
 }

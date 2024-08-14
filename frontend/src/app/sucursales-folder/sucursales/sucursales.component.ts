@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { SucursalesTableComponent } from '../sucursales-table/sucursales-table.component';
-import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/sucursal-created-or-modified.service';
+import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/sucursal.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SucursalFormComponent } from '../sucursal-form/sucursal-form.component.js';
+import { SucursalFormComponent } from '../sucursal-form/sucursal-form.component';
 
 @Component({
   selector: 'app-sucursales',
@@ -62,8 +62,10 @@ export class SucursalesComponent implements OnInit {
   }
 
   newSucursal() {
-    const modalRef = this.modalService.open(SucursalFormComponent, { size: 'l' , centered: true});
-    modalRef.componentInstance.title = 'Nueva Sucursal'
+    const modalRef = this.modalService.open(SucursalFormComponent, {
+      size: 'l',
+      centered: true,
+    });
+    modalRef.componentInstance.title = 'Nueva Sucursal';
   }
-  
 }

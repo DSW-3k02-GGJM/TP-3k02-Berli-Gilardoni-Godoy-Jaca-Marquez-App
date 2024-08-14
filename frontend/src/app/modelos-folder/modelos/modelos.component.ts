@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ModelosTableComponent } from '../modelos-table/modelos-table.component';
-import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo-created-or-modified.service';
+import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModeloFormComponent } from '../modelo-form/modelo-form.component.js';
+import { ModeloFormComponent } from '../modelo-form/modelo-form.component';
 
 @Component({
   selector: 'app-modelos',
@@ -60,7 +60,10 @@ export class ModelosComponent implements OnInit {
   }
 
   newModelo() {
-    const modalRef = this.modalService.open(ModeloFormComponent, { size: 'l' , centered: true});
-    modalRef.componentInstance.title = 'Nuevo Modelo'
+    const modalRef = this.modalService.open(ModeloFormComponent, {
+      size: 'l',
+      centered: true,
+    });
+    modalRef.componentInstance.title = 'Nuevo Modelo';
   }
 }

@@ -7,7 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component.js';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
-import { ColorFormComponent } from '../color-form/color-form.component.js';
+import { ColorFormComponent } from '../color-form/color-form.component';
 
 @Component({
   selector: 'app-colors-table',
@@ -30,12 +30,15 @@ export class ColorsTableComponent {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private modalService: NgbModal,
+    private modalService: NgbModal
   ) {}
 
   // Método para navegar a la página de edición de una marca
   editColor(color: any): void {
-    const modalRef = this.modalService.open(ColorFormComponent, { size: 'l' , centered: true});
+    const modalRef = this.modalService.open(ColorFormComponent, {
+      size: 'l',
+      centered: true,
+    });
     modalRef.componentInstance.title = 'Editar Color';
     modalRef.componentInstance.currentColorId = color.id;
   }

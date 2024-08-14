@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { MarcasTableComponent } from '../marcas-table/marcas-table.component';
-import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca-created-or-modified.service';
+import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MarcaFormComponent } from '../marca-form/marca-form.component.js';
+import { MarcaFormComponent } from '../marca-form/marca-form.component';
 
 @Component({
   selector: 'app-marcas',
@@ -63,7 +63,10 @@ export class MarcasComponent implements OnInit {
   }
 
   newMarca() {
-    const modalRef = this.modalService.open(MarcaFormComponent, { size: 'l' , centered: true});
-    modalRef.componentInstance.title = 'Nueva Marca'
+    const modalRef = this.modalService.open(MarcaFormComponent, {
+      size: 'l',
+      centered: true,
+    });
+    modalRef.componentInstance.title = 'Nueva Marca';
   }
 }

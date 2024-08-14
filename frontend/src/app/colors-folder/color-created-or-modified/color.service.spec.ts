@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ColorCreatedOrModifiedService } from './color-created-or-modified.service';
+import { ColorCreatedOrModifiedService } from './color.service';
 
 describe('ColorCreatedOrModifiedService', () => {
   let service: ColorCreatedOrModifiedService;

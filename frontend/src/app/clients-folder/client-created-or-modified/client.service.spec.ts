@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ClientCreatedOrModifiedService } from './client-created-or-modified.service';
+import { ClientCreatedOrModifiedService } from './client.service';
 
 describe('ClientCreatedOrModifiedService', () => {
   let service: ClientCreatedOrModifiedService;

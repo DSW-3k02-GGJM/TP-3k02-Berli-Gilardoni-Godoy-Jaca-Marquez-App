@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service.js';
-import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/categoria-created-or-modified.service';
+import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/categoria.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -69,5 +69,4 @@ export class CategoriaFormComponent implements OnInit {
     }
     this.categoriaCreatedOrModifiedService.isDataLoaded = true;
   }
-
 }

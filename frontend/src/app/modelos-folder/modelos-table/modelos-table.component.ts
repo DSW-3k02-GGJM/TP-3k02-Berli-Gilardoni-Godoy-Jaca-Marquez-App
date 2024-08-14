@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
-import { ModeloFormComponent } from '../modelo-form/modelo-form.component.js';
+import { ModeloFormComponent } from '../modelo-form/modelo-form.component';
 
 @Component({
   selector: 'app-modelos-table',

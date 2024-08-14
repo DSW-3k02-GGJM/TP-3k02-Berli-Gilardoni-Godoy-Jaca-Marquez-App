@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SucursalCreatedOrModifiedService } from './sucursal-created-or-modified.service';
+import { SucursalCreatedOrModifiedService } from './sucursal.service';
 
 describe('SucursalCreatedOrModifiedService', () => {
   let service: SucursalCreatedOrModifiedService;

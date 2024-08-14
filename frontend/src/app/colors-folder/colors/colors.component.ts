@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ColorsTableComponent } from '../colors-table/colors-table.component';
-import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color-created-or-modified.service';
+import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color.service';
 import { Subscription } from 'rxjs';
-import { ColorFormComponent } from '../color-form/color-form.component.js';
+import { ColorFormComponent } from '../color-form/color-form.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -64,7 +64,10 @@ export class ColorsComponent implements OnInit {
   }
 
   newColor() {
-    const modalRef = this.modalService.open(ColorFormComponent, { size: 'l' , centered: true});
-    modalRef.componentInstance.title = 'Nuevo Color'
+    const modalRef = this.modalService.open(ColorFormComponent, {
+      size: 'l',
+      centered: true,
+    });
+    modalRef.componentInstance.title = 'Nuevo Color';
   }
 }

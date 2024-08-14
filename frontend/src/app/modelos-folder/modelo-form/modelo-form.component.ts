@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo-created-or-modified.service';
+import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -71,7 +71,6 @@ export class ModeloFormComponent implements OnInit {
       // Establece la acción como 'Create'.
       this.action = 'Create';
     }
-
   }
 
   // Método para cargar las categorías
@@ -105,5 +104,4 @@ export class ModeloFormComponent implements OnInit {
     }
     this.modeloCreatedOrModifiedService.isDataLoaded = true;
   }
-
 }

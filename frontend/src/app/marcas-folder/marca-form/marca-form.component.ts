@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca-created-or-modified.service';
+import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -23,7 +23,6 @@ export class MarcaFormComponent implements OnInit {
   @Input() title: string = '';
   @Input() currentMarcaId: number = -1;
   action: string = '';
-
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
@@ -71,5 +70,4 @@ export class MarcaFormComponent implements OnInit {
     }
     this.marcaCreatedOrModifiedService.isDataLoaded = true;
   }
-
 }

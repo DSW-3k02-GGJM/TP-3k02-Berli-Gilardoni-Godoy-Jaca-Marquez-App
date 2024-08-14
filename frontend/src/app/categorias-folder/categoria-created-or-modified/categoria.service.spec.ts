@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CategoriaCreatedOrModifiedService } from './categoria-created-or-modified.service';
+import { CategoriaCreatedOrModifiedService } from './categoria.service';
 
 describe('CategoriaCreatedOrModifiedService', () => {
   let service: CategoriaCreatedOrModifiedService;

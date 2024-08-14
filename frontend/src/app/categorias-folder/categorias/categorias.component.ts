@@ -4,11 +4,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service.js';
 import { CategoriasTableComponent } from '../categorias-table/categorias-table.component';
-import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/categoria-created-or-modified.service';
+import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/categoria.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CategoriaFormComponent } from '../categoria-form/categoria-form.component.js';
-
+import { CategoriaFormComponent } from '../categoria-form/categoria-form.component';
 
 @Component({
   selector: 'app-categorias',
@@ -64,7 +63,10 @@ export class CategoriasComponent implements OnInit {
   }
 
   newCategoria() {
-    const modalRef = this.modalService.open(CategoriaFormComponent, { size: 'l' , centered: true});
-    modalRef.componentInstance.title = 'Nueva Categoría'
+    const modalRef = this.modalService.open(CategoriaFormComponent, {
+      size: 'l',
+      centered: true,
+    });
+    modalRef.componentInstance.title = 'Nueva Categoría';
   }
 }

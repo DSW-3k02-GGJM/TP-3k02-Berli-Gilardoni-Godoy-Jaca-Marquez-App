@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ClientCreatedOrModifiedService } from '../client-created-or-modified/client-created-or-modified.service';
+import { ClientCreatedOrModifiedService } from '../client-created-or-modified/client.service';
 
 @Component({
   selector: 'app-client-form',
