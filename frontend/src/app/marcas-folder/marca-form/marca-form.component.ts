@@ -2,21 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca-created-or-modified.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-marca-form',
-  standalone: true,
   templateUrl: './marca-form.component.html',
   styleUrls: ['./marca-form.component.scss'],
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
 })
 export class MarcaFormComponent implements OnInit {
@@ -27,7 +22,7 @@ export class MarcaFormComponent implements OnInit {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private marcaCreatedOrModifiedService: MarcaCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     public activeModal: NgbActiveModal
   ) {}
 
@@ -36,7 +31,7 @@ export class MarcaFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.marcaCreatedOrModifiedService.isDataLoaded = false;
+    this.createdOrModifiedService.isDataLoaded = false;
 
     // Se ejecuta al inicializar el componente
     if (this.currentMarcaId != -1) {
@@ -59,17 +54,17 @@ export class MarcaFormComponent implements OnInit {
       this.apiService
         .create('marcas', this.marcaForm.value)
         .subscribe((response) => {
-          this.marcaCreatedOrModifiedService.notifyMarcaCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     } else if (this.action === 'Edit') {
       // Si la acción es 'Edit', llama al servicio para actualizar la marca existente
       this.apiService
         .update('marcas', this.currentMarcaId, this.marcaForm.value)
         .subscribe((response) => {
-          this.marcaCreatedOrModifiedService.notifyMarcaCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     }
-    this.marcaCreatedOrModifiedService.isDataLoaded = true;
+    this.createdOrModifiedService.isDataLoaded = true;
   }
 
 }

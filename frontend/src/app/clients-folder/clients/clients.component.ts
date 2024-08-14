@@ -1,20 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { ClientsTableComponent } from '../clients-table/clients-table.component';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClientFormComponent } from '../client-form/client-form.component.js';
-import { CreatedOrModifiedService } from '../../shared/created-or-modified.service.js';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-clients',
-  standalone: true,
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
-  imports: [CommonModule, HttpClientModule, ClientsTableComponent],
   providers: [ApiService],
 })
 export class ClientsComponent implements OnInit {

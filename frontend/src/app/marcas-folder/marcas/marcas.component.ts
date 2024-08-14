@@ -1,19 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { MarcasTableComponent } from '../marcas-table/marcas-table.component';
-import { MarcaCreatedOrModifiedService } from '../marca-created-or-modified/marca-created-or-modified.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MarcaFormComponent } from '../marca-form/marca-form.component.js';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-marcas',
-  standalone: true,
   templateUrl: './marcas.component.html',
   styleUrls: ['./marcas.component.scss'],
-  imports: [CommonModule, HttpClientModule, MarcasTableComponent],
   providers: [ApiService],
 })
 export class MarcasComponent implements OnInit {
@@ -22,7 +17,7 @@ export class MarcasComponent implements OnInit {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private marcaCreatedOrModifiedService: MarcaCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     private modalService: NgbModal
   ) {}
 
@@ -45,13 +40,13 @@ export class MarcasComponent implements OnInit {
 
   fillData() {
     this.subscription =
-      this.marcaCreatedOrModifiedService.marcaCreatedOrModified.subscribe(
+      this.createdOrModifiedService.createdOrModified.subscribe(
         () => {
           this.loadData();
         }
       );
 
-    if (!this.marcaCreatedOrModifiedService.isDataLoaded) {
+    if (!this.createdOrModifiedService.isDataLoaded) {
       this.loadData();
     }
   }

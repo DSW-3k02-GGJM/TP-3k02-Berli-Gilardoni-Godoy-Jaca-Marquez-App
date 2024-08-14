@@ -5,19 +5,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color-created-or-modified.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-color-form',
-  standalone: true,
   templateUrl: './color-form.component.html',
   styleUrls: ['./color-form.component.scss'],
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
 })
 export class ColorFormComponent implements OnInit {
@@ -28,7 +25,7 @@ export class ColorFormComponent implements OnInit {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private colorCreatedOrModifiedService: ColorCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     public activeModal: NgbActiveModal
   ) {}
 
@@ -37,7 +34,7 @@ export class ColorFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.colorCreatedOrModifiedService.isDataLoaded = false;
+    this.createdOrModifiedService.isDataLoaded = false;
 
     // Se ejecuta al inicializar el componente
     if (this.currentColorId != -1) {
@@ -59,17 +56,17 @@ export class ColorFormComponent implements OnInit {
       this.apiService
         .create('colores', this.colorForm.value)
         .subscribe((response) => {
-          this.colorCreatedOrModifiedService.notifyColorCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     } else if (this.action === 'Edit') {
       // Si la acción es 'Edit', llama al servicio para actualizar el color existente
       this.apiService
         .update('colores', this.currentColorId, this.colorForm.value)
         .subscribe((response) => {
-          this.colorCreatedOrModifiedService.notifyColorCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     }
-    this.colorCreatedOrModifiedService.isDataLoaded = true;
+    this.createdOrModifiedService.isDataLoaded = true;
   }
 
 }

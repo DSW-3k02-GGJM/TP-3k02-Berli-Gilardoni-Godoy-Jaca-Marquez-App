@@ -2,21 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreatedOrModifiedService } from '../../shared/created-or-modified.service.js';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-client-form',
-  standalone: true,
   templateUrl: './client-form.component.html',
   styleUrl: './client-form.component.scss',
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
 })
 export class ClientFormComponent implements OnInit {

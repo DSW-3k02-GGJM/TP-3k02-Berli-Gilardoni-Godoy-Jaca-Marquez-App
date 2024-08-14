@@ -2,21 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo-created-or-modified.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-modelo-form',
-  standalone: true,
   templateUrl: './modelo-form.component.html',
   styleUrls: ['./modelo-form.component.scss'],
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
 })
 export class ModeloFormComponent implements OnInit {
@@ -28,7 +23,7 @@ export class ModeloFormComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private modeloCreatedOrModifiedService: ModeloCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     public activeModal: NgbActiveModal
   ) {}
 
@@ -42,7 +37,7 @@ export class ModeloFormComponent implements OnInit {
 
   ngOnInit(): void {
     // Inicializa la variable isDataLoaded en el servicio para indicar que los datos aún no han sido cargados.
-    this.modeloCreatedOrModifiedService.isDataLoaded = false;
+    this.createdOrModifiedService.isDataLoaded = false;
 
     // Llama al método loadCategorias() para obtener la lista de categorías disponibles desde el backend
     // y almacenarlas en una propiedad del componente para usar en el formulario.
@@ -94,16 +89,16 @@ export class ModeloFormComponent implements OnInit {
       this.apiService
         .create('modelos', this.modeloForm.value)
         .subscribe((response) => {
-          this.modeloCreatedOrModifiedService.notifyModeloCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     } else if (this.action === 'Edit') {
       this.apiService
         .update('modelos', this.currentModeloId, this.modeloForm.value)
         .subscribe((response) => {
-          this.modeloCreatedOrModifiedService.notifyModeloCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     }
-    this.modeloCreatedOrModifiedService.isDataLoaded = true;
+    this.createdOrModifiedService.isDataLoaded = true;
   }
 
 }

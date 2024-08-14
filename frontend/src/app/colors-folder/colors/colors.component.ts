@@ -1,20 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ColorsTableComponent } from '../colors-table/colors-table.component';
-import { ColorCreatedOrModifiedService } from '../color-created-or-modified/color-created-or-modified.service';
 import { Subscription } from 'rxjs';
 import { ColorFormComponent } from '../color-form/color-form.component.js';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-colors',
-  standalone: true,
   templateUrl: './colors.component.html',
   styleUrls: ['./colors.component.scss'],
-  imports: [CommonModule, HttpClientModule, ColorsTableComponent],
   providers: [ApiService],
 })
 export class ColorsComponent implements OnInit {
@@ -23,7 +20,7 @@ export class ColorsComponent implements OnInit {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private colorCreatedOrModifiedService: ColorCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     private modalService: NgbModal
   ) {}
 
@@ -46,13 +43,13 @@ export class ColorsComponent implements OnInit {
 
   fillData() {
     this.subscription =
-      this.colorCreatedOrModifiedService.colorCreatedOrModified.subscribe(
+      this.createdOrModifiedService.createdOrModified.subscribe(
         () => {
           this.loadData();
         }
       );
 
-    if (!this.colorCreatedOrModifiedService.isDataLoaded) {
+    if (!this.createdOrModifiedService.isDataLoaded) {
       this.loadData();
     }
   }

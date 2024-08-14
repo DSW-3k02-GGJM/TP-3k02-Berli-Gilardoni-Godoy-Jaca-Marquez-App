@@ -8,15 +8,13 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service.js';
-import { CategoriaCreatedOrModifiedService } from '../categoria-created-or-modified/categoria-created-or-modified.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-categoria-form',
-  standalone: true,
   templateUrl: './categoria-form.component.html',
   styleUrl: './categoria-form.component.scss',
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
 })
 export class CategoriaFormComponent implements OnInit {
@@ -26,7 +24,7 @@ export class CategoriaFormComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private categoriaCreatedOrModifiedService: CategoriaCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     public activeModal: NgbActiveModal
   ) {}
 
@@ -38,7 +36,7 @@ export class CategoriaFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.categoriaCreatedOrModifiedService.isDataLoaded = false;
+    this.createdOrModifiedService.isDataLoaded = false;
 
     if (this.currentCategoriaId != -1) {
       this.apiService
@@ -58,16 +56,16 @@ export class CategoriaFormComponent implements OnInit {
       this.apiService
         .create('categorias', this.categoriaForm.value)
         .subscribe((response) => {
-          this.categoriaCreatedOrModifiedService.notifyCategoriaCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     } else if (this.action == 'Edit') {
       this.apiService
         .update('categorias', this.currentCategoriaId, this.categoriaForm.value)
         .subscribe((response) => {
-          this.categoriaCreatedOrModifiedService.notifyCategoriaCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     }
-    this.categoriaCreatedOrModifiedService.isDataLoaded = true;
+    this.createdOrModifiedService.isDataLoaded = true;
   }
 
 }

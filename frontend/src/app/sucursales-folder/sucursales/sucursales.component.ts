@@ -1,19 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { SucursalesTableComponent } from '../sucursales-table/sucursales-table.component';
-import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/sucursal-created-or-modified.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SucursalFormComponent } from '../sucursal-form/sucursal-form.component.js';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-sucursales',
-  standalone: true,
   templateUrl: './sucursales.component.html',
   styleUrl: './sucursales.component.scss',
-  imports: [CommonModule, HttpClientModule, SucursalesTableComponent],
   providers: [ApiService],
 })
 export class SucursalesComponent implements OnInit {
@@ -22,7 +17,7 @@ export class SucursalesComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private sucursalCreatedOrModifiedService: SucursalCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     private modalService: NgbModal
   ) {}
 
@@ -44,13 +39,13 @@ export class SucursalesComponent implements OnInit {
 
   fillData() {
     this.subscription =
-      this.sucursalCreatedOrModifiedService.sucursalCreatedOrModified.subscribe(
+      this.createdOrModifiedService.createdOrModified.subscribe(
         () => {
           this.loadData();
         }
       );
 
-    if (!this.sucursalCreatedOrModifiedService.isDataLoaded) {
+    if (!this.createdOrModifiedService.isDataLoaded) {
       this.loadData();
     }
   }

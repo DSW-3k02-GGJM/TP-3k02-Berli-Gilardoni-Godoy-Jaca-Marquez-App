@@ -1,19 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { ModelosTableComponent } from '../modelos-table/modelos-table.component';
-import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/modelo-created-or-modified.service';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModeloFormComponent } from '../modelo-form/modelo-form.component.js';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-modelos',
-  standalone: true,
   templateUrl: './modelos.component.html',
   styleUrl: './modelos.component.scss',
-  imports: [CommonModule, HttpClientModule, ModelosTableComponent],
   providers: [ApiService],
 })
 export class ModelosComponent implements OnInit {
@@ -22,7 +17,7 @@ export class ModelosComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private modeloCreatedOrModifiedService: ModeloCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     private modalService: NgbModal
   ) {}
 
@@ -42,13 +37,13 @@ export class ModelosComponent implements OnInit {
 
   fillData() {
     this.subscription =
-      this.modeloCreatedOrModifiedService.modeloCreatedOrModified.subscribe(
+      this.createdOrModifiedService.createdOrModified.subscribe(
         () => {
           this.loadData();
         }
       );
 
-    if (!this.modeloCreatedOrModifiedService.isDataLoaded) {
+    if (!this.createdOrModifiedService.isDataLoaded) {
       this.loadData();
     }
   }

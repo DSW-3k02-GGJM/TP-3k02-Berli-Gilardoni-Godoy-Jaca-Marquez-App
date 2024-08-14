@@ -2,22 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { SucursalCreatedOrModifiedService } from '../sucursal-created-or-modified/sucursal-created-or-modified.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreatedOrModifiedService } from '../../shared/created-or-modified/created-or-modified.service.js';
 
 @Component({
   selector: 'app-sucursal-form',
-  standalone: true,
   templateUrl: './sucursal-form.component.html',
   styleUrl: './sucursal-form.component.scss',
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
 })
 export class SucursalFormComponent implements OnInit {
@@ -27,7 +21,7 @@ export class SucursalFormComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private sucursalCreatedOrModifiedService: SucursalCreatedOrModifiedService,
+    private createdOrModifiedService: CreatedOrModifiedService,
     public activeModal: NgbActiveModal
   ) {}
 
@@ -38,7 +32,7 @@ export class SucursalFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.sucursalCreatedOrModifiedService.isDataLoaded = false;
+    this.createdOrModifiedService.isDataLoaded = false;
 
     if (this.currentSucursalId != -1) {
       this.apiService
@@ -58,16 +52,16 @@ export class SucursalFormComponent implements OnInit {
       this.apiService
         .create('sucursales', this.sucursalForm.value)
         .subscribe((response) => {
-          this.sucursalCreatedOrModifiedService.notifySucursalCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     } else if (this.action == 'Edit') {
       this.apiService
         .update('sucursales', this.currentSucursalId, this.sucursalForm.value)
         .subscribe((response) => {
-          this.sucursalCreatedOrModifiedService.notifySucursalCreatedOrModified();
+          this.createdOrModifiedService.notifyCreatedOrModified();
         });
     }
-    this.sucursalCreatedOrModifiedService.isDataLoaded = true;
+    this.createdOrModifiedService.isDataLoaded = true;
   }
 
 }
