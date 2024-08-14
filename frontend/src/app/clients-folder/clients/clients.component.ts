@@ -7,7 +7,7 @@ import { ClientsTableComponent } from '../clients-table/clients-table.component'
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClientFormComponent } from '../client-form/client-form.component.js';
-import { CreatedOrModifiedService } from '../../shared/created-or-modified.service.js';
+import { ClientCreatedOrModifiedService } from '../client-created-or-modified.service.js';
 
 @Component({
   selector: 'app-clients',
@@ -23,7 +23,7 @@ export class ClientsComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private createdOrModifiedService: CreatedOrModifiedService,
+    private clientCreatedOrModifiedService: ClientCreatedOrModifiedService,
     private modalService: NgbModal
   ) {}
 
@@ -43,13 +43,13 @@ export class ClientsComponent implements OnInit {
 
   fillData() {
     this.subscription =
-      this.createdOrModifiedService.createdOrModified.subscribe(
+      this.clientCreatedOrModifiedService.clientCreatedOrModified.subscribe(
         () => {
           this.loadData();
         }
       );
 
-    if (!this.createdOrModifiedService.isDataLoaded) {
+    if (!this.clientCreatedOrModifiedService.isDataLoaded) {
       this.loadData();
     }
   }

@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreatedOrModifiedService } from '../../shared/created-or-modified.service.js';
+import { ClientCreatedOrModifiedService } from '../client-created-or-modified.service.js';
 
 @Component({
   selector: 'app-client-form',
@@ -26,7 +26,7 @@ export class ClientFormComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private createdOrModifiedService: CreatedOrModifiedService,
+    private clientCreatedOrModifiedService: ClientCreatedOrModifiedService,
     public activeModal: NgbActiveModal
   ) {}
 
@@ -43,7 +43,7 @@ export class ClientFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.createdOrModifiedService.isDataLoaded = false;
+    this.clientCreatedOrModifiedService.isDataLoaded = false;
 
     if (this.currentClientId != -1) {
       this.apiService
@@ -86,16 +86,16 @@ export class ClientFormComponent implements OnInit {
       this.apiService
         .create('clientes', this.clientForm.value)
         .subscribe((response) => {
-          this.createdOrModifiedService.notifyCreatedOrModified();
+          this.clientCreatedOrModifiedService.notifyClientCreatedOrModified();
         });
     } else if (this.action == 'Edit') {
       this.apiService
         .update('clientes', this.currentClientId, this.clientForm.value)
         .subscribe((response) => {
-          this.createdOrModifiedService.notifyCreatedOrModified();
+          this.clientCreatedOrModifiedService.notifyClientCreatedOrModified();
         });
     }
-    this.createdOrModifiedService.isDataLoaded = true;
+    this.clientCreatedOrModifiedService.isDataLoaded = true;
   }
 
 }
