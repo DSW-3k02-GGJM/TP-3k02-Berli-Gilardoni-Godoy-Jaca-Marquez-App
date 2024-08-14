@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -7,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
-import { ClientFormComponent } from '../client-form/client-form.component.js';
+import { ClientFormComponent } from '../client-form/client-form.component';
 
 @Component({
   selector: 'app-clients-table',
@@ -28,11 +27,7 @@ export class ClientsTableComponent {
   @Output() clientDeleted = new EventEmitter();
   filterRows = '';
 
-  constructor(
-    private apiService: ApiService,
-    private router: Router,
-    private modalService: NgbModal
-  ) {}
+  constructor(private apiService: ApiService, private modalService: NgbModal) {}
 
   formatBirthDate(fechaNacimientoDB: string): string {
     let fechaNacimientoTable: string = '${day}/${month}/${year}';
@@ -52,7 +47,10 @@ export class ClientsTableComponent {
   }
 
   editClient(client: any): void {
-    const modalRef = this.modalService.open(ClientFormComponent, { size: 'l' , centered: true});
+    const modalRef = this.modalService.open(ClientFormComponent, {
+      size: 'l',
+      centered: true,
+    });
     modalRef.componentInstance.title = 'Editar Cliente';
     modalRef.componentInstance.currentClientId = client.id;
   }

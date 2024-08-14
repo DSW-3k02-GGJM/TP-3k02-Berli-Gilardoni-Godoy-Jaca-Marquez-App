@@ -1,6 +1,8 @@
-<div class="lista-vehiculos">
-  <h2 class="pt-3 ps-4 titulo-vehiculos">Nuestros vehiculos</h2>
-  <section class="vehicle-list">
+<div class="lista-vehiculos text-white">
+  <div class="titulo d-flex justify-content-between pt-3 me-5">
+    <h2 class="nuestros-vehiculos">Nuestros vehiculos</h2>
+  </div>
+  <section class="vehicle-list mt-3 mx-5">
     <app-vehicle-card
       *ngFor="let vehiculo of response"
       [modelo]="vehiculo.modelo.nombre"

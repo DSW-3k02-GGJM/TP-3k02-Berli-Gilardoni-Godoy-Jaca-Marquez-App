@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ClientCreatedOrModifiedService } from '../client-created-or-modified.service.js';
+import { ClientCreatedOrModifiedService } from '../client-created-or-modified/client-created-or-modified.service';
 
 @Component({
   selector: 'app-client-form',
@@ -57,10 +57,10 @@ export class ClientFormComponent implements OnInit {
             fechaNacimiento: fechaNacimientoFormat,
           });
         });
-        this.action = 'Edit';
-      } else {
-        this.action = 'Create';
-      }
+      this.action = 'Edit';
+    } else {
+      this.action = 'Create';
+    }
   }
 
   formatBirthDate(fechaNacimientoDB: string): string {
@@ -97,5 +97,4 @@ export class ClientFormComponent implements OnInit {
     }
     this.clientCreatedOrModifiedService.isDataLoaded = true;
   }
-
 }

@@ -27,13 +27,13 @@ export class CategoriasTableComponent {
   @Output() categoriaDeleted = new EventEmitter();
   filterRows = '';
 
-  constructor(
-    private apiService: ApiService,
-    private modalService: NgbModal
-  ) {}
+  constructor(private apiService: ApiService, private modalService: NgbModal) {}
 
   editCategoria(categoria: any): void {
-    const modalRef = this.modalService.open(CategoriaFormComponent, { size: 'l' , centered: true});
+    const modalRef = this.modalService.open(CategoriaFormComponent, {
+      size: 'l',
+      centered: true,
+    });
     modalRef.componentInstance.title = 'Editar Categoría';
     modalRef.componentInstance.currentCategoriaId = categoria.id;
   }
