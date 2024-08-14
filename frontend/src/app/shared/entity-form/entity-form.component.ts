@@ -1,4 +1,4 @@
-import { Component, Input, NgModule, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreatedOrModifiedService } from '../../shared/created-or-modified.service.js';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-entity-form',
   standalone: true,
@@ -88,7 +88,4 @@ export class EntityFormComponent implements OnInit {
     this.createdOrModifiedService.isDataLoaded = true;
   }
 
-  closeModal() {
-    this.activeModal.close();
-  }
 }
