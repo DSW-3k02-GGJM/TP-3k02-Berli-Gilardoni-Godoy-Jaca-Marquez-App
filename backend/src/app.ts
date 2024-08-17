@@ -10,6 +10,7 @@ import { marcaRouter } from './marca/marca.routes.js';
 import { modeloRouter } from './modelo/modelo.routes.js';
 import { sucursalRouter } from './sucursal/sucursal.routes.js';
 import { vehiculoRouter } from './vehiculo/vehiculo.routes.js';
+import { usuarioRouter } from './usuario/usuario.route.js';
 
 const app = express();
 app.use(express.json());
@@ -42,6 +43,7 @@ app.use('/api/marcas', marcaRouter);
 app.use('/api/modelos', modeloRouter);
 app.use('/api/sucursales', sucursalRouter);
 app.use('/api/vehiculos', vehiculoRouter);
+app.use('/api/usuarios', usuarioRouter);
 
 app.use((_, res) => {
   return res.status(404).send({ message: 'Recurso no encontrado' });
