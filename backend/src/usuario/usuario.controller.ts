@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
+import bcrypt from 'bcrypt';
 import { orm } from '../shared/db/orm.js';
 import { Usuario } from './usuario.entity.js';
 import { AuthService } from '../shared/db/auth.service.js';
+
 
 const em = orm.em;
 
@@ -12,7 +14,7 @@ const sanitizedUsuarioInput = (
 ) => {
   req.body.sanitizedInput = {
     email: req.body.email,
-    contraseña: req.body.contraseña,
+    password: req.body.password,
   };
   // Más validaciones
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -24,17 +26,8 @@ const sanitizedUsuarioInput = (
 };
 
 const findAll = async (req: Request, res: Response) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ message: 'Token no recibido' });
-    }
     try {
-        const decoded = AuthService.verifyToken(token); //Decodifica el token
-        const usuario = await em.findOne(Usuario, { id: decoded.id }); //Busca el usuario por decodificada
-
-        if (!usuario) {
-            return res.status(401).json({ message: 'Token invalido' });
-        }
+        // Comportamiento de la ruta
         const usuarios = await em.find(
         Usuario,
         {},
@@ -93,20 +86,27 @@ const update = async (req: Request, res: Response) => {
 
 const register = async (req: Request, res: Response) => {
   try {
-    const usuario = em.create(Usuario, req.body.sanitizedInput);
+    const password = req.body.sanitizedInput.password;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const usuario = em.create(Usuario, {
+        ...req.body.sanitizedInput,
+        password: hashedPassword,
+      });
     await em.flush();
 
-    const token = AuthService.generateToken(usuario); // Crea un token y lo asocia al usuario
-    res.status(201).json({ message: 'Usuario creado', data: usuario , token });
+    //const token = AuthService.generateToken(usuario); // Crea un token y lo asocia al usuario
+    const { password: _, ...usuarioPublico} = usuario;
+    res.status(201).json({ message: 'Registro completo', data: usuarioPublico });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message }); // No es recomendado mandar estos errores al frontend (le gusta a los hackers)
   }
 };
 
 const login = async (req: Request, res: Response) => {
     try {
         const email = req.body.email;
-        const contraseña = req.body.contraseña;
+        const password = req.body.password;
         const usuario = await em.findOne(
             Usuario,
             { email },
@@ -114,19 +114,37 @@ const login = async (req: Request, res: Response) => {
             populate: [
             ],
             }
-      );
-
-      if(!usuario){res.status(401).json({ message: 'Mail incorrecto' });}
-      else {
-        if(usuario.contraseña !== contraseña){res.status(401).json({ message: 'Contraseña incorrecta' });}
-        else {
-            const token = AuthService.generateToken(usuario);
-            res.status(200).json({ message: 'Usuario encontrado', data: usuario, token});
+            );
+        if(!usuario){
+            res.status(401).json({ message: 'Mail incorrecto' });
         }
-    }
+        else {
+            const isValid = await bcrypt.compare(password, usuario.password)
+            if(!isValid){
+                res.status(401).json({ message: 'Contraseña incorrecta' });
+            }
+            else {
+                const token = AuthService.generateToken(usuario); // Crea un token y lo asocia al usuario
+                const { password: _, ...usuarioPublico} = usuario;
+                res
+                    .cookie('access_token', token, {
+                        httpOnly: true, // La cookie solo se puede acceder en el servidor (No se puede ver desde el cliente)
+                        //secure: true, // Funciona solo con https
+                        sameSite: 'strict', // Solo se puede acceder en el mismo dominio
+                        maxAge: 1000 * 60 * 60, // Dura 1h
+                    })
+                    .status(200).json({ message: 'Login completo', data: usuarioPublico});
+            }
+        }
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
   };
 
-export { sanitizedUsuarioInput, findAll, findOne, update, remove, register, login };
+  const logout = async (req: Request, res: Response) => {
+    res
+      .clearCookie('access_token')
+      .status(200).json({ message: 'Logout completo' });
+  };
+
+export { sanitizedUsuarioInput, findAll, findOne, update, remove, register, login, logout };

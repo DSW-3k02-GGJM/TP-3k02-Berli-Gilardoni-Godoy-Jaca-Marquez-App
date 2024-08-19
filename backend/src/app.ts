@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
 import { alquilerRouter } from './alquiler/alquiler.routes.js';
@@ -14,6 +15,7 @@ import { usuarioRouter } from './usuario/usuario.route.js';
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 // luego de los middlewares base
 app.use((req, res, next) => {

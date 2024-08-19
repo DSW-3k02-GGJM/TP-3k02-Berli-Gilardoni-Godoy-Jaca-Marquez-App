@@ -13,7 +13,7 @@ import { Cliente } from '../cliente/cliente.entity.js';
     email!: string;
   
     @Property({ nullable: false })
-    contraseña!: string;
+    password!: string;
   
     /*@OneToOne(() => Cliente, (cliente) => cliente.usuario, {
       cascade: [Cascade.ALL],

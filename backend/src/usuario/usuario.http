@@ -1,7 +1,6 @@
 ### GET ALL
 http://localhost:3000/api/usuarios
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJlamVtcGxvQGdtYWlsLmNvbSIsImlhdCI6MTcyMzkxNjUzNywiZXhwIjoxNzIzOTIwMTM3fQ.D5jJUtImuJBpunfN9v_CejSNbzVoK0BBwY215BBxygY
-
+### Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJlamVtcGxvMkBnbWFpbC5jb20iLCJpYXQiOjE3MjQwNzY1NzcsImV4cCI6MTcyNDA4MDE3N30.wkmfb_37Rac7yLxexYLZsMFqeukYhaPxv5Xu_SwkHu0
 
 ### REGISTER
 # @name createUsuario
@@ -9,8 +8,8 @@ POST http://localhost:3000/api/usuarios/register
 Content-Type: application/json
 
 {
-    "email": "ejemplo2@gmail.com",
-    "contraseña": "password"
+    "email": "ejemplo@gmail.com",
+    "password": "password"
 }
 
 ### LOGIN
@@ -18,8 +17,17 @@ POST http://localhost:3000/api/usuarios/login
 Content-Type: application/json
 
 {
-    "email": "ejemplo@gmail.com",
-    "contraseña": "password"
+    "email": "ejemplo2@gmail.com",
+    "password": "password"
+}
+
+### LOGOUT
+POST http://localhost:3000/api/usuarios/logout
+Content-Type: application/json
+
+{
+    "email": "ejemplo2@gmail.com",
+    "password": "password"
 }
 
 ### ID
@@ -34,7 +42,7 @@ Content-Type: application/json
 
 {
     "email": "ejemploPUT@gmail.com",
-    "contraseña": "password"
+    "password": "password"
 }
 
 ### POST 2
@@ -43,7 +51,7 @@ Content-Type: application/json
 
 {
     "email": "ejemplo2@gmail.com",
-    "contraseña": "password2"
+    "password": "password2"
 }
 ### POST to DELETE
 # @name createUsuarioToDelete
@@ -52,7 +60,7 @@ Content-Type: application/json
 
 {
     "email": "ejemploDelete@gmail.com",
-    "contraseña": "password3"
+    "password": "password3"
 }
 
 ### DELETE
