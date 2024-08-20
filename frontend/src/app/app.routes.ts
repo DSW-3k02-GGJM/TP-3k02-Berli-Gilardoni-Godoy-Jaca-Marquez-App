@@ -14,6 +14,9 @@ import { ModelosComponent } from './modelos-folder/modelos/modelos.component';
 import { ModeloFormComponent } from './modelos-folder/modelo-form/modelo-form.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
 import { TestMatiComponent } from './test/test-mati/test-mati.component.js';
+import {LoginComponent} from "./usuario-folder/login/login.component";
+import {RegisterComponent} from "./usuario-folder/register/register.component";
+import {LogoutComponent} from "./usuario-folder/logout/logout.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -37,5 +40,8 @@ export const routes: Routes = [
   { path: 'modelos/modificacion/:id', component: ModeloFormComponent },
   { path: 'vehiculos', component: VehicleListComponent },
   { path: 'testMati', component: TestMatiComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'logout', component: LogoutComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];

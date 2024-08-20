@@ -30,7 +30,7 @@ export class AuthService {
       return res.status(401).json({ message: 'Acceso no autorizado' });
     }
     try {
-      const data = AuthService.verifyToken(token);
+      data = AuthService.verifyToken(token);
       req.session.user = data;
     } 
     catch (error: any) {
