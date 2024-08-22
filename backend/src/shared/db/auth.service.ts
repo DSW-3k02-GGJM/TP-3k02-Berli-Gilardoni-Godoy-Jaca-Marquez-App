@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 import { Usuario } from '../../usuario/usuario.entity.js';
 import { Request, Response, NextFunction } from 'express';
 import { orm } from './orm.js';
-
 const em = orm.em;
 const SECRET_KEY = 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era';
 
@@ -14,6 +13,7 @@ export class AuthService {
 
   static verifyToken(token: string): any {
     try {
+      console.log('token', token);
       return jwt.verify(token, SECRET_KEY);
     } catch (error) {
       throw new Error('Token inválido');
@@ -25,7 +25,6 @@ export class AuthService {
     let data = null;
 
     req.session = { user: null };
-
     if (!token) {
       return res.status(401).json({ message: 'Acceso no autorizado' });
     }

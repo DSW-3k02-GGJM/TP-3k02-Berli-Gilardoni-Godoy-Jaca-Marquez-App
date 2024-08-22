@@ -16,6 +16,10 @@
   padding: 10px; /* Espaciado interno del campo de entrada */
 }
 
+.form {
+  padding: 0.5em 2em 2em 2em;
+}
+
 .form-style input::placeholder {
   color: #ffffff; /* Color del texto del placeholder */
 }
@@ -28,7 +32,7 @@
 }
 
 .unselectable {
-  user-select: none;;
+  user-select: none;
 }
 
 .modal-header {

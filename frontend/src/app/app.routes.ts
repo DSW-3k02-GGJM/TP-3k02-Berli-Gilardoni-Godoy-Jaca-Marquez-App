@@ -17,10 +17,11 @@ import { TestMatiComponent } from './test/test-mati/test-mati.component.js';
 import {LoginComponent} from "./usuario-folder/login/login.component";
 import {RegisterComponent} from "./usuario-folder/register/register.component";
 import {LogoutComponent} from "./usuario-folder/logout/logout.component";
+import {authGuard} from "./auth.guard";
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
-  { path: 'clientes', component: ClientsComponent },
+  { path: 'clientes', component: ClientsComponent, canActivate: [authGuard] },
   { path: 'clientes/creacion', component: ClientFormComponent },
   { path: 'clientes/modificacion/:id', component: ClientFormComponent },
   { path: 'categorias', component: CategoriasComponent },

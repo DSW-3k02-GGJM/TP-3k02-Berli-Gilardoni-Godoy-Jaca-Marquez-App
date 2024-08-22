@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
 import { alquilerRouter } from './alquiler/alquiler.routes.js';
@@ -12,12 +13,23 @@ import { modeloRouter } from './modelo/modelo.routes.js';
 import { sucursalRouter } from './sucursal/sucursal.routes.js';
 import { vehiculoRouter } from './vehiculo/vehiculo.routes.js';
 import { usuarioRouter } from './usuario/usuario.route.js';
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 const app = express();
+const corsOptions = {
+  origin: 'http://localhost:4200', // Frontend URL
+  credentials: true, // Permite credenciales
+
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
 // luego de los middlewares base
+
 app.use((req, res, next) => {
   /*
   Cuando se realiza una solicitud a, por ejemplo, http://localhost:3000/api/vehiculos,
@@ -26,15 +38,17 @@ app.use((req, res, next) => {
   a recursos de otro sitio web desde un navegador), por lo que obtiene HttpErrorResponse
   con un estado de 0 y un error desconocido. Al agregar los siguientes encabezados, será
   posible realizar solicitudes desde cualquier origen.
-  */
+
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header(
     'Access-Control-Allow-Headers',
     'Content-Type, Accept, Accept-Language, Accept-Encoding'
   );
+  */
   RequestContext.create(orm.em, next);
 });
+
 // antes de las rutas y middlewares de negocio
 
 app.use('/api/alquileres', alquilerRouter);
@@ -53,6 +67,7 @@ app.use((_, res) => {
 
 await syncSchema(); // never in production
 
-app.listen(3000, () => {
-  console.log('Servidor operando en http://localhost:3000/'); //Si no aparece con este link probar con 'localhost:8000'
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log('Servidor operando en http://localhost:'+ port + '/'); //Si no aparece con este link probar con 'localhost:8000'
 });
