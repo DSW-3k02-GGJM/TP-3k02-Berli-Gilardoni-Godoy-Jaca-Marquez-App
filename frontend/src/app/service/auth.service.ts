@@ -28,6 +28,12 @@ export class AuthService {
     });
   }
 
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/usuarios/logout`, {
+      withCredentials: true,
+    });
+  }
+
   isAuthenticated(): Observable<any> {
     return this.http.post(`${this.apiUrl}/usuarios/is-authenticated`, {
       withCredentials: true,

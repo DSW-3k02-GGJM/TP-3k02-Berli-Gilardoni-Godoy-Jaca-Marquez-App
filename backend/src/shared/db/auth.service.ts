@@ -26,7 +26,7 @@ export class AuthService {
 
     req.session = { user: null };
     if (!token) {
-      return res.status(401).json({ message: 'Acceso no autorizado' });
+      return res.status(401).json({ message: 'Acceso no autorizado', isAuthenticated: false });
     }
     try {
       data = AuthService.verifyToken(token);

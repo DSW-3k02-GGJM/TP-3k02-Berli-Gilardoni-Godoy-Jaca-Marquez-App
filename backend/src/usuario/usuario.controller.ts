@@ -148,7 +148,7 @@ const login = async (req: Request, res: Response) => {
   };
 
   const verifyAuthentication = async (req: Request, res: Response) => {
-      res.status(200).send({ message: "Authenticated" });
+      res.status(200).send({ message: "Authenticated" , isAuthenticated: true });
   };
 
 export { sanitizedUsuarioInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication };
