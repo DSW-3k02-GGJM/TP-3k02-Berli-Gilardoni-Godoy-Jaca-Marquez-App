@@ -7,11 +7,12 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = '/api';
 
   constructor(private http: HttpClient) { }
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Credentials': 'true',
   });
 
   register(data: any): Observable<any> {

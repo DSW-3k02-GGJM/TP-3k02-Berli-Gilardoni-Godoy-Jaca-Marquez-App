@@ -29,7 +29,7 @@ Antes de ejecutar el frontend, tener en ejecución el backend para obtener y gua
 2. Ejecutar el siguiente comando:
 
 ```bash
-   ng serve -o
+   ng serve --proxy-config proxy-conf.json -o
 ```
 
 - El parámetro `-o` permite abrir la aplicación en el navegador por defecto.
