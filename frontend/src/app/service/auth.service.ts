@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
+import {Observable, BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  loginOrLogout = new Subject<boolean>();
+  private loggedInSubject = new BehaviorSubject<boolean>(false);
+  loginOrLogout: Observable<boolean> = this.loggedInSubject.asObservable();
   isLogged = false;
   private apiUrl = '/api';
 
@@ -20,9 +21,7 @@ export class AuthService {
   }
 
   notifyLoginOrLogout() {
-    console.log('notifyLoginOrLogout');
-    console.log('isLogged', this.isLogged);
-    this.loginOrLogout.next(this.isLogged);
+    this.loggedInSubject.next(this.isLogged);
   }
 
   resetIsLogged() {
@@ -42,6 +41,8 @@ export class AuthService {
   }
 
   login(data: any): Observable<any> {
+    this.isLogged = true;
+    this.loggedInSubject.next(this.isLogged);
     return this.http.post(`${this.apiUrl}/usuarios/login`, data, {
       headers: this.headers,
       withCredentials: true,
@@ -49,6 +50,8 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
+    this.isLogged = false;
+    this.loggedInSubject.next(this.isLogged);
     return this.http.post(`${this.apiUrl}/usuarios/logout`, {
       withCredentials: true,
     });

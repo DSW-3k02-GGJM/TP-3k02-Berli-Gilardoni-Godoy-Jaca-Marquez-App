@@ -33,8 +33,8 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.authService.login(this.loginForm.value)
       .subscribe( response => {
-        this.authService.isLogged = true;
-        this.authService.notifyLoginOrLogout()
+        console.log("notifyLoginOrLogout");
+        this.authService.notifyLoginOrLogout();
         console.log(response);
       });
   }

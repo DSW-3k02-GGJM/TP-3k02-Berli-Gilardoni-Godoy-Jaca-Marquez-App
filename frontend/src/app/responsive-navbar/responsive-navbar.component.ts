@@ -19,16 +19,13 @@ export class ResponsiveNavbarComponent implements OnInit {
 
   ngOnInit() {
     console.log('ngOnInit');
-    this.subscription =
-      this.authService.loginOrLogout.subscribe(
-        (isLogged: boolean) => {
-          this.isAuthenticated = isLogged;
-          this.authService.isLogged = isLogged;
-          console.log(this.authService.isLogged);
-        }
-      );
-    console.log(this.authService.isLogged);
-    console.log(this.subscription)
+    this.subscription = this.authService.loginOrLogout.subscribe(
+      (isLogged: boolean) => {
+        console.log('isLogged', isLogged);
+        this.isAuthenticated = isLogged;
+      }
+    );
+
     if (this.authService.isLogged) {
       this.isAuthenticated = true;
     }
@@ -44,8 +41,7 @@ export class ResponsiveNavbarComponent implements OnInit {
     console.log(!this.isAuthenticated);
     this.authService.logout().subscribe(
       response => {
-        this.authService.isLogged = false;
-        this.authService.notifyLoginOrLogout()
+        this.authService.notifyLoginOrLogout();
         console.log(response);
       });
   }
