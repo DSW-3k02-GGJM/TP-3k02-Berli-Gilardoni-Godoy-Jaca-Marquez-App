@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../../service/auth.service";
 import { HttpClientModule } from "@angular/common/http";
@@ -15,9 +15,15 @@ import { HttpClientModule } from "@angular/common/http";
   styleUrl: './login.component.scss',
   providers: [AuthService]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+  ) { }
+
+  ngOnInit() {
+    this.authService.isLogged = false;
+  }
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required]),
@@ -25,8 +31,10 @@ export class LoginComponent {
   });
 
   onSubmit() {
-    this.authService.login(this.loginForm.value).subscribe(
-      response => {
+    this.authService.login(this.loginForm.value)
+      .subscribe( response => {
+        this.authService.isLogged = true;
+        this.authService.notifyLoginOrLogout()
         console.log(response);
       });
   }

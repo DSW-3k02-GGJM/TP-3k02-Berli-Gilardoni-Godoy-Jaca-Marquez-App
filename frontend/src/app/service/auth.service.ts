@@ -1,13 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  loginOrLogout = new Subject<boolean>();
+  isLogged = false;
   private apiUrl = '/api';
+
+  get IsLogged(): boolean {
+    return this.isLogged;
+  }
+
+  set IsLogged(value: boolean) {
+    this.isLogged = value;
+  }
+
+  notifyLoginOrLogout() {
+    console.log('notifyLoginOrLogout');
+    console.log('isLogged', this.isLogged);
+    this.loginOrLogout.next(this.isLogged);
+  }
+
+  resetIsLogged() {
+    this.isLogged = false;
+  }
 
   constructor(private http: HttpClient) { }
   headers = new HttpHeaders({

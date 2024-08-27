@@ -2,7 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {AuthService} from "../service/auth.service";
 import {CommonModule} from "@angular/common";
-import {catchError, map, Observable, of, } from "rxjs";
+import {catchError, map, Observable, of, Subscription,} from "rxjs";
 
 @Component({
   selector: 'app-responsive-navbar',
@@ -14,33 +14,38 @@ import {catchError, map, Observable, of, } from "rxjs";
 export class ResponsiveNavbarComponent implements OnInit {
   authService = inject(AuthService) as AuthService;
   isAuthenticated: boolean = false;
+  private subscription?: Subscription;
+
 
   ngOnInit() {
-    // Suscribirse al Observable para actualizar isAuthenticated
-    this.verifyAuthentication().subscribe(
-      (isAuth: boolean) => {
-        this.isAuthenticated = isAuth;
-      },
-      (error: any) => {
-        console.error('Error during authentication verification:', error);
-        this.isAuthenticated = false;
-      },
-      () => {
-        console.log('Authentication verification completed.');
-      }
-    );
+    console.log('ngOnInit');
+    this.subscription =
+      this.authService.loginOrLogout.subscribe(
+        (isLogged: boolean) => {
+          this.isAuthenticated = isLogged;
+          this.authService.isLogged = isLogged;
+          console.log(this.authService.isLogged);
+        }
+      );
+    console.log(this.authService.isLogged);
+    console.log(this.subscription)
+    if (this.authService.isLogged) {
+      this.isAuthenticated = true;
+    }
   }
 
-  verifyAuthentication(): Observable<boolean> {
-    return this.authService.isAuthenticated().pipe(
-      map(response => response.isAuthenticated), // Ajusta esto según la estructura de tu respuesta
-      catchError(() => of(false))
-    );
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
+
   logout() {
     console.log(!this.isAuthenticated);
     this.authService.logout().subscribe(
       response => {
+        this.authService.isLogged = false;
+        this.authService.notifyLoginOrLogout()
         console.log(response);
       });
   }
