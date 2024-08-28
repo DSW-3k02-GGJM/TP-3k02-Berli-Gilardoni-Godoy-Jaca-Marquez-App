@@ -4,11 +4,20 @@ import { Vehiculo } from './vehiculo.entity.js';
 
 const em = orm.em;
 
+
+
 const sanitizedVehiculoInput = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+
+  let imagenBuffer;
+  if (req.body.imagen) {
+    // Convierte la imagen base64 en un buffer
+    imagenBuffer = Buffer.from(req.body.imagen, 'base64');
+  }
+
   req.body.sanitizedInput = {
     patente: req.body.patente,
     anioFabricacion: req.body.anioFabricacion,
@@ -17,6 +26,7 @@ const sanitizedVehiculoInput = (
     color: req.body.color,
     modelo: req.body.modelo,
     alquileres: req.body.alquileres,
+    imagen: imagenBuffer,  // Añadido
   };
   // Más validaciones
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -44,9 +54,17 @@ const findAll = async (req: Request, res: Response) => {
         ],
       }
     );
-    res
-      .status(200)
-      .json({ message: 'Todos los vehiculos encontrados', data: vehiculos });
+
+    // Crear un campo separado para la imagen en base64
+    const vehiculosConImagen = vehiculos.map(vehiculo => {
+      const vehiculoData = {
+        ...vehiculo,
+        imagenBase64: vehiculo.imagen instanceof Buffer ? vehiculo.imagen.toString('base64') : null,
+      };
+      return vehiculoData;
+    });
+
+    res.status(200).json({ message: 'Todos los vehiculos encontrados', data: vehiculosConImagen });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -70,11 +88,19 @@ const findOne = async (req: Request, res: Response) => {
         ],
       }
     );
-    res.status(200).json({ message: 'Vehiculo encontrado', data: vehiculo });
+
+    // Crear un campo separado para la imagen en base64
+    const vehiculoData = {
+      ...vehiculo,
+      imagenBase64: vehiculo.imagen instanceof Buffer ? vehiculo.imagen.toString('base64') : null,
+    };
+
+    res.status(200).json({ message: 'Vehiculo encontrado', data: vehiculoData });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const add = async (req: Request, res: Response) => {
   try {
