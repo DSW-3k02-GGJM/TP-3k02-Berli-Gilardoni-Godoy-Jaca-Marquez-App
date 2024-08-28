@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { VehicleCardComponent } from '../vehicle-card/vehicle-card.component';
-import { ApiService } from '../service/api.service';
+import { ApiService } from '../../service/api.service';
 
 @Component({
   selector: 'app-vehicle-list',

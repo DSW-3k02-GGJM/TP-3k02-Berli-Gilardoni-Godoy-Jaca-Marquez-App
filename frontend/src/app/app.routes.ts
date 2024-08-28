@@ -12,8 +12,10 @@ import { SucursalesComponent } from './suc-folder/sucursales/sucursales.componen
 import { SucursalFormComponent } from './suc-folder/sucursal-form/sucursal-form.component';
 import { ModelosComponent } from './mod-folder/modelos/modelos.component';
 import { ModeloFormComponent } from './mod-folder/modelo-form/modelo-form.component';
-import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
+import { VehicleListComponent } from './veh-folder/vehicle-list/vehicle-list.component';
 import { TestMatiComponent } from './test/test-mati/test-mati.component.js';
+import { VehiclesComponent } from './veh-folder/vehicles/vehicles.component';
+import { VehicleFormComponent } from './veh-folder/vehicle-form/vehicle-form.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -35,7 +37,12 @@ export const routes: Routes = [
   { path: 'modelos', component: ModelosComponent },
   { path: 'modelos/creacion', component: ModeloFormComponent },
   { path: 'modelos/modificacion/:id', component: ModeloFormComponent },
+  // este es el de las tarjetitas
   { path: 'vehiculos', component: VehicleListComponent },
+  // este es el de alta pero para el admin
+  { path: 'vehiculosAdmin', component: VehiclesComponent },
+  { path: 'vehiculos/creacion', component: VehicleFormComponent },
+  { path: 'vehiculos/modificacion/:id', component: VehicleFormComponent },
   { path: 'testMati', component: TestMatiComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
