@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {BehaviorSubject, catchError, Observable, Subject, tap, throwError} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {catchError, Observable, of, Subject, tap, throwError} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +56,6 @@ export class AuthService {
   isAuthenticated(): Observable<any> {
     return this.http.post(`${this.apiUrl}/usuarios/is-authenticated`, {
       withCredentials: true,
-    });
+    })
   }
 }

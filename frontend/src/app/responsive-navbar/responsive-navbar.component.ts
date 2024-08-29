@@ -20,7 +20,6 @@ export class ResponsiveNavbarComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log('ngOnInit');
     this.subscription =
       this.authService.loginOrLogout.subscribe(
         () => {
