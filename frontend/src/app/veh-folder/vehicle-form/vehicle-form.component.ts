@@ -95,6 +95,7 @@ export class VehicleFormComponent implements OnInit {
       this.uploadImage(file).subscribe(
         (rutaImagen: string) => {
           this.vehicleForm.patchValue({ imagenRuta: rutaImagen });
+          console.log('Ruta de la imagen:', this.vehicleForm.value.imagenRuta);
         },
         (error) => {
           console.error('Error al subir la imagen:', error);
@@ -102,21 +103,24 @@ export class VehicleFormComponent implements OnInit {
       );
     }
   }
+  
 
   uploadImage(file: File): Observable<string> {
     const formData = new FormData();
     formData.append('file', file);
-
+  
     return this.httpClient.post<{ ruta: string }>('/api/upload', formData).pipe(
       map((response) => response.ruta)
     );
   }
+  
 
   onSubmit() {
     if (this.vehicleForm.valid) {
       const formData = this.vehicleForm.value;
+      console.log('Datos enviados:', formData); // Agrega esta línea para ver los datos que se envían
       this.activeModal.close();
-
+  
       if (this.action === 'Create') {
         this.apiService.create('vehiculos', formData).subscribe((response) => {
           this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
@@ -128,9 +132,10 @@ export class VehicleFormComponent implements OnInit {
             this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
           });
       }
-
+  
       this.vehicleCreatedOrModifiedService.isDataLoaded = true;
     }
   }
+  
 }
 
