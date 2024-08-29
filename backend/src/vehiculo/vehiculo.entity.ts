@@ -6,7 +6,6 @@ import {
   Cascade,
   Collection,
   OneToMany,
-  BlobType,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
 import { Sucursal } from '../sucursal/sucursal.entity.js';
@@ -37,10 +36,5 @@ export class Vehiculo extends BaseEntity {
   @OneToMany(() => Alquiler, (alquiler) => alquiler.vehiculo, {
     cascade: [Cascade.ALL],
   })
-
-  // Preuba para imagen...
-  @Property({ type: BlobType, nullable: true })
-  imagen?: Buffer;
-  
   alquileres = new Collection<Alquiler>(this);
 }
