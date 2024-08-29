@@ -47,7 +47,7 @@ export class VehiclesTableComponent {
       (result) => {
         if (result) {
           this.apiService
-            .delete('vehiculos', Number(vehicle.id))
+            .delete('vehiculos', Number(vehicle.id)) 
             .subscribe((response) => {
               this.vehicleDeleted.emit(vehicle.id);
             });

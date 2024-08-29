@@ -6,10 +6,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { VehicleCreatedOrModifiedService } from '../vehicle-created-or-modified/vehicle.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -23,13 +25,14 @@ export class VehicleFormComponent implements OnInit {
   @Input() title: string = '';
   @Input() currentVehicleId: number = -1;
   action: string = '';
-  modelos: any[] = []; // Agrega esta propiedad para almacenar las categorías
+  modelos: any[] = [];
   colors: any[] = [];
   sucursals: any[] = [];
 
   constructor(
     private apiService: ApiService,
     private vehicleCreatedOrModifiedService: VehicleCreatedOrModifiedService,
+    private httpClient: HttpClient,
     public activeModal: NgbActiveModal
   ) {}
 
@@ -37,82 +40,97 @@ export class VehicleFormComponent implements OnInit {
     patente: new FormControl('', [Validators.required]),
     anioFabricacion: new FormControl('', [Validators.required]),
     kmRecorridos: new FormControl('', [Validators.required]),
-    modelo: new FormControl('', [Validators.required]), // Campo para la categoría
-    color: new FormControl('', [Validators.required]), // Campo para la marca
+    modelo: new FormControl('', [Validators.required]),
+    color: new FormControl('', [Validators.required]),
     sucursal: new FormControl('', [Validators.required]),
+    imagenRuta: new FormControl(''),
+    //imagenRuta: new FormControl('', [Validators.required]), // Control para la ruta de la imagen
   });
 
   ngOnInit(): void {
-    // Inicializa la variable isDataLoaded en el servicio para indicar que los datos aún no han sido cargados.
     this.vehicleCreatedOrModifiedService.isDataLoaded = false;
-
-    // Llama al método loadCategorias() para obtener la lista de categorías disponibles desde el backend
-    // y almacenarlas en una propiedad del componente para usar en el formulario.
     this.loadModelos();
     this.loadColores();
     this.loadSucursales();
 
     if (this.currentVehicleId != -1) {
-      // Si el parámetro 'id' está presente en la ruta, significa que estamos en el modo de edición.
-      // Realiza una solicitud al backend para obtener los detalles del modelo con el ID proporcionado.
       this.apiService
         .getOne('vehiculos', Number(this.currentVehicleId))
         .subscribe((response) => {
-          // Usa el método patchValue para actualizar el formulario con los datos del modelo recibido.
-          // Asigna los valores del modelo a los campos del formulario.
           this.vehicleForm.patchValue({
             ...response.data,
-            modelo: response.data.modelo.id, 
+            modelo: response.data.modelo.id,
             color: response.data.color.id,
-            sucursal: response.data.sucursal.id, 
+            sucursal: response.data.sucursal.id,
+            imagenRuta: response.data.imagenRuta, // Asigna la ruta de la imagen
           });
         });
-
-      // Establece la acción como 'Edit' para indicar que estamos editando un modelo existente.
       this.action = 'Edit';
     } else {
-      // Si no hay un parámetro 'id' en la ruta, significa que estamos en el modo de creación.
-      // Establece la acción como 'Create'.
       this.action = 'Create';
     }
   }
 
-  // Método para cargar
   loadModelos(): void {
     this.apiService.getAll('modelos').subscribe((response) => {
       this.modelos = response.data;
     });
   }
 
-  // Método para cargar
   loadColores(): void {
     this.apiService.getAll('colores').subscribe((response) => {
       this.colors = response.data;
     });
   }
 
-  // Método para cargar
   loadSucursales(): void {
     this.apiService.getAll('sucursales').subscribe((response) => {
       this.sucursals = response.data;
     });
   }
 
-  onSubmit() {
-    this.activeModal.close();
-    if (this.action === 'Create') {
-      this.apiService
-        .create('vehiculos', this.vehicleForm.value)
-        .subscribe((response) => {
-          this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
-        });
-    } else if (this.action === 'Edit') {
-      this.apiService
-        .update('vehiculos', this.currentVehicleId, this.vehicleForm.value)
-        .subscribe((response) => {
-          this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
-        });
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.uploadImage(file).subscribe(
+        (rutaImagen: string) => {
+          this.vehicleForm.patchValue({ imagenRuta: rutaImagen });
+        },
+        (error) => {
+          console.error('Error al subir la imagen:', error);
+        }
+      );
     }
-    this.vehicleCreatedOrModifiedService.isDataLoaded = true;
+  }
+
+  uploadImage(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.httpClient.post<{ ruta: string }>('/api/upload', formData).pipe(
+      map((response) => response.ruta)
+    );
+  }
+
+  onSubmit() {
+    if (this.vehicleForm.valid) {
+      const formData = this.vehicleForm.value;
+      this.activeModal.close();
+
+      if (this.action === 'Create') {
+        this.apiService.create('vehiculos', formData).subscribe((response) => {
+          this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
+        });
+      } else if (this.action === 'Edit') {
+        this.apiService
+          .update('vehiculos', this.currentVehicleId, formData)
+          .subscribe((response) => {
+            this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
+          });
+      }
+
+      this.vehicleCreatedOrModifiedService.isDataLoaded = true;
+    }
   }
 }
+
