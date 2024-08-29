@@ -1,0 +1,43 @@
+<div class="container p-5">
+  <div class="row">
+    <div class="col-md-4 mx-auto">
+      <div class="card">
+        <div class="card-header">
+          Registrarse
+        </div>
+        <div class="card-body">
+          <form [formGroup]="registerForm">
+            <div class="form-group">
+              <input
+                id="email"
+                class="form-control"
+                type="email"
+                formControlName="email"
+                placeholder="Email"
+              />
+            </div>
+            <hr />
+            <div class="form-group">
+              <input
+                id="password"
+                class="form-control"
+                type="password"
+                formControlName="password"
+                placeholder="Contraseña"
+              />
+            </div>
+            <hr />
+            <button
+              type="submit"
+              class="btn btn-primary border border-1 border-white"
+              (click)="onSubmit()"
+              [disabled]="!registerForm.valid"
+            >
+              Registrar
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

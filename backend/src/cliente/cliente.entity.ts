@@ -4,9 +4,11 @@ import {
   Cascade,
   Collection,
   OneToMany,
+  OneToOne,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
 import { Alquiler } from '../alquiler/alquiler.entity.js';
+import { Usuario } from '../usuario/usuario.entity.js';
 
 @Entity()
 export class Cliente extends BaseEntity {
@@ -26,9 +28,6 @@ export class Cliente extends BaseEntity {
   fechaNacimiento!: Date;
 
   @Property({ nullable: false })
-  mail!: string;
-
-  @Property({ nullable: false })
   domicilio!: string;
 
   @Property({ nullable: false })
@@ -41,4 +40,11 @@ export class Cliente extends BaseEntity {
     cascade: [Cascade.ALL],
   })
   alquileres = new Collection<Alquiler>(this);
+
+  /*
+  @OneToOne(() => Usuario, (usuario) => usuario.cliente, {
+    cascade: [Cascade.ALL],
+  })
+  usuario!: Usuario;
+  */
 }

@@ -14,12 +14,16 @@ import { ModelosComponent } from './mod-folder/modelos/modelos.component';
 import { ModeloFormComponent } from './mod-folder/modelo-form/modelo-form.component';
 import { VehicleListComponent } from './veh-folder/vehicle-list/vehicle-list.component';
 import { TestMatiComponent } from './test/test-mati/test-mati.component.js';
+import {LoginComponent} from "./usuario-folder/login/login.component";
+import {RegisterComponent} from "./usuario-folder/register/register.component";
+import {LogoutComponent} from "./usuario-folder/logout/logout.component";
+import {authGuard} from "./auth.guard";
 import { VehiclesComponent } from './veh-folder/vehicles/vehicles.component';
 import { VehicleFormComponent } from './veh-folder/vehicle-form/vehicle-form.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
-  { path: 'clientes', component: ClientsComponent },
+  { path: 'clientes', component: ClientsComponent, canActivate: [authGuard] },
   { path: 'clientes/creacion', component: ClientFormComponent },
   { path: 'clientes/modificacion/:id', component: ClientFormComponent },
   { path: 'categorias', component: CategoriasComponent },
@@ -44,5 +48,8 @@ export const routes: Routes = [
   { path: 'vehiculos/creacion', component: VehicleFormComponent },
   { path: 'vehiculos/modificacion/:id', component: VehicleFormComponent },
   { path: 'testMati', component: TestMatiComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'logout', component: LogoutComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
