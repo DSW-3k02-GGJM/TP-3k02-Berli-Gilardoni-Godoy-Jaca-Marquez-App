@@ -21,6 +21,7 @@ import { CategoriaFormComponent } from '../categoria-form/categoria-form.compone
 export class CategoriasComponent implements OnInit {
   categorias: any[] = [];
   private subscription?: Subscription;
+  private subscription2?: Subscription;
 
   constructor(
     private apiService: ApiService,

@@ -1,32 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, catchError, Observable, Subject, tap, throwError} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  loginOrLogout = new Subject<boolean>();
+  loginOrLogout = new Subject<void>();
   isLogged = false;
   private apiUrl = '/api';
 
-  get IsLogged(): boolean {
-    return this.isLogged;
-  }
-
-  set IsLogged(value: boolean) {
-    this.isLogged = value;
-  }
-
-  notifyLoginOrLogout() {
-    console.log('notifyLoginOrLogout');
-    console.log('isLogged', this.isLogged);
-    this.loginOrLogout.next(this.isLogged);
-  }
-
-  resetIsLogged() {
-    this.isLogged = false;
+  notifyLoginOrLogout(isLogged : boolean) {
+    this.isLogged = isLogged;
+    this.loginOrLogout.next();
   }
 
   constructor(private http: HttpClient) { }
@@ -45,13 +32,25 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/usuarios/login`, data, {
       headers: this.headers,
       withCredentials: true,
-    });
+    }).pipe(
+      tap(() => this.notifyLoginOrLogout(true)), // login exitoso
+      catchError(error => {
+        // Error en el login
+        return throwError(() => error);
+      })
+    );
   }
 
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/usuarios/logout`, {
       withCredentials: true,
-    });
+    }).pipe(
+      tap(() => this.notifyLoginOrLogout(false)), // logout exitoso
+      catchError(error => {
+        // Error en el logout
+        return throwError(() => error);
+      })
+    );
   }
 
   isAuthenticated(): Observable<any> {

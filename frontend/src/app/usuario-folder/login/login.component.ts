@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../../service/auth.service";
 import { HttpClientModule } from "@angular/common/http";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -13,17 +14,13 @@ import { HttpClientModule } from "@angular/common/http";
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
-  providers: [AuthService]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   constructor(
     private authService: AuthService,
   ) { }
 
-  ngOnInit() {
-    this.authService.isLogged = false;
-  }
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required]),
@@ -32,10 +29,9 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.authService.login(this.loginForm.value)
-      .subscribe( response => {
-        this.authService.isLogged = true;
-        this.authService.notifyLoginOrLogout()
-        console.log(response);
+      .subscribe(
+        res=> {
+        console.log(res);
       });
   }
 }

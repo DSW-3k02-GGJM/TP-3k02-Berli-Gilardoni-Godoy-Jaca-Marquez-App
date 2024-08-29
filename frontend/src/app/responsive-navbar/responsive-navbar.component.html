@@ -45,7 +45,7 @@
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
-        <ng-container *ngIf="!isAuthenticated; else loggedIn">
+        <ng-container *ngIf="!isLogged; else loggedIn">
           <li class="nav-item">
             <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
           </li>

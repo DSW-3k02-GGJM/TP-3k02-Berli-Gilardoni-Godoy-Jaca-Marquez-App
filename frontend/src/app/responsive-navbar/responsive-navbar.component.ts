@@ -12,8 +12,10 @@ import {catchError, map, Observable, of, Subscription,} from "rxjs";
   styleUrl: './responsive-navbar.component.scss',
 })
 export class ResponsiveNavbarComponent implements OnInit {
-  authService = inject(AuthService) as AuthService;
-  isAuthenticated: boolean = false;
+  constructor(
+    private authService: AuthService)
+  { }
+  isLogged = false;
   private subscription?: Subscription;
 
 
@@ -21,16 +23,13 @@ export class ResponsiveNavbarComponent implements OnInit {
     console.log('ngOnInit');
     this.subscription =
       this.authService.loginOrLogout.subscribe(
-        (isLogged: boolean) => {
-          this.isAuthenticated = isLogged;
-          this.authService.isLogged = isLogged;
-          console.log(this.authService.isLogged);
+        () => {
+          this.isLogged = this.authService.isLogged;
         }
       );
-    console.log(this.authService.isLogged);
-    console.log(this.subscription)
-    if (this.authService.isLogged) {
-      this.isAuthenticated = true;
+
+    if(!this.authService.isLogged) {
+      this.isLogged = false;
     }
   }
 
@@ -41,12 +40,10 @@ export class ResponsiveNavbarComponent implements OnInit {
   }
 
   logout() {
-    console.log(!this.isAuthenticated);
-    this.authService.logout().subscribe(
-      response => {
-        this.authService.isLogged = false;
-        this.authService.notifyLoginOrLogout()
-        console.log(response);
-      });
+    this.authService.logout()
+      .subscribe(
+      res => {
+      console.log(res);
+    });
   }
 }
