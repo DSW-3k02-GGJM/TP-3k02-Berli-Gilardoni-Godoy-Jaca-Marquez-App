@@ -1,0 +1,43 @@
+<input
+  type="text"
+  class="form-control mb-3"
+  name="filterPost"
+  placeholder="Buscar por patente..."
+  [(ngModel)]="filterRows"
+/>
+<div class="div-tablas">
+  <table
+    class="table table-dark table-hover table-bordered table-sm border border-white text-center vehicles-table"
+  >
+    <thead>
+      <tr class="text-danger">
+        <th>Patente</th>
+        <th>Año de Fabricación</th>
+        <th>Km Recorridos</th>
+        <th>Modelo</th>
+        <th>Color</th>
+        <th>Sucursal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vehicle of vehicles | filter : filterRows">
+        <td>{{ vehicle.patente }}</td>
+        <td>{{ vehicle.anioFabricacion }}</td>
+        <td>{{ vehicle.kmRecorridos }}</td>
+        <td>{{ vehicle.modelo.nombre }}</td>
+        <td>{{ vehicle.color.nombre }}</td>
+        <td>{{ vehicle.sucursal.nombre }}</td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button class="btn btn-dark fs-5" (click)="editVehicle(vehicle)">
+              ✏️
+            </button>
+            <button class="btn btn-dark fs-5" (click)="deleteVehicle(vehicle)">
+              ❌
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

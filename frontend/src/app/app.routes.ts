@@ -1,23 +1,25 @@
 import { Routes } from '@angular/router';
 import { HomePageComponent } from './home-page/home-page.component';
-import { ClientsComponent } from './clients-folder/clients/clients.component';
-import { ClientFormComponent } from './clients-folder/client-form/client-form.component';
-import { CategoriasComponent } from './categorias-folder/categorias/categorias.component';
-import { CategoriaFormComponent } from './categorias-folder/categoria-form/categoria-form.component';
-import { MarcasComponent } from './marcas-folder/marcas/marcas.component';
-import { MarcaFormComponent } from './marcas-folder/marca-form/marca-form.component';
-import { ColorsComponent } from './colors-folder/colors/colors.component';
-import { ColorFormComponent } from './colors-folder/color-form/color-form.component';
-import { SucursalesComponent } from './sucursales-folder/sucursales/sucursales.component';
-import { SucursalFormComponent } from './sucursales-folder/sucursal-form/sucursal-form.component';
-import { ModelosComponent } from './modelos-folder/modelos/modelos.component';
-import { ModeloFormComponent } from './modelos-folder/modelo-form/modelo-form.component';
-import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
+import { ClientsComponent } from './cli-folder/clients/clients.component';
+import { ClientFormComponent } from './cli-folder/client-form/client-form.component';
+import { CategoriasComponent } from './cat-folder/categorias/categorias.component';
+import { CategoriaFormComponent } from './cat-folder/categoria-form/categoria-form.component';
+import { MarcasComponent } from './mar-folder/marcas/marcas.component';
+import { MarcaFormComponent } from './mar-folder/marca-form/marca-form.component';
+import { ColorsComponent } from './col-folder/colors/colors.component';
+import { ColorFormComponent } from './col-folder/color-form/color-form.component';
+import { SucursalesComponent } from './suc-folder/sucursales/sucursales.component';
+import { SucursalFormComponent } from './suc-folder/sucursal-form/sucursal-form.component';
+import { ModelosComponent } from './mod-folder/modelos/modelos.component';
+import { ModeloFormComponent } from './mod-folder/modelo-form/modelo-form.component';
+import { VehicleListComponent } from './veh-folder/vehicle-list/vehicle-list.component';
 import { TestMatiComponent } from './test/test-mati/test-mati.component.js';
 import {LoginComponent} from "./usuario-folder/login/login.component";
 import {RegisterComponent} from "./usuario-folder/register/register.component";
 import {LogoutComponent} from "./usuario-folder/logout/logout.component";
 import {authGuard} from "./auth.guard";
+import { VehiclesComponent } from './veh-folder/vehicles/vehicles.component';
+import { VehicleFormComponent } from './veh-folder/vehicle-form/vehicle-form.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -39,7 +41,12 @@ export const routes: Routes = [
   { path: 'modelos', component: ModelosComponent },
   { path: 'modelos/creacion', component: ModeloFormComponent },
   { path: 'modelos/modificacion/:id', component: ModeloFormComponent },
+  // este es el de las tarjetitas
   { path: 'vehiculos', component: VehicleListComponent },
+  // este es el de alta pero para el admin
+  { path: 'vehiculosAdmin', component: VehiclesComponent },
+  { path: 'vehiculos/creacion', component: VehicleFormComponent },
+  { path: 'vehiculos/modificacion/:id', component: VehicleFormComponent },
   { path: 'testMati', component: TestMatiComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },

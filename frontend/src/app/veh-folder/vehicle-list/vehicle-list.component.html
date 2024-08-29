@@ -1,0 +1,15 @@
+<div class="lista-vehiculos text-white">
+  <div class="titulo d-flex justify-content-between pt-3 me-5">
+    <h2 class="nuestros-vehiculos">Nuestros vehiculos</h2>
+  </div>
+  <section class="vehicle-list mt-3 mx-5">
+    <app-vehicle-card
+      *ngFor="let vehiculo of response"
+      [modelo]="vehiculo.modelo.nombre"
+      [descripcion]="vehiculo.modelo.categoria.descripcion"
+      [imagen]="
+        'https://http2.mlstatic.com/D_NQ_NP_642000-MLA70518447599_072023-O.webp'
+      "
+    ></app-vehicle-card>
+  </section>
+</div>
