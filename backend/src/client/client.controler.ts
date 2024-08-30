@@ -4,8 +4,6 @@ import { Client } from './client.entity.js';
 
 const em = orm.em;
 
-//TODO: finish translation
-
 const sanitizedClientInput = (
   req: Request,
   res: Response,
@@ -59,7 +57,7 @@ const findAll = async (req: Request, res: Response) => {
 const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const cliente = await em.findOneOrFail(
+    const client = await em.findOneOrFail(
       Client,
       { id },
       {
@@ -74,7 +72,7 @@ const findOne = async (req: Request, res: Response) => {
         ],
       }
     );
-    res.status(200).json({ message: 'All clients found', data: cliente });
+    res.status(200).json({ message: 'All clients found', data: client });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -82,9 +80,9 @@ const findOne = async (req: Request, res: Response) => {
 
 const add = async (req: Request, res: Response) => {
   try {
-    const cliente = em.create(Client, req.body.sanitizedInput);
+    const client = em.create(Client, req.body.sanitizedInput);
     await em.flush();
-    res.status(201).json({ message: 'The client has been created', data: cliente });
+    res.status(201).json({ message: 'The client has been created', data: client });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -93,8 +91,8 @@ const add = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const cliente = em.getReference(Client, id);
-    em.assign(cliente, req.body.sanitizedInput);
+    const client = em.getReference(Client, id);
+    em.assign(client, req.body.sanitizedInput);
     await em.flush();
     res.status(200).json({ message: 'The client has been updated' });
   } catch (error: any) {
@@ -105,8 +103,8 @@ const update = async (req: Request, res: Response) => {
 const remove = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const cliente = em.getReference(Client, id);
-    await em.removeAndFlush(cliente);
+    const client = em.getReference(Client, id);
+    await em.removeAndFlush(client);
     res.status(200).send({ message: 'The client has been deleted' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
