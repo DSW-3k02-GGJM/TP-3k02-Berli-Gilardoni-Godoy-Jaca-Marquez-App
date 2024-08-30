@@ -140,11 +140,13 @@ export class VehicleFormComponent implements OnInit {
     // Modifica el valor de imagenRuta
       if(formData.imagenRuta != null) 
       {
-          formData.imagenRuta = formData.imagenRuta.replace('C:/fakepath', 'assets/img/');
-      }
+          //formData.imagenRuta = formData.imagenRuta.replace('C:\fakepath\', 'assets\img\');
+          formData.imagenRuta = formData.imagenRuta.replace('C:\\fakepath\\', 'assets/img/');
+
+      } // en realidad se guarda como C:\fakepath
      
 
-      console.log('Datos enviados:', formData); // Agrega esta línea para ver los datos que se envían
+      console.log('Datos enviados:', formData); // para ver los datos que se envían
       this.activeModal.close();
   
       if (this.action === 'Create') {

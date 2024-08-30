@@ -11,6 +11,7 @@ export class VehicleCardComponent {
   @Input() modelo!: string;
   @Input() descripcion!: string;
   @Input() imagen!: string;
+  @Input() cantPasajeros!: Int16Array;
   ImagePath: string;
   constructor() {
     this.ImagePath =
