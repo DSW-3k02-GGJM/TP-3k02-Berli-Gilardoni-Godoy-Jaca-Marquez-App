@@ -89,6 +89,7 @@ export class VehicleFormComponent implements OnInit {
     });
   }
 
+  /*
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
@@ -102,7 +103,23 @@ export class VehicleFormComponent implements OnInit {
         }
       );
     }
+  }*/
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      // Obtén el nombre del archivo
+      const fileName = file.name;
+  
+      // Construye la ruta relativa en tu carpeta assets
+      const imageRuta = `assets/img/${fileName}`;
+  
+      // Aquí puedes usar imageRuta como quieras, por ejemplo:
+      this.vehicleForm.patchValue({ imagenRuta: imageRuta });
+      console.log('Ruta de la imagen:', imageRuta);
+    }
   }
+  
   
 
   uploadImage(file: File): Observable<string> {
@@ -117,7 +134,16 @@ export class VehicleFormComponent implements OnInit {
 
   onSubmit() {
     if (this.vehicleForm.valid) {
+
       const formData = this.vehicleForm.value;
+
+    // Modifica el valor de imagenRuta
+      if(formData.imagenRuta != null) 
+      {
+          formData.imagenRuta = formData.imagenRuta.replace('C:/fakepath', 'assets/img/');
+      }
+     
+
       console.log('Datos enviados:', formData); // Agrega esta línea para ver los datos que se envían
       this.activeModal.close();
   
