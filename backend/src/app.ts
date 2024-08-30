@@ -4,15 +4,15 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
-import { reservationRouter as reservationRouter } from './alquiler/alquiler.routes.js';
-import { categoryRouter as categoryRouter } from './categoria/categoria.routes.js';
-import { clienteRouter as clientRouter } from './cliente/cliente.routes.js';
+import { categoryRouter } from "./category/category.routes.js";
+import { clientRouter } from './client/client.routes.js';
 import { colorRouter } from './color/color.routes.js';
-import { brandRouter as brandRouter } from './marca/marca.routes.js';
-import { modeloRouter as vehicleModelRouter } from './modelo/modelo.routes.js';
-import { locationRouter as locationRouter } from './sucursal/sucursal.routes.js';
-import { vehicleRouter as vehicleRouter } from './vehiculo/vehiculo.routes.js';
-import { usuarioRouter as userRouter } from './usuario/usuario.route.js';
+import { brandRouter } from './brand/brand.routes.js';
+import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js';
+import { locationRouter } from './location/location.routes.js';
+import { reservationRouter  } from './reservation/reservation.routes.js';
+import { vehicleRouter } from './vehicle/vehicle.routes.js';
+import { userRouter } from './user/user.routes.js';
 import dotenv from 'dotenv'
 
 dotenv.config();

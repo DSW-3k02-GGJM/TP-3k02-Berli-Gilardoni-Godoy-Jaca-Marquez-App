@@ -1,0 +1,90 @@
+### GET ALL
+GET http://localhost:3000/api/clients
+
+### POST
+# @name createClient
+POST http://localhost:3000/api/clients
+Content-Type: application/json
+
+{
+  "documentType": "DNI",
+  "documentID": "34617640",
+  "clientName": "Juan",
+  "clientSurname": "Perez",
+  "birthDate": "1980-01-01",
+  "address": "Ayacucho 1023",
+  "phoneNumber": "3416893525",
+  "nationality": "Argentina"
+}
+
+### ID
+@id = {{createClient.response.body.data.id}}
+
+### GET ONE
+# @name createClient
+GET http://localhost:3000/api/clients/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/clients/{{id}}
+Content-Type: application/json
+
+{
+  "documentType": "DNI",
+  "documentID": "34617640",
+  "clientName": "Juan",
+  "clientSurname": "Perez",
+  "birthDate": "1980-01-01",
+  "address": "Ayacucho 2431",
+  "phoneNumber": "3416893525",
+  "nationality": "Argentina"
+}
+
+### POST 2
+POST http://localhost:3000/api/clients
+Content-Type: application/json
+
+{
+  "documentType": "Pasaporte",
+  "documentID": "AB1234567",
+  "clientName": "Peter",
+  "clientSurname": "Griffin",
+  "birthDate": "1975-03-28",
+  "address": "24 Cottrill St.",
+  "phoneNumber": "3055551212",
+  "nationality": "Estados Unidos"
+}
+
+### POST 3
+POST http://localhost:3000/api/clients
+Content-Type: application/json
+
+{
+  "documentType": "Pasaporte",
+  "documentID": "BA45678932",
+  "clientName": "Lionel",
+  "clientSurname": "Messi",
+  "birthDate": "1965-03-18",
+  "address": "Miami 123",
+  "phoneNumber": "305555231",
+  "nationality": "Argentino"
+}
+
+### POST to DELETE
+# @name createClientToDelete
+POST http://localhost:3000/api/clients
+Content-Type: application/json
+
+{
+  "documentType": "DNI",
+  "documentID": "21375376",
+  "clientName": "Ana",
+  "clientSurname": "Garcia",
+  "birthDate": "1990-02-15",
+  "address": "Laprida 742",
+  "phoneNumber": "3413528690",
+  "nationality": "Argentina"
+}
+
+### DELETE
+@idToDelete = {{createClientToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/clients/{{idToDelete}}

@@ -1,0 +1,75 @@
+### GET ALL
+GET http://localhost:3000/api/vehicleModels
+
+### POST
+# @name createVehicleModels
+POST http://localhost:3000/api/vehicleModels
+Content-Type: application/json
+
+{
+    "vehicleModelName": "Toyota Corolla",
+    "transmissionType": "Automatica",
+    "passengerCount": 5,
+    "category": 1,
+    "brand": 1
+}
+
+### ID
+@id = {{createVehicleModels.response.body.data.id}}
+
+### GET ONE
+GET http://localhost:3000/api/vehicleModels/{{id}}
+
+
+### PUT
+PUT  http://localhost:3000/api/vehicleModels/{{id}}
+Content-Type: application/json
+
+{
+    "vehicleModelName": "Toyota Corolla",
+    "transmissionType": "Automatica",
+    "passengerCount": 6,
+    "category": 1,
+    "brand": 1
+}
+
+### POST 2
+POST http://localhost:3000/api/vehicleModels
+Content-Type: application/json
+
+{
+    "vehicleModelName": "Honda Civic",
+    "transmissionType": "Manual",
+    "passengerCount": 4,
+    "category": 1,
+    "brand": 2
+}
+
+### POST 3
+POST http://localhost:3000/api/vehicleModels
+Content-Type: application/json
+
+{
+    "vehicleModelName": "Ford F-150",
+    "transmissionType": "Automatica",
+    "passengerCount": 6,
+    "category": 2,
+    "brand": 3
+}
+
+### POST to DELETE
+# @name createVehicleModelToDelete
+POST http://localhost:3000/api/vehicleModels
+Content-Type: application/json
+
+{
+    "vehicleModelName": "Chevrolet Silverado",
+    "transmissionType": "Automatica",
+    "passengerCount": 4,
+    "category": 2,
+    "brand": 5
+}
+
+### DELETE
+@idToDelete = {{createVehicleModelToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/vehicleModels/{{idToDelete}}

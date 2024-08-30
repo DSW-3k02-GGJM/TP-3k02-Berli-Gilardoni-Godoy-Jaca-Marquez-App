@@ -9,11 +9,17 @@ import { BaseEntity } from '../shared/db/baseEntity.entity.js';
 import { Vehicle } from '../vehicle/vehicle.entity.js';
 
 @Entity()
-export class Color extends BaseEntity {
+export class Location extends BaseEntity {
   @Property({ nullable: false })
-  colorName!: string;
+  locationName!: string;
 
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.color, {
+  @Property({ nullable: false })
+  address!: string;
+
+  @Property({ nullable: false })
+  phoneNumber!: string;
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.location, {
     cascade: [Cascade.ALL],
   })
   vehicles = new Collection<Vehicle>(this);
