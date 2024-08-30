@@ -5,10 +5,10 @@ import {
     OneToOne,
   } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Cliente } from '../cliente/cliente.entity.js';
+//import { Cliente } from '../cliente/cliente.entity.js';
   
   @Entity()
-  export class Usuario extends BaseEntity {
+  export class User extends BaseEntity {
     @Property({ nullable: false, unique: true })
     email!: string;
   

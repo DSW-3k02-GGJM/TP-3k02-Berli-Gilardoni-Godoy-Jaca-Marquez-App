@@ -7,39 +7,39 @@ import {
   OneToOne,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Alquiler } from '../alquiler/alquiler.entity.js';
-import { Usuario } from '../usuario/usuario.entity.js';
+import { Reservation } from '../alquiler/alquiler.entity.js';
+import { User } from '../usuario/usuario.entity.js';
 
 @Entity()
-export class Cliente extends BaseEntity {
+export class Client extends BaseEntity {
   @Property({ nullable: false })
-  tipoDoc!: string;
+  documentType!: string;
 
   @Property({ nullable: false, unique: true })
-  nroDoc!: string;
+  documentID!: string;
 
   @Property({ nullable: false })
-  nombre!: string;
+  clientName!: string;
 
   @Property({ nullable: false })
-  apellido!: string;
+  clientSurname!: string;
 
   @Property({ type: 'date', nullable: false })
-  fechaNacimiento!: Date;
+  birthDate!: Date;
 
   @Property({ nullable: false })
-  domicilio!: string;
+  address!: string;
 
   @Property({ nullable: false })
-  telefono!: string;
+  phoneNumber!: string;
 
   @Property({ nullable: false })
-  nacionalidad!: string;
+  nationality!: string;
 
-  @OneToMany(() => Alquiler, (alquiler) => alquiler.cliente, {
+  @OneToMany(() => Reservation, (reservation) => reservation.client, {
     cascade: [Cascade.ALL],
   })
-  alquileres = new Collection<Alquiler>(this);
+  reservations = new Collection<Reservation>(this);
 
   /*
   @OneToOne(() => Usuario, (usuario) => usuario.cliente, {

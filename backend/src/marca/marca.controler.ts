@@ -1,18 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
-import { Marca } from './marca.entity.js';
+import { Brand } from './marca.entity.js';
 
 const em = orm.em;
 
-const sanitizedMarcaInput = (
+const sanitizedBrandInput = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   // 1. Creación del objeto `sanitizedInput` en `req.body`
   req.body.sanitizedInput = {
-    nombre: req.body.nombre,
-    modelos: req.body.modelos,
+    brandName: req.body.brandName,
+    vehicleModels: req.body.vehicleModels,
   };
   // 2. Eliminación de claves indefinidas en `sanitizedInput`
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -26,24 +26,24 @@ const sanitizedMarcaInput = (
 
 const findAll = async (req: Request, res: Response) => {
   try {
-    const marcas = await em.find(
-      Marca,
+    const brands = await em.find(
+      Brand,
       {},
       {
         populate: [
-          'modelos',
-          'modelos.categoria',
-          'modelos.vehiculos',
-          'modelos.vehiculos.color',
-          'modelos.vehiculos.sucursal',
-          'modelos.vehiculos.alquileres',
-          'modelos.vehiculos.alquileres.cliente',
+          'vehicleModels',
+          'vehicleModels.category',
+          'vehicleModels.vehicles',
+          'vehicleModels.vehicles.color',
+          'vehicleModels.vehicles.location',
+          'vehicleModels.vehicles.reservations',
+          'vehicleModels.vehicles.reservations.client',
         ],
       }
     );
     res
       .status(200)
-      .json({ message: 'Todas las marcas encontradas', data: marcas });
+      .json({ message: 'All brands have been found', data: brands });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -52,22 +52,22 @@ const findAll = async (req: Request, res: Response) => {
 const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const marca = await em.findOneOrFail(
-      Marca,
+    const brand = await em.findOneOrFail(
+      Brand,
       { id },
       {
         populate: [
-          'modelos',
-          'modelos.categoria',
-          'modelos.vehiculos',
-          'modelos.vehiculos.color',
-          'modelos.vehiculos.sucursal',
-          'modelos.vehiculos.alquileres',
-          'modelos.vehiculos.alquileres.cliente',
+          'vehicleModels',
+          'vehicleModels.category',
+          'vehicleModels.vehicles',
+          'vehicleModels.vehicles.color',
+          'vehicleModels.vehicles.location',
+          'vehicleModels.vehicles.reservations',
+          'vehicleModels.vehicles.reservations.client',
         ],
       }
     );
-    res.status(200).json({ message: 'Marca encontrada', data: marca });
+    res.status(200).json({ message: 'The brand has been found', data: brand });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -75,9 +75,9 @@ const findOne = async (req: Request, res: Response) => {
 
 const add = async (req: Request, res: Response) => {
   try {
-    const marca = em.create(Marca, req.body.sanitizedInput);
+    const brand = em.create(Brand, req.body.sanitizedInput);
     await em.flush();
-    res.status(201).json({ message: 'Marca creada', data: marca });
+    res.status(201).json({ message: 'The brand has been created', data: brand });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -86,10 +86,10 @@ const add = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const marca = em.getReference(Marca, id);
-    em.assign(marca, req.body.sanitizedInput);
+    const brand = em.getReference(Brand, id);
+    em.assign(brand, req.body.sanitizedInput);
     await em.flush();
-    res.status(200).json({ message: 'Marca actualizada' });
+    res.status(200).json({ message: 'The brand has been updated' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -98,12 +98,12 @@ const update = async (req: Request, res: Response) => {
 const remove = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const marca = em.getReference(Marca, id);
-    await em.removeAndFlush(marca);
-    res.status(200).send({ message: 'Marca eliminada' });
+    const brand = em.getReference(Brand, id);
+    await em.removeAndFlush(brand);
+    res.status(200).send({ message: 'The brand has been deleted' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export { sanitizedMarcaInput, findAll, findOne, add, update, remove };
+export { sanitizedBrandInput, findAll, findOne, add, update, remove };

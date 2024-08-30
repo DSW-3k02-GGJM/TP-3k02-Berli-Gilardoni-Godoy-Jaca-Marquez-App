@@ -8,11 +8,11 @@ import {
   remove,
 } from './alquiler.controler.js';
 
-export const alquilerRouter = Router();
+export const reservationRouter = Router();
 
-alquilerRouter.get('/', findAll);
-alquilerRouter.get('/:id', findOne);
-alquilerRouter.post('/', sanitizedAlquilerInput, add);
-alquilerRouter.put('/:id', sanitizedAlquilerInput, update);
-alquilerRouter.patch('/:id', sanitizedAlquilerInput, update);
-alquilerRouter.delete('/:id', remove);
+reservationRouter.get('/', findAll);
+reservationRouter.get('/:id', findOne);
+reservationRouter.post('/', sanitizedAlquilerInput, add);
+reservationRouter.put('/:id', sanitizedAlquilerInput, update);
+reservationRouter.patch('/:id', sanitizedAlquilerInput, update);
+reservationRouter.delete('/:id', remove);

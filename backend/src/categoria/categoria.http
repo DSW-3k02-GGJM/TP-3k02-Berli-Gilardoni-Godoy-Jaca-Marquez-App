@@ -1,60 +1,60 @@
 ### GET ALL
-http://localhost:3000/api/categorias
+http://localhost:3000/api/categories
 
 
 ### POST
-# @name createCategoria
-POST http://localhost:3000/api/categorias
+# @name createCategory
+POST http://localhost:3000/api/categories
 Content-Type: application/json
 
 {
-    "nombre": "SUV",
-    "descripcion": "Vehículos robustos y espaciosos, ideales para familias o viajes de aventura.",
-    "precioPorDia": 100,
-    "valorDeposito": 500
+    "categoryName": "SUV",
+    "categoryDescription": "Vehículos robustos y espaciosos, ideales para familias o viajes de aventura.",
+    "pricePerDay": 100,
+    "depositValue": 500
 }
 
 ### ID
-@id = {{createCategoria.response.body.data.id}}
+@id = {{createCategory.response.body.data.id}}
 
 ### GET ONE
-http://localhost:3000/api/categorias/{{id}}
+http://localhost:3000/api/categories/{{id}}
 
 ### PUT
-PUT http://localhost:3000/api/categorias/{{id}}
+PUT http://localhost:3000/api/categories/{{id}}
 Content-Type: application/json
 
 {
-    "nombre": "SUV",
-    "descripcion": "Vehículos robustos y espaciosos, ideales para familias o viajes de aventura.",
-    "precioPorDia": 150,
-    "valorDeposito": 570
+    "categoryName": "SUV",
+    "categoryDescription": "Vehículos robustos y espaciosos, ideales para familias o viajes de aventura.",
+    "pricePerDay": 150,
+    "depositValue": 570
 }
 
 ### POST 2
-POST http://localhost:3000/api/categorias
+POST http://localhost:3000/api/categories
 Content-Type: application/json
 
 {
-    "nombre": "Camioneta",
-    "descripcion": "Vehículos grandes y robustos, ideales para transportar cargas o remolcar vehículos.",
-    "precioPorDia": 150,
-    "valorDeposito": 750
+    "categoryName": "Camioneta",
+    "categoryDescription": "Vehículos grandes y robustos, ideales para transportar cargas o remolcar vehículos.",
+    "pricePerDay": 150,
+    "depositValue": 750
 }
 
 ### POST to DELETE
-# @name createCategoriaToDelete
-POST http://localhost:3000/api/categorias
+# @name createCategoryToDelete
+POST http://localhost:3000/api/categories
 Content-Type: application/json
 
 {
-    "nombre": "Deportivo",
-    "descripcion": "Vehículos que destacan por su rendimiento y diseño deportivo.",
-    "precioPorDia": 120,
-    "valorDeposito": 600
+    "categoryName": "Deportivo",
+    "categoryDescription": "Vehículos que destacan por su rendimiento y diseño deportivo.",
+    "pricePerDay": 120,
+    "depositValue": 600
 }
 
 ### DELETE
-@idToDelete = {{createCategoriaToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/categorias/{{idToDelete}}
+@idToDelete = {{createCategoryToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/categories/{{idToDelete}}
 

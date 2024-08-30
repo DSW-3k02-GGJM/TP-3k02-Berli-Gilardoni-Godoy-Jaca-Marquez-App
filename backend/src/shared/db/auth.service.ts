@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
-import { Usuario } from '../../usuario/usuario.entity.js';
+import { User } from '../../usuario/usuario.entity.js';
 import { Request, Response, NextFunction } from 'express';
 import { orm } from './orm.js';
 const em = orm.em;
 const SECRET_KEY = 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era';
 
 export class AuthService {
-  static generateToken(usuario: Usuario): string {
+  static generateToken(usuario: User): string {
     const payload = { id: usuario.id, email: usuario.email };
     return jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
   }

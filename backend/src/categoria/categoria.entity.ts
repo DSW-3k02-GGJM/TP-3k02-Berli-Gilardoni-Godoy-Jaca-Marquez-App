@@ -6,24 +6,24 @@ import {
   Collection,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Modelo } from '../modelo/modelo.entity.js';
+import { VehicleModel } from '../modelo/modelo.entity.js';
 
 @Entity()
-export class Categoria extends BaseEntity {
+export class Category extends BaseEntity {
   @Property({ nullable: false, unique: true })
-  nombre!: string;
+  categoryName!: string;
 
   @Property({ nullable: false })
-  descripcion!: string;
+  categoryDescription!: string;
 
   @Property({ type: 'float', nullable: false })
-  precioPorDia!: number;
+  pricePerDay!: number;
 
   @Property({ type: 'float', nullable: false })
-  valorDeposito!: number;
+  depositValue!: number;
 
-  @OneToMany(() => Modelo, (modelo) => modelo.categoria, {
+  @OneToMany(() => VehicleModel, (vehicleModel) => vehicleModel.category, {
     cascade: [Cascade.ALL],
   })
-  modelos = new Collection<Modelo>(this);
+  vehicleModels = new Collection<VehicleModel>(this);
 }

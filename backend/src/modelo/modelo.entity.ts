@@ -8,29 +8,29 @@ import {
   Rel,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Marca } from '../marca/marca.entity.js';
-import { Vehiculo } from '../vehiculo/vehiculo.entity.js';
-import { Categoria } from '../categoria/categoria.entity.js';
+import { Brand } from '../marca/marca.entity.js';
+import { Vehicle } from '../vehiculo/vehiculo.entity.js';
+import { Category } from '../categoria/categoria.entity.js';
 
 @Entity()
-export class Modelo extends BaseEntity {
+export class VehicleModel extends BaseEntity {
   @Property({ nullable: false })
-  nombre!: string;
+  vehicleModelName!: string;
 
   @Property()
-  tipoTransmision!: string;
+  transmissionType!: string;
 
   @Property()
-  cantPasajeros!: number;
+  passengerCount!: number;
 
-  @ManyToOne(() => Categoria, { nullable: false })
-  categoria!: Rel<Categoria>;
+  @ManyToOne(() => Category, { nullable: false })
+  category!: Rel<Category>;
 
-  @ManyToOne(() => Marca, { nullable: false })
-  marca!: Rel<Marca>;
+  @ManyToOne(() => Brand, { nullable: false })
+  brand!: Rel<Brand>;
 
-  @OneToMany(() => Vehiculo, (vehiculo) => vehiculo.modelo, {
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.vehicleModel, {
     cascade: [Cascade.ALL],
   })
-  vehiculos = new Collection<Vehiculo>(this);
+  vehicles = new Collection<Vehicle>(this);
 }

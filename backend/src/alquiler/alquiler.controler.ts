@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
-import { Alquiler } from './alquiler.entity.js';
+import { Reservation } from './alquiler.entity.js';
 
 const em = orm.em;
 
@@ -32,7 +32,7 @@ const sanitizedAlquilerInput = (
 const findAll = async (req: Request, res: Response) => {
   try {
     const alquileres = await em.find(
-      Alquiler,
+      Reservation,
       {},
       {
         populate: [
@@ -58,7 +58,7 @@ const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
     const alquiler = await em.findOneOrFail(
-      Alquiler,
+      Reservation,
       { id },
       {
         populate: [
@@ -80,7 +80,7 @@ const findOne = async (req: Request, res: Response) => {
 
 const add = async (req: Request, res: Response) => {
   try {
-    const alquiler = em.create(Alquiler, req.body.sanitizedInput);
+    const alquiler = em.create(Reservation, req.body.sanitizedInput);
     await em.flush();
     res.status(201).json({ message: 'Alquiler creado', data: alquiler });
   } catch (error: any) {
@@ -91,7 +91,7 @@ const add = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const alquiler = await em.findOneOrFail(Alquiler, { id });
+    const alquiler = await em.findOneOrFail(Reservation, { id });
     em.assign(alquiler, req.body.sanitizedInput);
     await em.flush();
     res.status(200).json({ message: 'Alquiler actualizado', data: alquiler });
@@ -103,7 +103,7 @@ const update = async (req: Request, res: Response) => {
 const remove = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const alquiler = em.getReference(Alquiler, id);
+    const alquiler = em.getReference(Reservation, id);
     await em.removeAndFlush(alquiler);
     res.status(200).send({ message: 'Alquiler eliminado' });
   } catch (error: any) {

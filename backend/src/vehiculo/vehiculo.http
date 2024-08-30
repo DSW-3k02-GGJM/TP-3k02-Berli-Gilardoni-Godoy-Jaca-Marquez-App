@@ -1,94 +1,94 @@
 ### GET ALL
-http://localhost:3000/api/vehiculos
+http://localhost:3000/api/vehicles
 
 
 ### POST
-# @name createVehiculo
-POST http://localhost:3000/api/vehiculos
+# @name createVehicle
+POST http://localhost:3000/api/vehicles
 Content-Type: application/json
 
 {
-    "patente": "OAS135",
-    "anioFabricacion": "2010",
-    "kmRecorridos": "2500",
-    "sucursal": 1,
+    "licensePlate": "OAS135",
+    "manufacturingYear": "2010",
+    "totalKms": "2500",
+    "location": 1,
     "color": 2,
-    "modelo": 1
+    "vehicleModel": 1
 }
 
 ### ID
-@id = {{createVehiculo.response.body.data.id}}
+@id = {{createVehicle.response.body.data.id}}
 
 ### GET ONE
-http://localhost:3000/api/vehiculos/{{id}}
+http://localhost:3000/api/vehicles/{{id}}
 
 ### PUT
-PUT http://localhost:3000/api/vehiculos/{{id}}
+PUT http://localhost:3000/api/vehicles/{{id}}
 Content-Type: application/json
 
 {
-    "patente": "POP135",
-    "anioFabricacion": "2014",
-    "kmRecorridos": "2500",
-    "sucursal": 1,
+    "licensePlate": "POP135",
+    "manufacturingYear": "2014",
+    "totalKms": "2500",
+    "location": 1,
     "color": 2,
-    "modelo": 1
+    "vehicleModel": 1
 }
 
 ### POST 2
-POST http://localhost:3000/api/vehiculos
+POST http://localhost:3000/api/vehicles
 Content-Type: application/json
 
 {
-    "patente": "COC567",
-    "anioFabricacion": "2000",
-    "kmRecorridos": 13000,
-    "sucursal": 3,
+    "licensePlate": "COC567",
+    "manufacturingYear": "2000",
+    "totalKms": 13000,
+    "location": 3,
     "color": 1,
-    "modelo": 3
+    "vehicleModel": 3
 }
 
 ### POST 3
-POST http://localhost:3000/api/vehiculos
+POST http://localhost:3000/api/vehicles
 Content-Type: application/json
 
 {
-    "patente": "AAA333",
-    "anioFabricacion": "2020",
-    "kmRecorridos": 10,
-    "sucursal": 2,
+    "licensePlate": "AAA333",
+    "manufacturingYear": "2020",
+    "totalKms": 10,
+    "location": 2,
     "color": 2,
-    "modelo": 3
+    "vehicleModel": 3
 }
 
 ### POST to DELETE
-# @name createVehiculoToDelete
-POST http://localhost:3000/api/vehiculos
+# @name createVehicleToDelete
+POST http://localhost:3000/api/vehicles
 Content-Type: application/json
 
 {
-    "patente": "RTY123",
-    "anioFabricacion": "2003",
-    "kmRecorridos": 8600,
-    "sucursal": 5,
+    "licensePlate": "RTY123",
+    "manufacturingYear": "2003",
+    "totalKms": 8600,
+    "location": 5,
     "color": 3,
-    "modelo": 2
+    "vehicleModel": 2
 }
 
 ### POST to DELETE
-# @name createVehiculoToDelete
-POST http://localhost:3000/api/vehiculos
+# @name createVehicleToDelete
+POST http://localhost:3000/api/vehicles
 Content-Type: application/json
 
 {
-    "patente": "RTT111",
-    "anioFabricacion": "2000",
-    "kmRecorridos": 200,
-    "sucursal": 2,
+    "licensePlate": "RTT111",
+    "manufacturingYear": "2000",
+    "totalKms": 200,
+    "location": 2,
     "color": 2,
-    "modelo": 2
+    "vehicleModel": 2
 }
 
 ### DELETE
-@idToDelete = {{createVehiculoToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/vehiculos/{{idToDelete}}
+@idToDelete = {{createVehicleToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/vehicles/{{idToDelete}}

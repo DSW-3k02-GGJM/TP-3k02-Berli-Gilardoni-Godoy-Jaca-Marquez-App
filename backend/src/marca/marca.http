@@ -1,58 +1,58 @@
 ### GET ALL
-GET http://localhost:3000/api/marcas
+GET http://localhost:3000/api/brands
 
 ### POST
-# @name createMarca
-POST http://localhost:3000/api/marcas
+# @name createBrand
+POST http://localhost:3000/api/brands
 Content-Type: application/json
 
 {
-  "nombre": "Toyota"
+  "brand": "Toyota"
 }
 
 ### ID
-@id = {{createMarca.response.body.data.id}}
+@id = {{createBrand.response.body.data.id}}
 # esto no se bien q es despues lo arreglo
 
 ### Obtener una Marca
-GET http://localhost:3000/api/marcas/{{id}}
+GET http://localhost:3000/api/brands/{{id}}
 
 ### PUT => Modificaciones completas (Recurso completo e idempotente)
 ### PATCH => Modificaciones parciales o completas
 
 ### Modificar una marca (PUT)
-PUT http://localhost:3000/api/marcas/{{id}}
+PUT http://localhost:3000/api/brands/{{id}}
 Content-Type: application/json
 
 {
-  "nombre": "Fiat"
+  "brandName": "Fiat"
 }
 
 ### POST 2
-POST http://localhost:3000/api/marcas
+POST http://localhost:3000/api/brands
 Content-Type: application/json
 
 {
-  "nombre": "Honda"
+  "brandName": "Honda"
 }
 
 ### POST 3
-POST http://localhost:3000/api/marcas
+POST http://localhost:3000/api/brands
 Content-Type: application/json
 
 {
-  "nombre": "Ford"
+  "brandName": "Ford"
 }
 
 ### POST to DELETE
-# @name createMarcaToDelete
-POST http://localhost:3000/api/marcas
+# @name createBrandToDelete
+POST http://localhost:3000/api/brands
 Content-Type: application/json
 
 {
-  "nombre": "Chevrolet"
+  "brandName": "Chevrolet"
 }
 
 ### DELETE
-@idToDelete = {{createMarcaToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/marcas/{{idToDelete}}
+@idToDelete = {{createBrandToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/brands/{{idToDelete}}

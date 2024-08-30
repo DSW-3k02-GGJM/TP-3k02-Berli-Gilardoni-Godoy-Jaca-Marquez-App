@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { orm } from '../shared/db/orm.js';
-import { Modelo } from './modelo.entity.js';
+import { VehicleModel } from './modelo.entity.js';
 
 const em = orm.em;
 
 const findAll = async (req: Request, res: Response) => {
   try {
     const modelos = await em.find(
-      Modelo,
+      VehicleModel,
       {},
       {
         populate: [
@@ -34,7 +34,7 @@ const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
     const modelo = await em.findOneOrFail(
-      Modelo,
+      VehicleModel,
       { id },
       {
         populate: [
@@ -59,7 +59,7 @@ const findOne = async (req: Request, res: Response) => {
 
 const add = async (req: Request, res: Response) => {
   try {
-    const modelo = em.create(Modelo, req.body);
+    const modelo = em.create(VehicleModel, req.body);
     await em.flush();
     res.status(201).json({ message: 'Modelo creado', data: modelo });
   } catch (error: any) {
@@ -70,7 +70,7 @@ const add = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const modelo = await em.findOneOrFail(Modelo, { id });
+    const modelo = await em.findOneOrFail(VehicleModel, { id });
     em.assign(modelo, req.body);
     await em.flush();
     res.status(200).json({ message: 'Modelo actualizado', data: modelo });
@@ -82,7 +82,7 @@ const update = async (req: Request, res: Response) => {
 const remove = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const modelo = em.getReference(Modelo, id);
+    const modelo = em.getReference(VehicleModel, id);
     await em.removeAndFlush(modelo);
     res.status(200).send({ message: 'Modelo eliminado' });
   } catch (error: any) {

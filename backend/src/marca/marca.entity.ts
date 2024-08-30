@@ -6,15 +6,15 @@ import {
   OneToMany,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Modelo } from '../modelo/modelo.entity.js';
+import { VehicleModel } from '../modelo/modelo.entity.js';
 
 @Entity()
-export class Marca extends BaseEntity {
+export class Brand extends BaseEntity {
   @Property({ nullable: false, unique: true })
-  nombre!: string;
+  brandName!: string;
 
-  @OneToMany(() => Modelo, (modelo) => modelo.marca, {
+  @OneToMany(() => VehicleModel, (vehicleModel) => vehicleModel.brand, {
     cascade: [Cascade.ALL],
   })
-  modelos = new Collection<Modelo>(this);
+  vehicleModels = new Collection<VehicleModel>(this);
 }

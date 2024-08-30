@@ -1,34 +1,34 @@
 import { Entity, Property, ManyToOne, Rel } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Cliente } from '../cliente/cliente.entity.js';
-import { Vehiculo } from '../vehiculo/vehiculo.entity.js';
+import { Client } from '../cliente/cliente.entity.js';
+import { Vehicle } from '../vehiculo/vehiculo.entity.js';
 
 @Entity()
-export class Alquiler extends BaseEntity {
+export class Reservation extends BaseEntity {
   @Property({ type: 'date' })
-  fechaAlquiler = new Date();
+  reservationDate = new Date();
 
   @Property({ type: 'date', nullable: false })
-  fechaInicio!: Date;
+  startDate!: Date;
 
   @Property({ type: 'date', nullable: false })
-  fechaFinPactada!: Date;
+  plannedEndDate!: Date;
 
   @Property({ type: 'date', nullable: true })
-  fechaFinReal?: Date;
+  realEndDate?: Date;
 
   @Property({ type: 'date', nullable: true })
-  fechaCancelacion?: Date;
+  cancellationDate?: Date;
 
   @Property({ nullable: false })
-  kmIniciales!: number;
+  initialKm!: number;
 
   @Property({ nullable: true })
-  kmFinales?: number;
+  finalKm?: number;
 
-  @ManyToOne(() => Cliente, { nullable: false })
-  cliente!: Rel<Cliente>;
+  @ManyToOne(() => Client, { nullable: false })
+  client!: Rel<Client>;
 
-  @ManyToOne(() => Vehiculo, { nullable: false })
-  vehiculo!: Rel<Vehiculo>;
+  @ManyToOne(() => Vehicle, { nullable: false })
+  vehicle!: Rel<Vehicle>;
 }

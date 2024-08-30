@@ -6,21 +6,21 @@ import {
   Collection,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Vehiculo } from '../vehiculo/vehiculo.entity.js';
+import { Vehicle } from '../vehiculo/vehiculo.entity.js';
 
 @Entity()
-export class Sucursal extends BaseEntity {
+export class Location extends BaseEntity {
   @Property({ nullable: false })
-  nombre!: string;
+  locationName!: string;
 
   @Property({ nullable: false })
-  domicilio!: string;
+  address!: string;
 
   @Property({ nullable: false })
-  telefono!: string;
+  phoneNumber!: string;
 
-  @OneToMany(() => Vehiculo, (vehiculo) => vehiculo.sucursal, {
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.location, {
     cascade: [Cascade.ALL],
   })
-  vehiculos = new Collection<Vehiculo>(this);
+  vehicles = new Collection<Vehicle>(this);
 }

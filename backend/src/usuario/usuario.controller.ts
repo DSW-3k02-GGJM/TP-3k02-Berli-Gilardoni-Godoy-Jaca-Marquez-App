@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import { orm } from '../shared/db/orm.js';
-import { Usuario } from './usuario.entity.js';
+import { User } from './usuario.entity.js';
 import { AuthService } from '../shared/db/auth.service.js';
 
 
@@ -29,7 +29,7 @@ const findAll = async (req: Request, res: Response) => {
     try {
         // Comportamiento de la ruta
         const usuarios = await em.find(
-        Usuario,
+        User,
         {},
         {
             populate: [
@@ -48,7 +48,7 @@ const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
     const usuario = await em.findOneOrFail(
-      Usuario,
+      User,
       { id },
       {
         populate: [
@@ -64,7 +64,7 @@ const findOne = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
     try {
       const id = Number.parseInt(req.params.id);
-      const usuario = await em.findOneOrFail(Usuario, { id });
+      const usuario = await em.findOneOrFail(User, { id });
       em.assign(usuario, req.body.sanitizedInput);
       await em.flush();
       res.status(200).json({ message: 'Usuario actualizado', data: usuario });
@@ -76,7 +76,7 @@ const update = async (req: Request, res: Response) => {
   const remove = async (req: Request, res: Response) => {
     try {
       const id = Number.parseInt(req.params.id);
-      const usuario = em.getReference(Usuario, id);
+      const usuario = em.getReference(User, id);
       await em.removeAndFlush(usuario);
       res.status(200).send({ message: 'Usuario eliminado' });
     } catch (error: any) {
@@ -89,7 +89,7 @@ const register = async (req: Request, res: Response) => {
     const password = req.body.sanitizedInput.password;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const usuario = em.create(Usuario, {
+    const usuario = em.create(User, {
         ...req.body.sanitizedInput,
         password: hashedPassword,
       });
@@ -108,7 +108,7 @@ const login = async (req: Request, res: Response) => {
         const email = req.body.email;
         const password = req.body.password;
         const usuario = await em.findOne(
-            Usuario,
+            User,
             { email },
             {
             populate: [
