@@ -22,7 +22,8 @@ export class VehicleListComponent implements OnInit {
   }
 
   fillData() {
-    this.apiService.getAll('vehiculos').subscribe((response) => {
+    //this.apiService.getAll('vehiculos').subscribe((response) => {
+      this.apiService.getAll('modelos').subscribe((response) => {
       this.response = response.data;
     });
   }

@@ -23,6 +23,9 @@ export class Modelo extends BaseEntity {
   @Property()
   cantPasajeros!: number;
 
+  @Property({ nullable: true }) // Nueva propiedad para la ruta de la imagen
+  imagenRuta?: string;
+
   @ManyToOne(() => Categoria, { nullable: false })
   categoria!: Rel<Categoria>;
 

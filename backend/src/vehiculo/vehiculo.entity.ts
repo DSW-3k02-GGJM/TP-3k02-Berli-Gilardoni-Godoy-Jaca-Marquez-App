@@ -24,8 +24,10 @@ export class Vehiculo extends BaseEntity {
   @Property({ nullable: false })
   kmRecorridos!: number;
 
+  /*
   @Property({ nullable: true }) // Nueva propiedad para la ruta de la imagen
   imagenRuta?: string;
+  */
 
   @ManyToOne(() => Sucursal, { nullable: false })
   sucursal!: Rel<Sucursal>;

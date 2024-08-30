@@ -6,10 +6,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ModeloCreatedOrModifiedService } from '../modelo-created-or-modified/mod.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-modelo-form',
@@ -29,7 +31,8 @@ export class ModeloFormComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private modeloCreatedOrModifiedService: ModeloCreatedOrModifiedService,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal,
+    private httpClient: HttpClient,
   ) {}
 
   modeloForm = new FormGroup({
@@ -38,6 +41,7 @@ export class ModeloFormComponent implements OnInit {
     cantPasajeros: new FormControl('', [Validators.required]),
     categoria: new FormControl('', [Validators.required]), // Campo para la categoría
     marca: new FormControl('', [Validators.required]), // Campo para la marca
+    imagenRuta: new FormControl(''),
   });
 
   ngOnInit(): void {
@@ -87,6 +91,67 @@ export class ModeloFormComponent implements OnInit {
     });
   }
 
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      // Obtén el nombre del archivo
+      const fileName = file.name;
+  
+      // Construye la ruta relativa en tu carpeta assets
+      const imageRuta = `assets/img/${fileName}`;
+  
+      // Aquí puedes usar imageRuta como quieras, por ejemplo:
+      this.modeloForm.patchValue({ imagenRuta: imageRuta });
+      console.log('Ruta de la imagen:', imageRuta);
+    }
+  }
+  
+  
+
+  uploadImage(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+  
+    return this.httpClient.post<{ ruta: string }>('/api/upload', formData).pipe(
+      map((response) => response.ruta)
+    );
+  }
+  
+
+  onSubmit() {
+    if (this.modeloForm.valid) {
+
+      const formData = this.modeloForm.value;
+
+    // Modifica el valor de imagenRuta
+      if(formData.imagenRuta != null) 
+      {
+          //formData.imagenRuta = formData.imagenRuta.replace('C:\fakepath\', 'assets\img\');
+          formData.imagenRuta = formData.imagenRuta.replace('C:\\fakepath\\', 'assets/img/');
+
+      } // en realidad se guarda como C:\fakepath
+     
+
+      console.log('Datos enviados:', formData); // para ver los datos que se envían
+      this.activeModal.close();
+  
+      if (this.action === 'Create') {
+        this.apiService.create('modelos', formData).subscribe((response) => {
+          this.modeloCreatedOrModifiedService.notifyModeloCreatedOrModified();
+        });
+      } else if (this.action === 'Edit') {
+        this.apiService
+          .update('modelos', this.currentModeloId, formData)
+          .subscribe((response) => {
+            this.modeloCreatedOrModifiedService.notifyModeloCreatedOrModified();
+          });
+      }
+  
+      this.modeloCreatedOrModifiedService.isDataLoaded = true;
+    }
+  }
+  
+  /*
   onSubmit() {
     this.activeModal.close();
     if (this.action === 'Create') {
@@ -104,4 +169,5 @@ export class ModeloFormComponent implements OnInit {
     }
     this.modeloCreatedOrModifiedService.isDataLoaded = true;
   }
+    */
 }

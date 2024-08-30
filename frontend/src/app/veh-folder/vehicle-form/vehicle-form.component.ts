@@ -88,48 +88,6 @@ export class VehicleFormComponent implements OnInit {
       this.sucursals = response.data;
     });
   }
-
-  /*
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.uploadImage(file).subscribe(
-        (rutaImagen: string) => {
-          this.vehicleForm.patchValue({ imagenRuta: rutaImagen });
-          console.log('Ruta de la imagen:', this.vehicleForm.value.imagenRuta);
-        },
-        (error) => {
-          console.error('Error al subir la imagen:', error);
-        }
-      );
-    }
-  }*/
-
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      // Obtén el nombre del archivo
-      const fileName = file.name;
-  
-      // Construye la ruta relativa en tu carpeta assets
-      const imageRuta = `assets/img/${fileName}`;
-  
-      // Aquí puedes usar imageRuta como quieras, por ejemplo:
-      this.vehicleForm.patchValue({ imagenRuta: imageRuta });
-      console.log('Ruta de la imagen:', imageRuta);
-    }
-  }
-  
-  
-
-  uploadImage(file: File): Observable<string> {
-    const formData = new FormData();
-    formData.append('file', file);
-  
-    return this.httpClient.post<{ ruta: string }>('/api/upload', formData).pipe(
-      map((response) => response.ruta)
-    );
-  }
   
 
   onSubmit() {

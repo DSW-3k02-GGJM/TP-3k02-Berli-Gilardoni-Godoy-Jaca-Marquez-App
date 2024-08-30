@@ -4,12 +4,12 @@
   </div>
   <section class="vehicle-list mt-3 mx-5">
     <app-vehicle-card
-      *ngFor="let vehiculo of response"
-      [modelo]="vehiculo.modelo.nombre"
-      [descripcion]="vehiculo.modelo.categoria.descripcion"
-      [cantPasajeros] = "vehiculo.modelo.cantPasajeros"
+      *ngFor="let modelo of response"
+      [modelo]="modelo.nombre"
+      [descripcion]="modelo.categoria.descripcion"
+      [cantPasajeros] = "modelo.cantPasajeros"
       [imagen]="
-      vehiculo.imagenRuta
+      modelo.imagenRuta
       "
     ></app-vehicle-card>
   </section>

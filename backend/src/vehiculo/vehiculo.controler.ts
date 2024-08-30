@@ -17,7 +17,7 @@ const sanitizedVehiculoInput = (
     color: req.body.color,
     modelo: req.body.modelo,
     alquileres: req.body.alquileres,
-    imagenRuta: req.body.imagenRuta, // agregue esto para la imagen (ruta)
+    //imagenRuta: req.body.imagenRuta, // agregue esto para la imagen (ruta)
   };
   // Más validaciones
   Object.keys(req.body.sanitizedInput).forEach((key) => {
