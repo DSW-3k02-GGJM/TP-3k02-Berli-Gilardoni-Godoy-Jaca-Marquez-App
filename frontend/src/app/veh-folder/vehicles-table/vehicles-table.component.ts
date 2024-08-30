@@ -25,7 +25,6 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
 export class VehiclesTableComponent {
   @Input() vehicles!: any[];
   @Output() vehicleDeleted = new EventEmitter();
-  filterRows = '';
 
   constructor(private apiService: ApiService, private modalService: NgbModal) {}
 
