@@ -4,8 +4,8 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class CategoriaCreatedOrModifiedService {
-  categoriaCreatedOrModified = new Subject<void>();
+export class CategoryCreatedOrModifiedService {
+  categoryCreatedOrModified = new Subject<void>();
   isDataLoaded = false;
 
   get IsDataLoaded(): boolean {
@@ -16,8 +16,8 @@ export class CategoriaCreatedOrModifiedService {
     this.isDataLoaded = value;
   }
 
-  notifyCategoriaCreatedOrModified() {
-    this.categoriaCreatedOrModified.next();
+  notifyCategoryCreatedOrModified() {
+    this.categoryCreatedOrModified.next();
   }
 
   resetDataLoaded() {

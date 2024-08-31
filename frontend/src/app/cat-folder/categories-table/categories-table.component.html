@@ -20,23 +20,23 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let categoria of categorias | filter : filterRows">
-        <td>{{ categoria.id }}</td>
-        <td>{{ categoria.nombre }}</td>
-        <td>{{ categoria.descripcion }}</td>
-        <td>{{ categoria.precioPorDia }}</td>
-        <td>{{ categoria.valorDeposito }}</td>
+      <tr *ngFor="let category of categories | filter : filterRows">
+        <td>{{ category.id }}</td>
+        <td>{{ category.categoryName }}</td>
+        <td>{{ category.categoryDescription }}</td>
+        <td>{{ category.pricePerDay }}</td>
+        <td>{{ category.depositValue }}</td>
         <td>
           <div class="d-flex justify-content-around">
             <button
               class="btn btn-dark fs-5"
-              (click)="editCategoria(categoria)"
+              (click)="editCategory(category)"
             >
               ✏️
             </button>
             <button
               class="btn btn-dark fs-5"
-              (click)="deleteCategoria(categoria)"
+              (click)="deleteCategory(category)"
             >
               ❌
             </button>

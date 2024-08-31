@@ -5,38 +5,38 @@
   <div class="modal-body fw-medium bg-dark modal-text">
     <section class="form">
       <form
-        id="categoriaForm"
-        [formGroup]="categoriaForm"
+        id="categoryForm"
+        [formGroup]="categoryForm"
         class="border border-dark border-3 rounded mt-2 form-style"
       >
         <input
-          id="nombre"
+          id="categoryName"
           type="text"
-          formControlName="nombre"
+          formControlName="categoryName"
           placeholder="Nombre"
         />
         <hr />
 
         <input
-          id="descripcion"
+          id="categoryDescription"
           type="text"
-          formControlName="descripcion"
+          formControlName="categoryDescription"
           placeholder="Descripcion"
         />
         <hr />
 
         <input
-          id="precioPorDia"
+          id="pricePerDay"
           type="number"
-          formControlName="precioPorDia"
+          formControlName="pricePerDay"
           placeholder="Precio por Dia"
         />
         <hr />
 
         <input
-          id="valorDeposito"
+          id="depositValue"
           type="number"
-          formControlName="valorDeposito"
+          formControlName="depositValue"
           placeholder="Valor Deposito"
         />
         <hr />
@@ -54,10 +54,10 @@
         type="submit"
         class="btn btn-primary border border-1 border-white"
         (click)="onSubmit()"
-        [disabled]="!categoriaForm.valid"
+        [disabled]="!categoryForm.valid"
       >
         Registrar
       </button>
     </div>
   </div>
-</div> 
+</div>

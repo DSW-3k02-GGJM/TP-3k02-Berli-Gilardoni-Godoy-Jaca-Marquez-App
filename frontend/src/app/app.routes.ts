@@ -2,8 +2,8 @@ import { Routes } from '@angular/router';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ClientsComponent } from './cli-folder/clients/clients.component';
 import { ClientFormComponent } from './cli-folder/client-form/client-form.component';
-import { CategoriasComponent } from './cat-folder/categorias/categorias.component';
-import { CategoriaFormComponent } from './cat-folder/categoria-form/categoria-form.component';
+import { CategoriesComponent } from './cat-folder/categories/categories.component';
+import { CategoryFormComponent } from './cat-folder/category-form/category-form.component';
 import { MarcasComponent } from './mar-folder/marcas/marcas.component';
 import { MarcaFormComponent } from './mar-folder/marca-form/marca-form.component';
 import { ColorsComponent } from './col-folder/colors/colors.component';
@@ -26,9 +26,9 @@ export const routes: Routes = [
   { path: 'clientes', component: ClientsComponent, canActivate: [authGuard] },
   { path: 'clientes/creacion', component: ClientFormComponent },
   { path: 'clientes/modificacion/:id', component: ClientFormComponent },
-  { path: 'categorias', component: CategoriasComponent },
-  { path: 'categorias/creacion', component: CategoriaFormComponent },
-  { path: 'categorias/modificacion/:id', component: CategoriaFormComponent },
+  { path: 'categories', component: CategoriesComponent },
+  { path: 'categories/creacion', component: CategoryFormComponent },
+  { path: 'categories/modificacion/:id', component: CategoryFormComponent },
   { path: 'marcas', component: MarcasComponent },
   { path: 'marcas/creacion', component: MarcaFormComponent },
   { path: 'marcas/modificacion/:id', component: MarcaFormComponent },

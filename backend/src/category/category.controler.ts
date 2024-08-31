@@ -55,7 +55,7 @@ const findOne = async (req: Request, res: Response) => {
     const id = Number.parseInt(req.params.id);
     const category = await em.findOneOrFail(
       Category,
-      {},
+      { id },
       {
         populate: [
           'vehicleModels',
