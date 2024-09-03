@@ -28,9 +28,9 @@
         <td>{{ vehicle.licensePlate }}</td>
         <td>{{ vehicle.manufacturingYear }}</td>
         <td>{{ vehicle.totalKms }}</td>
-        <td>{{ vehicle.vehicleModel.colorName }}</td>
+        <td>{{ vehicle.vehicleModel.vehicleModelName }}</td>
         <td>{{ vehicle.color.colorName }}</td>
-        <td>{{ vehicle.location.colorName }}</td>
+        <td>{{ vehicle.location.locationName }}</td>
         <td>
           <div class="d-flex justify-content-around">
             <button class="btn btn-dark fs-5" (click)="editVehicle(vehicle)">

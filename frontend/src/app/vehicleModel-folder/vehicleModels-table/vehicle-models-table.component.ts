@@ -41,8 +41,8 @@ export class VehicleModelsTableComponent {
 
   deleteVehicleModel(vehicleModel: any): void {
     const modalRef = this.modalService.open(ConfirmDeletionComponent);
-    modalRef.componentInstance.title = 'Eliminar vehicleModel';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar el vehicleModel ${vehicleModel.vehicleModelName}?`;
+    modalRef.componentInstance.title = 'Eliminar modelo?';
+    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar el modelo ${vehicleModel.vehicleModelName}?`;
 
     modalRef.result.then(
       (result) => {

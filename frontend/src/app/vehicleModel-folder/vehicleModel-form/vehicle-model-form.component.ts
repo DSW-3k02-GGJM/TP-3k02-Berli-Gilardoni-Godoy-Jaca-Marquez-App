@@ -83,7 +83,7 @@ export class VehicleModelFormComponent implements OnInit {
     });
   }
 
-  // Método para cargar las categorías
+  // Método para cargar las marcas
   loadBrands(): void {
     this.apiService.getAll('brands').subscribe((response) => {
       this.brands = response.data;
@@ -99,7 +99,7 @@ export class VehicleModelFormComponent implements OnInit {
       // Construye la ruta relativa en tu carpeta assets
       const imagePath = `assets/img/${fileName}`;
 
-      // Aquí puedes usar imageRuta como quieras, por ejemplo:
+      // Aquí puedes usar imagePath como quieras, por ejemplo:
       this.vehicleModelForm.patchValue({ imagePath: imagePath });
       console.log('Ruta de la imagen:', imagePath);
     }
@@ -166,7 +166,5 @@ export class VehicleModelFormComponent implements OnInit {
     }
     this.vehicleModelCreatedOrModifiedService.isDataLoaded = true;
   }
-
-
 */
 }

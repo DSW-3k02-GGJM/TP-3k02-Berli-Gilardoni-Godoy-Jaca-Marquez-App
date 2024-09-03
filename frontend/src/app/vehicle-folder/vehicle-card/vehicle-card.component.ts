@@ -9,7 +9,7 @@ import { Component, Input } from '@angular/core';
 })
 export class VehicleCardComponent {
   @Input() vehicleModel!: string;
-  @Input() description!: string;
+  @Input() categoryDescription!: string;
   @Input() image!: string;
   @Input() passengerCount!: Int16Array;
   ImagePath: string;

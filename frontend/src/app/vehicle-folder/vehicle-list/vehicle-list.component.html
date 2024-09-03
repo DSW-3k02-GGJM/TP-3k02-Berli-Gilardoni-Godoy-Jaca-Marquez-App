@@ -6,7 +6,7 @@
     <app-vehicle-card
       *ngFor="let vehicleModel of response"
       [vehicleModel]="vehicleModel.vehicleModelName"
-      [description]="vehicleModel.category.categoryName"
+      [categoryDescription]="vehicleModel.category.categoryDescription"
       [passengerCount] = "vehicleModel.passengerCount"
       [image]="vehicleModel.imagePath"
     ></app-vehicle-card>
