@@ -55,7 +55,7 @@ export class ClientsComponent implements OnInit {
   }
 
   loadData() {
-    this.apiService.getAll('clientes').subscribe((response) => {
+    this.apiService.getAll('clients').subscribe((response) => {
       this.clients = response.data;
     });
   }

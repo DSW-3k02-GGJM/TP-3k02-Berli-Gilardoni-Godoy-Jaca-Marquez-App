@@ -1,0 +1,92 @@
+<div class="border border-1 border-white rounded-pill unselectable">
+  <div class="modal-header d-flex bg-dark text-white">
+    <h2 class="modal-title">{{ title }}</h2>
+  </div>
+  <div class="modal-body fw-medium bg-dark modal-text">
+    <section class="form">
+      <form
+        id="modeloForm"
+        [formGroup]="vehicleModelForm"
+        class="border border-dark border-3 rounded mt-2 form-style"
+      >
+        <input
+          id="vehicleModelName"
+          type="text"
+          formControlName="vehicleModelName"
+          placeholder="Nombre del modelo"
+        />
+        <hr />
+
+        <input
+          id="passengerCount"
+          type="number"
+          formControlName="passengerCount"
+          placeholder="Cantidad maxima de pasajeros"
+        />
+        <hr />
+
+        <select
+          id="transmissionType"
+          formControlName="transmissionType"
+          class="form-select bg-dark text-white border border-secondary w-auto"
+        >
+          <option value="" disabled selected>Seleccione Tipo de Transmisión</option>
+          <option value="Manual">Manual</option>
+          <option value="Automatica">Automatica</option>
+        </select>
+        <hr />
+
+        <!-- Categoría -->
+        <select
+          id="category"
+          formControlName="category"
+          class="form-select bg-dark text-white border border-secondary w-auto"
+        >
+          <option value="" disabled selected>Seleccione Categoría</option>
+          <option *ngFor="let category of categories" [value]="category.id">
+            {{ category.categoryName }}
+          </option>
+        </select>
+        <hr />
+
+        <!-- marca -->
+        <select
+          id="brand"
+          formControlName="brand"
+          class="form-select bg-dark text-white border border-secondary w-auto"
+        >
+          <option value="" disabled selected>Seleccione Marca</option>
+          <option *ngFor="let brand of brands" [value]="brand.id">
+            {{ brand.brandName }}
+          </option>
+        </select>
+        <hr />
+        <input
+          type="file"
+          id="imagePath"
+          formControlName="imagePath"
+          accept="image/*"
+          class="form-control bg-dark text-white border border-secondary rounded w-100 mt-2"
+        />
+        <hr />
+      </form>
+    </section>
+    <div class="modal-footer bg-dark modal-text">
+      <button
+        type="button"
+        class="btn btn-secondary border border-1 border-white"
+        (click)="activeModal.dismiss()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary border border-1 border-white"
+        (click)="onSubmit()"
+        [disabled]="!vehicleModelForm.valid"
+      >
+        Registrar
+      </button>
+    </div>
+  </div>
+</div>

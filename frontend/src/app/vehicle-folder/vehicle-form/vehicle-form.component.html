@@ -1,0 +1,106 @@
+<div class="border border-1 border-white rounded-pill unselectable">
+  <div class="modal-header d-flex bg-dark text-white">
+    <h2 class="modal-title">{{ title }}</h2>
+  </div>
+  <div class="modal-body fw-medium bg-dark modal-text">
+    <section class="form">
+      <form
+        id="vehicleForm"
+        [formGroup]="vehicleForm"
+        class="border border-dark border-3 rounded mt-2 form-style"
+      >
+        <input
+          id="licensePlate"
+          type="text"
+          formControlName="licensePlate"
+          placeholder="Patente del Vehiculo"
+        />
+        <hr />
+
+        <input
+          id="manufacturingYear"
+          type="number"
+          formControlName="manufacturingYear"
+          placeholder="Año de Fabricación"
+        />
+        <hr />
+
+        <input
+          id="totalKms"
+          type="number"
+          formControlName="totalKms"
+          placeholder="Cantidad de km recorridos a la fecha de ingreso"
+        />
+        <hr />
+
+        <!-- Modelo -->
+        <select
+          id="vehicleModel"
+          formControlName="vehicleModel"
+          class="form-select bg-dark text-white border border-secondary w-auto"
+        >
+          <option value="" disabled selected>Seleccione Modelo</option>
+          <option *ngFor="let vehicleModel of vehicleModels" [value]="vehicleModel.id">
+            {{ vehicleModel.colorName }}
+          </option>
+        </select>
+        <hr />
+
+        <!-- color -->
+        <select
+          id="color"
+          formControlName="color"
+          class="form-select bg-dark text-white border border-secondary w-auto"
+        >
+          <option value="" disabled selected>Seleccione color</option>
+          <option *ngFor="let color of colors" [value]="color.id">
+            {{ color.colorName }}
+          </option>
+        </select>
+        <hr />
+
+        <!-- sucursal -->
+        <select
+          id="location"
+          formControlName="location"
+          class="form-select bg-dark text-white border border-secondary w-auto"
+        >
+          <option value="" disabled selected>Seleccione location</option>
+          <option *ngFor="let location of locations" [value]="location.id">
+            {{ location.locationName }}
+          </option>
+        </select>
+
+        <hr />
+
+         <!-- Imagen AAAAAAAAAAAAAAAAAAAAAAA
+         <input
+         type="file"
+         id="imagePath"
+         formControlName="imagePath"
+         accept="image/*"
+         class="form-control bg-dark text-white border border-secondary w-auto"
+       />
+       <hr />
+        -->
+      </form>
+    </section>
+    <div class="modal-footer bg-dark modal-text">
+      <button
+        type="button"
+        class="btn btn-secondary border border-1 border-white"
+        (click)="activeModal.dismiss()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary border border-1 border-white"
+        (click)="onSubmit()"
+        [disabled]="!vehicleForm.valid"
+      >
+        Registrar
+      </button>
+    </div>
+  </div>
+</div>

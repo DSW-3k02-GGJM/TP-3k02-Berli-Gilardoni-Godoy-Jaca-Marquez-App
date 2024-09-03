@@ -17,7 +17,6 @@ const sanitizedVehicleInput = (
     color: req.body.color,
     vehicleModel: req.body.vehicleModel,
     reservations: req.body.reservations,
-    imageRoute: req.body.imageRoute, // agregue esto para la imagen (ruta)
   };
   // Más validaciones
   Object.keys(req.body.sanitizedInput).forEach((key) => {

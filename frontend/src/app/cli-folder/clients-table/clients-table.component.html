@@ -15,7 +15,6 @@
         <th>Nro. Doc.</th>
         <th>Apellido y Nombre</th>
         <th>Fecha de Nacimiento</th>
-        <th>Mail</th>
         <th>Domicilio</th>
         <th>Telefono</th>
         <th>Nacionalidad</th>
@@ -24,14 +23,13 @@
     </thead>
     <tbody>
       <tr *ngFor="let client of clients | filter : filterRows">
-        <td>{{ client.tipoDoc }}</td>
-        <td>{{ client.nroDoc }}</td>
-        <td>{{ client.apellido + ", " + client.nombre }}</td>
-        <td>{{ formatBirthDate(client.fechaNacimiento) }}</td>
-        <td>{{ client.mail }}</td>
-        <td>{{ client.domicilio }}</td>
-        <td>{{ client.telefono }}</td>
-        <td>{{ client.nacionalidad }}</td>
+        <td>{{ client.documentType }}</td>
+        <td>{{ client.documentID }}</td>
+        <td>{{ client.clientSurname + ", " + client.clientName }}</td>
+        <td>{{ formatBirthDate(client.birthDate) }}</td>
+        <td>{{ client.address }}</td>
+        <td>{{ client.phoneNumber }}</td>
+        <td>{{ client.nationality }}</td>
         <td>
           <div class="d-flex justify-content-around">
             <button class="btn btn-dark fs-5" (click)="editClient(client)">

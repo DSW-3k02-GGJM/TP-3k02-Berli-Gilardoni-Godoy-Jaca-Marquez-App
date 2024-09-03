@@ -1,0 +1,42 @@
+<input
+  type="text"
+  class="form-control mb-3"
+  name="filterPost"
+  placeholder="Buscar por Nombre..."
+  [(ngModel)]="filterRows"
+/>
+<div class="div-tablas">
+  <table
+    class="table table-dark table-hover table-bordered table-sm border border-white text-center modelos-table"
+  >
+    <thead>
+      <tr class="text-danger">
+        <th>Nombre</th>
+        <th>Tipo de Transmisión</th>
+        <th>Cantidad de Pasajeros</th>
+        <th>Categoría</th>
+        <th>Marca</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vehicleModel of vehicleModels | filter : filterRows">
+        <td>{{ vehicleModel.vehicleModelName }}</td>
+        <td>{{ vehicleModel.transmissionType }}</td>
+        <td>{{ vehicleModel.passengerCount }}</td>
+        <td>{{ vehicleModel.category.categoryName }}</td>
+        <td>{{ vehicleModel.brand.brandName }}</td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button class="btn btn-dark fs-5" (click)="editVehicleModel(vehicleModel)">
+              ✏️
+            </button>
+            <button class="btn btn-dark fs-5" (click)="deleteVehicleModel(vehicleModel)">
+              ❌
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -29,21 +29,21 @@ export class ClientsTableComponent {
 
   constructor(private apiService: ApiService, private modalService: NgbModal) {}
 
-  formatBirthDate(fechaNacimientoDB: string): string {
-    let fechaNacimientoTable: string = '${day}/${month}/${year}';
-    fechaNacimientoTable = fechaNacimientoTable.replace(
+  formatBirthDate(birthDateDB: string): string {
+    let birthDateTable: string = '${day}/${month}/${year}';
+    birthDateTable = birthDateTable.replace(
       '${month}',
-      fechaNacimientoDB.substring(5, 7)
+      birthDateDB.substring(5, 7)
     );
-    fechaNacimientoTable = fechaNacimientoTable.replace(
+    birthDateTable = birthDateTable.replace(
       '${day}',
-      fechaNacimientoDB.substring(8, 10)
+      birthDateDB.substring(8, 10)
     );
-    fechaNacimientoTable = fechaNacimientoTable.replace(
+    birthDateTable = birthDateTable.replace(
       '${year}',
-      fechaNacimientoDB.substring(0, 4)
+      birthDateDB.substring(0, 4)
     );
-    return fechaNacimientoTable;
+    return birthDateTable;
   }
 
   editClient(client: any): void {
@@ -58,13 +58,13 @@ export class ClientsTableComponent {
   deleteClient(client: any): void {
     const modalRef = this.modalService.open(ConfirmDeletionComponent);
     modalRef.componentInstance.title = 'Eliminar cliente';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar al cliente ${client.apellido}, ${client.nombre}?`;
+    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar al cliente ${client.clientSurname}, ${client.clientName}?`;
 
     modalRef.result.then(
       (result) => {
         if (result) {
           this.apiService
-            .delete('clientes', Number(client.id))
+            .delete('clients', Number(client.id))
             .subscribe((response) => {
               this.clientDeleted.emit(client.id);
             });

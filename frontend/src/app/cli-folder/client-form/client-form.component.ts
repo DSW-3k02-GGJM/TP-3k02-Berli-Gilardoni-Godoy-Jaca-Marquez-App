@@ -31,15 +31,14 @@ export class ClientFormComponent implements OnInit {
   ) {}
 
   clientForm = new FormGroup({
-    tipoDoc: new FormControl('', [Validators.required]),
-    nroDoc: new FormControl('', [Validators.required]),
-    nombre: new FormControl('', [Validators.required]),
-    apellido: new FormControl('', [Validators.required]),
-    mail: new FormControl('', [Validators.required]),
-    fechaNacimiento: new FormControl('', [Validators.required]),
-    domicilio: new FormControl('', [Validators.required]),
-    telefono: new FormControl('', [Validators.required]),
-    nacionalidad: new FormControl('', [Validators.required]),
+    documentType: new FormControl('', [Validators.required]),
+    documentID: new FormControl('', [Validators.required]),
+    clientName: new FormControl('', [Validators.required]),
+    clientSurname: new FormControl('', [Validators.required]),
+    birthDate: new FormControl('', [Validators.required]),
+    address: new FormControl('', [Validators.required]),
+    phoneNumber: new FormControl('', [Validators.required]),
+    nationality: new FormControl('', [Validators.required]),
   });
 
   ngOnInit(): void {
@@ -47,14 +46,14 @@ export class ClientFormComponent implements OnInit {
 
     if (this.currentClientId != -1) {
       this.apiService
-        .getOne('clientes', Number(this.currentClientId))
+        .getOne('clients', Number(this.currentClientId))
         .subscribe((response) => {
-          let fechaNacimientoFormat = this.formatBirthDate(
-            response.data.fechaNacimiento
+          let birthDateFormat = this.formatBirthDate(
+            response.data.birthDate
           );
           this.clientForm.patchValue({
             ...response.data,
-            fechaNacimiento: fechaNacimientoFormat,
+            birthDate: birthDateFormat,
           });
         });
       this.action = 'Edit';
@@ -63,34 +62,34 @@ export class ClientFormComponent implements OnInit {
     }
   }
 
-  formatBirthDate(fechaNacimientoDB: string): string {
-    let fechaNacimientoFormat: string = '${year}-${month}-${day}';
-    fechaNacimientoFormat = fechaNacimientoFormat.replace(
+  formatBirthDate(birthDateDB: string): string {
+    let birthDateFormat: string = '${year}-${month}-${day}';
+    birthDateFormat = birthDateFormat.replace(
       '${year}',
-      fechaNacimientoDB.substring(0, 4)
+      birthDateDB.substring(0, 4)
     );
-    fechaNacimientoFormat = fechaNacimientoFormat.replace(
+    birthDateFormat = birthDateFormat.replace(
       '${month}',
-      fechaNacimientoDB.substring(5, 7)
+      birthDateDB.substring(5, 7)
     );
-    fechaNacimientoFormat = fechaNacimientoFormat.replace(
+    birthDateFormat = birthDateFormat.replace(
       '${day}',
-      fechaNacimientoDB.substring(8, 10)
+      birthDateDB.substring(8, 10)
     );
-    return fechaNacimientoFormat;
+    return birthDateFormat;
   }
 
   onSubmit() {
     this.activeModal.close();
     if (this.action == 'Create') {
       this.apiService
-        .create('clientes', this.clientForm.value)
+        .create('clients', this.clientForm.value)
         .subscribe((response) => {
           this.clientCreatedOrModifiedService.notifyClientCreatedOrModified();
         });
     } else if (this.action == 'Edit') {
       this.apiService
-        .update('clientes', this.currentClientId, this.clientForm.value)
+        .update('clients', this.currentClientId, this.clientForm.value)
         .subscribe((response) => {
           this.clientCreatedOrModifiedService.notifyClientCreatedOrModified();
         });

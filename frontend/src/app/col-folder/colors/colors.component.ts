@@ -58,7 +58,7 @@ export class ColorsComponent implements OnInit {
   }
 
   loadData() {
-    this.apiService.getAll('colores').subscribe((response) => {
+    this.apiService.getAll('colors').subscribe((response) => {
       this.colors = response.data;
     });
   }

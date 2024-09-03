@@ -33,7 +33,7 @@ export class ColorsTableComponent {
     private modalService: NgbModal
   ) {}
 
-  // Método para navegar a la página de edición de una marca
+  // Método para navegar a la página de edición de una color
   editColor(color: any): void {
     const modalRef = this.modalService.open(ColorFormComponent, {
       size: 'l',
@@ -43,17 +43,17 @@ export class ColorsTableComponent {
     modalRef.componentInstance.currentColorId = color.id;
   }
 
-  // Método para eliminar una marca
+  // Método para eliminar una color
   deleteColor(color: any): void {
     const modalRef = this.modalService.open(ConfirmDeletionComponent);
     modalRef.componentInstance.title = 'Eliminar color';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar el color ${color.nombre}?`;
+    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar el color ${color.colorName}?`;
 
     modalRef.result.then(
       (result) => {
         if (result) {
           this.apiService
-            .delete('colores', Number(color.id))
+            .delete('colors', Number(color.id))
             .subscribe((response) => {
               this.colorDeleted.emit(color.id);
             });

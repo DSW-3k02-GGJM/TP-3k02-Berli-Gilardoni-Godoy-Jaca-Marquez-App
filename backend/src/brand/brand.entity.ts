@@ -1,9 +1,8 @@
 import {
   Entity,
-  Property,
   Cascade,
   Collection,
-  OneToMany,
+  OneToMany, Property,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
 import { VehicleModel } from '../vehicleModel/vehicleModel.entity.js';
