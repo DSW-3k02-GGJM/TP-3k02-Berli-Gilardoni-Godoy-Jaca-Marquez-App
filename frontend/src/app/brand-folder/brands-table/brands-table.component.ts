@@ -46,7 +46,7 @@ export class BrandsTableComponent {
   deleteBrand(brand: any): void {
     const modalRef = this.modalService.open(ConfirmDeletionComponent);
     modalRef.componentInstance.title = 'Eliminar marca';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar la marca ${brand.colorName}?`;
+    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar la marca ${brand.brandName}?`;
 
     modalRef.result.then(
       (result) => {

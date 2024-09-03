@@ -22,7 +22,7 @@ export class VehicleListComponent implements OnInit {
   }
 
   fillData() {
-    this.apiService.getAll('vehicles').subscribe((response) => {
+    this.apiService.getAll('vehicleModels').subscribe((response) => {
       this.response = response.data;
     });
   }
