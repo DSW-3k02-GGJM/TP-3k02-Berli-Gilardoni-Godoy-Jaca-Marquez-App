@@ -9,7 +9,7 @@ export class FilterPipe implements PipeTransform {
     if (arg.length < 3) return value;
     const result = [];
     for (const row of value) {
-      if (row.nombre.toLowerCase().indexOf(arg.toLowerCase()) > -1) {
+      if (row.colorName.toLowerCase().indexOf(arg.toLowerCase()) > -1) { //TODO: Ver como hacemos los filtros, por ahora solo andaria color
         result.push(row);
       }
     }

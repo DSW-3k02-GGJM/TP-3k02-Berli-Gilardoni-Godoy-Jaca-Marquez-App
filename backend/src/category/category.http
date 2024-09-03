@@ -1,0 +1,60 @@
+### GET ALL
+http://localhost:3000/api/categories
+
+
+### POST
+# @name createCategory
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "categoryName": "SUV",
+    "categoryDescription": "Vehículos robustos y espaciosos, ideales para familias o viajes de aventura.",
+    "pricePerDay": 100,
+    "depositValue": 500
+}
+
+### ID
+@id = {{createCategory.response.body.data.id}}
+
+### GET ONE
+http://localhost:3000/api/categories/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/categories/{{id}}
+Content-Type: application/json
+
+{
+    "categoryName": "SUV",
+    "categoryDescription": "Vehículos robustos y espaciosos, ideales para familias o viajes de aventura.",
+    "pricePerDay": 150,
+    "depositValue": 570
+}
+
+### POST 2
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "categoryName": "Camioneta",
+    "categoryDescription": "Vehículos grandes y robustos, ideales para transportar cargas o remolcar vehículos.",
+    "pricePerDay": 150,
+    "depositValue": 750
+}
+
+### POST to DELETE
+# @name createCategoryToDelete
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "categoryName": "Deportivo",
+    "categoryDescription": "Vehículos que destacan por su rendimiento y diseño deportivo.",
+    "pricePerDay": 120,
+    "depositValue": 600
+}
+
+### DELETE
+@idToDelete = {{createCategoryToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/categories/{{idToDelete}}
+

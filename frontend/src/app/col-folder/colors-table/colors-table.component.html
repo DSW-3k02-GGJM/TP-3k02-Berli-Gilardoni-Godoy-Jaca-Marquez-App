@@ -17,7 +17,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let color of colors | filter : filterRows">
-        <td>{{ color.nombre }}</td>
+        <td>{{ color.colorName }}</td>
         <td class="actions-column">
           <div class="d-flex justify-content-around">
             <button class="btn btn-dark fs-5" (click)="editColor(color)">

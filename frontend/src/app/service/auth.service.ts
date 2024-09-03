@@ -23,13 +23,13 @@ export class AuthService {
   });
 
   register(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/usuarios/register`, data, {
+    return this.http.post(`${this.apiUrl}/users/register`, data, {
       headers: this.headers,
     });
   }
 
   login(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/usuarios/login`, data, {
+    return this.http.post(`${this.apiUrl}/users/login`, data, {
       headers: this.headers,
       withCredentials: true,
     }).pipe(
@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/usuarios/logout`, {
+    return this.http.post(`${this.apiUrl}/users/logout`, {
       withCredentials: true,
     }).pipe(
       tap(() => this.notifyLoginOrLogout(false)), // logout exitoso
@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   isAuthenticated(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/usuarios/is-authenticated`, {
+    return this.http.post(`${this.apiUrl}/users/is-authenticated`, {
       withCredentials: true,
     })
   }

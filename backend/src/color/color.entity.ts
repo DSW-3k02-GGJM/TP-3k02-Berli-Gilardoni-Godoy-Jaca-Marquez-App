@@ -6,15 +6,15 @@ import {
   Collection,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Vehiculo } from '../vehiculo/vehiculo.entity.js';
+import { Vehicle } from '../vehicle/vehicle.entity.js';
 
 @Entity()
 export class Color extends BaseEntity {
   @Property({ nullable: false })
-  nombre!: string;
+  colorName!: string;
 
-  @OneToMany(() => Vehiculo, (vehiculo) => vehiculo.color, {
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.color, {
     cascade: [Cascade.ALL],
   })
-  vehiculos = new Collection<Vehiculo>(this);
+  vehicles = new Collection<Vehicle>(this);
 }

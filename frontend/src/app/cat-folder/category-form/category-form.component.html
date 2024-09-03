@@ -1,0 +1,63 @@
+<div class="border border-1 border-white rounded-pill unselectable">
+  <div class="modal-header d-flex bg-dark text-white">
+    <h2 class="modal-title">{{ title }}</h2>
+  </div>
+  <div class="modal-body fw-medium bg-dark modal-text">
+    <section class="form">
+      <form
+        id="categoryForm"
+        [formGroup]="categoryForm"
+        class="border border-dark border-3 rounded mt-2 form-style"
+      >
+        <input
+          id="categoryName"
+          type="text"
+          formControlName="categoryName"
+          placeholder="Nombre"
+        />
+        <hr />
+
+        <input
+          id="categoryDescription"
+          type="text"
+          formControlName="categoryDescription"
+          placeholder="Descripcion"
+        />
+        <hr />
+
+        <input
+          id="pricePerDay"
+          type="number"
+          formControlName="pricePerDay"
+          placeholder="Precio por Dia"
+        />
+        <hr />
+
+        <input
+          id="depositValue"
+          type="number"
+          formControlName="depositValue"
+          placeholder="Valor Deposito"
+        />
+        <hr />
+      </form>
+    </section>
+    <div class="modal-footer bg-dark modal-text">
+      <button
+        type="button"
+        class="btn btn-secondary border border-1 border-white"
+        (click)="activeModal.dismiss()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary border border-1 border-white"
+        (click)="onSubmit()"
+        [disabled]="!categoryForm.valid"
+      >
+        Registrar
+      </button>
+    </div>
+  </div>
+</div>

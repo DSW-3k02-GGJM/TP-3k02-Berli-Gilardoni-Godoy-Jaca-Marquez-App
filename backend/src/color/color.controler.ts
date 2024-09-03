@@ -4,26 +4,28 @@ import { Color } from './color.entity.js';
 
 const em = orm.em;
 
+//TODO: sanitizedColorInput
+
 const findAll = async (req: Request, res: Response) => {
   try {
-    const colores = await em.find(
+    const colors = await em.find(
       Color,
       {},
       {
         populate: [
-          'vehiculos',
-          'vehiculos.sucursal',
-          'vehiculos.modelo',
-          'vehiculos.modelo.categoria',
-          'vehiculos.modelo.marca',
-          'vehiculos.alquileres',
-          'vehiculos.alquileres.cliente',
+          'vehicles',
+          'vehicles.location',
+          'vehicles.vehicleModel',
+          'vehicles.vehicleModel.category',
+          'vehicles.vehicleModel.brand',
+          'vehicles.reservations',
+          'vehicles.reservations.client',
         ],
       }
     );
     res.status(200).json({
-      message: 'Todos los colores encontrados',
-      data: colores,
+      message: 'All colors have been found',
+      data: colors,
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -38,18 +40,18 @@ const findOne = async (req: Request, res: Response) => {
       { id },
       {
         populate: [
-          'vehiculos',
-          'vehiculos.sucursal',
-          'vehiculos.modelo',
-          'vehiculos.modelo.categoria',
-          'vehiculos.modelo.marca',
-          'vehiculos.alquileres',
-          'vehiculos.alquileres.cliente',
+          'vehicles',
+          'vehicles.location',
+          'vehicles.vehicleModel',
+          'vehicles.vehicleModel.category',
+          'vehicles.vehicleModel.brand',
+          'vehicles.reservations',
+          'vehicles.reservations.client',
         ],
       }
     );
     res.status(200).json({
-      message: 'Color encontrado',
+      message: 'The color has been found',
       data: color,
     });
   } catch (error: any) {
@@ -61,7 +63,7 @@ const add = async (req: Request, res: Response) => {
   try {
     const color = em.create(Color, req.body);
     await em.flush();
-    res.status(201).json({ message: 'Color creado', data: color });
+    res.status(201).json({ message: 'The color has been created', data: color });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -73,7 +75,7 @@ const update = async (req: Request, res: Response) => {
     const color = em.getReference(Color, id);
     em.assign(color, req.body);
     await em.flush();
-    res.status(200).json({ message: 'Color actualizado' });
+    res.status(200).json({ message: 'The color has been updated' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -84,7 +86,7 @@ const remove = async (req: Request, res: Response) => {
     const id = Number.parseInt(req.params.id);
     const color = em.getReference(Color, id);
     await em.removeAndFlush(color);
-    res.status(200).send({ message: 'Color eliminado' });
+    res.status(200).send({ message: 'The color has been deleted' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

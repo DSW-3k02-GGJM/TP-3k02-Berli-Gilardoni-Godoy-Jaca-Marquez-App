@@ -4,15 +4,15 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
-import { alquilerRouter } from './alquiler/alquiler.routes.js';
-import { categoriaRouter } from './categoria/categoria.routes.js';
-import { clienteRouter } from './cliente/cliente.routes.js';
+import { categoryRouter } from "./category/category.routes.js";
+import { clientRouter } from './client/client.routes.js';
 import { colorRouter } from './color/color.routes.js';
-import { marcaRouter } from './marca/marca.routes.js';
-import { modeloRouter } from './modelo/modelo.routes.js';
-import { sucursalRouter } from './sucursal/sucursal.routes.js';
-import { vehiculoRouter } from './vehiculo/vehiculo.routes.js';
-import { usuarioRouter } from './usuario/usuario.route.js';
+import { brandRouter } from './brand/brand.routes.js';
+import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js';
+import { locationRouter } from './location/location.routes.js';
+import { reservationRouter  } from './reservation/reservation.routes.js';
+import { vehicleRouter } from './vehicle/vehicle.routes.js';
+import { userRouter } from './user/user.routes.js';
 import dotenv from 'dotenv'
 
 dotenv.config();
@@ -51,18 +51,18 @@ app.use((req, res, next) => {
 
 // antes de las rutas y middlewares de negocio
 
-app.use('/api/alquileres', alquilerRouter);
-app.use('/api/categorias', categoriaRouter);
-app.use('/api/clientes', clienteRouter);
-app.use('/api/colores', colorRouter);
-app.use('/api/marcas', marcaRouter);
-app.use('/api/modelos', modeloRouter);
-app.use('/api/sucursales', sucursalRouter);
-app.use('/api/vehiculos', vehiculoRouter);
-app.use('/api/usuarios', usuarioRouter);
+app.use('/api/reservations', reservationRouter);
+app.use('/api/categories', categoryRouter);
+app.use('/api/clients', clientRouter);
+app.use('/api/colors', colorRouter);
+app.use('/api/brands', brandRouter);
+app.use('/api/vehicleModels', vehicleModelRouter);
+app.use('/api/locations', locationRouter);
+app.use('/api/vehicles', vehicleRouter);
+app.use('/api/users', userRouter);
 
 app.use((_, res) => {
-  return res.status(404).send({ message: 'Recurso no encontrado' });
+  return res.status(404).send({ message: 'Resource not' });
 });
 
 await syncSchema(); // never in production

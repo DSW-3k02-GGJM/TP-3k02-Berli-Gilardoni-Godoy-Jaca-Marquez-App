@@ -31,7 +31,7 @@ export class ColorFormComponent implements OnInit {
   ) {}
 
   colorForm = new FormGroup({
-    nombre: new FormControl('', [Validators.required]),
+    colorName: new FormControl('', [Validators.required]),
   });
 
   ngOnInit(): void {
@@ -40,7 +40,7 @@ export class ColorFormComponent implements OnInit {
     // Se ejecuta al inicializar el componente
     if (this.currentColorId != -1) {
       this.apiService
-        .getOne('colores', Number(this.currentColorId)) // Obtiene los datos del color por ID
+        .getOne('colors', Number(this.currentColorId)) // Obtiene los datos del color por ID
         .subscribe((response) => {
           this.colorForm.patchValue(response.data);
         });
@@ -55,14 +55,14 @@ export class ColorFormComponent implements OnInit {
     if (this.action === 'Create') {
       // Si la acción es 'Create', llama al servicio para crear una nuevo color
       this.apiService
-        .create('colores', this.colorForm.value)
+        .create('colors', this.colorForm.value)
         .subscribe((response) => {
           this.colorCreatedOrModifiedService.notifyColorCreatedOrModified();
         });
     } else if (this.action === 'Edit') {
       // Si la acción es 'Edit', llama al servicio para actualizar el color existente
       this.apiService
-        .update('colores', this.currentColorId, this.colorForm.value)
+        .update('colors', this.currentColorId, this.colorForm.value)
         .subscribe((response) => {
           this.colorCreatedOrModifiedService.notifyColorCreatedOrModified();
         });

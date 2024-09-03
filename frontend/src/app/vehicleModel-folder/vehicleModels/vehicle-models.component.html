@@ -1,0 +1,14 @@
+<div class="lista-modelos text-white">
+  <div class="titulo d-flex justify-content-between pt-3 me-5">
+    <h2 class="nuestros-modelos">Nuestros modelos</h2>
+    <button class="btn btn-primary" (click)="newVehicleModel()">
+      + Nuevo
+    </button>
+  </div>
+  <section class="modelo-list mt-3 mx-5">
+    <app-vehicleModels-table
+      [vehicleModels]="vehicleModels"
+      (vehicleModelDeleted)="onVehicleModelDeleted($event)"
+    ></app-vehicleModels-table>
+  </section>
+</div>

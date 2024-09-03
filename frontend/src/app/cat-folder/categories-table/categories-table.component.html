@@ -1,0 +1,48 @@
+<input
+  type="text"
+  class="form-control mb-3"
+  name="filterPost"
+  placeholder="Buscar por Nombre..."
+  [(ngModel)]="filterRows"
+/>
+<div class="div-tablas">
+  <table
+    class="table table-dark table-hover table-bordered table-sm border border-white text-center categorias-table"
+  >
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Descripcion</th>
+        <th>Precio por día</th>
+        <th>Valor depósito</th>
+        <th>Mas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let category of categories | filter : filterRows">
+        <td>{{ category.id }}</td>
+        <td>{{ category.categoryName }}</td>
+        <td>{{ category.categoryDescription }}</td>
+        <td>{{ category.pricePerDay }}</td>
+        <td>{{ category.depositValue }}</td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button
+              class="btn btn-dark fs-5"
+              (click)="editCategory(category)"
+            >
+              ✏️
+            </button>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="deleteCategory(category)"
+            >
+              ❌
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

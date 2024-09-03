@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class HomePageComponent {
   constructor(private router: Router) {}
 
-  mostrarVehiculos() {
-    this.router.navigate(['/vehiculos']);
+  showVehicles() {
+    this.router.navigate(['/vehicles']);
   }
 }
