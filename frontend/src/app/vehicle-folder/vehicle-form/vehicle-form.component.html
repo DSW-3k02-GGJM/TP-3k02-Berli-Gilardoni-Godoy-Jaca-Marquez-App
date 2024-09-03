@@ -41,7 +41,7 @@
         >
           <option value="" disabled selected>Seleccione Modelo</option>
           <option *ngFor="let vehicleModel of vehicleModels" [value]="vehicleModel.id">
-            {{ vehicleModel.colorName }}
+            {{ vehicleModel.vehicleModelName }}
           </option>
         </select>
         <hr />
