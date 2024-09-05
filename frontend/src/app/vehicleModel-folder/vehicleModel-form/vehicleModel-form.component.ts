@@ -15,8 +15,8 @@ import {map, Observable} from "rxjs";
 @Component({
   selector: 'app-vehicleModel-form',
   standalone: true,
-  templateUrl: './vehicle-model-form.component.html',
-  styleUrls: ['./vehicle-model-form.component.scss'],
+  templateUrl: './vehicleModel-form.component.html',
+  styleUrls: ['./vehicleModel-form.component.scss'],
   imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   providers: [ApiService],
 })
@@ -58,12 +58,16 @@ export class VehicleModelFormComponent implements OnInit {
       this.apiService
         .getOne('vehicleModels', Number(this.currentVehicleModelId))
         .subscribe((response) => {
+          console.log('Response from getOne:', response);
           // Usa el método patchValue para actualizar el formulario con los datos del modelo recibido.
           // Asigna los valores del modelo a los campos del formulario, incluyendo 'categoria' y 'marca'.
           this.vehicleModelForm.patchValue({
-            ...response.data,
-            category: response.data.category.id, // Asume que `categoriaId` es el ID de la categoría seleccionada.
-            brand: response.data.brand.id, // Asume que `marcaId` es el ID de la marca seleccionada.
+            vehicleModelName: response.data.vehicleModelName,
+            transmissionType: response.data.transmissionType,
+            passengerCount: response.data.passengerCount,
+            category: response.data.category.id,
+            brand: response.data.brand.id,
+            imagePath: response.data.imagePath,
           });
         });
 

@@ -6,14 +6,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
-import { VehicleModelFormComponent } from "../vehicleModel-form/vehicle-model-form.component.js";
-
+import { VehicleModelFormComponent } from "../vehicleModel-form/vehicleModel-form.component.js";
 
 @Component({
   selector: 'app-vehicleModels-table',
   standalone: true,
-  templateUrl: './vehicle-models-table.component.html',
-  styleUrl: './vehicle-models-table.component.scss',
+  templateUrl: './vehicleModels-table.component.html',
+  styleUrl: './vehicleModels-table.component.scss',
   imports: [
     CommonModule,
     HttpClientModule,

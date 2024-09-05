@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VehicleModelFormComponent } from '../vehicleModel-form/vehicle-model-form.component.js';
+import { VehicleModelFormComponent } from '../vehicleModel-form/vehicleModel-form.component.js';
 
 describe('VehicleModelFormComponent', () => {
   let component: VehicleModelFormComponent;

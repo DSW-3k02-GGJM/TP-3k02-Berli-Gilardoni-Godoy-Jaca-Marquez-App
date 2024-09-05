@@ -43,8 +43,6 @@ export class VehicleFormComponent implements OnInit {
     vehicleModel: new FormControl('', [Validators.required]),
     color: new FormControl('', [Validators.required]),
     location: new FormControl('', [Validators.required]),
-    imagePath: new FormControl(''),
-    //imagenRuta: new FormControl('', [Validators.required]), // Control para la ruta de la imagen
   });
 
   ngOnInit(): void {
@@ -93,15 +91,6 @@ export class VehicleFormComponent implements OnInit {
     if (this.vehicleForm.valid) {
 
       const formData = this.vehicleForm.value;
-
-    // Modifica el valor de imagenRuta
-      if(formData.imagePath != null)
-      {
-          //formData.imagenRuta = formData.imagenRuta.replace('C:\fakepath\', 'assets\img\');
-          formData.imagePath = formData.imagePath.replace('C:\\fakepath\\', 'assets/img/');
-
-      } // en realidad se guarda como C:\fakepath
-
 
       console.log('Datos enviados:', formData); // para ver los datos que se envían
       this.activeModal.close();
