@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,7 +17,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   imports: [CommonModule, HttpClientModule, ColorsTableComponent],
   providers: [ApiService],
 })
-export class ColorsComponent implements OnInit {
+export class ColorsComponent implements OnInit, OnDestroy {
   colors: any[] = []; // Lista de colores a mostrar en la vista
   private subscription?: Subscription;
 
@@ -33,6 +33,7 @@ export class ColorsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.colorCreatedOrModifiedService.resetDataLoaded();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

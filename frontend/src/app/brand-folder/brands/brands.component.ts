@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -16,7 +16,7 @@ import {BrandsTableComponent} from "../brands-table/brands-table.component.js";
   imports: [CommonModule, HttpClientModule, BrandsTableComponent],
   providers: [ApiService],
 })
-export class BrandsComponent implements OnInit {
+export class BrandsComponent implements OnInit, OnDestroy {
   brands: any[] = []; // Lista de brands a mostrar en la vista
   private subscription?: Subscription;
 
@@ -32,6 +32,7 @@ export class BrandsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.brandCreatedOrModifiedService.resetDataLoaded();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

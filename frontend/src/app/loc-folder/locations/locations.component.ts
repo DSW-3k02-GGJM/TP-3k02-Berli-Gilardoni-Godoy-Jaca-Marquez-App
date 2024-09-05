@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -16,7 +16,7 @@ import { LocationFormComponent } from '../location-form/location-form.component.
   imports: [CommonModule, HttpClientModule, LocationsTableComponent],
   providers: [ApiService],
 })
-export class LocationsComponent implements OnInit {
+export class LocationsComponent implements OnInit, OnDestroy {
   locations: any[] = [];
   private subscription?: Subscription;
 
@@ -31,6 +31,7 @@ export class LocationsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.locationCreatedOrModifiedService.resetDataLoaded();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

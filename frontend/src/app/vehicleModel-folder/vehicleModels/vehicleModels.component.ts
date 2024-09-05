@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -16,7 +16,7 @@ import { VehicleModelFormComponent } from '../vehicleModel-form/vehicleModel-for
   imports: [CommonModule, HttpClientModule, VehicleModelsTableComponent],
   providers: [ApiService],
 })
-export class VehicleModelsComponent implements OnInit {
+export class VehicleModelsComponent implements OnInit, OnDestroy {
   vehicleModels: any[] = [];
   private subscription?: Subscription;
 
@@ -31,6 +31,7 @@ export class VehicleModelsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.vehicleModelCreatedOrModifiedService.resetDataLoaded();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

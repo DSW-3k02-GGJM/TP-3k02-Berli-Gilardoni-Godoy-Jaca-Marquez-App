@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,7 +17,7 @@ import { CategoryFormComponent } from '../category-form/category-form.component'
   imports: [CommonModule, HttpClientModule, CategoriesTableComponent],
   providers: [ApiService],
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent implements OnInit, OnDestroy {
   categories: any[] = [];
   private subscription?: Subscription;
   private subscription2?: Subscription;
@@ -33,6 +33,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.categoryCreatedOrModifiedService.resetDataLoaded();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

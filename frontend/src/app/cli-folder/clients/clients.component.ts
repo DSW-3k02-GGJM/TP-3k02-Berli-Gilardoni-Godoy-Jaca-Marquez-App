@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,7 +17,7 @@ import { ClientCreatedOrModifiedService } from '../client-created-or-modified/cl
   imports: [CommonModule, HttpClientModule, ClientsTableComponent],
   providers: [ApiService],
 })
-export class ClientsComponent implements OnInit {
+export class ClientsComponent implements OnInit, OnDestroy {
   clients: any[] = [];
   private subscription?: Subscription;
 
@@ -32,6 +32,7 @@ export class ClientsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.clientCreatedOrModifiedService.resetDataLoaded();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
