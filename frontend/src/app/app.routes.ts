@@ -16,7 +16,6 @@ import { VehicleListComponent } from './vehicle-folder/vehicle-list/vehicle-list
 import { TestMatiComponent } from './test/test-mati/test-mati.component.js';
 import {LoginComponent} from "./user-folder/login/login.component";
 import {RegisterComponent} from "./user-folder/register/register.component";
-import {LogoutComponent} from "./user-folder/logout/logout.component";
 import {authGuard} from "./auth.guard";
 import { VehiclesComponent } from './vehicle-folder/vehicles/vehicles.component';
 import { VehicleFormComponent } from './vehicle-folder/vehicle-form/vehicle-form.component';
@@ -50,6 +49,5 @@ export const routes: Routes = [
   { path: 'testMati', component: TestMatiComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'logout', component: LogoutComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];

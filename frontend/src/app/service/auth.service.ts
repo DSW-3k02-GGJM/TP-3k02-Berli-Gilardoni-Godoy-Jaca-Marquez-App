@@ -25,7 +25,14 @@ export class AuthService {
   register(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/users/register`, data, {
       headers: this.headers,
-    });
+    }).pipe(
+      tap(() => {this.notifyLoginOrLogout(true);
+      console.log("hola")}), // register exitoso
+      catchError(error => {
+        // Error en el register
+        return throwError(() => error);
+      })
+    );
   }
 
   login(data: any): Observable<any> {

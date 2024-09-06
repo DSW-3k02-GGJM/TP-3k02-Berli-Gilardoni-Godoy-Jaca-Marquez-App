@@ -97,7 +97,14 @@ const register = async (req: Request, res: Response) => {
 
     //const token = AuthService.generateToken(usuario); // Crea un token y lo asocia al usuario
     const { password: _, ...publicUser} = user;
-    res.status(201).json({ message: 'Sign-up completed', data: publicUser });
+    const token = AuthService.generateToken(user); // Crea un token y lo asocia al usuario
+    res.cookie('access_token', token, {
+              httpOnly: true, // La cookie solo se puede acceder en el servidor (No se puede ver desde el cliente)
+              secure: true, // Funciona solo con https
+              sameSite: 'strict', // Solo se puede acceder en el mismo dominio
+              maxAge: 1000 * 60 * 60, // Dura 1h
+          })
+          .status(200).json({ message: 'Sign-up and Login completed', data: publicUser});
   } catch (error: any) {
     res.status(500).json({ message: error.message }); // No es recomendado mandar estos errores al frontend (le gusta a los hackers)
   }
@@ -105,8 +112,8 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
     try {
-        const email = req.body.email;
-        const password = req.body.password;
+        const email = req.body.sanitizedInput.email;
+        const password = req.body.sanitizedInput.password;
         const user = await em.findOne(
             User,
             { email },

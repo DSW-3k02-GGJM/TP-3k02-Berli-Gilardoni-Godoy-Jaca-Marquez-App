@@ -20,8 +20,7 @@ export class AppComponent implements OnInit {
       res=> {
         console.log("res");
         this.authService.notifyLoginOrLogout(true);
-      },
-      err => { }
+      }
     );
   }
 

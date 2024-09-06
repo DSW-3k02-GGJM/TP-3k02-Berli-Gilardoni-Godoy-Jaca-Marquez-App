@@ -3,6 +3,9 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AuthService } from "../../service/auth.service";
 import { HttpClientModule } from "@angular/common/http";
 import {Subscription} from "rxjs";
+import {Router} from "@angular/router";
+import {SuccessfulModalComponent} from "../successful-modal/successful-modal.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-login',
@@ -10,7 +13,7 @@ import {Subscription} from "rxjs";
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -19,6 +22,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
+    private router: Router,
+    private modalService: NgbModal
   ) { }
 
 
@@ -32,6 +37,8 @@ export class LoginComponent {
       .subscribe(
         res=> {
         console.log(res);
+        const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false });
+        modalRef.componentInstance.title = 'Inicio de sesión exitoso';
       });
   }
 }

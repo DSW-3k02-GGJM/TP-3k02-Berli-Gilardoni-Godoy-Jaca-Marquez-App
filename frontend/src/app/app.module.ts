@@ -25,7 +25,7 @@ import { AuthService } from "./service/auth.service";
     provideAnimationsAsync(),
     provideAnimationsAsync(),
     provideHttpClient(),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    //provideHttpClient(withInterceptors([authInterceptor])),
     AuthService
   ],
   bootstrap: [AppComponent] // Especifica el componente raíz que Angular debe inicializar al arrancar la aplicación

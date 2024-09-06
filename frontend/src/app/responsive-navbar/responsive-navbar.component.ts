@@ -3,6 +3,8 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
 import {AuthService} from "../service/auth.service";
 import {CommonModule} from "@angular/common";
 import {catchError, map, Observable, of, Subscription,} from "rxjs";
+import {SuccessfulModalComponent} from "../user-folder/successful-modal/successful-modal.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-responsive-navbar',
@@ -13,8 +15,9 @@ import {catchError, map, Observable, of, Subscription,} from "rxjs";
 })
 export class ResponsiveNavbarComponent implements OnInit {
   constructor(
-    private authService: AuthService)
-  { }
+    private authService: AuthService,
+    private modalService: NgbModal
+  ) { }
   isLogged = false;
   private subscription?: Subscription;
 
@@ -42,7 +45,9 @@ export class ResponsiveNavbarComponent implements OnInit {
     this.authService.logout()
       .subscribe(
       res => {
-      console.log(res);
+        const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false });
+        modalRef.componentInstance.title = 'Logout exitoso';
+        console.log(res);
     });
   }
 }

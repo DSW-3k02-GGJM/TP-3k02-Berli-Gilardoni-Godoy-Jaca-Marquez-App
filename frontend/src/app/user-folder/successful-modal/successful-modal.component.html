@@ -1,0 +1,14 @@
+<div class="border border-success rounded-pill unselectable">
+  <div class="modal-header d-flex bg-dark text-white">
+    <h2 class="modal-title">{{ title }}</h2>
+  </div>
+  <div class="modal-footer bg-dark modal-text " style="justify-content: center">
+    <button
+      type="button"
+      class="btn btn-primary border border-1 border-white"
+      (click)="activeModal.dismiss(); router.navigate(['/home']);"
+    >
+      Aceptar
+    </button>
+  </div>
+</div>
