@@ -14,7 +14,11 @@
                 type="email"
                 formControlName="email"
                 placeholder="Email"
+                [class.is-invalid]="registerForm.get('email')?.errors?.emailExists"
               />
+              <div class="invalid-feedback">
+                Este email ya está siendo usado. Por favor use otro.
+              </div>
             </div>
             <hr />
             <div class="form-group">
@@ -24,7 +28,11 @@
                 type="password"
                 formControlName="password"
                 placeholder="Contraseña"
-              />
+                [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+              />        
+              <div class="invalid-feedback">
+                La contraseña es requerida
+              </div>
             </div>
             <hr />
             <button

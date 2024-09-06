@@ -4,6 +4,10 @@ import { AuthService } from "../../service/auth.service";
 import { HttpClientModule } from "@angular/common/http";
 import {SuccessfulModalComponent} from "../successful-modal/successful-modal.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +15,11 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
     imports: [
       FormsModule,
       ReactiveFormsModule,
-      HttpClientModule
+      HttpClientModule,
+      CommonModule,
+      MatProgressSpinnerModule,
+      MatFormFieldModule,
+      MatInputModule
     ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -24,7 +32,7 @@ export class RegisterComponent {
   ) { }
 
   registerForm = new FormGroup({
-    email: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required], [this.authService.uniqueEmailValidator()]),
     password: new FormControl('', [Validators.required]),
   });
 

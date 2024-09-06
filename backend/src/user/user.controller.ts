@@ -158,4 +158,17 @@ const login = async (req: Request, res: Response) => {
       res.status(200).send({ message: "Authenticated" });
   };
 
-export { sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication };
+  const verifyEmailExists = async (req: Request, res: Response) => {
+    try {
+      const email = req.params.email;
+      const user = await em.findOneOrFail(
+        User,
+        { email: email });
+      res.status(200).json({ exists: true });
+    }
+    catch (error: any) {
+      res.status(200).json({ exists: false});
+    }
+  };
+
+export { sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists };
