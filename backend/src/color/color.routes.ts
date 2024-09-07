@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { findAll, findOne, add, update, remove } from './color.controler.js';
+import {findAll, findOne, add, update, remove, sanitizedColorInput} from './color.controler.js';
 
 export const colorRouter = Router();
 
 colorRouter.get('/', findAll);
 colorRouter.get('/:id', findOne);
-colorRouter.post('/', add);
-colorRouter.put('/:id', update);
-colorRouter.patch('/:id', update);
+colorRouter.post('/', sanitizedColorInput, add);
+colorRouter.put('/:id', sanitizedColorInput, update);
+colorRouter.patch('/:id', sanitizedColorInput, update);
 colorRouter.delete('/:id', remove);
