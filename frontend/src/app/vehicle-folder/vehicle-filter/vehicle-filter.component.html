@@ -1,0 +1,10 @@
+<div class="filtro-fechas">
+    <label for="fechaDesde">Fecha Desde:</label>
+    <input type="date" id="fechaDesde" [(ngModel)]="fechaDesde" />
+  
+    <label for="fechaHasta">Fecha Hasta:</label>
+    <input type="date" id="fechaHasta" [(ngModel)]="fechaHasta" />
+  
+    <button (click)="applyFilter()">Aplicar Filtro</button>
+  </div>
+  

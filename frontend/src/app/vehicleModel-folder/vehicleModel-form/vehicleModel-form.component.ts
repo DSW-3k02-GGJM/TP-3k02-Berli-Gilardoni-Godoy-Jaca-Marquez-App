@@ -94,6 +94,8 @@ export class VehicleModelFormComponent implements OnInit {
     });
   }
 
+  // creo q ahora esto es basura
+  /*
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
@@ -107,7 +109,7 @@ export class VehicleModelFormComponent implements OnInit {
       this.vehicleModelForm.patchValue({ imagePath: imagePath });
       console.log('Ruta de la imagen:', imagePath);
     }
-  }
+  }*/
 
   uploadImage(file: File): Observable<string> {
     const formData = new FormData();
@@ -152,23 +154,4 @@ export class VehicleModelFormComponent implements OnInit {
     }
   }
 
-  /*
-  onSubmit() {
-    this.activeModal.close();
-    if (this.action === 'Create') {
-      this.apiService
-        .create('vehicleModels', this.vehicleModelForm.value)
-        .subscribe((response) => {
-          this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
-        });
-    } else if (this.action === 'Edit') {
-      this.apiService
-        .update('vehicleModels', this.currentVehicleModelId, this.vehicleModelForm.value)
-        .subscribe((response) => {
-          this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
-        });
-    }
-    this.vehicleModelCreatedOrModifiedService.isDataLoaded = true;
-  }
-*/
 }

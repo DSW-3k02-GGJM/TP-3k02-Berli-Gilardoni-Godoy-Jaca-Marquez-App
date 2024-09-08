@@ -10,15 +10,19 @@ import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { authInterceptor } from "./interceptors/auth.interceptor";
 import { AuthService } from "./service/auth.service";
 
+// esto lo agregue recien
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
-    AppComponent // Declara el componente principal de la aplicación
+    AppComponent, // Declara el componente principal de la aplicación
   ],
   imports: [
     BrowserModule, // Importa BrowserModule para que la aplicación pueda ejecutarse en un navegador
     CommonModule,
     RouterOutlet,
     ResponsiveNavbarComponent,
+    HttpClientModule // no hace nada por ahora
   ],
   providers: [
     provideRouter(routes),
