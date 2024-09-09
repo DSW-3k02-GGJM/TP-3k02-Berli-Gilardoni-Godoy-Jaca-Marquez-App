@@ -37,6 +37,7 @@ export class RegisterComponent {
   });
 
   onSubmit() {
+    console.log(this.registerForm.value)
     this.authService.register(this.registerForm.value).subscribe(
       response => {
         const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false , size: 'sm' });

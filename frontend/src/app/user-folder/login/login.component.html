@@ -14,7 +14,11 @@
                 type="email"
                 formControlName="email"
                 placeholder="Email"
+                [class.is-invalid]="loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || loginForm.get('email')?.dirty)"
               />
+              <div *ngIf="loginForm.get('email')?.errors?.required" class="invalid-feedback">
+                El mail es requerido.
+              </div>
             </div>
             <hr />
             <div class="form-group">
@@ -24,17 +28,25 @@
                 type="password"
                 formControlName="password"
                 placeholder="Contraseña"
+                [class.is-invalid]="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)"
               />
+              <div *ngIf="loginForm.get('password')?.errors?.required" class="invalid-feedback">
+                La contraseña es requerida.
+              </div>
             </div>
             <hr />
+            <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+              {{ errorMessage }}
+            </div>
             <button
               type="submit"
               class="btn btn-primary border border-1 border-white"
               (click)="onSubmit()"
-              [disabled]="!loginForm.valid"
+              [disabled]="loginForm.invalid"
             >
               Ingresar
             </button>
+            
           </form>
         </div>
       </div>
