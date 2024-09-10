@@ -100,6 +100,7 @@ const register = async (req: Request, res: Response) => {
     const user = em.create(User, {
         ...req.body.sanitizedInput,
         password: hashedPassword,
+        role: 'client', // Por defecto se crea como cliente
       });
     await em.flush();
 
