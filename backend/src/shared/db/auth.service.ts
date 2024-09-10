@@ -24,6 +24,7 @@ export class AuthService {
       const token = req.cookies.access_token;
       let data = null;
       req.session = { user: null };
+
       if (!token) {
         return res.status(401).json({ message: 'Unauthorized access'});
       }
