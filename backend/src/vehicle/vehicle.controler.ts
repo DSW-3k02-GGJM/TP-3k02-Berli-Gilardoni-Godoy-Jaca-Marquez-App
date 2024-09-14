@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Vehicle } from './vehicle.entity.js';
+import { VehicleModel } from '../vehicleModel/vehicleModel.entity.js';
+
+// pruebo esto para la parte del filtro
+import { EntityManager } from '@mikro-orm/core';
+
 
 const em = orm.em;
 
@@ -109,4 +114,37 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
+
+// hago la funcion para el filtor
+// Asegúrate de tener el EntityManager disponible aquí
+
+export const getAvailableVehicleModelsHandler = async (req: Request, res: Response) => {
+  const { fechaDesde, fechaHasta } = req.query;
+
+  try {
+    const em = req.em; // Obtén el EntityManager del request
+
+    if (!em) {
+      throw new Error('EntityManager not found in request context');
+    }
+
+    const qb = em.createQueryBuilder(VehicleModel, 'vm');
+    qb.leftJoinAndSelect('vm.reservations', 'r')
+      .where(
+        qb.expr().or(
+          qb.expr().isNull('r.startDate'),
+          qb.expr().lte('r.endDate', new Date(fechaDesde)),
+          qb.expr().gte('r.startDate', new Date(fechaHasta))
+        )
+      )
+      .groupBy('vm.id')
+      .having('COUNT(r.id) > 0');
+
+    const availableModels = await qb.getResultList();
+    res.json({ data: availableModels });
+  } catch (error) {
+    console.error('Error fetching available vehicle models:', error);
+    res.status(500).json({ error: 'Error fetching available vehicle models' });
+  }
+};
 export { sanitizedVehicleInput, findAll, findOne, add, update, remove };

@@ -24,3 +24,4 @@ export class VehicleCreatedOrModifiedService {
     this.isDataLoaded = false;
   }
 }
+

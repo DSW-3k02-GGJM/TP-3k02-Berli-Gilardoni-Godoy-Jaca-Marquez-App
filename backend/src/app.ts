@@ -92,6 +92,10 @@ import { vehicleRouter } from './vehicle/vehicle.routes.js';
 import { userRouter } from './user/user.routes.js';
 import dotenv from 'dotenv';
 import mysql from 'mysql';
+// nuevas
+import { MikroORM } from '@mikro-orm/core';
+import { attachEntityManager } from './middleware/entityManager.middleware';
+
 
 dotenv.config();
 
@@ -155,6 +159,32 @@ app.get('/api/vehicleModels/available', (req, res) => {
   });
 });
 
+// nuevoooooo
+//const app = express();
+
+// Configuración de MikroORM
+async function initializeDatabase() {
+  const orm = await MikroORM.init({
+    // Configuración de MikroORM aquí
+  });
+
+  // Obtén el EntityManager de MikroORM
+  const em = orm.em;
+
+  // Configura el EntityManager en la aplicación Express
+  app.set('entityManager', em);
+}
+
+initializeDatabase().catch(err => {
+  console.error('Error initializing database:', err);
+  process.exit(1);
+});
+
+// Usa el middleware para inyectar el EntityManager
+app.use(attachEntityManager);
+
+
+
 // Rutas existentes
 app.use('/api/reservations', reservationRouter);
 app.use('/api/categories', categoryRouter);
@@ -176,3 +206,9 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log('Servidor operando en http://localhost:' + port + '/'); // Si no aparece con este link probar con 'localhost:8000'
 });
+
+
+// Rutas y otros middlewares
+// ...
+
+export default app;
