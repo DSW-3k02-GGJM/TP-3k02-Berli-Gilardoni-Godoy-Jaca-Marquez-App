@@ -13,3 +13,4 @@ userRouter.post('/register', sanitizedUserInput , register)
 userRouter.post('/login', sanitizedUserInput , login)
 userRouter.post('/logout', sanitizedUserInput , logout)
 userRouter.post('/is-authenticated', AuthService.isAuthenticated , verifyAuthentication)
+//

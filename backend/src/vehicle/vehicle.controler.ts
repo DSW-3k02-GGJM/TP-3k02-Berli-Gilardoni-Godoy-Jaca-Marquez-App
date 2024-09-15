@@ -4,7 +4,10 @@ import { Vehicle } from './vehicle.entity.js';
 import { VehicleModel } from '../vehicleModel/vehicleModel.entity.js';
 
 // pruebo esto para la parte del filtro
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, EntityRepository } from '@mikro-orm/mysql'; // or any other driver package
+
+
+
 
 
 const em = orm.em;
@@ -118,33 +121,34 @@ const remove = async (req: Request, res: Response) => {
 // hago la funcion para el filtor
 // Asegúrate de tener el EntityManager disponible aquí
 
+
+import { SqlEntityManager } from '@mikro-orm/mysql'; // Asegúrate de importar el SqlEntityManager
+
+
 export const getAvailableVehicleModelsHandler = async (req: Request, res: Response) => {
   const { fechaDesde, fechaHasta } = req.query;
 
   try {
-    const em = req.em; // Obtén el EntityManager del request
+    const em: SqlEntityManager = req.em as SqlEntityManager; // Asegúrate de castear a SqlEntityManager
 
-    if (!em) {
-      throw new Error('EntityManager not found in request context');
-    }
-
-    const qb = em.createQueryBuilder(VehicleModel, 'vm');
-    qb.leftJoinAndSelect('vm.reservations', 'r')
-      .where(
-        qb.expr().or(
-          qb.expr().isNull('r.startDate'),
-          qb.expr().lte('r.endDate', new Date(fechaDesde)),
-          qb.expr().gte('r.startDate', new Date(fechaHasta))
-        )
-      )
+    // Consulta utilizando Knex
+    const availableModels = await em.getKnex().select('vm.*')
+      .from('vehicle_model as vm')
+      .leftJoin('reservation as r', 'vm.id', 'r.vehicle_id')
+      .where(function() {
+        this.whereNull('r.start_date')
+          .orWhere('r.end_date', '<=', new Date(fechaDesde as string))
+          .orWhere('r.start_date', '>=', new Date(fechaHasta as string));
+      })
       .groupBy('vm.id')
-      .having('COUNT(r.id) > 0');
+      .havingRaw('COUNT(r.id) = 0');
 
-    const availableModels = await qb.getResultList();
+    // Devolver los modelos disponibles
     res.json({ data: availableModels });
   } catch (error) {
     console.error('Error fetching available vehicle models:', error);
     res.status(500).json({ error: 'Error fetching available vehicle models' });
   }
 };
+
 export { sanitizedVehicleInput, findAll, findOne, add, update, remove };

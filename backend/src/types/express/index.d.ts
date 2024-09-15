@@ -5,7 +5,7 @@ declare global {
   namespace Express {
     interface Request {
       session?: Record<string,any,null>
-      em?: EntityManager; // Agrega la propiedad `em` opcionalmente
+      em: EntityManager; // Agrega la propiedad `em` opcionalmente
     }
   }
 }

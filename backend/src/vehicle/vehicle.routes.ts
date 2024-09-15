@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { sanitizedVehicleInput, findAll, findOne, add, update, remove } from './vehicle.controler.js'
+import { sanitizedVehicleInput, findAll, findOne, add, update, remove, getAvailableVehicleModelsHandler } from './vehicle.controler.js'
 
 export const vehicleRouter = Router()
 
@@ -9,3 +9,6 @@ vehicleRouter.post('/', sanitizedVehicleInput, add)
 vehicleRouter.put('/:id', sanitizedVehicleInput, update)
 vehicleRouter.patch('/:id', sanitizedVehicleInput, update)
 vehicleRouter.delete('/:id', remove)
+vehicleRouter.get('/available', getAvailableVehicleModelsHandler);
+
+export default vehicleRouter;

@@ -85,17 +85,13 @@ import { categoryRouter } from "./category/category.routes.js";
 import { clientRouter } from './client/client.routes.js';
 import { colorRouter } from './color/color.routes.js';
 import { brandRouter } from './brand/brand.routes.js';
-import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js';
+import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js'; // Aquí ya tienes el router
 import { locationRouter } from './location/location.routes.js';
-import { reservationRouter } from './reservation/reservation.routes.js';
+import { reservationRouter  } from './reservation/reservation.routes.js';
 import { vehicleRouter } from './vehicle/vehicle.routes.js';
 import { userRouter } from './user/user.routes.js';
+import { attachEntityManager } from './middleware/entityManager.middleware.js'; // Importar middleware
 import dotenv from 'dotenv';
-import mysql from 'mysql';
-// nuevas
-import { MikroORM } from '@mikro-orm/core';
-import { attachEntityManager } from './middleware/entityManager.middleware';
-
 
 dotenv.config();
 
@@ -109,106 +105,41 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-// Configuración de la conexión a la base de datos
-//clientUrl: 'mysql://miUsuario:miContraseña@localhost:3306/alquilerVehiculos',// marcos
-const connection = mysql.createConnection({
-  host: 'localhost',
-  //port: '3306',
-  user: 'miUsuario',
-  password: 'miContraseña',
-  database: 'alquilerVehiculos'
-});
-
-connection.connect((err: any) => {
-  if (err) throw err;
-  console.log('Conexión a la base de datos exitosa.');
-});
-
+// Luego de los middlewares base
 app.use((req, res, next) => {
+  // Configurar los encabezados CORS si es necesario
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Accept-Language, Accept-Encoding');
+  
+  // Usar RequestContext para MikroORM
   RequestContext.create(orm.em, next);
 });
 
-// Agregar el endpoint para vehículos disponibles
-app.get('/api/vehicleModels/available', (req, res) => {
-  const { fechaDesde, fechaHasta } = req.query;
+// Middleware para adjuntar EntityManager
+app.use(attachEntityManager); // Aquí añades el middleware de EntityManager
 
-  /*
-  const query = `
-    SELECT vm.*
-    FROM vehicle_model vm
-    JOIN vehicle v ON vm.id = v.vehicle_model_id
-    LEFT JOIN reservation r ON v.id = r.vehicle_id
-    WHERE (
-      r.start_date IS NULL 
-      OR r.planned_end_date < ? 
-      OR r.start_date > ?
-    )
-    GROUP BY vm.id
-    HAVING COUNT(v.id) > 0;
-  `;
-  */
- const query = 'select vm.* from vehicle_model vm;';
-
-  connection.query(query, [fechaDesde, fechaHasta], (error, results) => {
-    if (error) {
-      console.error('Error en la consulta:', error);
-      res.status(500).json({ error: 'Error en la consulta' });
-    } else {
-      res.json({ data: results });
-    }
-  });
-});
-
-// nuevoooooo
-//const app = express();
-
-// Configuración de MikroORM
-async function initializeDatabase() {
-  const orm = await MikroORM.init({
-    // Configuración de MikroORM aquí
-  });
-
-  // Obtén el EntityManager de MikroORM
-  const em = orm.em;
-
-  // Configura el EntityManager en la aplicación Express
-  app.set('entityManager', em);
-}
-
-initializeDatabase().catch(err => {
-  console.error('Error initializing database:', err);
-  process.exit(1);
-});
-
-// Usa el middleware para inyectar el EntityManager
-app.use(attachEntityManager);
-
-
-
-// Rutas existentes
+// Registrar las rutas de negocio
 app.use('/api/reservations', reservationRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/clients', clientRouter);
 app.use('/api/colors', colorRouter);
 app.use('/api/brands', brandRouter);
-app.use('/api/vehicleModels', vehicleModelRouter);
+app.use('/api/vehicleModels', vehicleModelRouter); // Registrar la ruta de vehicleModels
 app.use('/api/locations', locationRouter);
 app.use('/api/vehicles', vehicleRouter);
 app.use('/api/users', userRouter);
 
+// Manejo de errores 404
 app.use((_, res) => {
   return res.status(404).send({ message: 'Resource not found' });
 });
 
-await syncSchema(); // nunca en producción
+// Sincronización del esquema (evitar en producción)
+await syncSchema(); // never in production
 
+// Iniciar servidor en el puerto especificado
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log('Servidor operando en http://localhost:' + port + '/'); // Si no aparece con este link probar con 'localhost:8000'
+  console.log('Servidor operando en http://localhost:' + port + '/'); // Verifica con este link
 });
-
-
-// Rutas y otros middlewares
-// ...
-
-export default app;
