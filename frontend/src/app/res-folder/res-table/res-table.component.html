@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let reservation of reservations | filter : filterRows">
+      <tr *ngFor="let reservation of reservations | filter : filterRows : ''">
         <td>{{ formatDate(reservation.reservationDate) }}</td>
         <td>{{ formatDate(reservation.startDate) }}</td>
         <td>{{ formatDate(reservation.plannedEndDate) }}</td>
