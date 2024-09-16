@@ -14,14 +14,7 @@
                 type="email"
                 formControlName="email"
                 placeholder="Email"
-                [class.is-invalid]="registerForm.get('email')?.invalid && (registerForm.get('email')?.touched || registerForm.get('email')?.dirty)"
               />
-              <div *ngIf="registerForm.get('email')?.errors?.emailExists" class="invalid-feedback">
-                Este email ya está siendo usado. Por favor use otro.
-              </div>
-              <div *ngIf="registerForm.get('email')?.errors?.required" class="invalid-feedback">
-                El mail es requerido.
-              </div>
             </div>
             <hr />
             <div class="form-group">
@@ -31,18 +24,14 @@
                 type="password"
                 formControlName="password"
                 placeholder="Contraseña"
-                [class.is-invalid]="registerForm.get('password')?.invalid && (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)"
-              />        
-              <div class="invalid-feedback">
-                La contraseña es requerida.
-              </div>
+              />
             </div>
             <hr />
             <button
               type="submit"
               class="btn btn-primary border border-1 border-white"
               (click)="onSubmit()"
-              [disabled]="registerForm.invalid"
+              [disabled]="!registerForm.valid"
             >
               Registrar
             </button>

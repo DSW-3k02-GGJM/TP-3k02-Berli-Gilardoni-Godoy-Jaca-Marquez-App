@@ -19,8 +19,6 @@ import {RegisterComponent} from "./user-folder/register/register.component";
 import {authGuard} from "./auth.guard";
 import { VehiclesComponent } from './vehicle-folder/vehicles/vehicles.component';
 import { VehicleFormComponent } from './vehicle-folder/vehicle-form/vehicle-form.component';
-import { ResComponent } from './res-folder/res/res.component.js';
-import { ResFormComponent } from './res-folder/res-form/res-form.component.js';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -48,9 +46,6 @@ export const routes: Routes = [
   { path: 'vehiclesAdmin', component: VehiclesComponent },
   { path: 'vehicles/create', component: VehicleFormComponent },
   { path: 'vehicles/modify/:id', component: VehicleFormComponent },
-  { path: 'reservations', component: ResComponent },
-  { path: 'reservations/create', component: ResFormComponent },
-  { path: 'reservations/modify/:id', component: ResFormComponent },
   { path: 'testMati', component: TestMatiComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },

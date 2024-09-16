@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {catchError, delay, map, Observable, of, Subject, tap, throwError} from 'rxjs';
-import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
+import {catchError, Observable, of, Subject, tap, throwError} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -65,22 +64,5 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/users/is-authenticated`, {
       withCredentials: true,
     })
-  }
-
-  emailExists(email: string): Observable<boolean> {
-    return this.http.get<{ exists: boolean }>(`${this.apiUrl}/users/email-exists/${email}`)
-      .pipe(
-        map(response => response.exists),
-        catchError(() => of(false)) // Maneja errores devolviendo `false`
-      );
-  }
-
-  uniqueEmailValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return this.emailExists(control.value).pipe(
-        map((exists) => (exists ? { emailExists: true } : null)),
-        catchError(async () => null)
-      );
-    };
   }
 }

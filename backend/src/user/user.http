@@ -10,8 +10,7 @@ Content-Type: application/json
 
 {
     "email": "ejemplo@gmail.com",
-    "password": "password",
-    "role": "admin"
+    "password": "password"
 }
 
 ### LOGIN
@@ -44,21 +43,20 @@ Content-Type: application/json
 
 {
     "email": "ejemploPUT@gmail.com",
-    "password": "password",
+    "password": "password"
 }
 
 ### POST 2
-POST http://localhost:3000/api/users/register
+POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-    "email": "empleado1@gmail.com",
-    "password": "password",
-    "role": "employee"
+    "email": "ejemplo2@gmail.com",
+    "password": "password2"
 }
 ### POST to DELETE
 # @name createUserToDelete
-POST http://localhost:3000/api/users/register
+POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
