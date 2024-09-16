@@ -45,7 +45,7 @@ export class ResponsiveNavbarComponent implements OnInit {
     this.authService.logout()
       .subscribe(
       res => {
-        const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false });
+        const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true });
         modalRef.componentInstance.title = 'Logout exitoso';
         console.log(res);
     });
