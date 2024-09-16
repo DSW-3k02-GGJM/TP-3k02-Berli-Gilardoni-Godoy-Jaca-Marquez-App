@@ -20,7 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let vehicleModel of vehicleModels | filter : filterRows">
+      <tr *ngFor="let vehicleModel of vehicleModels | filter : filterRows : 'vehicleModelName'">
         <td>{{ vehicleModel.vehicleModelName }}</td>
         <td>{{ vehicleModel.transmissionType }}</td>
         <td>{{ vehicleModel.passengerCount }}</td>

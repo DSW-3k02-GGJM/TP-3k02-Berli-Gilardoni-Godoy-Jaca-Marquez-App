@@ -3,6 +3,7 @@
   class="form-control mb-3"
   name="filterPost"
   placeholder="Buscar por patente..."
+  [(ngModel)]="filterRows"
 />
 <div class="div-tablas">
   <table
@@ -21,7 +22,7 @@
     </thead>
     <tbody>
       <!-- <tr *ngFor="let vehicle of vehicles | filter : filterRows"> -->
-      <tr *ngFor="let vehicle of vehicles">
+      <tr *ngFor="let vehicle of vehicles | filter : filterRows : 'licensePlate'">
         <td>{{ vehicle.licensePlate }}</td>
         <td>{{ vehicle.manufacturingYear }}</td>
         <td>{{ vehicle.totalKms }}</td>

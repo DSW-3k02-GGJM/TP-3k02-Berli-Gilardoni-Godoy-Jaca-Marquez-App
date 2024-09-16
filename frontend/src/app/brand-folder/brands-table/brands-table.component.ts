@@ -32,7 +32,7 @@ export class BrandsTableComponent {
     private modalService: NgbModal
   ) {}
 
-  // Método para navegar a la página de edición de una marca
+  // Métod0 para navegar a la página de edición de una marca
   editBrand(brand: any): void {
     const modalRef = this.modalService.open(BrandFormComponent, {
       size: 'l',
@@ -42,7 +42,7 @@ export class BrandsTableComponent {
     modalRef.componentInstance.currentBrandId = brand.id;
   }
 
-  // Método para eliminar una marca
+  // Métod0 para eliminar una marca
   deleteBrand(brand: any): void {
     const modalRef = this.modalService.open(ConfirmDeletionComponent);
     modalRef.componentInstance.title = 'Eliminar marca';

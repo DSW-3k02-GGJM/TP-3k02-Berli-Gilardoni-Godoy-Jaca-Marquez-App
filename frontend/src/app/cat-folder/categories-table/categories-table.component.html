@@ -20,7 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let category of categories | filter : filterRows">
+      <tr *ngFor="let category of categories | filter : filterRows : 'categoryName'">
         <td>{{ category.id }}</td>
         <td>{{ category.categoryName }}</td>
         <td>{{ category.categoryDescription }}</td>

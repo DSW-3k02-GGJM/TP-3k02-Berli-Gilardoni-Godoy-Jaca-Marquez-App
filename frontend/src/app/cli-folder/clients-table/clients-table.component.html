@@ -22,7 +22,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let client of clients | filter : filterRows">
+      <tr *ngFor="let client of clients | filter : filterRows : 'clientName'">
         <td>{{ client.documentType }}</td>
         <td>{{ client.documentID }}</td>
         <td>{{ client.clientSurname + ", " + client.clientName }}</td>

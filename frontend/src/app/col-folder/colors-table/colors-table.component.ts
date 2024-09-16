@@ -33,7 +33,7 @@ export class ColorsTableComponent {
     private modalService: NgbModal
   ) {}
 
-  // Método para navegar a la página de edición de una color
+  // Métod0 para navegar a la página de edición de un color
   editColor(color: any): void {
     const modalRef = this.modalService.open(ColorFormComponent, {
       size: 'l',
@@ -43,7 +43,7 @@ export class ColorsTableComponent {
     modalRef.componentInstance.currentColorId = color.id;
   }
 
-  // Método para eliminar una color
+  // Métod0 para eliminar un color
   deleteColor(color: any): void {
     const modalRef = this.modalService.open(ConfirmDeletionComponent);
     modalRef.componentInstance.title = 'Eliminar color';

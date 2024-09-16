@@ -18,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let location of locations | filter : filterRows">
+      <tr *ngFor="let location of locations | filter : filterRows : 'locationName'">
         <td>{{ location.locationName }}</td>
         <td>{{ location.address }}</td>
         <td>{{ location.phoneNumber }}</td>

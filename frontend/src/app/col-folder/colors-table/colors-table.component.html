@@ -16,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let color of colors | filter : filterRows">
+      <tr *ngFor="let color of colors | filter : filterRows : 'colorName'">
         <td>{{ color.colorName }}</td>
         <td class="actions-column">
           <div class="d-flex justify-content-around">

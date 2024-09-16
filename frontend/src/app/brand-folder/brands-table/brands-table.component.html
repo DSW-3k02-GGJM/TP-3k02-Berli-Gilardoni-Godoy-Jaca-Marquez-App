@@ -17,7 +17,7 @@
     </thead>
     <tbody>
       <!-- Itera sobre la lista de marcas -->
-      <tr *ngFor="let brand of brands | filter : filterRows">
+      <tr *ngFor="let brand of brands | filter : filterRows : 'brandName'">
         <td>{{ brand.brandName }}</td>
         <!-- Muestra el nombre de la marca -->
         <td class="actions-column">

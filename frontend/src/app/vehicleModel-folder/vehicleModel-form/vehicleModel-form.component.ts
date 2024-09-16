@@ -47,7 +47,7 @@ export class VehicleModelFormComponent implements OnInit {
     // Inicializa la variable isDataLoaded en el servicio para indicar que los datos aún no han sido cargados.
     this.vehicleModelCreatedOrModifiedService.isDataLoaded = false;
 
-    // Llama al método loadCategorias() para obtener la lista de categorías disponibles desde el backend
+    // Llama al métod0 loadCategorias() para obtener la lista de categorías disponibles desde el backend
     // y almacenarlas en una propiedad del componente para usar en el formulario.
     this.loadCategories();
     this.loadBrands();
@@ -59,7 +59,7 @@ export class VehicleModelFormComponent implements OnInit {
         .getOne('vehicleModels', Number(this.currentVehicleModelId))
         .subscribe((response) => {
           console.log('Response from getOne:', response);
-          // Usa el método patchValue para actualizar el formulario con los datos del modelo recibido.
+          // Usa el métod0 patchValue para actualizar el formulario con los datos del modelo recibido.
           // Asigna los valores del modelo a los campos del formulario, incluyendo 'categoria' y 'marca'.
           this.vehicleModelForm.patchValue({
             vehicleModelName: response.data.vehicleModelName,
@@ -80,14 +80,14 @@ export class VehicleModelFormComponent implements OnInit {
     }
   }
 
-  // Método para cargar las categorías
+  // Métod0 para cargar las categorías
   loadCategories(): void {
     this.apiService.getAll('categories').subscribe((response) => {
       this.categories = response.data;
     });
   }
 
-  // Método para cargar las marcas
+  // Métod0 para cargar las marcas
   loadBrands(): void {
     this.apiService.getAll('brands').subscribe((response) => {
       this.brands = response.data;

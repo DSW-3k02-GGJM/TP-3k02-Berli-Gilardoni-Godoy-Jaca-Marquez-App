@@ -29,7 +29,7 @@ export class ColorsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Se ejecuta al inicializar el componente
-    this.fillData(); // Llama al método para llenar los datos de colores
+    this.fillData(); // Llama al métod0 para llenar los datos de colores
   }
 
   ngOnDestroy(): void {

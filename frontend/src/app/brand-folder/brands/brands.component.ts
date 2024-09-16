@@ -28,7 +28,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Se ejecuta al inicializar el componente
-    this.fillData(); // Llama al método para llenar los datos de brands
+    this.fillData(); // Llama al métod0 para llenar los datos de brands
   }
 
   ngOnDestroy(): void {
