@@ -87,11 +87,20 @@ const update = async (req: Request, res: Response) => {
 const register = async (req: Request, res: Response) => {
   try {
     const password = req.body.sanitizedInput.password;
+    const email = req.body.sanitizedInput.email;
+    if (!password || !email) {
+      return res.status(401).json({ message: 'Email and password are required' });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const userR = await em.findOne( User , { email } , {populate: [] , });
+    if(userR){
+      return res.status(401).json({ message: 'This email is already used' });
+    }
     const user = em.create(User, {
         ...req.body.sanitizedInput,
         password: hashedPassword,
+        role: 'client', // Por defecto se crea como cliente
       });
     await em.flush();
 
@@ -114,21 +123,18 @@ const login = async (req: Request, res: Response) => {
     try {
         const email = req.body.sanitizedInput.email;
         const password = req.body.sanitizedInput.password;
-        const user = await em.findOne(
-            User,
-            { email },
-            {
-            populate: [
-            ],
-            }
-            );
+        if (!password || !email) {
+          return res.status(401).json({ message: 'Email and password are required' });
+        }
+        
+        const user = await em.findOne( User , { email } , {populate: [] , });
         if(!user){
-            res.status(401).json({ message: 'Incorrect email' });
+          return res.status(401).json({ message: 'Incorrect email' });
         }
         else {
             const isValid = await bcrypt.compare(password, user.password)
             if(!isValid){
-                res.status(401).json({ message: 'Wrong password' });
+              return res.status(401).json({ message: 'Wrong password' });
             }
             else {
                 const token = AuthService.generateToken(user); // Crea un token y lo asocia al usuario
@@ -140,7 +146,7 @@ const login = async (req: Request, res: Response) => {
                         sameSite: 'strict', // Solo se puede acceder en el mismo dominio
                         maxAge: 1000 * 60 * 60, // Dura 1h
                     })
-                    .status(200).json({ message: 'Login completed', data: publicUser});
+                    .status(200).json({ message: 'Login completed'});
             }
         }
     } catch (error: any) {
@@ -158,4 +164,17 @@ const login = async (req: Request, res: Response) => {
       res.status(200).send({ message: "Authenticated" });
   };
 
-export { sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication };
+  const verifyEmailExists = async (req: Request, res: Response) => {
+    try {
+      const email = req.params.email;
+      const user = await em.findOneOrFail(
+        User,
+        { email: email });
+      res.status(200).json({ exists: true });
+    }
+    catch (error: any) {
+      res.status(200).json({ exists: false});
+    }
+  };
+
+export { sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists };

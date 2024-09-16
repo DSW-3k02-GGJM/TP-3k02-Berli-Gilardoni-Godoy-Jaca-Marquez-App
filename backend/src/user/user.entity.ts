@@ -14,6 +14,9 @@ import { BaseEntity } from '../shared/db/baseEntity.entity.js';
   
     @Property({ nullable: false })
     password!: string;
+
+    @Property({ nullable: false })
+    role!: string; //admin, employee, client
   
     /*@OneToOne(() => Cliente, (cliente) => cliente.usuario, {
       cascade: [Cascade.ALL],
