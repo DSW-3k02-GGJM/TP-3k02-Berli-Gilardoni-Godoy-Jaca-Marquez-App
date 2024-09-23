@@ -31,28 +31,26 @@ export class LoginComponent {
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
-  });
+  }, { updateOn: 'submit' });
   errorMessage: string | null = null
 
   onSubmit() {
-    console.log(this.loginForm.invalid)
-      console.log("es valido");
+    if (!this.loginForm.invalid) {
       this.authService.login(this.loginForm.value)
-        .subscribe(
-          res=> {
-            console.log("es valido2");
-            this.errorMessage = null;
-            console.log(res);
-            const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false });
-            modalRef.componentInstance.title = 'Inicio de sesión exitoso';
-          },
-          err => {
-            if (err.status === 401) {
-              this.errorMessage = 'Credenciales incorrectas';
-              console.log(this.errorMessage);
-            } else {
-              this.errorMessage = 'Error en el servidor';
-            }
-          });
+      .subscribe(
+        res => {
+          this.errorMessage = null;
+          const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false });
+          modalRef.componentInstance.title = 'Inicio de sesión exitoso';
+        },
+        err => {
+          if (err.status === 401) {
+            this.errorMessage = 'Credenciales incorrectas';
+            console.log(this.errorMessage);
+          } else {
+            this.errorMessage = 'Error en el servidor';
+          }
+        });
       }
+    } 
 }

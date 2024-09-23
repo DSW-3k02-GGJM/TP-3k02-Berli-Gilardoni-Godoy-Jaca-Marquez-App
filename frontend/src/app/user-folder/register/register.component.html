@@ -6,7 +6,7 @@
           Registrarse
         </div>
         <div class="card-body">
-          <form [formGroup]="registerForm">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="form-group">
               <input
                 id="email"
@@ -41,8 +41,6 @@
             <button
               type="submit"
               class="btn btn-primary border border-1 border-white"
-              (click)="onSubmit()"
-              [disabled]="registerForm.invalid"
             >
               Registrar
             </button>

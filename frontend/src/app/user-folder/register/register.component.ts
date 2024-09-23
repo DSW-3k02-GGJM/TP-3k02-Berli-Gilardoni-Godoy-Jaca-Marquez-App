@@ -34,15 +34,16 @@ export class RegisterComponent {
   registerForm = new FormGroup({
     email: new FormControl('', [Validators.required], [this.authService.uniqueEmailValidator()]),
     password: new FormControl('', [Validators.required]),
-  });
+  }, { updateOn: 'submit' });
 
   onSubmit() {
-    console.log(this.registerForm.value)
-    this.authService.register(this.registerForm.value).subscribe(
-      response => {
-        const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false , size: 'sm' });
-        modalRef.componentInstance.title = 'Registro exitoso';
-        console.log(response);
-      });
+    if (!this.registerForm.invalid) {
+      this.authService.register(this.registerForm.value).subscribe(
+        response => {
+          const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false , size: 'sm' });
+          modalRef.componentInstance.title = 'Registro exitoso';
+          console.log(response);
+        });
+    }   
   }
 }
