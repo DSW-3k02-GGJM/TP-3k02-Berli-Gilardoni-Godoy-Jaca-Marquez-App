@@ -13,6 +13,7 @@ import { locationRouter } from './location/location.routes.js';
 import { reservationRouter  } from './reservation/reservation.routes.js';
 import { vehicleRouter } from './vehicle/vehicle.routes.js';
 import { userRouter } from './user/user.routes.js';
+import { AuthService } from './shared/db/auth.service.js';
 import dotenv from 'dotenv'
 
 dotenv.config();
@@ -49,8 +50,6 @@ app.use((req, res, next) => {
   RequestContext.create(orm.em, next);
 });
 
-// antes de las rutas y middlewares de negocio
-
 app.use('/api/reservations', reservationRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/clients', clientRouter);
@@ -69,5 +68,6 @@ await syncSchema(); // never in production
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
+  AuthService.ensureAdminExists();
   console.log('Servidor operando en http://localhost:'+ port + '/'); //Si no aparece con este link probar con 'localhost:8000'
 });

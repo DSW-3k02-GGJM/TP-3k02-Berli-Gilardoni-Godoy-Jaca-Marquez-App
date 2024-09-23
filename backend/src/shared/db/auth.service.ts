@@ -1,9 +1,14 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../../user/user.entity';
+import { User } from '../../user/user.entity.js';
 import { Request, Response, NextFunction } from 'express';
 import { orm } from './orm.js';
-const em = orm.em;
-const SECRET_KEY = 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era';
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv'
+
+dotenv.config();
+
+const em = orm.em.fork();
+const SECRET_KEY = process.env.SECRET_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era';
 
 export class AuthService {
   static generateToken(user: User): string {
@@ -40,5 +45,21 @@ export class AuthService {
       }
       next();
     };
+  }
+
+  static async ensureAdminExists() {
+    const adminUser = await em.findOne(User, { role: 'admin' });
+    if (!adminUser) {
+      const hashedPassword = await bcrypt.hash('admin', 10);
+      const admin = em.create(User, {
+        email: process.env.ADMIN_EMAIL || 'admin@admin.com',
+        password: hashedPassword,
+        role: process.env.ADMIN_PASSWORD || 'admin',
+      });
+      await em.flush();
+      console.log('Admin user created:', admin.email);
+    } else {
+      console.log('Admin user already exists');
+    }
   }
 }
