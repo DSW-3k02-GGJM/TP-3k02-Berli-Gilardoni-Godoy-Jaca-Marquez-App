@@ -10,6 +10,8 @@
         <th>Tipo Documento</th>
         <th>Documento</th>
         <th>Vehículo</th>
+        <th>Precio Final</th>
+        <th>Check-in / Check-out</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -21,6 +23,40 @@
         <td>{{ reservation.client.documentType }}</td>
         <td>{{ reservation.client.documentID }}</td>
         <td>{{ reservation.vehicle.licensePlate }}</td>
+        <!-- Ver fórmula de cálculo para el precio final-->
+        <td>
+          {{
+            reservation.finalKm != null && reservation.initialKms != null
+              ? "$" + (reservation.finalKm - reservation.initialKms) * 5
+              : "$0"
+          }}
+        </td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button
+              class="btn btn-dark fs-5"
+              (click)="checkInRes(reservation)"
+              [disabled]="reservation.initialKms"
+            >
+              <img
+                src="../../../assets/check-in-img.png"
+                alt="Check-in"
+                class="check"
+              />
+            </button>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="checkOutRes(reservation)"
+              [disabled]="!reservation.initialKms || reservation.finalKm"
+            >
+              <img
+                src="../../../assets/check-out-img.png"
+                alt="Check-out"
+                class="check"
+              />
+            </button>
+          </div>
+        </td>
         <td>
           <div class="d-flex justify-content-around">
             <button class="btn btn-dark fs-5" (click)="editRes(reservation)">
@@ -35,4 +71,3 @@
     </tbody>
   </table>
 </div>
-
