@@ -16,21 +16,24 @@ import { VehicleListComponent } from './vehicle-folder/vehicle-list/vehicle-list
 import { TestMatiComponent } from './test/test-mati/test-mati.component.js';
 import {LoginComponent} from "./user-folder/login/login.component";
 import {RegisterComponent} from "./user-folder/register/register.component";
-import {authGuard} from "./auth.guard";
+import {authGuard} from "./guards/auth.guard";
 import { VehiclesComponent } from './vehicle-folder/vehicles/vehicles.component';
 import { VehicleFormComponent } from './vehicle-folder/vehicle-form/vehicle-form.component';
 import { ResComponent } from './res-folder/res/res.component.js';
 import { ResFormComponent } from './res-folder/res-form/res-form.component.js';
+import { authAdminGuard } from './guards/auth-admin.guard.js';
+import { authEmployeeGuard } from './guards/auth-employee.guard.js';
+import { authClientGuard } from './guards/auth-client.guard.js';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
-  { path: 'clients', component: ClientsComponent, canActivate: [authGuard] },
+  { path: 'clients', component: ClientsComponent, canActivate: [authAdminGuard] },
   { path: 'clients/create', component: ClientFormComponent },
   { path: 'clients/modify/:id', component: ClientFormComponent },
-  { path: 'categories', component: CategoriesComponent },
+  { path: 'categories', component: CategoriesComponent, canActivate: [authEmployeeGuard] },
   { path: 'categories/create', component: CategoryFormComponent },
   { path: 'categories/modify/:id', component: CategoryFormComponent },
-  { path: 'brands', component: BrandsComponent },
+  { path: 'brands', component: BrandsComponent, canActivate: [authClientGuard] },
   { path: 'brands/create', component: BrandFormComponent },
   { path: 'brands/modify/:id', component: BrandFormComponent },
   { path: 'colors', component: ColorsComponent },

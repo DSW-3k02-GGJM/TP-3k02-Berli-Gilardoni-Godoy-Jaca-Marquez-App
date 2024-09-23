@@ -71,7 +71,7 @@ export class AuthService {
     return this.http.get<{ exists: boolean }>(`${this.apiUrl}/users/email-exists/${email}`)
       .pipe(
         map(response => response.exists),
-        catchError(() => of(false)) // Maneja errores devolviendo `false`
+        catchError(() => of(false)) 
       );
   }
 
@@ -82,5 +82,23 @@ export class AuthService {
         catchError(async () => null)
       );
     };
+  }
+
+  checkAdmin(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/admin`, {
+      withCredentials: true,
+    })
+  }
+
+  checkEmployee(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/employee`, {
+      withCredentials: true,
+    })
+  }
+
+  checkClient(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/client`, {
+      withCredentials: true,
+    })
   }
 }

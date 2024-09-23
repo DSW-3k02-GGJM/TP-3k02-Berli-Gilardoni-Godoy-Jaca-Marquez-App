@@ -161,7 +161,7 @@ const login = async (req: Request, res: Response) => {
   };
 
   const verifyAuthentication = async (req: Request, res: Response) => {
-      res.status(200).send({ message: "Authenticated" });
+    res.status(200).send({ message: "Authenticated" });
   };
 
   const verifyEmailExists = async (req: Request, res: Response) => {
@@ -177,4 +177,4 @@ const login = async (req: Request, res: Response) => {
     }
   };
 
-export { sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists };
+export { sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists};
