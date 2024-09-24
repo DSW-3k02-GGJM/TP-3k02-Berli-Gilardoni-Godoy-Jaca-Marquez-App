@@ -10,10 +10,10 @@
   <section class="vehicle-list mt-3 mx-5">
     <app-vehicle-card
       *ngFor="let vehicleModel of response"
-      [vehicleModel]="vehicleModel.vehicleModelName"
-      [categoryDescription]="vehicleModel.category.categoryDescription"
-      [passengerCount] = "vehicleModel.passengerCount"
-      [image]="vehicleModel.imagePath"
+      [vehicleModel]="vehicleModel.vehicle_model_name"
+      [categoryDescription]="vehicleModel.category_name"
+      [passengerCount] = "vehicleModel.passenger_count"
+      [image]="vehicleModel.image_path"
     ></app-vehicle-card>
   </section>
 </div>

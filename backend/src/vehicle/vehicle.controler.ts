@@ -140,16 +140,18 @@ export const getAvailableVehicleModelsHandler = async (req: Request, res: Respon
     const em: SqlEntityManager = req.em as SqlEntityManager; // Asegúrate de castear a SqlEntityManager
 
     // Consulta utilizando Knex
-    const availableModels = await em.getKnex().select('vehicle_model.*')
+    const availableModels = await em.getKnex().select('vehicle_model.*','category.category_name')
+        .distinct('vehicle_model.id')
         .from('vehicle_model')
+        .innerJoin('category', 'vehicle_model.category_id', 'category.id')
         .leftJoin('reservation', 'vehicle_model.id', 'reservation.vehicle_id')
         .where(function () {
           this.whereNull('reservation.start_date')
               .orWhere('reservation.planned_end_date', '<=', new Date(startDate as string))
-              .orWhere('reservation.start_date', '>=', new Date(startDate as string));
+              .orWhere('reservation.start_date', '>=', new Date(startDate as string))
+              .orWhereNotNull('reservation.cancellation_date');
         })
-        .groupBy('vehicle_model.id')
-        .havingRaw('COUNT(reservation.id) = 0');
+        .groupBy('vehicle_model.id');
 
     // Devolver los modelos disponibles
     res.json({data: availableModels});
