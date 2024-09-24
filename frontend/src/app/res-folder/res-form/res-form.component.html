@@ -38,11 +38,12 @@
           id="documentType"
           formControlName="documentType"
           class="form-select bg-dark text-white border border-secondary w-auto"
+          (change)="onDocumentTypeSelected($event)"
         >
-          <option value="" disabled selected>Seleccione Tipo Documento</option>
-          <option *ngFor="let client of clients" [value]="client.id">
-            {{ client.documentType }}
-          </option>
+          <option value="" disabled selected>Tipo Documento</option>
+          <option value="DNI">DNI</option>
+          <option value="Pasaporte">Pasaporte</option>
+          <option value="Libreta">Libreta</option>
         </select>
         <hr />
 
@@ -52,7 +53,7 @@
           class="form-select bg-dark text-white border border-secondary w-auto"
         >
           <option value="" disabled selected>Seleccione Documento</option>
-          <option *ngFor="let client of clients" [value]="client.id">
+          <option *ngFor="let client of filteredClients" [value]="client.id">
             {{ client.documentID }}
           </option>
         </select>
@@ -80,7 +81,6 @@
         >
           Cancelar
         </button>
-        <!-- aca abajo falta el (click)="onSubmit()" -->
         <button
           type="submit"
           class="btn btn-primary border border-1 border-white"
