@@ -126,6 +126,7 @@ import { SqlEntityManager } from '@mikro-orm/mysql'; // Asegúrate de importar e
 
 
 export const getAvailableVehicleModelsHandler = async (req: Request, res: Response) => {
+  /*
   const { fechaDesde, fechaHasta } = req.query;
 
   try {
@@ -149,6 +150,22 @@ export const getAvailableVehicleModelsHandler = async (req: Request, res: Respon
     console.error('Error fetching available vehicle models:', error);
     res.status(500).json({ error: 'Error fetching available vehicle models' });
   }
+*/
+
+  try {
+    const em: SqlEntityManager = req.em as SqlEntityManager; // Asegúrate de castear a SqlEntityManager
+
+    // Consulta para obtener todos los modelos de vehículos
+    const allModels = await em.getKnex().select('*')
+      .from('vehicle_model');
+
+    // Devolver todos los modelos de vehículos
+    res.json({ data: allModels });
+  } catch (error) {
+    console.error('Error fetching all vehicle models:', error);
+    res.status(500).json({ error: 'Error fetching all vehicle models' });
+  }
+
 };
 
 export { sanitizedVehicleInput, findAll, findOne, add, update, remove };

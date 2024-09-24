@@ -6,6 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
+  /*
+  getAvailableVehicleModelsHandler(fechaDesde: string, fechaHasta: string) {
+    throw new Error('Method not implemented.');
+  }
+  */
+ 
   private apiUrl = 'http://localhost:3000/api';
   httpClient: any;
 
@@ -50,7 +56,7 @@ export class ApiService {
     return this.http.get<any>('API_URL/vehicleModels/available', { params });
   }*/
 
-  
+  // despues porbar con getAvailableVehicleModelsHandler
   getAvailableVehicleModels(fechaDesde: string, fechaHasta: string): Observable<any> {
     const params = new HttpParams()
       .set('fechaDesde', fechaDesde)
