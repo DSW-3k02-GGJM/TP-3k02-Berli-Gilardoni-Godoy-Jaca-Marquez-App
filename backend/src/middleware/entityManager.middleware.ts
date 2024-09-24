@@ -7,6 +7,7 @@ import { Request, Response, NextFunction } from 'express';
 import { MikroORM, EntityManager } from '@mikro-orm/core';
 import {MySqlDriver} from "@mikro-orm/mysql";
 import {SqlHighlighter} from "@mikro-orm/sql-highlighter";
+import {orm} from "../shared/db/orm.js";
 
 export async function attachEntityManager(req: Request, res: Response, next: NextFunction) {
   const orm = await MikroORM.init({

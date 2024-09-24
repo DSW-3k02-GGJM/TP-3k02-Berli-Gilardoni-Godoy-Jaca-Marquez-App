@@ -89,19 +89,17 @@ export class VehicleListComponent implements OnInit {
 
   }
 
+  onFilterApplied(filterData: { startDate: string; endDate: string }) {
 
-  
-  onFilterApplied(filterData: { fechaDesde: string; fechaHasta: string }) {
-    
-    const { fechaDesde, fechaHasta } = filterData;
-    
-    
-    this.apiService.getAvailableVehicleModels(fechaDesde, fechaHasta).subscribe((filteredModels) => {
+    const { startDate, endDate } = filterData;
+
+
+    this.apiService.getAvailableVehicleModels(startDate, endDate).subscribe((filteredModels) => {
       this.response = filteredModels.data;  // Actualiza la lista de modelos de vehículos
     });
 
 
-    
+
   }
-  
+
 }

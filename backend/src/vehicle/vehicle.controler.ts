@@ -63,6 +63,10 @@ const findAll = async (req: Request, res: Response) => {
 const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
+    console.log('Received ID:', req.params.id); // Log the received ID
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
     const vehicle = await em.findOneOrFail(
       Vehicle,
       { id },
@@ -126,46 +130,35 @@ import { SqlEntityManager } from '@mikro-orm/mysql'; // Asegúrate de importar e
 
 
 export const getAvailableVehicleModelsHandler = async (req: Request, res: Response) => {
-  /*
-  const { fechaDesde, fechaHasta } = req.query;
+
+  const {startDate, endDate} = req.query;
+
+  console.log('Received startDate:', startDate);
+  console.log('Received endDate:', endDate);
 
   try {
     const em: SqlEntityManager = req.em as SqlEntityManager; // Asegúrate de castear a SqlEntityManager
 
     // Consulta utilizando Knex
-    const availableModels = await em.getKnex().select('vm.*')
-      .from('vehicle_model as vm')
-      .leftJoin('reservation as r', 'vm.id', 'r.vehicle_id')
-      .where(function() {
-        this.whereNull('r.start_date')
-          .orWhere('r.end_date', '<=', new Date(fechaDesde as string))
-          .orWhere('r.start_date', '>=', new Date(fechaHasta as string));
-      })
-      .groupBy('vm.id')
-      .havingRaw('COUNT(r.id) = 0');
+    const availableModels = await em.getKnex().select('vehicle_model.*')
+        .from('vehicle_model')
+        .leftJoin('reservation', 'vehicle_model.id', 'reservation.vehicle_id')
+        .where(function () {
+          this.whereNull('reservation.start_date')
+              .orWhere('reservation.planned_end_date', '<=', new Date(startDate as string))
+              .orWhere('reservation.start_date', '>=', new Date(startDate as string));
+        })
+        .groupBy('vehicle_model.id')
+        .havingRaw('COUNT(reservation.id) = 0');
 
     // Devolver los modelos disponibles
-    res.json({ data: availableModels });
+    res.json({data: availableModels});
   } catch (error) {
     console.error('Error fetching available vehicle models:', error);
-    res.status(500).json({ error: 'Error fetching available vehicle models' });
+    res.status(500).json({error: 'Error fetching available vehicle models'});
   }
-*/
-
-  try {
-    const em: SqlEntityManager = req.em as SqlEntityManager; // Asegúrate de castear a SqlEntityManager
-
-    // Consulta para obtener todos los modelos de vehículos
-    const allModels = await em.getKnex().select('*')
-      .from('vehicle_model');
-
-    // Devolver todos los modelos de vehículos
-    res.json({ data: allModels });
-  } catch (error) {
-    console.error('Error fetching all vehicle models:', error);
-    res.status(500).json({ error: 'Error fetching all vehicle models' });
-  }
-
-};
+  ;
+}
 
 export { sanitizedVehicleInput, findAll, findOne, add, update, remove };
+

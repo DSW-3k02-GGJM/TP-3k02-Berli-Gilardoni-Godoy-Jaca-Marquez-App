@@ -9,16 +9,16 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./vehicle-filter.component.scss'],
 })
 export class VehicleFilterComponent {
-  fechaDesde: string = '';
-  fechaHasta: string = '';
+  startDate: string = '';
+  endDate: string = '';
 
   // enviamos las fechas a la list componente
-  @Output() filterApplied = new EventEmitter<{ fechaDesde: string; fechaHasta: string }>();
+  @Output() filterApplied = new EventEmitter<{ startDate: string; endDate: string }>();
 
   // el botoncito
   applyFilter() {
-    this.filterApplied.emit({ fechaDesde: this.fechaDesde, fechaHasta: this.fechaHasta });
+    this.filterApplied.emit({ startDate: this.startDate, endDate: this.endDate });
   }
 
-  
+
 }

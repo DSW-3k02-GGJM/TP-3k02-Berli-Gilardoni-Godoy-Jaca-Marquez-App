@@ -11,7 +11,7 @@ export class ApiService {
     throw new Error('Method not implemented.');
   }
   */
- 
+
   private apiUrl = 'http://localhost:3000/api';
   httpClient: any;
 
@@ -57,13 +57,13 @@ export class ApiService {
   }*/
 
   // despues porbar con getAvailableVehicleModelsHandler
-  getAvailableVehicleModels(fechaDesde: string, fechaHasta: string): Observable<any> {
+  getAvailableVehicleModels(startDate: string, endDate: string): Observable<any> {
     const params = new HttpParams()
-      .set('fechaDesde', fechaDesde)
-      .set('fechaHasta', fechaHasta);
-  
-    return this.http.get<any>(`${this.apiUrl}/vehicleModels/available`, { params });
+      .set('startDate', startDate)
+      .set('endDate', endDate);
+
+    return this.http.get<any>(`${this.apiUrl}/vehicles/available`, { params });
   }
-  
-  
+
+
 }
