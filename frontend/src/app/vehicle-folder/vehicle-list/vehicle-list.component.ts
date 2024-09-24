@@ -57,7 +57,7 @@ export class VehicleListComponent implements OnInit {
   }
 }
 */
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgForOf} from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { VehicleCardComponent } from '../vehicle-card/vehicle-card.component';
@@ -69,7 +69,7 @@ import { VehicleFilterComponent } from '../vehicle-filter/vehicle-filter.compone
   standalone: true,
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.scss'],
-  imports: [HttpClientModule, VehicleCardComponent, VehicleFilterComponent],  // Asegúrate de agregarlo aquí
+  imports: [HttpClientModule, VehicleCardComponent, VehicleFilterComponent, NgForOf],  // Asegúrate de agregarlo aquí
   providers: [ApiService],
 })
 export class VehicleListComponent implements OnInit {
