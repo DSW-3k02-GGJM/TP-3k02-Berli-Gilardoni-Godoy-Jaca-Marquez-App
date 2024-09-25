@@ -1,0 +1,73 @@
+<div class="div-tablas">
+  <table
+    class="table table-dark table-hover table-bordered table-sm border border-white text-center reservations-table"
+  >
+    <thead>
+      <tr class="text-danger">
+        <th>Fecha de Reserva</th>
+        <th>Fecha Inicio Reserva</th>
+        <th>Fecha Fin Reserva</th>
+        <th>Tipo Documento</th>
+        <th>Documento</th>
+        <th>Vehículo</th>
+        <th>Precio Final</th>
+        <th>Check-in / Check-out</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reservation of reservations | filter : filterRows">
+        <td>{{ formatDate(reservation.reservationDate) }}</td>
+        <td>{{ formatDate(reservation.startDate) }}</td>
+        <td>{{ formatDate(reservation.plannedEndDate) }}</td>
+        <td>{{ reservation.client.documentType }}</td>
+        <td>{{ reservation.client.documentID }}</td>
+        <td>{{ reservation.vehicle.licensePlate }}</td>
+        <!-- Ver fórmula de cálculo para el precio final-->
+        <td>
+          {{
+            reservation.finalKm != null && reservation.initialKms != null
+              ? "$" + (reservation.finalKm - reservation.initialKms) * 5
+              : "$0"
+          }}
+        </td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button
+              class="btn btn-dark fs-5"
+              (click)="checkInRes(reservation)"
+              [disabled]="reservation.initialKms"
+            >
+              <img
+                src="../../../assets/check-in-img.png"
+                alt="Check-in"
+                class="check"
+              />
+            </button>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="checkOutRes(reservation)"
+              [disabled]="!reservation.initialKms || reservation.finalKm"
+            >
+              <img
+                src="../../../assets/check-out-img.png"
+                alt="Check-out"
+                class="check"
+              />
+            </button>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button class="btn btn-dark fs-5" (click)="editRes(reservation)">
+              ✏️
+            </button>
+            <button class="btn btn-dark fs-5" (click)="deleteRes(reservation)">
+              ❌
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

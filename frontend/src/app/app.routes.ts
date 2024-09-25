@@ -19,6 +19,8 @@ import {RegisterComponent} from "./user-folder/register/register.component";
 import {authGuard} from "./auth.guard";
 import { VehiclesComponent } from './vehicle-folder/vehicles/vehicles.component';
 import { VehicleFormComponent } from './vehicle-folder/vehicle-form/vehicle-form.component';
+import { ResComponent } from './rescli-folder/rescli/rescli.component';
+import { ResFormComponent } from './rescli-folder/rescli-form/rescli-form.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -50,4 +52,8 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
+  // esto son para los alquileres hechos por el cliente (usuario)
+  { path: 'reservationCli', component: ResComponent },
+  { path: 'reservationCli/create', component: ResFormComponent },
+  { path: 'reservationCli/modify/:id', component: ResFormComponent },
 ];
