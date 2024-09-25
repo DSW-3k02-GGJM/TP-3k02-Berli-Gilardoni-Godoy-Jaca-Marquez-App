@@ -1,3 +1,23 @@
 .navbar {
-  background-color: #337ab7;
+  background-color: #0F222D ;
+  padding: 0%;
+}
+
+.navbar-nav {
+  --bs-nav-link-active: white; /* <-- Your custom color here */
+  --bs-nav-link-active-bg: white; /* <-- Your custom color here */
+}
+
+.active {
+  background-color: #21303A
+  ;
+}
+
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.637); /* Cambia el color del borde del botón */
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  /* Cambia el color de las líneas del icono a blanco */
 }

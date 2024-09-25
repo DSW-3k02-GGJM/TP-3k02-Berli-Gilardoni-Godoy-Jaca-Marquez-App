@@ -1,32 +1,54 @@
+.container-padre {
+  width: 100%;
+  height: auto;
+  position: relative;
+  align-items: center; 
+}
+
 .container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.carousel {
   width: 100%;
+  height: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
 h1 {
   font-size: 3rem;
-  color: #333;
+  color: #181C14;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 p {
   font-size: 1.5rem;
-  color: #666;
+  color: #181C14;
   text-align: center;
   margin-bottom: 1rem;
 }
 
 .subtitulo-home-page {
-  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: whitesmoke;
 }
 
 .hero {
+  color: #ffffff;
   height: 5em;
   display: flex;
   justify-content: center;
@@ -35,12 +57,12 @@ p {
 
 .hero h1 {
   font-size: 2.5em;
-  color: #fff;
+  color: whitesmoke;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .cta-button {
-  background-color: #337ab7;
+  background-color: #21303A;
   color: #fff;
   padding: 1rem 2rem;
   border: none;
@@ -74,12 +96,54 @@ p {
   font-size: 1.3em;
 }
 
-@media (max-width: 700px) {
+
+@media (max-width: 1200px) {
+  .container-padre {
+    width: 100%;
+    height: auto;
+    position:  static;
+  }
+  
+  .container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: static;
+  }
+  
+  .carousel {
+    width: 100%;
+    height: 100%;
+    position: static;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+
   .hero .titulo-home-page {
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+    color: black;
+  }
+
+  .subtitulo-home-page {
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+    color: black;
+  }
+}
+
+@media (max-width: 700px) {
+
+  .hero .titulo-home-page {
+    color: black;
     font-size: 1.5em;
   }
 
   .subtitulo-home-page {
+    color: black;
     font-size: 1em;
   }
 

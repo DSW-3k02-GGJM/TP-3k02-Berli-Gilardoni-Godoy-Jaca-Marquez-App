@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { TestComponenteComponent } from '../test-componente/test-componente.component.js';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-test-mati',
   standalone: true,
-  imports: [TestComponenteComponent, ],
+  imports: [TestComponenteComponent, FormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './test-mati.component.html',
   styleUrl: './test-mati.component.scss'
 })

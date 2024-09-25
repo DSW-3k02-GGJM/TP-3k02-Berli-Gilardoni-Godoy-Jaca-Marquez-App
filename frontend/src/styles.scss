@@ -1,3 +1,12 @@
+$primary: #21303A;
+$secondary: #FFF5D0;
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #dc3545;
+$light: #f8f9fa;
+$dark: #343a40;
+
 /* Estilos para el contenedor del formulario */
 .form-style {
   background-color: #000; /* Un color de fondo oscuro (gris oscuro) */
@@ -25,7 +34,7 @@
 }
 
 .danger-text {
-  color: #dc3545; 
+  color: $danger; 
   font-weight: bold;
 }
 
@@ -40,7 +49,18 @@
   user-select: none;
 }
 
+html, body { background-color: $secondary; }
+
 .modal-header {
   justify-content: center;
 }
+
+.texto-blanco {
+  color: #FFF5D0;
+}
+
+.texto-negro {
+  color: #181C14;
+}
+
 

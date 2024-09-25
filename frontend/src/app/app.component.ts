@@ -24,5 +24,5 @@ export class AppComponent implements OnInit {
     );
   }
 
-  title = 'alquiler-vehiculos';
+  title = 'Alquilcar';
 }
