@@ -4,7 +4,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { VehicleCardComponent } from '../vehicle-card/vehicle-card.component';
 import { ApiService } from '../../service/api.service';
 import { VehicleFilterComponent } from '../vehicle-filter/vehicle-filter.component'; // Importa el componente de filtro
-
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-vehicle-list',
