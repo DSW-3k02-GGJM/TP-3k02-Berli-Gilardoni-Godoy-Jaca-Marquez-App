@@ -22,6 +22,7 @@ import { VehicleFormComponent } from './vehicle-folder/vehicle-form/vehicle-form
 import { ResComponent } from './rescli-folder/rescli/rescli.component';
 import { ResFormComponent } from './rescli-folder/rescli-form/rescli-form.component';
 
+
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
   { path: 'clients', component: ClientsComponent, canActivate: [authGuard] },

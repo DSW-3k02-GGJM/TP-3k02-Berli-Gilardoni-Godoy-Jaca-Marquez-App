@@ -5,6 +5,7 @@ import { VehicleCardComponent } from '../vehicle-card/vehicle-card.component';
 import { ApiService } from '../../service/api.service';
 import { VehicleFilterComponent } from '../vehicle-filter/vehicle-filter.component'; // Importa el componente de filtro
 
+
 @Component({
   selector: 'app-vehicle-list',
   standalone: true,
