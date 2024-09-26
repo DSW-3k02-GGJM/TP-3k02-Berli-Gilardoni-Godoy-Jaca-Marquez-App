@@ -50,14 +50,16 @@ const sanitizedFilterInput = async (
   if (!isValidDateFormat(startDate as string)) {
     return res.status(400).json({message: 'Invalid or missing startDate'});
   } else {
-    if (Date.parse(startDate as string) < Date.now()) {
+    //fecha ingresada 1ms antes de medianoche
+    if ( new Date(Date.parse(startDate as string) +86400000-1)  < new Date(Date.now())) {
       return res.status(400).json({message: "Invalid startDate. You can't book a reservation for the past!"});
     }}
 
   if (!isValidDateFormat(endDate as string)) {
     return res.status(400).json({message: 'Invalid or missing endDate'});
   } else {
-    if (Date.parse(startDate as string) > Date.parse(endDate as string)) {
+    //fecha ingresada 1ms antes de medianoche
+    if (new Date(Date.parse(startDate as string) +86400000-1) > new Date(Date.parse(endDate as string) +86400000-1)) {
       return res.status(400).json({message: "Invalid endDate. You reservation can't end if it never started!"});
     }}
 
@@ -180,10 +182,13 @@ const findAll = async (req: Request, res: Response) => {
       filters.$and.push({'l1.id': filter.location});
 
       const reservationFilters: any[] = [];
+      //Cuando  hago los filtros, toma un dia antes, por eso le sumo 1 dia
+      filter.startDate = new Date(filter.startDate);
+      filter.endDate = new Date(filter.endDate);
 
       reservationFilters.push({'r6.startDate': {$eq: null}});
-      reservationFilters.push({'r6.startDate': {$gte: new Date(filter.endDate as string)}});
-      reservationFilters.push({'r6.planned_end_date': {$lte: new Date(filter.startDate as string)}});
+      reservationFilters.push({'r6.startDate': {$gte: new Date(filter.endDate.setDate(filter.endDate.getDate()+1))}});
+      reservationFilters.push({'r6.planned_end_date': {$lte: new Date(filter.startDate.setDate(filter.startDate.getDate()+1))}});
       reservationFilters.push({'r6.cancellation_date': {$ne: null}});
       filters.$and.push({$or: reservationFilters});
 
