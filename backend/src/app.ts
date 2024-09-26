@@ -74,7 +74,7 @@ app.listen(port, () => {
   console.log('Servidor operando en http://localhost:'+ port + '/'); //Si no aparece con este link probar con 'localhost:8000'
 });
 */
-
+//TODO: borrar comment
 import 'reflect-metadata';
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -90,7 +90,6 @@ import { locationRouter } from './location/location.routes.js';
 import { reservationRouter  } from './reservation/reservation.routes.js';
 import { vehicleRouter } from './vehicle/vehicle.routes.js';
 import { userRouter } from './user/user.routes.js';
-import { attachEntityManager } from './middleware/entityManager.middleware.js'; // Importar middleware
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -115,9 +114,6 @@ app.use((req, res, next) => {
   // Usar RequestContext para MikroORM
   RequestContext.create(orm.em, next);
 });
-
-// Middleware para adjuntar EntityManager
-app.use(attachEntityManager); // Aquí añades el middleware de EntityManager
 
 // Registrar las rutas de negocio
 app.use('/api/reservations', reservationRouter);

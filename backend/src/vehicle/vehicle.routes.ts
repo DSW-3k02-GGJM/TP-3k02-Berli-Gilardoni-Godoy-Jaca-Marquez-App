@@ -9,11 +9,8 @@ import {
     remove,
     findAvailable,
 } from './vehicle.controler.js'
-import {attachEntityManager} from "../middleware/entityManager.middleware.js";
 
 export const vehicleRouter = Router()
-
-vehicleRouter.use(attachEntityManager); // Add this line to use the middleware
 
 vehicleRouter.get('/', findAll);
 vehicleRouter.get('/available', sanitizedFilterInput,findAvailable);
