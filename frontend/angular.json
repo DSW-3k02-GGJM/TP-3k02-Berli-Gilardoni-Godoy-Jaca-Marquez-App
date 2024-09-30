@@ -79,16 +79,12 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "tsconfig.json",
-            "inlineStyleLanguage": "scss",
-            "assets": ["src/assets"],
-            "styles": ["src/styles.scss"],
-            "scripts": []
-          }
-        }
+         "builder": "@angular-devkit/build-angular:jest",
+         "options": {
+           "tsConfig": "tsconfig.spec.json",
+           "polyfills": ["zone.js", "zone.js/testing"]
+         }
+       }
       }
     }
   }
