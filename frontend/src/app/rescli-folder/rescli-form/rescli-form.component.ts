@@ -11,45 +11,46 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { ResCreatedOrModifiedService } from '../rescli-created-or-modified/rescli.service.js';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import {map, Observable} from "rxjs";
-//falta todo lo del service created-or-modified
+import { DateFilterService } from '../../shared/date-filter.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-res-form',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule,],
+  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   templateUrl: './rescli-form.component.html',
   styleUrl: './rescli-form.component.scss'
 })
-export class ResFormComponent implements OnInit{
+export class ResFormComponent implements OnInit {
   @Input() title: string = '';
   @Input() currentResId: number = -1;
   action: string = '';
   clients: any[] = [];
   vehicles: any[] = [];
+  startDate: Date | null = null;
+  endDate: Date | null = null;
 
   filteredClients: any[] = [];
-
 
   constructor(
     private apiService: ApiService,
     private resCreatedOrModifiedService: ResCreatedOrModifiedService,
     public activeModal: NgbActiveModal,
-    private httpClient: HttpClient,
+    private dateFilterService: DateFilterService,
+    private fb: FormBuilder,
+    private http: HttpClient
   ) {}
 
   resForm = new FormGroup({
-    startDate: new FormControl('', [Validators.required]),
     plannedEndDate: new FormControl('', [Validators.required]),
     documentType: new FormControl('', [Validators.required]),
     documentID: new FormControl('', [Validators.required]),
     licensePlate: new FormControl('', [Validators.required]),
   }, { validators: this.dateLessThan('startDate', 'plannedEndDate') });
-  
-  //valida que startDate >= fecha actual y valida que startDate < plannedEndDate
+
   dateLessThan(startDateField: string, endDateField: string) {
     return (formGroup: AbstractControl) => {
-      const startDate = formGroup.get(startDateField)?.value;
+      const startDate = this.startDate; // Usar la fecha del filtro
       const endDate = formGroup.get(endDateField)?.value;
       const today = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
 
@@ -65,17 +66,21 @@ export class ResFormComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    // Inicializa la variable isDataLoaded en el servicio para indicar que los datos aún no han sido cargados.
+    this.dateFilterService.startDate$.subscribe(date => {
+      this.startDate = date;
+      console.log('Fecha de inicio del filtro:', this.startDate); // Verificar la fecha de inicio
+    });
+    this.dateFilterService.endDate$.subscribe(date => {
+      this.endDate = date;
+      console.log('Fecha de fin del filtro:', this.endDate); // Verificar la fecha de fin
+    });
+
     this.resCreatedOrModifiedService.isDataLoaded = false;
 
-    // Llama al método loadClients() para obtener la lista de clientes disponibles desde el backend
-    // y almacenarlas en una propiedad del componente para usar en el formulario.
     this.loadClients();
     this.loadVehicles();
 
     if (this.currentResId != -1) {
-      // Si el parámetro 'id' está presente en la ruta, significa que estamos en el modo de edición.
-      // Realiza una solicitud al backend para obtener los detalles de la reseva con el ID proporcionado.
       this.apiService
         .getOne('reservations', Number(this.currentResId))
         .subscribe((response) => {
@@ -89,7 +94,6 @@ export class ResFormComponent implements OnInit{
           console.log('Id del cliente', response.data.client.documentID)
 
           this.resForm.patchValue({
-            startDate: startDateFormat,
             plannedEndDate: plannedEndDateFormat,
             documentType: response.data.client.documentType,
             documentID: response.data.client.id,
@@ -97,100 +101,106 @@ export class ResFormComponent implements OnInit{
           });
         });
 
-      // Establece la acción como 'Edit' para indicar que estamos editando una reserva existente.
       this.action = 'Edit';
     } else {
-      // Si no hay un parámetro 'id' en la ruta, significa que estamos en el modo de creación de una nueva reserva.
-      // Establece la acción como 'Create'.
       this.action = 'Create';
     }
   }
 
-    formatDate(DateDB: string): string {
-      let DateFormat: string = '${year}-${month}-${day}';
-      DateFormat = DateFormat.replace(
-        '${year}',
-        DateDB.substring(0, 4)
-      );
-      DateFormat = DateFormat.replace(
-        '${month}',
-        DateDB.substring(5, 7)
-      );
-      DateFormat = DateFormat.replace(
-        '${day}',
-        DateDB.substring(8, 10)
-      );
-      return DateFormat;
-    }
-
-   // Método para cargar los clientes
-   loadClients(): void {
-    this.apiService.getAll('clients').subscribe((response) => {
-      this.clients = response.data;
-      console.log(this.clients); //para ver que cleintes trae
-    });
-
-
+  formatDate(DateDB: string): string {
+    let DateFormat: string = '${year}-${month}-${day}';
+    DateFormat = DateFormat.replace(
+      '${year}',
+      DateDB.substring(0, 4)
+    );
+    DateFormat = DateFormat.replace(
+      '${month}',
+      DateDB.substring(5, 7)
+    );
+    DateFormat = DateFormat.replace(
+      '${day}',
+      DateDB.substring(8, 10)
+    );
+    return DateFormat;
   }
 
-  // Método para cargar los vehiculos
+  loadClients(): void {
+    this.apiService.getAll('clients').subscribe((response) => {
+      this.clients = response.data;
+      console.log(this.clients);
+    });
+  }
+
   loadVehicles(): void {
     this.apiService.getAll('vehicles').subscribe((response) => {
       this.vehicles = response.data;
     });
   }
- 
-  //crea un nuevo array de clientes cuyo tipo doc sea el elegido
-  onDocumentTypeSelected(event: Event): void{
-    const selectElement  = event.target as HTMLSelectElement;
+
+  onDocumentTypeSelected(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
     const selectedDocumentType = selectElement.value;
-    console.log('El tipo doc elegido fue:', selectedDocumentType); //para ver el tipo doc elegido
+    console.log('El tipo doc elegido fue:', selectedDocumentType);
     this.filteredClients = this.clients.filter(client => client.documentType === selectedDocumentType)
-    console.log(this.filteredClients); //para ver la lista de clientes filtrados por el tipo doc elegido
+    console.log(this.filteredClients);
   }
 
-  onSubmit(){
+  onSubmit() {
     if (this.resForm.valid) {
+      if (!this.startDate || !this.endDate) {
+        console.error('Las fechas del filtro no están definidas');
+        return;
+      }
 
-      const formData = this.resForm.value;
+      const formData = {
+        ...this.resForm.value,
+        startDate: this.startDate,
+        endDate: this.endDate
+      };
 
-      console.log('Patente seleccionada:', formData.licensePlate); // Para verificar qué patente se selecciona
+      console.log('Datos del formulario:', formData);
 
-    // Encontrar el vehículo seleccionado
-    const selectedVehicle = this.vehicles.find(vehicle => vehicle.id === Number(formData.licensePlate));
+      const selectedVehicle = this.vehicles.find(vehicle => vehicle.id === Number(formData.licensePlate));
 
-    console.log('Vehículo seleccionado:', selectedVehicle); // Verificar si se encuentra el vehículo
+      if (!selectedVehicle) {
+        console.error('No se encontró el vehículo seleccionado');
+        return;
+      }
 
-    if (!selectedVehicle) {
-      console.error('No se encontró el vehículo seleccionado');
-      return; // Detener si no se encuentra el vehículo
-    }
       const finalData = {
         reservationDate: new Date().toISOString().split('T')[0],
         startDate: formData.startDate,
         plannedEndDate: formData.plannedEndDate,
         realEndDate: null,
         cancellationDate: null,
-        initialKms: 0, // Revisar, debería ser null apenas se crea la reserva
+        initialKms: 0,
         finalKm: null,
-        client: Number(formData.documentID), 
+        client: Number(formData.documentID),
         vehicle: Number(formData.licensePlate),
       };
-      
 
-      console.log('Datos enviados:', finalData); // para ver los datos que se envían
+      console.log('Datos enviados:', finalData);
+
       this.activeModal.close();
 
       if (this.action === 'Create') {
-        this.apiService.create('reservations', finalData).subscribe((response) => {
-          this.resCreatedOrModifiedService.notifyResCreatedOrModified();
-        });
-      } else if (this.action === 'Edit') {
-        this.apiService
-          .update('reservations', this.currentResId, finalData)
-          .subscribe((response) => {
+        this.apiService.create('reservations', finalData).subscribe(
+          (response) => {
             this.resCreatedOrModifiedService.notifyResCreatedOrModified();
-          });
+          },
+          (error) => {
+            console.error('Error al crear la reserva:', error);
+          }
+        );
+      } else if (this.action === 'Edit') {
+        this.apiService.update('reservations', this.currentResId, finalData).subscribe(
+          (response) => {
+            this.resCreatedOrModifiedService.notifyResCreatedOrModified();
+          },
+          (error) => {
+            console.error('Error al actualizar la reserva:', error);
+          }
+        );
       }
 
       this.resCreatedOrModifiedService.isDataLoaded = true;
