@@ -53,6 +53,10 @@ $dark: #343a40;
   padding: 10px; /* Espaciado interno del campo de entrada */
 }
 
+.form-control:hover {
+  background-color: rgb(0,0,0,0);
+}
+
 .form {
   padding: 0.5em 2em 2em 2em;
 }
@@ -77,7 +81,7 @@ $dark: #343a40;
   user-select: none;
 }
 
-html, body { background-color: whitesmoke; }
+html, body { background-color: #21303A; }
 
 .modal-header {
   justify-content: center;

@@ -32,7 +32,7 @@ export class RegisterComponent {
   ) { }
 
   registerForm = new FormGroup({
-    email: new FormControl('', [Validators.required], [this.authService.uniqueEmailValidator()]),
+    email: new FormControl('', [Validators.required, Validators.email], [this.authService.uniqueEmailValidator()]),
     password: new FormControl('', [Validators.required]),
   }, { updateOn: 'submit' });
 

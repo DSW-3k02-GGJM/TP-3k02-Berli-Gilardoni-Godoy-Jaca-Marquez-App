@@ -1,52 +1,72 @@
-<div class="container p-5">
-  <div class="row">
-    <div class="col-md-4 mx-auto">
-      <div class="card">
-        <div class="card-header">
-          Registrarse
+<div class="container">
+  <div class="title">Registrarse</div>
+  <hr>
+  <div class="content">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="user-details">
+        <!-- Input for Full Name -->
+        <mat-form-field class="input-box">
+          <mat-label>Email</mat-label>
+          <input 
+            matInput
+            id="email"
+            class="form-control is-loading"
+            type="email"
+            formControlName="email"
+            placeholder="Email"
+            [class.is-invalid]="registerForm.get('email')?.invalid && (registerForm.get('email')?.touched || registerForm.get('email')?.dirty)"
+            [class.is-loading]="registerForm.pending"
+          >
+          <mat-error *ngIf="registerForm.get('email')?.errors?.emailExists">
+            Este email ya está siendo usado. Por favor use otro.
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('email')?.errors?.required">
+            El email es requerido.
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('email')?.errors?.email">
+            El email no es un email válido.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="input-box">
+          <mat-label>Contraseña</mat-label>
+          <input 
+            matInput
+            id="password"
+            class="form-control"
+            type="password"
+            formControlName="password"
+            placeholder=""
+            [class.is-invalid]="registerForm.get('password')?.invalid && (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)"
+          >
+          <mat-error *ngIf="registerForm.get('password')?.errors?.required">
+            La contraseña es requerida.
+          </mat-error>
+        </mat-form-field>
+        <!-- Input for Email -->
+        <div class="input-box">
+          <span class="details">Email</span>
+          <input type="text" placeholder="Enter your email" required>
         </div>
-        <div class="card-body">
-          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-              <input
-                id="email"
-                class="form-control"
-                type="email"
-                formControlName="email"
-                placeholder="Email"
-                [class.is-invalid]="registerForm.get('email')?.invalid && (registerForm.get('email')?.touched || registerForm.get('email')?.dirty)"
-              />
-              <div *ngIf="registerForm.get('email')?.errors?.emailExists" class="invalid-feedback">
-                Este email ya está siendo usado. Por favor use otro.
-              </div>
-              <div *ngIf="registerForm.get('email')?.errors?.required" class="invalid-feedback">
-                El mail es requerido.
-              </div>
-            </div>
-            <hr />
-            <div class="form-group">
-              <input
-                id="password"
-                class="form-control"
-                type="password"
-                formControlName="password"
-                placeholder="Contraseña"
-                [class.is-invalid]="registerForm.get('password')?.invalid && (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)"
-              />        
-              <div class="invalid-feedback">
-                La contraseña es requerida.
-              </div>
-            </div>
-            <hr />
-            <button
-              type="submit"
-              class="btn btn-primary border border-1 border-white"
-            >
-              Registrar
-            </button>
-          </form>
+        <!-- Input for Phone Number -->
+        <div class="input-box">
+          <span class="details">Phone Number</span>
+          <input type="text" placeholder="Enter your number" required>
+        </div>
+        <!-- Input for Password -->
+        <div class="input-box">
+          <span class="details">Password</span>
+          <input type="text" placeholder="Enter your password" required>
+        </div>
+        <!-- Input for Confirm Password -->
+        <div class="input-box">
+          <span class="details">Confirm Password</span>
+          <input type="text" placeholder="Confirm your password" required>
         </div>
       </div>
-    </div>
+      <!-- Submit button -->
+      <div class="button">
+        <input type="submit" value="Registrarse">
+      </div>
+    </form>
   </div>
 </div>
