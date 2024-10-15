@@ -70,6 +70,7 @@ export class AuthService {
   emailExists(email: string): Observable<boolean> {
     return this.http.get<{ exists: boolean }>(`${this.apiUrl}/users/email-exists/${email}`)
       .pipe(
+        delay(1000),
         map(response => response.exists),
         catchError(() => of(false)) 
       );
@@ -82,6 +83,14 @@ export class AuthService {
         catchError(async () => null)
       );
     };
+  }
+
+  maxDateValidator(control: AbstractControl): ValidationErrors | null {
+    const selectedDate = new Date(control.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Ignorar la hora para comparar solo la fecha
+
+    return selectedDate > today ? { maxDate: true } : null;
   }
 
   checkAdmin(): Observable<any> {

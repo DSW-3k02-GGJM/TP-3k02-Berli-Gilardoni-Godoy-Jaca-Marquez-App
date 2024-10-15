@@ -53,6 +53,14 @@ $dark: #343a40;
   padding: 10px; /* Espaciado interno del campo de entrada */
 }
 
+.form-control.is-invalid:focus {
+  border-color: rgb(0,0,0,0);
+  box-shadow: none;
+}
+.form-control:focus{
+  border-color: rgb(0,0,0,0);
+  box-shadow: none;
+}
 .form-control:hover {
   background-color: rgb(0,0,0,0);
 }
