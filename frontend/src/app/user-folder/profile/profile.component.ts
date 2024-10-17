@@ -14,60 +14,78 @@ import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-profile',
   standalone: true,
-    imports: [
-      FormsModule,
-      ReactiveFormsModule,
-      HttpClientModule,
-      CommonModule,
-      MatProgressSpinnerModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatButtonModule, 
-      MatIconModule,
-      MatSelectModule
-    ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule,
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule, 
+    MatIconModule,
+    MatSelectModule
+  ],
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss'
 })
-export class RegisterComponent {
+export class ProfileComponent implements OnInit{
+  idUsuario: number = -1;
   hide = signal(true);
+  errorMessage: string = '';
+
+  email: string = '';
+
   clickEvent(event: MouseEvent) {
     event.preventDefault();
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
+
+  profileForm = new FormGroup({
+    documentType: new FormControl('', [Validators.required]),
+    documentID: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")],),
+    userName: new FormControl('', [Validators.required]),
+    userSurname: new FormControl('', [Validators.required]),
+    birthDate: new FormControl('', [Validators.required, this.authService.maxDateValidator]), //TODO: ver si parsea bien la fecha
+    address: new FormControl('', [Validators.required]),
+    phoneNumber: new FormControl('', [Validators.required]), //TODO: añadir validador de telefono
+    nationality: new FormControl('', [Validators.required]),
+  });
+
   constructor(
     private authService: AuthService,
     private modalService: NgbModal,
     private route: ActivatedRoute
   ) { }
 
-  registerForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email],[this.authService.uniqueEmailValidator()]),
-    password: new FormControl('', [Validators.required]),
-    documentType: new FormControl('', [Validators.required]),
-    documentID: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")],[this.authService.uniqueDocumentIDValidator()]),
-    userName: new FormControl('', [Validators.required]),
-    userSurname: new FormControl('', [Validators.required]),
-    birthDate: new FormControl('', [Validators.required, this.authService.maxDateValidator]), //TODO: ver si parsea bien la fecha //TODO: verifica que sea maxima pero por alguna razon no se detiene el submit
-    address: new FormControl('', [Validators.required]),
-    phoneNumber: new FormControl('', [Validators.required]), //TODO: añadir validador de telefono
-    nationality: new FormControl('', [Validators.required]),
-
-  }, { updateOn: 'submit' });
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.idUsuario = params['id'];
+      this.authService.findUser(this.idUsuario).subscribe(response => {
+        this.email = response.data.email;
+        this.profileForm.patchValue(response.data);
+      });
+    });
+  }
 
   onSubmit() {
-    console.log(this.registerForm.value);
-    console.log(this.registerForm.invalid);
-    if (!this.registerForm.invalid) {
-      this.authService.register(this.registerForm.value).subscribe(
-        response => {
+    if (!this.profileForm.invalid) {
+      this.authService.updateUser(this.idUsuario, this.profileForm.value).subscribe({
+        next: response => {
           const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false , size: 'sm' });
-          modalRef.componentInstance.title = 'Registro exitoso';
-          console.log(response);
-        });
+          modalRef.componentInstance.title = 'Usuario actualizado';
+        },
+        error: error => {
+          if (error.status !== 401) {
+            this.errorMessage = "Error al actualizar el usuario. Intente de nuevo.";
+            console.log(error);
+          }
+
+        }
+      });
     }   
   }
 }

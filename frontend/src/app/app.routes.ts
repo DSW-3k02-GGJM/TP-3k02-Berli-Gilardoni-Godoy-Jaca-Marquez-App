@@ -24,6 +24,7 @@ import { ResFormComponent } from './res-folder/res-form/res-form.component.js';
 import { authAdminGuard } from './guards/auth-admin.guard.js';
 import { authEmployeeGuard } from './guards/auth-employee.guard.js';
 import { authClientGuard } from './guards/auth-client.guard.js';
+import { ProfileComponent } from './user-folder/profile/profile.component.js';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -57,5 +58,6 @@ export const routes: Routes = [
   { path: 'testMati', component: TestMatiComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];

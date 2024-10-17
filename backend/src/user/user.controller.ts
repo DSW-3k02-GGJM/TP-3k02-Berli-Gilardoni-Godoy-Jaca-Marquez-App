@@ -7,6 +7,23 @@ import { AuthService } from '../shared/db/auth.service.js';
 
 const em = orm.em;
 
+const sanitizedLoginInput = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req.body.sanitizedInput = {
+    email: req.body.email,
+    password: req.body.password,
+  };
+  // Más validaciones
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  });
+  next();
+};
 const sanitizedUserInput = async (
   req: Request,
   res: Response,
@@ -26,44 +43,12 @@ const sanitizedUserInput = async (
     nationality: req.body.nationality,
     reservations: req.body.reservations,
   };
-  // Más validaciones
+
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined) {
       delete req.body.sanitizedInput[key];
     }
   });
-
-  const password = req.body.sanitizedInput.password;
-  const email = req.body.sanitizedInput.email;
-  const documentType = req.body.sanitizedInput.documentType;
-  const documentID = req.body.sanitizedInput.documentID;
-  const userName = req.body.sanitizedInput.userName;
-  const userSurname = req.body.sanitizedInput.userSurname;
-  const birthDate = req.body.sanitizedInput.birthDate;
-  const address = req.body.sanitizedInput.address;
-  const phoneNumber = req.body.sanitizedInput.phoneNumber;
-  const nationality = req.body.sanitizedInput.nationality;
-
-  if (!password || !email) {
-    return res.status(400).json({ message: 'Email and password are required' });
-  }
-
-  if(!email.includes('@') || !email.includes('.')) { 
-    return res.status(400).json({ message: 'Invalid email' });
-  }
-
-  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality) {
-    return res.status(400).json({ message: 'All information are required'});
-  }
-  const userE = await em.findOne( User , { email } , {populate: [] , });
-  if(userE){
-    return res.status(401).json({ message: 'This email is already used' });
-  }
-
-  const userD = await em.findOne( User , { documentID } , {populate: [] , });
-  if(userD){
-    return res.status(401).json({ message: 'This document is already used' });
-  }
   next();
 };
 
@@ -104,6 +89,18 @@ const findOne = async (req: Request, res: Response) => {
 };
 
 const update = async (req: Request, res: Response) => {
+    const documentType = req.body.sanitizedInput.documentType;
+    const documentID = req.body.sanitizedInput.documentID;
+    const userName = req.body.sanitizedInput.userName;
+    const userSurname = req.body.sanitizedInput.userSurname;
+    const birthDate = req.body.sanitizedInput.birthDate;
+    const address = req.body.sanitizedInput.address;
+    const phoneNumber = req.body.sanitizedInput.phoneNumber;
+    const nationality = req.body.sanitizedInput.nationality;
+
+    if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality) {
+      return res.status(400).json({ message: 'All information are required'});
+    }
     try {
       const id = Number.parseInt(req.params.id);
       const user = await em.findOneOrFail(User, { id });
@@ -127,6 +124,37 @@ const update = async (req: Request, res: Response) => {
   };
 
 const register = async (req: Request, res: Response) => {
+  const password = req.body.sanitizedInput.password;
+  const email = req.body.sanitizedInput.email;
+  const documentType = req.body.sanitizedInput.documentType;
+  const documentID = req.body.sanitizedInput.documentID;
+  const userName = req.body.sanitizedInput.userName;
+  const userSurname = req.body.sanitizedInput.userSurname;
+  const birthDate = req.body.sanitizedInput.birthDate;
+  const address = req.body.sanitizedInput.address;
+  const phoneNumber = req.body.sanitizedInput.phoneNumber;
+  const nationality = req.body.sanitizedInput.nationality;
+
+  if (!password || !email) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+
+  if(!email.includes('@') || !email.includes('.')) { 
+    return res.status(400).json({ message: 'Invalid email' });
+  }
+
+  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality) {
+    return res.status(400).json({ message: 'All information are required'});
+  }
+  const userE = await em.findOne( User , { email } , {populate: [] , });
+  if(userE){
+    return res.status(401).json({ message: 'This email is already used' });
+  }
+
+  const userD = await em.findOne( User , { documentID } , {populate: [] , });
+  if(userD){
+    return res.status(401).json({ message: 'This document is already used' });
+  }
   try {
     const password = req.body.sanitizedInput.password;
     const email = req.body.sanitizedInput.email;
@@ -156,71 +184,81 @@ const register = async (req: Request, res: Response) => {
 };
 
 const login = async (req: Request, res: Response) => {
-    try {
-        const email = req.body.sanitizedInput.email;
-        const password = req.body.sanitizedInput.password;
-        
-        const user = await em.findOne( User , { email } , {populate: [] , });
-        if(!user){
-          return res.status(401).json({ message: 'Incorrect email' });
-        }
-        else {
-            const isValid = await bcrypt.compare(password, user.password)
-            if(!isValid){
-              return res.status(401).json({ message: 'Wrong password' });
-            }
-            else {
-                const token = AuthService.generateToken(user); // Crea un token y lo asocia al usuario
-                const { password: _, ...publicUser} = user;
-                res
-                    .cookie('access_token', token, {
-                        httpOnly: true, // La cookie solo se puede acceder en el servidor (No se puede ver desde el cliente)
-                        secure: true, // Funciona solo con https
-                        sameSite: 'strict', // Solo se puede acceder en el mismo dominio
-                        maxAge: 1000 * 60 * 60, // Dura 1h
-                    })
-                    .status(200).json({ message: 'Login completed'});
-            }
-        }
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+  const password = req.body.sanitizedInput.password;
+  const email = req.body.sanitizedInput.email;
 
-  const logout = async (req: Request, res: Response) => {
-    res
-      .clearCookie('access_token')
-      .status(200).json({ message: 'Logout completed' });
-  };
+  if (!password || !email) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+
+  if(!email.includes('@') || !email.includes('.')) { 
+    return res.status(400).json({ message: 'Invalid email' });
+  }
+  try {
+      const email = req.body.sanitizedInput.email;
+      const password = req.body.sanitizedInput.password;
+      
+      const user = await em.findOne( User , { email } , {populate: [] , });
+      if(!user){
+        return res.status(401).json({ message: 'Incorrect email' });
+      }
+      else {
+          const isValid = await bcrypt.compare(password, user.password)
+          if(!isValid){
+            return res.status(401).json({ message: 'Wrong password' });
+          }
+          else {
+              const token = AuthService.generateToken(user); // Crea un token y lo asocia al usuario
+              const { password: _, ...publicUser} = user;
+              res
+                  .cookie('access_token', token, {
+                      httpOnly: true, // La cookie solo se puede acceder en el servidor (No se puede ver desde el cliente)
+                      secure: true, // Funciona solo con https
+                      sameSite: 'strict', // Solo se puede acceder en el mismo dominio
+                      maxAge: 1000 * 60 * 60, // Dura 1h
+                  })
+                  .status(200).json({ message: 'Login completed'});
+          }
+      }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const logout = async (req: Request, res: Response) => {
+  res
+    .clearCookie('access_token')
+    .status(200).json({ message: 'Logout completed' });
+};
 
   const verifyAuthentication = async (req: Request, res: Response) => {
     res.status(200).send({ message: "Authenticated" });
   };
 
-  const verifyEmailExists = async (req: Request, res: Response) => {
-    try {
-      const email = req.params.email;
-      const user = await em.findOneOrFail(
-        User,
-        { email: email });
-      res.status(200).json({ exists: true });
-    }
-    catch (error: any) {
-      res.status(200).json({ exists: false});
-    }
-  };
+const verifyEmailExists = async (req: Request, res: Response) => {
+  try {
+    const email = req.params.email;
+    const user = await em.findOneOrFail(
+      User,
+      { email: email });
+    res.status(200).json({ exists: true });
+  }
+  catch (error: any) {
+    res.status(200).json({ exists: false});
+  }
+};
 
-  const verifyDocumentIDExists = async (req: Request, res: Response) => {
-    try {
-      const documentID = req.params.documentID;
-      const user = await em.findOneOrFail(
-        User,
-        { documentID: documentID });
-      res.status(200).json({ exists: true });
-    }
-    catch (error: any) {
-      res.status(200).json({ exists: false});
-    }
-  };
+const verifyDocumentIDExists = async (req: Request, res: Response) => {
+  try {
+    const documentID = req.params.documentID;
+    const user = await em.findOneOrFail(
+      User,
+      { documentID: documentID });
+    res.status(200).json({ exists: true });
+  }
+  catch (error: any) {
+    res.status(200).json({ exists: false});
+  }
+};
 
-export { sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists};
+export { sanitizedLoginInput, sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists};

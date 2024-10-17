@@ -23,6 +23,28 @@ export class AuthService {
     'Access-Control-Allow-Credentials': 'true',
   });
 
+  findUser(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/${id}`, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
+
+  updateUser(id: number, data: any): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/users/${id}`, data, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/users/${id}`, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
+
+
   register(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/users/register`, data, {
       headers: this.headers,

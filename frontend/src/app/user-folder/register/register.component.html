@@ -1,10 +1,10 @@
 <div class="container unselectable">
-  <div class="title">Registrarse</div>
+  <div class="title">Registro de usuario</div>
   <hr>
   <div class="content">
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
       <div class="user-details">
-        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+        <mat-form-field disabled class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Email</mat-label>
           <input 
             matInput
@@ -183,7 +183,7 @@
       <div class="button">
         <button type="submit" [disabled]="registerForm.pending">
           <ng-container *ngIf="!registerForm.pending; else loading">
-            Registrarse
+            Registrar
           </ng-container>
           <ng-template #loading>
             <mat-spinner diameter="30"></mat-spinner>
