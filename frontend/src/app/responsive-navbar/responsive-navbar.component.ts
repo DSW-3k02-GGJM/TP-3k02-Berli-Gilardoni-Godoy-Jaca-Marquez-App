@@ -19,14 +19,26 @@ export class ResponsiveNavbarComponent implements OnInit {
     private modalService: NgbModal
   ) { }
   isLogged = false;
+  profileLink = '/home';
   private subscription?: Subscription;
+  private subscription2?: Subscription;
 
 
   ngOnInit() {
     this.subscription =
       this.authService.loginOrLogout.subscribe(
         () => {
+          
           this.isLogged = this.authService.isLogged;
+          this.authService.getAuthenticatedId().subscribe(
+            response => {
+              this.profileLink = '/user/' + response.id
+            },
+            error => {
+              this.profileLink = '/home';
+              console.log(error);
+            }
+          );
         }
       );
 

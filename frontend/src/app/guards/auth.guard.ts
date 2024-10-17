@@ -1,7 +1,7 @@
 import {CanActivateFn, Router} from '@angular/router';
 import {inject} from "@angular/core";
 import {AuthService} from "../service/auth.service";
-import {catchError, map, of} from "rxjs";
+import {catchError, map, of, switchMap} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 
 export const authGuard: CanActivateFn = (route, state) => {
@@ -9,13 +9,30 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router) as Router;
   const http = inject(HttpClient);
 
-  return authService.isAuthenticated().pipe(
-    map(() => {
-      return true;
+  const routeId = Number(route.paramMap.get('id'));
+
+  return authService.getAuthenticatedId().pipe(
+    switchMap((res) => {
+      const authenticatedId = res.id;
+      return authService.checkClient().pipe(
+        map(() => {
+          return true;
+        }),
+        catchError(() => {
+          if (routeId === res.id) {
+            return of(true);
+          } else {
+            console.log("ID de la ruta no coincide con el ID autenticado");
+            router.navigate(['/home']);
+            return of(false);
+          }
+        })
+      );;
     }),
     catchError(() => {
-      //authService.notifyLoginOrLogout(false);
-      router.navigate(['/home']);
+      authService.notifyLoginOrLogout(false);
+      console.log("No estás autenticado");
+      router.navigate(['/login']);
       return of(false);
     })
   );

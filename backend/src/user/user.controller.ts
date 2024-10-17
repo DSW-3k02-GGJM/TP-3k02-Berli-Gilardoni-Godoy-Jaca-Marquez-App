@@ -261,4 +261,14 @@ const verifyDocumentIDExists = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedLoginInput, sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists};
+const getAuthenticatedId = async (req: Request, res: Response) => {
+  try {
+    const id = req.session.user.id;
+    res.status(200).json({ id });
+  }
+  catch (error: any) {
+    res.status(200).json({ id: null });
+  }
+}
+
+export { sanitizedLoginInput, sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists, getAuthenticatedId};

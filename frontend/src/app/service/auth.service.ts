@@ -133,6 +133,13 @@ export class AuthService {
     return selectedDate > today ? { maxDate: true } : null;
   }
 
+  getAuthenticatedId(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/authenticated-id`, {
+      headers: this.headers,
+      withCredentials: true,
+    })
+  }
+
   checkAdmin(): Observable<any> {
     return this.http.post(`${this.apiUrl}/users/admin`, {
       withCredentials: true,
