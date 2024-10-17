@@ -38,6 +38,11 @@ export class AuthService {
         if (!roles.includes(data.role)) {
           return res.status(401).json({ message: 'Unauthorized access (role)'});
         }
+
+        if ( req.params.id && data.role == 'client' && data.id != req.params.id) {
+          return res.status(401).json({ message: 'Unauthorized access (id)'}); // verifica si es el mismo usuario en caso de ser cliente
+        }
+        
         req.session.user = data;
       } 
       catch (error: any) {
@@ -55,6 +60,14 @@ export class AuthService {
         email: process.env.ADMIN_EMAIL || 'admin@admin.com',
         password: hashedPassword,
         role: process.env.ADMIN_PASSWORD || 'admin',
+        documentType: 'DNI',
+        documentID: 'XXXXXXXX',
+        userName: 'Admin',
+        userSurname: 'Admin',
+        birthDate: new Date(),
+        address: 'Admin',
+        phoneNumber: 'XXXX-XXXX',
+        nationality: 'Peruano'
       });
       await em.flush();
       console.log('Admin user created:', admin.email);

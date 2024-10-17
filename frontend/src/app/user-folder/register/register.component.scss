@@ -7,7 +7,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 30px 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
 
@@ -70,15 +72,15 @@ form .button button {
 form .button button:hover {
   background: #21303A; //no cambia cuando esta en modo celu
 }
-/* Responsive media query code for mobile devices */
+
 @media(max-width: 584px) {
-  :host {
-    height: 84vh;
+  /*:host {
+    height: 86vh;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-
+  */
   .container {
     max-width: 100%;
   }
@@ -98,4 +100,3 @@ form .button button:hover {
     width: 5px;
   }
 }
-/* Responsive media query code for mobile devices */

@@ -7,7 +7,7 @@ import { AuthService } from '../shared/db/auth.service.js';
 
 const em = orm.em;
 
-const sanitizedUserInput = (
+const sanitizedUserInput = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -15,6 +15,16 @@ const sanitizedUserInput = (
   req.body.sanitizedInput = {
     email: req.body.email,
     password: req.body.password,
+
+    documentType: req.body.documentType,
+    documentID: req.body.documentID,
+    userName: req.body.userName,
+    userSurname: req.body.userSurname,
+    birthDate: req.body.birthDate,
+    address: req.body.address,
+    phoneNumber: req.body.phoneNumber,
+    nationality: req.body.nationality,
+    reservations: req.body.reservations,
   };
   // Más validaciones
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -22,6 +32,38 @@ const sanitizedUserInput = (
       delete req.body.sanitizedInput[key];
     }
   });
+
+  const password = req.body.sanitizedInput.password;
+  const email = req.body.sanitizedInput.email;
+  const documentType = req.body.sanitizedInput.documentType;
+  const documentID = req.body.sanitizedInput.documentID;
+  const userName = req.body.sanitizedInput.userName;
+  const userSurname = req.body.sanitizedInput.userSurname;
+  const birthDate = req.body.sanitizedInput.birthDate;
+  const address = req.body.sanitizedInput.address;
+  const phoneNumber = req.body.sanitizedInput.phoneNumber;
+  const nationality = req.body.sanitizedInput.nationality;
+
+  if (!password || !email) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+
+  if(!email.includes('@') || !email.includes('.')) { 
+    return res.status(400).json({ message: 'Invalid email' });
+  }
+
+  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality) {
+    return res.status(400).json({ message: 'All information are required'});
+  }
+  const userE = await em.findOne( User , { email } , {populate: [] , });
+  if(userE){
+    return res.status(401).json({ message: 'This email is already used' });
+  }
+
+  const userD = await em.findOne( User , { documentID } , {populate: [] , });
+  if(userD){
+    return res.status(401).json({ message: 'This document is already used' });
+  }
   next();
 };
 
@@ -88,15 +130,9 @@ const register = async (req: Request, res: Response) => {
   try {
     const password = req.body.sanitizedInput.password;
     const email = req.body.sanitizedInput.email;
-    if (!password || !email) {
-      return res.status(401).json({ message: 'Email and password are required' });
-    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const userR = await em.findOne( User , { email } , {populate: [] , });
-    if(userR){
-      return res.status(401).json({ message: 'This email is already used' });
-    }
     const user = em.create(User, {
         ...req.body.sanitizedInput,
         password: hashedPassword,
@@ -123,9 +159,6 @@ const login = async (req: Request, res: Response) => {
     try {
         const email = req.body.sanitizedInput.email;
         const password = req.body.sanitizedInput.password;
-        if (!password || !email) {
-          return res.status(401).json({ message: 'Email and password are required' });
-        }
         
         const user = await em.findOne( User , { email } , {populate: [] , });
         if(!user){
@@ -177,4 +210,17 @@ const login = async (req: Request, res: Response) => {
     }
   };
 
-export { sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists};
+  const verifyDocumentIDExists = async (req: Request, res: Response) => {
+    try {
+      const documentID = req.params.documentID;
+      const user = await em.findOneOrFail(
+        User,
+        { documentID: documentID });
+      res.status(200).json({ exists: true });
+    }
+    catch (error: any) {
+      res.status(200).json({ exists: false});
+    }
+  };
+
+export { sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists};

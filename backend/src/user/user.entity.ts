@@ -3,12 +3,41 @@ import {
     Property,
     Cascade,
     OneToOne,
+    OneToMany,
+    Collection,
   } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
 //import { Cliente } from '../cliente/cliente.entity.js';
   
   @Entity()
   export class User extends BaseEntity {
+    //Datos del usuario
+    @Property({ nullable: false })
+    documentType!: string;
+
+    @Property({ nullable: false, unique: true })
+    documentID!: string;
+
+    @Property({ nullable: false })
+    userName!: string;
+
+    @Property({ nullable: false })
+    userSurname!: string;
+
+    @Property({ type: 'date', nullable: false })
+    birthDate!: Date;
+
+    @Property({ nullable: false })
+    address!: string;
+
+    @Property({ nullable: false })
+    phoneNumber!: string;
+
+    @Property({ nullable: false })
+    nationality!: string;
+
+    //Datos de login / logout
+
     @Property({ nullable: false, unique: true })
     email!: string;
   
@@ -17,11 +46,12 @@ import { BaseEntity } from '../shared/db/baseEntity.entity.js';
 
     @Property({ nullable: false })
     role!: string; //admin, employee, client
-  
-    /*@OneToOne(() => Cliente, (cliente) => cliente.usuario, {
+
+    /*
+    @OneToMany(() => Reservation, (reservation) => reservation.client, {
       cascade: [Cascade.ALL],
     })
-    cliente!: Cliente
-    */
+    reservations = new Collection<Reservation>(this);
+    */ //TODO: Cambiar cliente por usuario
   }
   

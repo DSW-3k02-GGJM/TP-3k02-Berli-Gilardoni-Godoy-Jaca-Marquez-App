@@ -75,6 +75,9 @@
             formControlName="documentID"
             placeholder=""
           >
+          <mat-error *ngIf="registerForm.get('documentID')?.errors?.documentIDExists">
+            Este numero ya está siendo usado.
+          </mat-error>
           <mat-error *ngIf="registerForm.get('documentID')?.errors?.required">
             El numero de documento es requerido.
           </mat-error>

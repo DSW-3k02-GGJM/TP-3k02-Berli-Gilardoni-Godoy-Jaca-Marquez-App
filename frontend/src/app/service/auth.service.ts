@@ -85,6 +85,24 @@ export class AuthService {
     };
   }
 
+  documentIDExists(documentID: string): Observable<boolean> {
+    return this.http.get<{ exists: boolean }>(`${this.apiUrl}/users/documentID-exists/${documentID}`)
+      .pipe(
+        delay(1000),
+        map(response => response.exists),
+        catchError(() => of(false)) 
+      );
+  }
+  
+  uniqueDocumentIDValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      return this.documentIDExists(control.value).pipe(
+        map((exists) => (exists ? { documentIDExists: true } : null)),
+        catchError(async () => null)
+      );
+    };
+  }
+
   maxDateValidator(control: AbstractControl): ValidationErrors | null {
     const selectedDate = new Date(control.value);
     const today = new Date();

@@ -46,10 +46,10 @@ export class RegisterComponent {
     email: new FormControl('', [Validators.required, Validators.email], [this.authService.uniqueEmailValidator()]),
     password: new FormControl('', [Validators.required]),
     documentType: new FormControl('', [Validators.required]),
-    documentID: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")], ),
+    documentID: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")], [this.authService.uniqueDocumentIDValidator()]),
     userName: new FormControl('', [Validators.required]),
     userSurname: new FormControl('', [Validators.required]),
-    birthDate: new FormControl('', [Validators.required, this.authService.maxDateValidator]),
+    birthDate: new FormControl('', [Validators.required, this.authService.maxDateValidator]), //TODO: ver si parsea bien la fecha
     address: new FormControl('', [Validators.required]),
     phoneNumber: new FormControl('', [Validators.required]), //TODO: añadir validador de telefono
     nationality: new FormControl('', [Validators.required]),
@@ -58,8 +58,7 @@ export class RegisterComponent {
 
   onSubmit() {
     console.log(this.registerForm.value);
-    console.log(this.registerForm);
-    /*if (!this.registerForm.invalid) {
+    if (!this.registerForm.invalid) {
       this.authService.register(this.registerForm.value).subscribe(
         response => {
           const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false , size: 'sm' });
@@ -67,6 +66,5 @@ export class RegisterComponent {
           console.log(response);
         });
     }   
-    */
   }
 }

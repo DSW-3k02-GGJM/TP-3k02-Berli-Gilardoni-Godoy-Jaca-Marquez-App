@@ -3,6 +3,7 @@ main {
   position: relative;
   height: auto;
   overflow: hidden;
+  padding-bottom: 1.5em;
 }
 
 .bg-img {
@@ -30,5 +31,8 @@ footer {
   position: fixed;
   bottom: 0;
   text-align: center;
+  justify-content: center;
+  height: 1.5em;
   width: 100vw;
 }
+

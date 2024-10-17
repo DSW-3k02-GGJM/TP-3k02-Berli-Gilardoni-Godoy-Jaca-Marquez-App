@@ -89,7 +89,12 @@ $dark: #343a40;
   user-select: none;
 }
 
-html, body { background-color: #21303A; }
+html, body { 
+  background-color: #21303A;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
 .modal-header {
   justify-content: center;
@@ -105,5 +110,4 @@ html, body { background-color: #21303A; }
 
 
 
-html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
