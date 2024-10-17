@@ -98,6 +98,7 @@
   backdrop-filter: blur(5px);
   opacity: 0;  /* Inicialmente oculto */
   transform: translateY(20px);  /* Posicionado más abajo inicialmente */
+  position: relative; /* Asegúrate de que tenga un contexto de apilado propio */
 }
 
 .card:hover .alquilar-btn {

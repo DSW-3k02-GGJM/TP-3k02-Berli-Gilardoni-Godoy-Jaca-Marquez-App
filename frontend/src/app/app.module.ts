@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { authInterceptor } from "./interceptors/auth.interceptor";
 import { AuthService } from "./service/auth.service";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; // agrego esto para el modal
 
 // esto lo agregue recien
 import { HttpClientModule } from '@angular/common/http';
@@ -22,7 +23,8 @@ import { HttpClientModule } from '@angular/common/http';
     CommonModule,
     RouterOutlet,
     ResponsiveNavbarComponent,
-    HttpClientModule // no hace nada por ahora
+    HttpClientModule, // no hace nada por ahora
+    NgbModule, // Agrega el módulo de Bootstrap
   ],
   providers: [
     provideRouter(routes),

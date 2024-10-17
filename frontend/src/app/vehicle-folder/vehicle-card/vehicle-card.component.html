@@ -1,12 +1,13 @@
-<div class="card">
+<div class="card" (click)="placeReservation()">
   <div class="image-box">
     <img src="{{ image }}" alt="Imagen del Modelo"/>
   </div>
-  <div class="content">
+  <div class="content" >
     <h2>{{ vehicleModel }}</h2>
     <p>{{ categoryDescription }}</p>
     <p>Cantidad de Pasajeros: {{ passengerCount }}</p>
     <!-- Botón de alquilar -->
     <button class="alquilar-btn" (click)="placeReservation()">Alquilar</button>
+    
   </div>
 </div>
