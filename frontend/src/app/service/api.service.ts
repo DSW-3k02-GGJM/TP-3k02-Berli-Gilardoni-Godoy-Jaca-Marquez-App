@@ -57,10 +57,11 @@ export class ApiService {
   }*/
 
   // despues porbar con getAvailableVehicleModelsHandler
-  getAvailableVehicleModels(startDate: string, endDate: string): Observable<any> {
+  getAvailableVehicleModels(startDate: string, endDate: string, location: string): Observable<any> {
     const params = new HttpParams()
       .set('startDate', startDate)
-      .set('endDate', endDate);
+      .set('endDate', endDate)
+      .set('location', location);
 
     return this.http.get<any>(`${this.apiUrl}/vehicles/available`, { params });
   }

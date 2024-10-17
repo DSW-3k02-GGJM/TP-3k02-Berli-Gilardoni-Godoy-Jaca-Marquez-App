@@ -1,19 +1,23 @@
 <div class="lista-vehiculos text-white">
   <div class="titulo d-flex justify-content-between pt-3 me-5">
     <h2 class="nuestros-vehiculos">Elegí el auto que quieras</h2>
+    <button class="btn btn-primary" (click)="editFilter()">
+      Editar Filtro
+    </button>
   </div>
 
   <!-- Filtro por fechas
    para escuchar los valores del filtro de fechas y hacer la solicitud de los vehículos disponibles -->
-  <app-vehicle-filter (filterApplied)="onFilterApplied($event)"></app-vehicle-filter>
 
   <section class="vehicle-list mt-3 mx-5">
-    <app-vehicle-card
-      *ngFor="let vehicleModel of response"
-      [vehicleModel]="vehicleModel.vehicle_model_name"
-      [categoryDescription]="vehicleModel.category_name"
-      [passengerCount] = "vehicleModel.passenger_count"
-      [image]="vehicleModel.image_path"
-    ></app-vehicle-card>
+    <ng-container *ngIf="response.length > 0">
+      <app-vehicle-card
+        *ngFor="let vehicleModel of response"
+        [vehicleModel]="vehicleModel.vehicle_model_name"
+        [categoryDescription]="vehicleModel.category_name"
+        [passengerCount] = "vehicleModel.passenger_count"
+        [image]="vehicleModel.image_path"
+      ></app-vehicle-card>
+    </ng-container>
   </section>
 </div>
