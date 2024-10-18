@@ -47,7 +47,7 @@ export class ProfileComponent implements OnInit{
 
   profileForm = new FormGroup({
     documentType: new FormControl('', [Validators.required]),
-    documentID: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")],),
+    documentID: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
     userName: new FormControl('', [Validators.required]),
     userSurname: new FormControl('', [Validators.required]),
     birthDate: new FormControl('', [Validators.required, this.authService.maxDateValidator]), //TODO: ver si parsea bien la fecha
@@ -68,6 +68,7 @@ export class ProfileComponent implements OnInit{
       this.authService.findUser(this.idUsuario).subscribe(response => {
         this.email = response.data.email;
         this.id = response.data.id;
+        this.profileForm.controls['documentID'].setAsyncValidators([this.authService.uniqueDocumentIDValidator(this.id)]);
         this.profileForm.patchValue(response.data);
       });
     });
@@ -81,7 +82,7 @@ export class ProfileComponent implements OnInit{
           modalRef.componentInstance.title = 'Usuario actualizado';
         },
         error: error => {
-          if (error.status !== 401) {
+          if (error.status !== 400) {
             this.errorMessage = "Error al actualizar el usuario. Intente de nuevo.";
             console.log(error);
           }

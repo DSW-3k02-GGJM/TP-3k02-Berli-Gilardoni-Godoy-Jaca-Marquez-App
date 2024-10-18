@@ -25,6 +25,8 @@ import { authAdminGuard } from './guards/auth-admin.guard.js';
 import { authEmployeeGuard } from './guards/auth-employee.guard.js';
 import { authClientGuard } from './guards/auth-client.guard.js';
 import { ProfileComponent } from './user-folder/profile/profile.component.js';
+import { UserFormComponent } from './user-folder/user-form/user-form.component.js';
+import { UsersComponent } from './user-folder/users/users.component.js';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -58,6 +60,9 @@ export const routes: Routes = [
   { path: 'testMati', component: TestMatiComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'users', component: UsersComponent },
+  { path: 'users/create', component: UserFormComponent},
+  { path: 'users/:id', component: UserFormComponent},
   { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];

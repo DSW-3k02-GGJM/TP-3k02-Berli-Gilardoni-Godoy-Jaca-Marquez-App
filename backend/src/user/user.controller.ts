@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { orm } from '../shared/db/orm.js';
 import { User } from './user.entity.js';
 import { AuthService } from '../shared/db/auth.service.js';
+import { Console } from 'console';
 
 
 const em = orm.em;
@@ -32,6 +33,35 @@ const sanitizedUserInput = async (
   req.body.sanitizedInput = {
     email: req.body.email,
     password: req.body.password,
+    role: req.body.role,
+    documentType: req.body.documentType,
+    documentID: req.body.documentID,
+    userName: req.body.userName,
+    userSurname: req.body.userSurname,
+    birthDate: req.body.birthDate,
+    address: req.body.address,
+    phoneNumber: req.body.phoneNumber,
+    nationality: req.body.nationality,
+    reservations: req.body.reservations,
+  };
+
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  });
+  next();
+};
+
+const sanitizedNewUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req.body.sanitizedInput = {
+    email: req.body.email,
+    password: req.body.password,
+    role: req.body.role,
 
     documentType: req.body.documentType,
     documentID: req.body.documentID,
@@ -50,6 +80,63 @@ const sanitizedUserInput = async (
     }
   });
   next();
+};
+
+const add = async (req: Request, res: Response) => {
+  const password = req.body.sanitizedInput.password;
+  const email = req.body.sanitizedInput.email;
+  const documentType = req.body.sanitizedInput.documentType;
+  const documentID = req.body.sanitizedInput.documentID;
+  const userName = req.body.sanitizedInput.userName;
+  const userSurname = req.body.sanitizedInput.userSurname;
+  const birthDate = req.body.sanitizedInput.birthDate;
+  const address = req.body.sanitizedInput.address;
+  const phoneNumber = req.body.sanitizedInput.phoneNumber;
+  const nationality = req.body.sanitizedInput.nationality;
+  const role = req.body.sanitizedInput.role;
+
+  console.log(role + 's');
+  console.log(email);
+  console.log(password);
+  if (!password || !email || !role) {
+    return res.status(400).json({ message: 'Email, password and role are required' });
+  }
+
+  if(role !== 'admin' && role !== 'employee' && role !== 'client') {
+    return res.status(400).json({ message: 'Role does not exist' });
+  }
+
+  if(!email.includes('@') || !email.includes('.')) { 
+    return res.status(400).json({ message: 'Invalid email' });
+  }
+
+  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality) {
+    return res.status(400).json({ message: 'All information are required'});
+  }
+  const userE = await em.findOne( User , { email } , {populate: [] , });
+  if(userE){
+    return res.status(400).json({ message: 'This email is already used' });
+  }
+
+  const userD = await em.findOne( User , { documentID } , {populate: [] , });
+  if(userD){
+    return res.status(409).json({ message: 'This document ID is already used' });
+  }
+  try {
+    const password = req.body.sanitizedInput.password;
+    const email = req.body.sanitizedInput.email;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = em.create(User, {
+        ...req.body.sanitizedInput,
+        password: hashedPassword,
+      });
+    await em.flush();
+    res.status(200).json({ message: 'The user has been created', data: user });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message }); // No es recomendado mandar estos errores al frontend (le gusta a los hackers)
+  }
 };
 
 const findAll = async (req: Request, res: Response) => {
@@ -89,28 +176,41 @@ const findOne = async (req: Request, res: Response) => {
 };
 
 const update = async (req: Request, res: Response) => {
-    const documentType = req.body.sanitizedInput.documentType;
-    const documentID = req.body.sanitizedInput.documentID;
-    const userName = req.body.sanitizedInput.userName;
-    const userSurname = req.body.sanitizedInput.userSurname;
-    const birthDate = req.body.sanitizedInput.birthDate;
-    const address = req.body.sanitizedInput.address;
-    const phoneNumber = req.body.sanitizedInput.phoneNumber;
-    const nationality = req.body.sanitizedInput.nationality;
+  const documentType = req.body.sanitizedInput.documentType;
+  const documentID = req.body.sanitizedInput.documentID;
+  const userName = req.body.sanitizedInput.userName;
+  const userSurname = req.body.sanitizedInput.userSurname;
+  const birthDate = req.body.sanitizedInput.birthDate;
+  const address = req.body.sanitizedInput.address;
+  const phoneNumber = req.body.sanitizedInput.phoneNumber;
+  const nationality = req.body.sanitizedInput.nationality;
+  const role = req.body.sanitizedInput.role;
+  const id = Number.parseInt(req.params.id);
 
-    if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality) {
-      return res.status(400).json({ message: 'All information are required'});
+  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality || !role) {
+    return res.status(400).json({ message: 'All information are required'});
+  }
+
+  if(role !== 'admin' && role !== 'employee' && role !== 'client') {
+    return res.status(400).json({ message: 'Role does not exist' });
+  }
+  
+  const userD = await em.findOne( User , { documentID } , {populate: [] , });
+  if(userD){
+    if (userD.id !== id) {
+      return res.status(400).json({ message: 'This document ID is already used' });
     }
-    try {
-      const id = Number.parseInt(req.params.id);
-      const user = await em.findOneOrFail(User, { id });
-      em.assign(user, req.body.sanitizedInput);
-      await em.flush();
-      res.status(200).json({ message: 'The user has been updated', data: user });
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+  }
+  try {
+    const id = Number.parseInt(req.params.id);
+    const user = await em.findOneOrFail(User, { id });
+    em.assign(user, req.body.sanitizedInput);
+    await em.flush();
+    res.status(200).json({ message: 'The user has been updated', data: user });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
   
   const remove = async (req: Request, res: Response) => {
     try {
@@ -148,12 +248,12 @@ const register = async (req: Request, res: Response) => {
   }
   const userE = await em.findOne( User , { email } , {populate: [] , });
   if(userE){
-    return res.status(401).json({ message: 'This email is already used' });
+    return res.status(400).json({ message: 'This email is already used' });
   }
 
   const userD = await em.findOne( User , { documentID } , {populate: [] , });
   if(userD){
-    return res.status(401).json({ message: 'This document is already used' });
+    return res.status(400).json({ message: 'This document id is already used' });
   }
   try {
     const password = req.body.sanitizedInput.password;
@@ -251,10 +351,16 @@ const verifyEmailExists = async (req: Request, res: Response) => {
 const verifyDocumentIDExists = async (req: Request, res: Response) => {
   try {
     const documentID = req.params.documentID;
+    const id = Number.parseInt(req.params.id);
     const user = await em.findOneOrFail(
       User,
       { documentID: documentID });
-    res.status(200).json({ exists: true });
+    if (user.id === id) {
+      res.status(200).json({ exists: false });
+    }
+    else {
+      res.status(200).json({ exists: true });
+    }
   }
   catch (error: any) {
     res.status(200).json({ exists: false});
@@ -271,4 +377,4 @@ const getAuthenticatedId = async (req: Request, res: Response) => {
   }
 }
 
-export { sanitizedLoginInput, sanitizedUserInput, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists, getAuthenticatedId};
+export { sanitizedNewUser, sanitizedLoginInput, sanitizedUserInput, add, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists, getAuthenticatedId};

@@ -179,6 +179,9 @@
           </mat-error>
         </mat-form-field>
       </div>
+      <mat-error *ngIf="errorMessage">
+        {{errorMessage}}
+      </mat-error>
       <!-- Submit button -->
       <div class="button">
         <button type="submit" [disabled]="registerForm.pending">

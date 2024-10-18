@@ -38,7 +38,6 @@ export class AuthService {
         if (!roles.includes(data.role)) {
           return res.status(401).json({ message: 'Unauthorized access (role)'});
         }
-        console.log(req.params.id);
         if ( req.params.id && data.role == 'client' && data.id != req.params.id) {
           return res.status(401).json({ message: 'Unauthorized access (id)'}); // verifica si es el mismo usuario en caso de ser cliente
         }

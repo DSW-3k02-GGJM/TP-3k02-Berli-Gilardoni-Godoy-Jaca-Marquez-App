@@ -1,0 +1,55 @@
+<input
+  type="text"
+  class="form-control mb-3"
+  name="filterPost"
+  placeholder="Buscar por Nombre..."
+  [(ngModel)]="filterRows"
+/>
+<div class="div-tablas">
+  <table
+    class="table table-dark table-hover table-bordered table-sm border border-white text-center users-table"
+  >
+    <thead>
+      <tr class="text-danger">
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Tipo Doc.</th>
+        <th>Nro. Doc.</th>
+        <th>Apellido y Nombre</th>
+        <th>Fecha de Nacimiento</th>
+        <th>Domicilio</th>
+        <th>Telefono</th>
+        <th>Nacionalidad</th>
+        <th>Mas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users | filter : filterRows : 'userName'">
+        <td>{{ user.email }}</td>
+        <td *ngIf="user.role === 'admin'">Admin</td>
+        <td *ngIf="user.role === 'employee'">Empleado</td>
+        <td *ngIf="user.role === 'client'">Cliente</td>
+        <td>{{ user.documentType }}</td>
+        <td>{{ user.documentID }}</td>
+        <td>{{ user.userSurname + ", " + user.userName }}</td>
+        <td>{{ formatBirthDate(user.birthDate) }}</td>
+        <td>{{ user.address }}</td>
+        <td>{{ user.phoneNumber }}</td>
+        <td>{{ user.nationality }}</td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button class="btn btn-dark fs-5" (click)="editUser(user)">
+              ✏️
+            </button>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="deleteUser(user)"
+            >
+              ❌
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

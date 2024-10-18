@@ -44,6 +44,24 @@ export class AuthService {
     });
   }
 
+  createUser(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users`, data, {
+      headers: this.headers,
+    }).pipe(
+      tap(() => {}), 
+      catchError(error => {
+        // Error en el register
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getAllUsers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users`,  {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
 
   register(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/users/register`, data, {
@@ -107,8 +125,8 @@ export class AuthService {
     };
   }
 
-  documentIDExists(documentID: string): Observable<boolean> {
-    return this.http.get<{ exists: boolean }>(`${this.apiUrl}/users/documentID-exists/${documentID}`)
+  documentIDExists(documentID: string,id: number): Observable<boolean> {
+    return this.http.get<{ exists: boolean }>(`${this.apiUrl}/users/documentID-exists/${documentID}/${id}`)
       .pipe(
         delay(1000),
         map(response => response.exists),
@@ -116,9 +134,9 @@ export class AuthService {
       );
   }
   
-  uniqueDocumentIDValidator(): AsyncValidatorFn {
+  uniqueDocumentIDValidator(id: number): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return this.documentIDExists(control.value).pipe(
+      return this.documentIDExists(control.value,id).pipe(
         map((exists) => (exists ? { documentIDExists: true } : null)),
         catchError(async () => null)
       );
