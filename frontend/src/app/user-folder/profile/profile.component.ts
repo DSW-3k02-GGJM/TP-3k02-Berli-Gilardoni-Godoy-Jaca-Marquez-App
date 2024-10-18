@@ -37,6 +37,7 @@ export class ProfileComponent implements OnInit{
   errorMessage: string = '';
 
   email: string = '';
+  id: number = -1;
 
   clickEvent(event: MouseEvent) {
     event.preventDefault();
@@ -66,6 +67,7 @@ export class ProfileComponent implements OnInit{
       this.idUsuario = params['id'];
       this.authService.findUser(this.idUsuario).subscribe(response => {
         this.email = response.data.email;
+        this.id = response.data.id;
         this.profileForm.patchValue(response.data);
       });
     });

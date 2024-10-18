@@ -52,6 +52,9 @@
     justify-content: space-between;
     margin: 20px 0 0 0;
   }
+  form .textarea {
+    width: 100%;
+  }
   form .user-details .input-box {
     margin-bottom: 10px;
     width: calc(100% / 2 - 20px);

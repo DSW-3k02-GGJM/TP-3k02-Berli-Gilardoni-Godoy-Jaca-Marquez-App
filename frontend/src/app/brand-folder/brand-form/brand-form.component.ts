@@ -57,28 +57,27 @@ export class BrandFormComponent implements OnInit {
     
     this.activatedRoute.params.subscribe(params => {
       this.currentBrandId = params['id'];
-        // Si hay un ID en los parámetros, es una edición
+   
       if (this.currentBrandId) {
         this.apiService
-          .getOne('brands', Number(this.currentBrandId)) // Obtiene los datos de la marca por ID
+          .getOne('brands', Number(this.currentBrandId)) 
           .subscribe((response) => {
             this.brandForm.patchValue(response.data);
           });
-        this.action = 'Edit'; // Establece la acción como 'Edit'
+        this.action = 'Edit'; 
         this.title = 'Editar marca';
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; // Establece la acción como 'Create' si no hay ID
+        this.action = 'Create'; 
         this.title = 'Nueva marca';
         this.buttonText = 'Registrar';
       }
-   });
+    });
   }
 
   onSubmit() {
     if(!this.brandForm.invalid) {
       if (this.action === 'Create') {
-        // Si la acción es 'Create', llama al servicio para crear una nueva marca
         this.apiService
           .create('brands', this.brandForm.value)
           .subscribe({
@@ -93,7 +92,6 @@ export class BrandFormComponent implements OnInit {
             }
           });
       } else if (this.action === 'Edit') {
-        // Si la acción es 'Edit', llama al servicio para actualizar la marca existente
         this.apiService
           .update('brands', this.currentBrandId, this.brandForm.value)
           .subscribe({

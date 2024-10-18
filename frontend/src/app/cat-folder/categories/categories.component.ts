@@ -25,7 +25,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private categoryCreatedOrModifiedService: CategoryCreatedOrModifiedService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -65,10 +66,6 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   newCategory() {
-    const modalRef = this.modalService.open(CategoryFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Nueva Categoría';
+    this.router.navigate(['/categories/create']);
   }
 }

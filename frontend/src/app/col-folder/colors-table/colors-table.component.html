@@ -11,12 +11,14 @@
   >
     <thead>
       <tr class="text-danger">
+        <th>Id</th>
         <th>Color</th>
         <th>Mas</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let color of colors | filter : filterRows : 'colorName'">
+        <td>{{ color.id }}</td>
         <td>{{ color.colorName }}</td>
         <td class="actions-column">
           <div class="d-flex justify-content-around">

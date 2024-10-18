@@ -7,6 +7,7 @@ import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { CategoryFormComponent } from '../category-form/category-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-categories-table',
@@ -27,15 +28,14 @@ export class CategoriesTableComponent {
   @Output() categoryDeleted = new EventEmitter();
   filterRows = '';
 
-  constructor(private apiService: ApiService, private modalService: NgbModal) {}
+  constructor(
+    private apiService: ApiService, 
+    private modalService: NgbModal,
+    private router: Router
+  ) {}
 
   editCategory(category: any): void {
-    const modalRef = this.modalService.open(CategoryFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Editar Categoría';
-    modalRef.componentInstance.currentCategoryId = category.id;
+    this.router.navigate(['/categories/' + category.id]);
   }
 
   deleteCategory(category: any): void {

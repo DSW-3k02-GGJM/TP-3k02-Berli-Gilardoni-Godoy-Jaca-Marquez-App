@@ -58,19 +58,18 @@ export class ColorFormComponent implements OnInit {
 
     this.activatedRoute.params.subscribe(params => {
       this.currentColorId = params['id'];
-        // Si hay un ID en los parámetros, es una edición
       if (this.currentColorId) {
         this.apiService
-          .getOne('colors', Number(this.currentColorId)) // Obtiene los datos de la marca por ID
+          .getOne('colors', Number(this.currentColorId)) 
           .subscribe((response) => {
             this.colorForm.patchValue(response.data);
             console.log(response.data);
           });
-        this.action = 'Edit'; // Establece la acción como 'Edit'
+        this.action = 'Edit'; 
         this.title = 'Editar color';
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; // Establece la acción como 'Create' si no hay ID
+        this.action = 'Create'; 
         this.title = 'Nuevo color';
         this.buttonText = 'Registrar';
       }
@@ -80,7 +79,6 @@ export class ColorFormComponent implements OnInit {
   onSubmit() {
     if(!this.colorForm.invalid) {
       if (this.action === 'Create') {
-        // Si la acción es 'Create', llama al servicio para crear una nuevo color
         this.apiService
           .create('colors', this.colorForm.value)
           .subscribe({
@@ -95,7 +93,6 @@ export class ColorFormComponent implements OnInit {
             }
           });
       } else if (this.action === 'Edit') {
-        // Si la acción es 'Edit', llama al servicio para actualizar el color existente
         this.apiService
           .update('colors', this.currentColorId, this.colorForm.value)
           .subscribe({
@@ -113,7 +110,7 @@ export class ColorFormComponent implements OnInit {
     }
   }
 
-  navigateToColors(): void {
+  navigateToColors() {
     this.router.navigate(['/colors']);
   }
 }
