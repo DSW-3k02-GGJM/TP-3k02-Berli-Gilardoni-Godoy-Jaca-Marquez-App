@@ -6,8 +6,6 @@ import { ApiService } from '../../service/api.service.js';
 import { CategoriesTableComponent } from '../categories-table/categories-table.component';
 import { CategoryCreatedOrModifiedService } from '../category-created-or-modified/cat.service';
 import { Subscription } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CategoryFormComponent } from '../category-form/category-form.component';
 
 @Component({
   selector: 'app-categories',
@@ -20,12 +18,10 @@ import { CategoryFormComponent } from '../category-form/category-form.component'
 export class CategoriesComponent implements OnInit, OnDestroy {
   categories: any[] = [];
   private subscription?: Subscription;
-  private subscription2?: Subscription;
 
   constructor(
     private apiService: ApiService,
     private categoryCreatedOrModifiedService: CategoryCreatedOrModifiedService,
-    private modalService: NgbModal,
     private router: Router
   ) {}
 

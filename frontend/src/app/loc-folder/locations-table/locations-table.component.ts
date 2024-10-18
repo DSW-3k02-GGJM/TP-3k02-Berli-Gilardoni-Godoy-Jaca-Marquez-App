@@ -31,16 +31,11 @@ export class LocationsTableComponent {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
   ) {}
 
   editLocation(location: any): void {
-    const modalRef = this.modalService.open(LocationFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Editar Sucursal';
-    modalRef.componentInstance.currentLocationId = location.id;
+    this.router.navigate(['/locations/' + location.id]);
   }
 
   deleteLocation(location: any): void {

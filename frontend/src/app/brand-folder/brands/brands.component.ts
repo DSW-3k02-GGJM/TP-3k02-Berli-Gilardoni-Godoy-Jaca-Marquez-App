@@ -4,8 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { BrandCreatedOrModifiedService } from '../brand-created-or-modified/brand.service.js';
 import { Subscription } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {BrandFormComponent} from "../brand-form/brand-form.component.js";
 import {BrandsTableComponent} from "../brands-table/brands-table.component.js";
 import { Router } from '@angular/router';
 
@@ -24,7 +22,6 @@ export class BrandsComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
     private brandCreatedOrModifiedService: BrandCreatedOrModifiedService,
-    private modalService: NgbModal,
     private router: Router,
   ) {}
 

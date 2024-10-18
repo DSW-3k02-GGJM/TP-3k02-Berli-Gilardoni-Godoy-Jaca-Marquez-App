@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { BrandCreatedOrModifiedService } from '../brand-created-or-modified/brand.service.js';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,7 +30,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatButtonModule, 
     MatIconModule,
-    MatSelectModule],
+    MatSelectModule
+  ],
   providers: [ApiService],
 })
 export class BrandFormComponent implements OnInit {

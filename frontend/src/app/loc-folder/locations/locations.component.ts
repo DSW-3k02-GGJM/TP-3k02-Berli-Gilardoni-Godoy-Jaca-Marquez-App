@@ -5,8 +5,7 @@ import { ApiService } from '../../service/api.service';
 import { LocationsTableComponent } from '../locations-table/locations-table.component.js';
 import { LocationCreatedOrModifiedService } from '../location-created-or-modified/location.service.js';
 import { Subscription } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LocationFormComponent } from '../location-form/location-form.component.js';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-locations',
@@ -23,7 +22,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private locationCreatedOrModifiedService: LocationCreatedOrModifiedService,
-    private modalService: NgbModal
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -63,10 +62,6 @@ export class LocationsComponent implements OnInit, OnDestroy {
   }
 
   newLocation() {
-    const modalRef = this.modalService.open(LocationFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Nueva Sucursal';
+    this.router.navigate(['/locations/create']);
   }
 }

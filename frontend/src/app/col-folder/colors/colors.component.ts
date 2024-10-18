@@ -6,8 +6,7 @@ import { ApiService } from '../../service/api.service';
 import { ColorsTableComponent } from '../colors-table/colors-table.component';
 import { ColorCreatedOrModifiedService } from '../color-created-or-modified/col.service';
 import { Subscription } from 'rxjs';
-import { ColorFormComponent } from '../color-form/color-form.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-colors',
@@ -24,7 +23,6 @@ export class ColorsComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
     private colorCreatedOrModifiedService: ColorCreatedOrModifiedService,
-    private modalService: NgbModal,
     private router: Router
   ) {}
 
