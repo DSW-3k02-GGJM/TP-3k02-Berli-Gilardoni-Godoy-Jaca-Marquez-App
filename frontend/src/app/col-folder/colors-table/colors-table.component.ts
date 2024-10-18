@@ -30,17 +30,13 @@ export class ColorsTableComponent {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
   ) {}
 
   // Métod0 para navegar a la página de edición de un color
   editColor(color: any): void {
-    const modalRef = this.modalService.open(ColorFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Editar Color';
-    modalRef.componentInstance.currentColorId = color.id;
+    this.router.navigate(['/colors/' + color.id]);
   }
 
   // Métod0 para eliminar un color

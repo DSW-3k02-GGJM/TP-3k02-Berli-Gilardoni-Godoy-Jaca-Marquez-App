@@ -70,7 +70,7 @@ export class BrandFormComponent implements OnInit {
       } else {
         this.action = 'Create'; // Establece la acción como 'Create' si no hay ID
         this.title = 'Nueva marca';
-        this.buttonText = 'Aceptar';
+        this.buttonText = 'Registrar';
       }
    });
   }

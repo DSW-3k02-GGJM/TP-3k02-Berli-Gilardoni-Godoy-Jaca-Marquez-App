@@ -24,7 +24,8 @@ export class ColorsComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
     private colorCreatedOrModifiedService: ColorCreatedOrModifiedService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -65,10 +66,6 @@ export class ColorsComponent implements OnInit, OnDestroy {
   }
 
   newColor() {
-    const modalRef = this.modalService.open(ColorFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Nuevo Color';
+    this.router.navigate(['/colors/create']);
   }
 }
