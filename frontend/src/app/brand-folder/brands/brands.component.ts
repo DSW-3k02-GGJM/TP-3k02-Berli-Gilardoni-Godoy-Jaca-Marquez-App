@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {BrandFormComponent} from "../brand-form/brand-form.component.js";
 import {BrandsTableComponent} from "../brands-table/brands-table.component.js";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-brands',
@@ -23,7 +24,8 @@ export class BrandsComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
     private brandCreatedOrModifiedService: BrandCreatedOrModifiedService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -64,10 +66,6 @@ export class BrandsComponent implements OnInit, OnDestroy {
   }
 
   newBrand() {
-    const modalRef = this.modalService.open(BrandFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Nueva Marca';
+    this.router.navigate(['/brands/create']);
   }
 }

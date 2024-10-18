@@ -36,7 +36,7 @@ export const routes: Routes = [
   { path: 'categories/modify/:id', component: CategoryFormComponent },
   { path: 'brands', component: BrandsComponent, canActivate: [authClientGuard] },
   { path: 'brands/create', component: BrandFormComponent },
-  { path: 'brands/modify/:id', component: BrandFormComponent },
+  { path: 'brands/:id', component: BrandFormComponent },
   { path: 'colors', component: ColorsComponent },
   { path: 'colors/create', component: ColorFormComponent },
   { path: 'colors/modify/:id', component: ColorFormComponent },

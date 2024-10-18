@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  :host {
+      height: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 20px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  
+  
+  .container {
+    max-width: 700px;
+    width: 100%;
+    height: auto;
+    background-color: whitesmoke;
+    margin: 0 20px;
+    padding: 15px 30px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  .container .information-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-right: 10px;
+  }
+  .container .information {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+  .container .information .information-content {
+    display: flex;
+    align-items: center;
+    user-select: text;
+  }
+
+  .container .title {
+    font-size: 25px;
+    font-weight: 500;
+    position: relative;
+  }
+  .content form .user-details {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 20px 0 0 0;
+  }
+  form .user-details .input-box {
+    margin-bottom: 10px;
+    width: calc(100% / 2 - 20px);
+  }
+  form .input-box span.details {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .user-details .input-box input {
+    width: 100%;
+  }
+  form .button {
+    height: 45px;
+    margin-bottom: 10px;
+  }
+  form .button button:disabled {
+    background: #21303A;
+    cursor: default;
+  }
+  form .button button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #0F222D ;
+  }
+  form .button button:hover {
+    background: #21303A; //no cambia cuando esta en modo celu
+  }
+  
+  @media(max-width: 584px) {
+    /*:host {
+      height: 86vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    */
+    .container {
+      max-width: 100%;
+    }
+    form .user-details .input-box {
+      margin-bottom: 15px;
+      width: 100%;
+    }
+    form .category {
+      width: 100%;
+    }
+    .content form .user-details {
+      padding-top: 5px;
+      max-height: 450px;
+      overflow-y: scroll;
+    }
+    .user-details::-webkit-scrollbar {
+      width: 5px;
+    }
+  }

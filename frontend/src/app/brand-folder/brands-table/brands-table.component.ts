@@ -7,6 +7,7 @@ import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { BrandFormComponent } from '../brand-form/brand-form.component.js';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-brands-table',
@@ -29,17 +30,13 @@ export class BrandsTableComponent {
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
   ) {}
 
   // Métod0 para navegar a la página de edición de una marca
   editBrand(brand: any): void {
-    const modalRef = this.modalService.open(BrandFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Editar Marca';
-    modalRef.componentInstance.currentBrandId = brand.id;
+    this.router.navigate(['/brands/' + brand.id]);
   }
 
   // Métod0 para eliminar una marca
