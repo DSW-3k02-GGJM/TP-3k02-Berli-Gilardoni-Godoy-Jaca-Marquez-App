@@ -7,6 +7,7 @@ import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import {  Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../../service/auth.service.js';
 @Component({
   selector: 'app-users-table',
   standalone: true,
@@ -19,7 +20,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   ],
   templateUrl: './users-table.component.html',
   styleUrl: './users-table.component.scss',
-  providers: [ApiService],
+  providers: [AuthService],
 })
 export class UsersTableComponent {
   @Input() users!: any[];
@@ -27,7 +28,7 @@ export class UsersTableComponent {
   filterRows = '';
 
   constructor(
-    private apiService: ApiService,
+    private authService: AuthService,
     private modalService: NgbModal,
     private router: Router,
   ) {}
@@ -61,8 +62,8 @@ export class UsersTableComponent {
     modalRef.result.then(
       (result) => {
         if (result) {
-          this.apiService
-            .delete('users', Number(user.id))
+          this.authService
+            .deleteUser(Number(user.id))
             .subscribe((response) => {
               this.userDeleted.emit(user.id);
             });

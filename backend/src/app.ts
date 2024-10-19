@@ -22,7 +22,6 @@ const app = express();
 const corsOptions = {
   origin: 'http://localhost:4200', // Frontend URL
   credentials: true, // Permite credenciales
-
 };
 
 app.use(cors(corsOptions));

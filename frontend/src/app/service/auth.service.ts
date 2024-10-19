@@ -39,7 +39,6 @@ export class AuthService {
 
   deleteUser(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/users/${id}`, {
-      headers: this.headers,
       withCredentials: true,
     });
   }
@@ -47,6 +46,7 @@ export class AuthService {
   createUser(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/users`, data, {
       headers: this.headers,
+      withCredentials: true,
     }).pipe(
       tap(() => {}), 
       catchError(error => {
