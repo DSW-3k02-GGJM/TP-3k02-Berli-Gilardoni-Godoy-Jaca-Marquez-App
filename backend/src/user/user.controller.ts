@@ -95,9 +95,7 @@ const add = async (req: Request, res: Response) => {
   const nationality = req.body.sanitizedInput.nationality;
   const role = req.body.sanitizedInput.role;
 
-  console.log(role + 's');
-  console.log(email);
-  console.log(password);
+
   if (!password || !email || !role) {
     return res.status(400).json({ message: 'Email, password and role are required' });
   }
@@ -120,7 +118,7 @@ const add = async (req: Request, res: Response) => {
 
   const userD = await em.findOne( User , { documentID } , {populate: [] , });
   if(userD){
-    return res.status(409).json({ message: 'This document ID is already used' });
+    return res.status(400).json({ message: 'This document ID is already used' });
   }
   try {
     const password = req.body.sanitizedInput.password;

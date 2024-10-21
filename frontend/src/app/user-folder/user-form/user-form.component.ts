@@ -93,6 +93,7 @@ export class UserFormComponent implements OnInit {
         this.title = 'Nuevo usuario';
         this.buttonText = 'Registrar';
         this.userForm.addControl('email', new FormControl('', [Validators.required, Validators.email],[this.authService.uniqueEmailValidator()]));
+        this.userForm.controls['documentID'].setAsyncValidators([this.authService.uniqueDocumentIDValidator(-1)]);
         this.userForm.addControl('password', new FormControl('', [Validators.required]));
       }
     });
