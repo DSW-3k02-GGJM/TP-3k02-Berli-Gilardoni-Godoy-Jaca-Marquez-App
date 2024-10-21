@@ -80,10 +80,16 @@ export class UserFormComponent implements OnInit {
         this.authService
           .findUser(Number(this.currentUserId)) 
           .subscribe((response) => {
+            let birthDateFormat = this.formatBirthDate(
+              response.data.birthDate
+            );
             this.currentEmail = response.data.email;
             this.currentUserId = response.data.id;
             this.userForm.controls['documentID'].setAsyncValidators([this.authService.uniqueDocumentIDValidator(this.currentUserId)]);
-            this.userForm.patchValue(response.data);
+            this.userForm.patchValue({
+              ...response.data,
+              birthDate: birthDateFormat,
+            });
           });
         this.action = 'Edit'; 
         this.title = 'Editar usuario';
@@ -134,6 +140,23 @@ export class UserFormComponent implements OnInit {
           });
       }
     }
+  }
+
+  formatBirthDate(birthDateDB: string): string {
+    let birthDateFormat: string = '${year}-${month}-${day}';
+    birthDateFormat = birthDateFormat.replace(
+      '${year}',
+      birthDateDB.substring(0, 4)
+    );
+    birthDateFormat = birthDateFormat.replace(
+      '${month}',
+      birthDateDB.substring(5, 7)
+    );
+    birthDateFormat = birthDateFormat.replace(
+      '${day}',
+      birthDateDB.substring(8, 10)
+    );
+    return birthDateFormat;
   }
 
   navigateToUsers() {

@@ -66,10 +66,16 @@ export class ProfileComponent implements OnInit{
     this.route.params.subscribe(params => {
       this.idUsuario = params['id'];
       this.authService.findUser(this.idUsuario).subscribe(response => {
+        let birthDateFormat = this.formatBirthDate(
+          response.data.birthDate
+        );
         this.email = response.data.email;
         this.id = response.data.id;
         this.profileForm.controls['documentID'].setAsyncValidators([this.authService.uniqueDocumentIDValidator(this.id)]);
-        this.profileForm.patchValue(response.data);
+        this.profileForm.patchValue({
+          ...response.data,
+          birthDate: birthDateFormat,
+        });
       });
     });
   }
@@ -90,5 +96,22 @@ export class ProfileComponent implements OnInit{
         }
       });
     }   
+  }
+
+  formatBirthDate(birthDateDB: string): string {
+    let birthDateFormat: string = '${year}-${month}-${day}';
+    birthDateFormat = birthDateFormat.replace(
+      '${year}',
+      birthDateDB.substring(0, 4)
+    );
+    birthDateFormat = birthDateFormat.replace(
+      '${month}',
+      birthDateDB.substring(5, 7)
+    );
+    birthDateFormat = birthDateFormat.replace(
+      '${day}',
+      birthDateDB.substring(8, 10)
+    );
+    return birthDateFormat;
   }
 }
