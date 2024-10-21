@@ -62,6 +62,6 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   newCategory() {
-    this.router.navigate(['/categories/create']);
+    this.router.navigate(['/staff/categories/create']);
   }
 }

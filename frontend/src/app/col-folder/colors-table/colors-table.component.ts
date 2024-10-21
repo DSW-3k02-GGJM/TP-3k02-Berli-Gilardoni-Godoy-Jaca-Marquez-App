@@ -36,7 +36,7 @@ export class ColorsTableComponent {
 
   // Métod0 para navegar a la página de edición de un color
   editColor(color: any): void {
-    this.router.navigate(['/colors/' + color.id]);
+    this.router.navigate(['/staff/colors/' + color.id]);
   }
 
   // Métod0 para eliminar un color

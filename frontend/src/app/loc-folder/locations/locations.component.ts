@@ -62,6 +62,6 @@ export class LocationsComponent implements OnInit, OnDestroy {
   }
 
   newLocation() {
-    this.router.navigate(['/locations/create']);
+    this.router.navigate(['/staff/locations/create']);
   }
 }

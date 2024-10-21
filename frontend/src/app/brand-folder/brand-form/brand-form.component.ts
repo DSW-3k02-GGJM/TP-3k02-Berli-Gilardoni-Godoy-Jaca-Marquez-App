@@ -86,7 +86,7 @@ export class BrandFormComponent implements OnInit {
               this.navigateToBrands();
             },
             error: error => {
-              if (error.status !== 401) {
+              if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
             }
@@ -101,7 +101,7 @@ export class BrandFormComponent implements OnInit {
               this.navigateToBrands();
             },
             error: error => {
-              if (error.status !== 401) {
+              if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
             }
@@ -111,6 +111,6 @@ export class BrandFormComponent implements OnInit {
   }
 
   navigateToBrands() {
-    this.router.navigate(['/brands']);
+    this.router.navigate(['/staff/brands']);
   }
 }

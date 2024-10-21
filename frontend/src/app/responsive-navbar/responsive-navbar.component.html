@@ -25,15 +25,8 @@
         <li class="nav-item">
           <a class="nav-link texto-blanco" aria-current="page" routerLink="/clients" routerLinkActive="active">Clientes</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link texto-blanco" routerLink="/categories" routerLinkActive="active">Categorías</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link texto-blanco" routerLink="/brands" routerLinkActive="active">Marcas</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link texto-blanco" routerLink="/colors" routerLinkActive="active">Colores</a>
-        </li>
+
+
         <li class="nav-item">
           <a class="nav-link texto-blanco" routerLink="/locations" routerLinkActive="active">Sucursales</a>
         </li>
@@ -65,6 +58,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link texto-blanco" [routerLink]="profileLink" routerLinkActive="active">Mi Perfil</a>
+          </li>
+          <li class="nav-item" *ngIf="isAdminOrEmployee">
+            <a class="nav-link texto-blanco" routerLink="/staff" routerLinkActive="active">Menu Staff</a>
           </li>
         </ng-template>
       </ul>

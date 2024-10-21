@@ -113,6 +113,6 @@ export class LocationFormComponent implements OnInit {
   }
 
   navigateToLocations() {
-    this.router.navigate(['/locations']);
+    this.router.navigate(['/staff/locations']);
   }
 }

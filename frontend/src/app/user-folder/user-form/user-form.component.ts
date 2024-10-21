@@ -160,6 +160,6 @@ export class UserFormComponent implements OnInit {
   }
 
   navigateToUsers() {
-    this.router.navigate(['/users']);
+    this.router.navigate(['/staff/users']);
   }
 }

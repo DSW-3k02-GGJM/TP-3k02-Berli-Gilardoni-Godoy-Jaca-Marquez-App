@@ -90,7 +90,7 @@ export class CategoryFormComponent implements OnInit {
               this.navigatesToCategories();
             },
             error: error => {
-              if (error.status !== 401) {
+              if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
             }
@@ -104,7 +104,7 @@ export class CategoryFormComponent implements OnInit {
               this.navigatesToCategories();
             },
             error: error => {
-              if (error.status !== 401) {
+              if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
             }
@@ -114,6 +114,6 @@ export class CategoryFormComponent implements OnInit {
   }
 
   navigatesToCategories() {
-    this.router.navigate(['/categories']);
+    this.router.navigate(['/staff/categories']);
   }
 }

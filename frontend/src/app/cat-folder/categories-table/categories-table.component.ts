@@ -35,7 +35,7 @@ export class CategoriesTableComponent {
   ) {}
 
   editCategory(category: any): void {
-    this.router.navigate(['/categories/' + category.id]);
+    this.router.navigate(['/staff/categories/' + category.id]);
   }
 
   deleteCategory(category: any): void {

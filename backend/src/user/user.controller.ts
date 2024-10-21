@@ -375,4 +375,15 @@ const getAuthenticatedId = async (req: Request, res: Response) => {
   }
 }
 
-export { sanitizedNewUser, sanitizedLoginInput, sanitizedUserInput, add, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists, getAuthenticatedId};
+const getAuthenticatedRole = async (req: Request, res: Response) => {
+  try {
+    const role = req.session.user.role;
+    console.log(role);
+    res.status(200).json({ role });
+  }
+  catch (error: any) {
+    res.status(200).json({ role: null });
+  }
+}
+
+export { sanitizedNewUser, sanitizedLoginInput, sanitizedUserInput, add, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists, getAuthenticatedId, getAuthenticatedRole};

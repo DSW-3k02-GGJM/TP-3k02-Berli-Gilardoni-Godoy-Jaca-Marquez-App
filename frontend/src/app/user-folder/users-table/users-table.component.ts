@@ -51,7 +51,7 @@ export class UsersTableComponent {
   }
 
   editUser(user: any): void {
-    this.router.navigate(['/users/' + user.id]);
+    this.router.navigate(['/staff/users/' + user.id]);
   }
 
   deleteUser(user: any): void {

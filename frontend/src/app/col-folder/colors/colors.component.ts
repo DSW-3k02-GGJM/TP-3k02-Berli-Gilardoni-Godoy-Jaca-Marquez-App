@@ -64,6 +64,6 @@ export class ColorsComponent implements OnInit, OnDestroy {
   }
 
   newColor() {
-    this.router.navigate(['/colors/create']);
+    this.router.navigate(['/staff/colors/create']);
   }
 }

@@ -87,7 +87,7 @@ export class ColorFormComponent implements OnInit {
               this.navigateToColors();
             },
             error: error => {
-              if (error.status !== 401) {
+              if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
             }
@@ -101,7 +101,7 @@ export class ColorFormComponent implements OnInit {
               this.navigateToColors();
             },
             error: error => {
-              if (error.status !== 401) {
+              if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
             }
@@ -111,6 +111,6 @@ export class ColorFormComponent implements OnInit {
   }
 
   navigateToColors() {
-    this.router.navigate(['/colors']);
+    this.router.navigate(['/staff/colors']);
   }
 }

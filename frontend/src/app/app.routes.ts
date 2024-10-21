@@ -27,24 +27,14 @@ import { authClientGuard } from './guards/auth-client.guard.js';
 import { ProfileComponent } from './user-folder/profile/profile.component.js';
 import { UserFormComponent } from './user-folder/user-form/user-form.component.js';
 import { UsersComponent } from './user-folder/users/users.component.js';
+import { StaffComponent } from './staff-folder/admin/staff.component.js';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
   { path: 'clients', component: ClientsComponent, canActivate: [authAdminGuard] },
   { path: 'clients/create', component: ClientFormComponent },
   { path: 'clients/:id', component: ClientFormComponent },
-  { path: 'categories', component: CategoriesComponent, canActivate: [authEmployeeGuard] },
-  { path: 'categories/create', component: CategoryFormComponent },
-  { path: 'categories/:id', component: CategoryFormComponent },
-  { path: 'brands', component: BrandsComponent, canActivate: [authClientGuard] },
-  { path: 'brands/create', component: BrandFormComponent },
-  { path: 'brands/:id', component: BrandFormComponent },
-  { path: 'colors', component: ColorsComponent },
-  { path: 'colors/create', component: ColorFormComponent },
-  { path: 'colors/:id', component: ColorFormComponent },
-  { path: 'locations', component: LocationsComponent },
-  { path: 'locations/create', component: LocationFormComponent },
-  { path: 'locations/:id', component: LocationFormComponent },
+
   { path: 'vehicleModels', component: VehicleModelsComponent },
   { path: 'vehicleModels/create', component: VehicleModelFormComponent },
   { path: 'vehicleModels/:id', component: VehicleModelFormComponent },
@@ -60,9 +50,30 @@ export const routes: Routes = [
   { path: 'testMati', component: TestMatiComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'users', component: UsersComponent },
-  { path: 'users/create', component: UserFormComponent},
-  { path: 'users/:id', component: UserFormComponent},
   { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
+
+  
+  { path: 'staff', component: StaffComponent, canActivate: [authEmployeeGuard],
+    children: [
+      { path: 'colors', component: ColorsComponent},
+      { path: 'colors/create', component: ColorFormComponent},
+      { path: 'colors/:id', component: ColorFormComponent},
+
+      { path: 'brands', component: BrandsComponent, canActivate: [authClientGuard] },
+      { path: 'brands/create', component: BrandFormComponent },
+      { path: 'brands/:id', component: BrandFormComponent },
+
+      { path: 'users', component: UsersComponent, canActivate: [authAdminGuard] },
+      { path: 'users/create', component: UserFormComponent, canActivate: [authAdminGuard] },
+      { path: 'users/:id', component: UserFormComponent, canActivate: [authAdminGuard] },
+
+      { path: 'categories', component: CategoriesComponent, canActivate: [authEmployeeGuard] },
+      { path: 'categories/create', component: CategoryFormComponent },
+      { path: 'categories/:id', component: CategoryFormComponent },
+    ]
+  },
+
   { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' }
+
 ];

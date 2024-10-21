@@ -9,7 +9,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 @Component({
   selector: 'app-responsive-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule,],
   templateUrl: './responsive-navbar.component.html',
   styleUrl: './responsive-navbar.component.scss',
 })
@@ -19,9 +19,9 @@ export class ResponsiveNavbarComponent implements OnInit {
     private modalService: NgbModal
   ) { }
   isLogged = false;
+  isAdminOrEmployee = false;
   profileLink = '/home';
   private subscription?: Subscription;
-  private subscription2?: Subscription;
 
 
   ngOnInit() {
@@ -30,6 +30,9 @@ export class ResponsiveNavbarComponent implements OnInit {
         () => {
           
           this.isLogged = this.authService.isLogged;
+          if(!this.isLogged) {
+            this.isAdminOrEmployee = false;
+          }
           this.authService.getAuthenticatedId().subscribe(
             response => {
               this.profileLink = '/user/' + response.id
@@ -39,10 +42,16 @@ export class ResponsiveNavbarComponent implements OnInit {
               console.log(error);
             }
           );
+          this.authService.checkEmployee().subscribe({
+            next: response => {
+              this.isAdminOrEmployee = true
+            }
+          });
         }
       );
 
     if(!this.authService.isLogged) {
+      this.isAdminOrEmployee = false;
       this.isLogged = false;
     }
   }
@@ -63,3 +72,4 @@ export class ResponsiveNavbarComponent implements OnInit {
     });
   }
 }
+

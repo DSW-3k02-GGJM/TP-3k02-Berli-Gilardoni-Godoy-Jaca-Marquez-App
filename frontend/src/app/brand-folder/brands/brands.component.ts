@@ -63,6 +63,6 @@ export class BrandsComponent implements OnInit, OnDestroy {
   }
 
   newBrand() {
-    this.router.navigate(['/brands/create']);
+    this.router.navigate(['/staff/brands/create']);
   }
 }

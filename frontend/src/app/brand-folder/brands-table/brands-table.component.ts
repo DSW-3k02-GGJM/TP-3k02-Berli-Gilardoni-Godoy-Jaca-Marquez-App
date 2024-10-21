@@ -36,7 +36,7 @@ export class BrandsTableComponent {
 
   // Métod0 para navegar a la página de edición de una marca
   editBrand(brand: any): void {
-    this.router.navigate(['/brands/' + brand.id]);
+    this.router.navigate(['/staff/brands/' + brand.id]);
   }
 
   // Métod0 para eliminar una marca

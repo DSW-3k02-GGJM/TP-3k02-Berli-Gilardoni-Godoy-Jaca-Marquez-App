@@ -63,6 +63,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   newUser() {
-    this.router.navigate(['/users/create']); //cambiar por 
+    this.router.navigate(['/staff/users/create']); //cambiar por 
   }
 }

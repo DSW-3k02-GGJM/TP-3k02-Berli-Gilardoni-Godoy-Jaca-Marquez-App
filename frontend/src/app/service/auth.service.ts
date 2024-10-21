@@ -175,4 +175,10 @@ export class AuthService {
       withCredentials: true,
     })
   }
+
+  getAuthenticatedRole(): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/users/authenticated-role`, {}, {
+      withCredentials: true,
+    });
+  }
 }
