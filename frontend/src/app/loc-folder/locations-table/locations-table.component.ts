@@ -35,7 +35,7 @@ export class LocationsTableComponent {
   ) {}
 
   editLocation(location: any): void {
-    this.router.navigate(['/admin/locations/' + location.id]);
+    this.router.navigate(['/staff/locations/' + location.id]);
   }
 
   deleteLocation(location: any): void {

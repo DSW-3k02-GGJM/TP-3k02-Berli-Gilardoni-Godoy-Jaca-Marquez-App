@@ -55,6 +55,10 @@ export const routes: Routes = [
   
   { path: 'staff', component: StaffComponent, canActivate: [authEmployeeGuard],
     children: [
+      { path: 'locations', component: LocationsComponent},
+      { path: 'locations/create', component: LocationFormComponent},
+      { path: 'locations/:id', component: LocationFormComponent},
+
       { path: 'colors', component: ColorsComponent},
       { path: 'colors/create', component: ColorFormComponent},
       { path: 'colors/:id', component: ColorFormComponent},
