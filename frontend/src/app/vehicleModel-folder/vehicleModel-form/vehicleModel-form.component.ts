@@ -80,7 +80,6 @@ export class VehicleModelFormComponent implements OnInit {
         this.apiService
           .getOne('vehicleModels', Number(this.currentVehicleModelId)) 
           .subscribe((response) => {
-            console.log(response.data);
             this.vehicleModelForm.patchValue({
               vehicleModelName: response.data.vehicleModelName,
               transmissionType: response.data.transmissionType,

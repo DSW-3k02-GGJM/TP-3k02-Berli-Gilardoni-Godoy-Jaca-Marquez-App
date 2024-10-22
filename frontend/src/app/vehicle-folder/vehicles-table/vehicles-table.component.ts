@@ -7,6 +7,7 @@ import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicles-table',
@@ -27,15 +28,14 @@ export class VehiclesTableComponent {
   @Output() vehicleDeleted = new EventEmitter()
   filterRows = '';
 
-  constructor(private apiService: ApiService, private modalService: NgbModal) {}
+  constructor(
+    private apiService: ApiService, 
+    private modalService: NgbModal,
+    private router: Router
+  ) {}
 
   editVehicle(vehicle: any): void {
-    const modalRef = this.modalService.open(VehicleFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Editar Vehiculo';
-    modalRef.componentInstance.currentVehicleId = vehicle.id;
+    this.router.navigate(['/staff/vehiclesS/' + vehicle.id]);
   }
 
   deleteVehicle(vehicle: any): void {

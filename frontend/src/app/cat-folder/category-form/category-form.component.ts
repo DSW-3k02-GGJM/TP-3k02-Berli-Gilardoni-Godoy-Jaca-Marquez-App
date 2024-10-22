@@ -32,7 +32,8 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatInputModule,
     MatButtonModule, 
     MatIconModule,
-    MatSelectModule],
+    MatSelectModule
+  ],
   providers: [ApiService],
 })
 export class CategoryFormComponent implements OnInit {

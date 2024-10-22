@@ -1,95 +1,123 @@
-<div class="border border-1 border-white rounded-pill unselectable">
-  <div class="modal-header d-flex bg-dark text-white">
-    <h2 class="modal-title">{{ title }}</h2>
+<div class="container unselectable">
+  <div class="d-flex justify-content-between">
+    <div class="title">{{title}}</div>
+    <button style="margin-bottom: 5px;" mat-stroked-button (click)="navigateToVehicles()">Volver</button>
   </div>
-  <div class="modal-body fw-medium bg-dark modal-text">
-    <section class="form">
-      <form
-        id="vehicleForm"
-        [formGroup]="vehicleForm"
-        class="border border-dark border-3 rounded mt-2 form-style"
-      >
-        <input
-          id="licensePlate"
-          type="text"
-          formControlName="licensePlate"
-          placeholder="Patente del Vehiculo"
-        />
-        <hr />
+  <hr>
+  <div *ngIf="action === 'Edit'" class="information">
+      <div class="information-title">ID</div>
+      <div class="information-content">
+          <span>{{currentVehicleId}}</span>
+      </div>
+  </div>
+  <hr *ngIf="action === 'Edit'">
+  <div class="content">
+    <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()" autocomplete="off">
+      <div class="user-details">
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Patente</mat-label>
+          <input 
+            matInput
+            id="licensePlate"
+            class="form-control"
+            type="text"
+            formControlName="licensePlate"
+            placeholder=""
+          >
+          <mat-error *ngIf="vehicleForm.get('licensePlate')?.errors?.required">
+            La patente es requerida.
+          </mat-error>
+        </mat-form-field>
 
-        <input
-          id="manufacturingYear"
-          type="number"
-          formControlName="manufacturingYear"
-          placeholder="Año de Fabricación"
-        />
-        <hr />
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Año de Fabricación</mat-label>
+          <input  
+            matInput
+            id="manufacturingYear"
+            class="form-control"
+            type="number"
+            formControlName="manufacturingYear"
+            placeholder="1900"
+            min="1900"
+          >
+          <mat-error *ngIf="vehicleForm.get('manufacturingYear')?.errors?.required">
+            El año de fabricación es requerido.
+          </mat-error>
+        </mat-form-field>
 
-        <input
-          id="totalKms"
-          type="number"
-          formControlName="totalKms"
-          placeholder="Cantidad de km recorridos a la fecha de ingreso"
-        />
-        <hr />
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Km Recorridos</mat-label>
+          <input  
+            matInput
+            id="totalKms"
+            class="form-control"
+            type="number"
+            formControlName="totalKms"
+            placeholder="0"
+            min="0"
+          >
+          <mat-error *ngIf="vehicleForm.get('totalKms')?.errors?.required">
+            Los km recorridos son requeridos.
+          </mat-error>
+        </mat-form-field>
 
-        <!-- Modelo -->
-        <select
-          id="vehicleModel"
-          formControlName="vehicleModel"
-          class="form-select bg-dark text-white border border-secondary w-auto"
-        >
-          <option value="" disabled selected>Seleccione Modelo</option>
-          <option *ngFor="let vehicleModel of vehicleModels" [value]="vehicleModel.id">
-            {{ vehicleModel.vehicleModelName }}
-          </option>
-        </select>
-        <hr />
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Modelo</mat-label>
+          <mat-select
+              id="vehicleModel"
+              formControlName="vehicleModel">
+              @for (vehicleModel of vehicleModels; track vehicleModel) {
+                <mat-option [value]="vehicleModel.id">{{vehicleModel.vehicleModelName}}</mat-option>
+              }
+          </mat-select>
+          <mat-error *ngIf="vehicleForm.get('vehicleModel')?.errors?.required">
+            El modelo es requerido.
+          </mat-error>
+        </mat-form-field>
 
-        <!-- color -->
-        <select
-          id="color"
-          formControlName="color"
-          class="form-select bg-dark text-white border border-secondary w-auto"
-        >
-          <option value="" disabled selected>Seleccione color</option>
-          <option *ngFor="let color of colors" [value]="color.id">
-            {{ color.colorName }}
-          </option>
-        </select>
-        <hr />
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Color</mat-label>
+          <mat-select
+              id="color"
+              formControlName="color">
+              @for (color of colors; track color) {
+                <mat-option [value]="color.id">{{color.colorName}}</mat-option>
+              }
+          </mat-select>
+          <mat-error *ngIf="vehicleForm.get('color')?.errors?.required">
+            El color es requerido.
+          </mat-error>
+        </mat-form-field>
 
-        <!-- sucursal -->
-        <select
-          id="location"
-          formControlName="location"
-          class="form-select bg-dark text-white border border-secondary w-auto"
-        >
-          <option value="" disabled selected>Seleccione location</option>
-          <option *ngFor="let location of locations" [value]="location.id">
-            {{ location.locationName }}
-          </option>
-        </select>
-
-        <hr />
-      </form>
-    </section>
-    <div class="modal-footer bg-dark modal-text">
-      <button
-        type="button"
-        class="btn btn-secondary border border-1 border-white"
-        (click)="activeModal.dismiss()"
-      >
-        Cancelar
-      </button>
-      <button
-        type="submit"
-        class="btn btn-primary border border-1 border-white"
-        (click)="onSubmit()"
-        [disabled]="!vehicleForm.valid"
-      >
-        Registrar
-      </button>
-    </div>
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Sucursal</mat-label>
+          <mat-select
+              id="location"
+              formControlName="location">
+              @for (location of locations; track location) {
+                <mat-option [value]="location.id">{{location.locationName}}</mat-option>
+              }
+          </mat-select>
+          <mat-error *ngIf="vehicleForm.get('location')?.errors?.required">
+            La sucursal es requerida.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <mat-error *ngIf="errorMessage">
+          {{errorMessage}}
+      </mat-error>
+      <!-- Submit button -->
+      <div class="button">
+        <button type="submit" [disabled]="vehicleForm.pending">
+          <ng-container *ngIf="!vehicleForm.pending; else loading">
+            {{buttonText}}
+          </ng-container>
+          <ng-template #loading>
+            <mat-spinner diameter="30"></mat-spinner>
+          </ng-template>
+          
+        </button>
+      </div>
+    </form>
   </div>
 </div>

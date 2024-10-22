@@ -12,19 +12,39 @@ import { VehicleCreatedOrModifiedService } from '../vehicle-created-or-modified/
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-form',
   standalone: true,
   templateUrl: './vehicle-form.component.html',
-  styleUrls: ['./vehicle-form.component.scss'],
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
+  styleUrls: ['../../styles/genericForm.scss'],
+  imports: [
+    CommonModule, 
+    HttpClientModule, 
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule, 
+    MatIconModule,
+    MatSelectModule
+  ],
   providers: [ApiService],
 })
 export class VehicleFormComponent implements OnInit {
-  @Input() title: string = '';
-  @Input() currentVehicleId: number = -1;
+  title: string = '';
+  buttonText: string = '';
+  currentVehicleId: number = -1;
   action: string = '';
+  errorMessage: string = '';
+
   vehicleModels: any[] = [];
   colors: any[] = [];
   locations: any[] = [];
@@ -33,7 +53,8 @@ export class VehicleFormComponent implements OnInit {
     private apiService: ApiService,
     private vehicleCreatedOrModifiedService: VehicleCreatedOrModifiedService,
     private httpClient: HttpClient,
-    public activeModal: NgbActiveModal
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {}
 
   vehicleForm = new FormGroup({
@@ -47,26 +68,34 @@ export class VehicleFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.vehicleCreatedOrModifiedService.isDataLoaded = false;
+
     this.loadVehicleModels();
     this.loadColors();
     this.loadLocations();
 
-    if (this.currentVehicleId != -1) {
-      this.apiService
-        .getOne('vehicles', Number(this.currentVehicleId))
-        .subscribe((response) => {
-          this.vehicleForm.patchValue({
-            ...response.data,
-            vehicleModel: response.data.vehicleModel.id,
-            color: response.data.color.id,
-            location: response.data.location.id,
-            imagePath: response.data.imagePath, // Asigna la ruta de la imagen
+    this.activatedRoute.params.subscribe(params => {
+      this.currentVehicleId = params['id'];
+   
+      if (this.currentVehicleId) {
+        this.apiService
+          .getOne('vehicles', Number(this.currentVehicleId)) 
+          .subscribe((response) => {
+            this.vehicleForm.patchValue({
+              ...response.data,
+              vehicleModel: response.data.vehicleModel.id,
+              color: response.data.color.id,
+              location: response.data.location.id,
+            });
           });
-        });
-      this.action = 'Edit';
-    } else {
-      this.action = 'Create';
-    }
+        this.action = 'Edit'; 
+        this.title = 'Editar vehículo';
+        this.buttonText = 'Guardar cambios';
+      } else {
+        this.action = 'Create'; 
+        this.title = 'Nuevo vehículo';
+        this.buttonText = 'Registrar';
+      }
+    });
   }
 
   loadVehicleModels(): void {
@@ -88,27 +117,47 @@ export class VehicleFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.vehicleForm.valid) {
+    if (!this.vehicleForm.invalid) {
 
       const formData = this.vehicleForm.value;
 
       console.log('Datos enviados:', formData); // para ver los datos que se envían
-      this.activeModal.close();
 
       if (this.action === 'Create') {
-        this.apiService.create('vehicles', formData).subscribe((response) => {
-          this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
+        this.apiService
+        .create('vehicles', formData)
+        .subscribe({
+          next: response => {
+            this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
+            this.navigateToVehicles();
+          },
+          error: error => {
+            if (error.status !== 400) {
+              this.errorMessage = "Error en el servidor. Intente de nuevo.";
+            }
+          }
         });
       } else if (this.action === 'Edit') {
         this.apiService
           .update('vehicles', this.currentVehicleId, formData)
-          .subscribe((response) => {
-            this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
+          .subscribe({
+            next: response => {
+              this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
+              this.navigateToVehicles();
+            },
+            error: error => {
+              if (error.status !== 400) {
+                this.errorMessage = "Error en el servidor. Intente de nuevo.";
+              }
+            }
           });
       }
 
-      this.vehicleCreatedOrModifiedService.isDataLoaded = true;
     }
+  }
+
+  navigateToVehicles() {
+    this.router.navigate(['/staff/vehiclesS']);
   }
 
 }
