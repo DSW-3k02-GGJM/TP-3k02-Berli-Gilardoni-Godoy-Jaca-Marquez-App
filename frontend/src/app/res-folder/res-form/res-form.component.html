@@ -33,14 +33,11 @@
               formControlName="plannedEndDate"
             >
           </mat-date-range-input>
-          <mat-error *ngIf="resForm.get('plannedEndDate')?.errors?.required || resForm.get('startDate')?.errors?.required">
-            Las fechas son requeridas.
+          <mat-error *ngIf="resForm.get('plannedEndDate')?.errors?.dateInvalid || resForm.get('startDate')?.errors?.required">
+            Ambas fechas son requeridas.
           </mat-error>
           <mat-error *ngIf="resForm.get('startDate')?.errors?.dateInvalid">
             El inicio no puede ser menor a la fecha actual.
-          </mat-error>
-          <mat-error *ngIf="!resForm.get('startDate')?.errors?.dateInvalid && resForm.get('plannedEndDate')?.errors?.dateInvalid">
-            Rango de fechas inválido.
           </mat-error>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>

@@ -68,7 +68,7 @@ export class ResFormComponent implements OnInit{
 
   resForm = new FormGroup({
     startDate: new FormControl('', [Validators.required]),
-    plannedEndDate: new FormControl('', [Validators.required]),
+    plannedEndDate: new FormControl('', [Validators.required]), //no funciona
     documentType: new FormControl('', [Validators.required]),
     documentID: new FormControl('', [Validators.required]),
     licensePlate: new FormControl('', [Validators.required]),
@@ -84,6 +84,8 @@ export class ResFormComponent implements OnInit{
       if (startDate && new Date(startDate) < new Date(today)) {
         formGroup.get(startDateField)?.setErrors({ dateInvalid: 'La fecha de inicio debe ser igual o mayor a la fecha actual' });
       } else if (startDate && endDate && startDate > endDate) {
+        formGroup.get(endDateField)?.setErrors({ dateInvalid: true });
+      } else if (!endDate) {
         formGroup.get(endDateField)?.setErrors({ dateInvalid: true });
       } else {
         formGroup.get(endDateField)?.setErrors(null);
@@ -179,9 +181,8 @@ export class ResFormComponent implements OnInit{
 
   onSubmit(){
     const formValues = this.resForm.value;
-
   
-  
+    console.log(this.resForm.get('startDate')?.errors); //para ver los errores de plannedEndDate
     if (!this.resForm.invalid) {
 
       const formData = this.resForm.value;
