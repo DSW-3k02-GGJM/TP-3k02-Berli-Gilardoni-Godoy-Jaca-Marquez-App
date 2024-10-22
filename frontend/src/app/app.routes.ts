@@ -35,9 +35,6 @@ export const routes: Routes = [
   { path: 'clients/create', component: ClientFormComponent },
   { path: 'clients/:id', component: ClientFormComponent },
 
-  { path: 'vehicleModels', component: VehicleModelsComponent },
-  { path: 'vehicleModels/create', component: VehicleModelFormComponent },
-  { path: 'vehicleModels/:id', component: VehicleModelFormComponent },
   // este es el de las tarjetitas
   { path: 'vehicles', component: VehicleListComponent },
   // este es el de alta pero para el admin
@@ -74,6 +71,10 @@ export const routes: Routes = [
       { path: 'categories', component: CategoriesComponent, canActivate: [authEmployeeGuard] },
       { path: 'categories/create', component: CategoryFormComponent },
       { path: 'categories/:id', component: CategoryFormComponent },
+
+      { path: 'vehicleModels', component: VehicleModelsComponent },
+      { path: 'vehicleModels/create', component: VehicleModelFormComponent },
+      { path: 'vehicleModels/:id', component: VehicleModelFormComponent },
     ]
   },
 

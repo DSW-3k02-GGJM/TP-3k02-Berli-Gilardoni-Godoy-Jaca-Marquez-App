@@ -7,6 +7,7 @@ import { VehicleModelCreatedOrModifiedService } from '../vehicleModel-created-or
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { VehicleModelFormComponent } from '../vehicleModel-form/vehicleModel-form.component.js';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicleModels',
@@ -23,7 +24,7 @@ export class VehicleModelsComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private vehicleModelCreatedOrModifiedService: VehicleModelCreatedOrModifiedService,
-    private modalService: NgbModal
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -61,10 +62,6 @@ export class VehicleModelsComponent implements OnInit, OnDestroy {
   }
 
   newVehicleModel() {
-    const modalRef = this.modalService.open(VehicleModelFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Nuevo Modelo';
+    this.router.navigate(['staff/vehicleModels/create']);
   }
 }

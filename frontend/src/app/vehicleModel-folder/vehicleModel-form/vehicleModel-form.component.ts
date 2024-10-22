@@ -11,26 +11,47 @@ import { ApiService } from '../../service/api.service';
 import { VehicleModelCreatedOrModifiedService } from '../vehicleModel-created-or-modified/vehicleModel.service.js';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import {map, Observable} from "rxjs";
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicleModel-form',
   standalone: true,
   templateUrl: './vehicleModel-form.component.html',
-  styleUrls: ['./vehicleModel-form.component.scss'],
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
+  styleUrls: ['../../styles/genericForm.scss'],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule, 
+    MatIconModule,
+    MatSelectModule
+  ],
   providers: [ApiService],
 })
 export class VehicleModelFormComponent implements OnInit {
-  @Input() title: string = '';
-  @Input() currentVehicleModelId: number = -1;
+  title: string = '';
+  buttonText: string = '';
+  currentVehicleModelId: number = -1;
   action: string = '';
+  errorMessage: string = '';
+
   categories: any[] = []; // Agrega esta propiedad para almacenar las categorías
   brands: any[] = [];
 
   constructor(
     private apiService: ApiService,
     private vehicleModelCreatedOrModifiedService: VehicleModelCreatedOrModifiedService,
-    public activeModal: NgbActiveModal,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private httpClient: HttpClient,
   ) {}
 
@@ -52,32 +73,32 @@ export class VehicleModelFormComponent implements OnInit {
     this.loadCategories();
     this.loadBrands();
 
-    if (this.currentVehicleModelId != -1) {
-      // Si el parámetro 'id' está presente en la ruta, significa que estamos en el modo de edición.
-      // Realiza una solicitud al backend para obtener los detalles del modelo con el ID proporcionado.
-      this.apiService
-        .getOne('vehicleModels', Number(this.currentVehicleModelId))
-        .subscribe((response) => {
-          console.log('Response from getOne:', response);
-          // Usa el métod0 patchValue para actualizar el formulario con los datos del modelo recibido.
-          // Asigna los valores del modelo a los campos del formulario, incluyendo 'categoria' y 'marca'.
-          this.vehicleModelForm.patchValue({
-            vehicleModelName: response.data.vehicleModelName,
-            transmissionType: response.data.transmissionType,
-            passengerCount: response.data.passengerCount,
-            category: response.data.category.id,
-            brand: response.data.brand.id,
-            imagePath: response.data.imagePath,
+    this.activatedRoute.params.subscribe(params => {
+      this.currentVehicleModelId = params['id'];
+   
+      if (this.currentVehicleModelId) {
+        this.apiService
+          .getOne('vehicleModels', Number(this.currentVehicleModelId)) 
+          .subscribe((response) => {
+            console.log(response.data);
+            this.vehicleModelForm.patchValue({
+              vehicleModelName: response.data.vehicleModelName,
+              transmissionType: response.data.transmissionType,
+              passengerCount: response.data.passengerCount,
+              category: response.data.category.id,
+              brand: response.data.brand.id,
+              imagePath: response.data.imagePath,});
           });
-        });
+        this.action = 'Edit'; 
+        this.title = 'Editar modelo';
+        this.buttonText = 'Guardar cambios';
+      } else {
+        this.action = 'Create'; 
+        this.title = 'Nuevo modelo';
+        this.buttonText = 'Registrar';
+      }
+    });
 
-      // Establece la acción como 'Edit' para indicar que estamos editando un modelo existente.
-      this.action = 'Edit';
-    } else {
-      // Si no hay un parámetro 'id' en la ruta, significa que estamos en el modo de creación de un nuevo modelo.
-      // Establece la acción como 'Create'.
-      this.action = 'Create';
-    }
   }
 
   // Métod0 para cargar las categorías
@@ -120,7 +141,7 @@ export class VehicleModelFormComponent implements OnInit {
 
 
   onSubmit() {
-    if (this.vehicleModelForm.valid) {
+    if (!this.vehicleModelForm.invalid) {
 
       const formData = this.vehicleModelForm.value;
 
@@ -134,24 +155,42 @@ export class VehicleModelFormComponent implements OnInit {
 
 
       console.log('Datos enviados:', formData); // para ver los datos que se envían
-      this.activeModal.close();
 
       if (this.action === 'Create') {
-        this.apiService.create('vehicleModels', formData).subscribe((response) => {
-          this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
+        this.apiService
+        .create('vehicleModels', formData)
+        .subscribe({
+          next: response => {
+            this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
+            this.navigateToVehicleModels();
+          },
+          error: error => {
+            if (error.status !== 400) {
+              this.errorMessage = "Error en el servidor. Intente de nuevo.";
+            }
+          }
         });
       } else if (this.action === 'Edit') {
         this.apiService
           .update('vehicleModels', this.currentVehicleModelId, formData)
-          .subscribe((response) => {
-            this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
+          .subscribe({
+            next: response => {
+              this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
+              this.navigateToVehicleModels();
+            },
+            error: error => {
+              if (error.status !== 400) {
+                this.errorMessage = "Error en el servidor. Intente de nuevo.";
+              }
+            }
           });
       }
-
-      this.vehicleModelCreatedOrModifiedService.isDataLoaded = true;
     }
   }
 
+  navigateToVehicleModels() {
+    this.router.navigate(['/staff/vehicleModels']);
+  }
   /*
   onSubmit() {
     this.activeModal.close();

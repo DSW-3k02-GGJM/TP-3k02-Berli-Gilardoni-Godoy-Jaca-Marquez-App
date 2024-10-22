@@ -89,7 +89,7 @@ export class LocationFormComponent implements OnInit {
               this.navigateToLocations();
             },
             error: error => {
-              if (error.status !== 401) {
+              if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
             }
@@ -103,7 +103,7 @@ export class LocationFormComponent implements OnInit {
               this.navigateToLocations();
             },
             error: error => {
-              if (error.status !== 401) {
+              if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
             }
