@@ -1,95 +1,109 @@
-<div class="border border-1 border-white rounded-pill unselectable">
-    <div class="modal-header d-flex bg-dark text-white">
-      <h2 class="modal-title">{{ title }}</h2>
-    </div>
-    <div class="modal-body fw-medium bg-dark modal-text">
-      <section class="form">
-        <form
-          id="resForm"
-          [formGroup]="resForm"
-          class="border border-dark border-3 rounded mt-2 form-style"
-        >
-        <input
-        id="startDate"
-        type="date"
-        formControlName="startDate"
-        placeholder="Fecha Inicio"
-        />
-        <label for="startDate">Fecha Inicio</label>
-        <div *ngIf="resForm.get('startDate')?.errors?.dateInvalid && resForm.get('startDate')?.touched">
-          La Fecha Inicio debe ser mayor o igual a la Fecha Actual
-        </div>
-        <hr />
+<div class="container unselectable">
+  <div class="d-flex justify-content-between">
+    <div class="title">{{title}}</div>
+    <button style="margin-bottom: 5px;" mat-stroked-button (click)="navigateToReservations()">Volver</button>
+  </div>
+  <hr>
+  <div *ngIf="action === 'Edit'" class="information">
+      <div class="information-title">ID</div>
+      <div class="information-content">
+          <span>{{currentResId}}</span>
+      </div>
+  </div>
+  <hr *ngIf="action === 'Edit'">
+  <div class="content">
+    <form [formGroup]="resForm" (ngSubmit)="onSubmit()" autocomplete="off">
+      <div class="user-details">
+
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Ingresa el rango de la reserva</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input 
+              matStartDate 
+              placeholder="Fecha Inicio"
+              id="startDate"
+              class="form-control"
+              formControlName="startDate"
+            >
+            <input 
+              matEndDate 
+              placeholder="Fecha Fin"
+              id="plannedEndDate"
+              class="form-control"
+              formControlName="plannedEndDate"
+            >
+          </mat-date-range-input>
+          <mat-error *ngIf="resForm.get('plannedEndDate')?.errors?.required || resForm.get('startDate')?.errors?.required">
+            Las fechas son requeridas.
+          </mat-error>
+          <mat-error *ngIf="resForm.get('startDate')?.errors?.dateInvalid">
+            El inicio no puede ser menor a la fecha actual.
+          </mat-error>
+          <mat-error *ngIf="!resForm.get('startDate')?.errors?.dateInvalid && resForm.get('plannedEndDate')?.errors?.dateInvalid">
+            Rango de fechas inválido.
+          </mat-error>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Tipo de Documento</mat-label>
+          <mat-select
+              id="documentType"
+              formControlName="documentType"
+              (selectionChange)="onDocumentTypeSelected($event)">
+              <mat-option value="DNI">DNI</mat-option>
+              <mat-option value="Pasaporte">Pasaporte</mat-option>
+              <mat-option value="Libreta">Libreta</mat-option>
+          </mat-select>
+          <mat-error *ngIf="resForm.get('documentType')?.errors?.required">
+            El tipo de documento es requerido.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Seleccione Documento</mat-label>
+          <mat-select
+              id="documentID"
+              formControlName="documentID">
+              @for (client of filteredClients; track client) {
+                <mat-option [value]="client.id">{{client.documentID}}</mat-option> 
+              }
+          </mat-select>
+          <mat-error *ngIf="resForm.get('documentID')?.errors?.required">
+            El documento es requerido.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+          <mat-label>Seleccione vehículo</mat-label>
+          <mat-select
+              id="licensePlate"
+              formControlName="licensePlate">
+              @for (vehicle of vehicles; track vehicle) {
+                <mat-option [value]="vehicle.id">{{vehicle.licensePlate}}</mat-option> 
+              }
+          </mat-select>
+          <mat-error *ngIf="resForm.get('licensePlate')?.errors?.required">
+            El vehículo es requerido.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <mat-error *ngIf="errorMessage">
+          {{errorMessage}}
+      </mat-error>
+      <!-- Submit button -->
+      <div class="button">
+        <button type="submit" [disabled]="resForm.pending">
+          <ng-container *ngIf="!resForm.pending; else loading">
+            {{buttonText}}
+          </ng-container>
+          <ng-template #loading>
+            <mat-spinner diameter="30"></mat-spinner>
+          </ng-template>
           
-        <input
-        id="plannedEndDate"
-        type="date"
-        formControlName="plannedEndDate"
-        placeholder="Fecha Fin"
-        />
-        <label for="plannedEndDate">Fecha Fin</label>
-        <div *ngIf="resForm.get('plannedEndDate')?.errors?.dateInvalid && resForm.get('plannedEndDate')?.touched">
-          La Fecha de Fin debe ser posterior a la Fecha de Inicio.
-        </div>
-        
-        <hr />
-        
-        <select
-          id="documentType"
-          formControlName="documentType"
-          class="form-select bg-dark text-white border border-secondary w-auto"
-          (change)="onDocumentTypeSelected($event)"
-        >
-          <option value="" disabled selected>Tipo Documento</option>
-          <option value="DNI">DNI</option>
-          <option value="Pasaporte">Pasaporte</option>
-          <option value="Libreta">Libreta</option>
-        </select>
-        <hr />
-
-        <select
-          id="documentID"
-          formControlName="documentID"
-          class="form-select bg-dark text-white border border-secondary w-auto"
-        >
-          <option value="" disabled selected>Seleccione Documento</option>
-          <option *ngFor="let client of filteredClients" [value]="client.id">
-            {{ client.documentID }}
-          </option>
-        </select>
-        <hr />
-
-        <select
-          id="licensePlate"
-          formControlName="licensePlate"
-          class="form-select bg-dark text-white border border-secondary w-auto"
-        >
-          <option value="" disabled selected>Seleccione Vehículo</option>
-          <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">
-            {{ vehicle.licensePlate }}
-          </option>
-        </select>
-        <hr />
-  
-        </form>
-      </section>
-      <div class="modal-footer bg-dark modal-text">
-        <button
-          type="button"
-          class="btn btn-secondary border border-1 border-white"
-          (click)="activeModal.dismiss()"
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          class="btn btn-primary border border-1 border-white"
-          (click)="onSubmit()"
-          [disabled]="!resForm.valid"
-        >
-          Registrar
         </button>
       </div>
-    </div>
+    </form>
   </div>
-  
+</div>

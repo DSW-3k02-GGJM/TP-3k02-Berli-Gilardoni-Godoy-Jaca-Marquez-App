@@ -7,6 +7,7 @@ import { ResFormComponent } from '../res-form/res-form.component.js';
 import { HttpClientModule } from '@angular/common/http';
 import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 
@@ -24,7 +25,7 @@ export class ResComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private resCreatedOrModifiedService: ResCreatedOrModifiedService,
-    private modalService: NgbModal
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -61,10 +62,6 @@ export class ResComponent implements OnInit {
   }
 
   newReservation() {
-    const modalRef = this.modalService.open(ResFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Nueva Reserva';
+    this.router.navigate(['/staff/reservations/create']);
   }
 }

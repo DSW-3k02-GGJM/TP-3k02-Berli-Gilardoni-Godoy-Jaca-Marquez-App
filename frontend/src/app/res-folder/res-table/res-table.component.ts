@@ -8,6 +8,7 @@ import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { ResFormComponent } from '../res-form/res-form.component.js';
 import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-res-table',
@@ -31,7 +32,8 @@ export class ResTableComponent {
   constructor(
     private apiService: ApiService,
     private modalService: NgbModal,
-    private resCreatedOrModifiedService: ResCreatedOrModifiedService
+    private resCreatedOrModifiedService: ResCreatedOrModifiedService,
+    private router: Router
   ) {}
 
   formatDate(DateDB: string): string {
@@ -43,12 +45,7 @@ export class ResTableComponent {
   }
 
   editRes(res: any): void {
-    const modalRef = this.modalService.open(ResFormComponent, {
-      size: 'l',
-      centered: true,
-    });
-    modalRef.componentInstance.title = 'Editar Reserva';
-    modalRef.componentInstance.currentResId = res.id;
+    this.router.navigate(['/staff/reservations/' + res.id]);
   }
 
   deleteRes(res: any): void {

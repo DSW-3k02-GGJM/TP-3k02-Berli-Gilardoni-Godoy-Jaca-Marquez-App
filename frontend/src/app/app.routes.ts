@@ -38,9 +38,6 @@ export const routes: Routes = [
   // este es el de las tarjetitas
   { path: 'vehicles', component: VehicleListComponent },
   // este es el de alta pero para el admin
-  { path: 'reservations', component: ResComponent },
-  { path: 'reservations/create', component: ResFormComponent },
-  { path: 'reservations/:id', component: ResFormComponent },
   { path: 'testMati', component: TestMatiComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
@@ -76,6 +73,10 @@ export const routes: Routes = [
       { path: 'vehiclesS', component: VehiclesComponent },
       { path: 'vehiclesS/create', component: VehicleFormComponent },
       { path: 'vehiclesS/:id', component: VehicleFormComponent },
+
+      { path: 'reservations', component: ResComponent },
+      { path: 'reservations/create', component: ResFormComponent },
+      { path: 'reservations/:id', component: ResFormComponent },
     ]
   },
 

@@ -9,6 +9,19 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { authInterceptor } from "./interceptors/auth.interceptor";
 import { AuthService } from "./service/auth.service";
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'YYYY/MM/DD',
+  },
+  display: {
+    dateInput: 'YYYY/MM/DD',
+    monthYearLabel: 'YYYY MMM',
+    dateA11yLabel: 'YYYY/MM/DD',
+    monthYearA11yLabel: 'YYYY MMM',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -26,7 +39,9 @@ import { AuthService } from "./service/auth.service";
     provideAnimationsAsync(),
     provideHttpClient(),
     //provideHttpClient(withInterceptors([authInterceptor])),
-    AuthService
+    AuthService,
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, // Configurar el locale
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }, // Proveer los formatos de fecha personalizados
   ],
   bootstrap: [AppComponent] // Especifica el componente raíz que Angular debe inicializar al arrancar la aplicación
 })
