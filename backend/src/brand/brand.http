@@ -7,7 +7,7 @@ POST http://localhost:3000/api/brands
 Content-Type: application/json
 
 {
-  "brandName": "Toyota"
+  "brandName": "Toyotas"
 }
 
 ### ID
@@ -15,17 +15,17 @@ Content-Type: application/json
 # esto no se bien q es despues lo arreglo
 
 ### Obtener una Marca
-GET http://localhost:3000/api/brands/{{id}}
+GET http://localhost:3000/api/brands/1
 
 ### PUT => Modificaciones completas (Recurso completo e idempotente)
 ### PATCH => Modificaciones parciales o completas
 
 ### Modificar una marca (PUT)
-PUT http://localhost:3000/api/brands/{{id}}
+PUT http://localhost:3000/api/brands/1422
 Content-Type: application/json
 
 {
-  "brandName": "Fiat"
+  "brandName": "Fifas"
 }
 
 ### POST 2
@@ -55,4 +55,4 @@ Content-Type: application/json
 
 ### DELETE
 @idToDelete = {{createBrandToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/brands/{{idToDelete}}
+DELETE http://localhost:3000/api/brands/1

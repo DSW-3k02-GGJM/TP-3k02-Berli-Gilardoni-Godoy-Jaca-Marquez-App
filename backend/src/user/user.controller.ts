@@ -186,7 +186,7 @@ const update = async (req: Request, res: Response) => {
   const id = Number.parseInt(req.params.id);
 
   if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality || !role) {
-    return res.status(400).json({ message: 'All information are required'});
+    return res.status(400).json({ message: 'All information is required'});
   }
 
   if(role !== 'admin' && role !== 'employee' && role !== 'client') {

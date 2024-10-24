@@ -11,24 +11,24 @@ Content-Type: application/json
     "categoryName": "SUV",
     "categoryDescription": "Vehículos robustos y espaciosos, ideales para familias o viajes de aventura.",
     "pricePerDay": 100,
-    "depositValue": 500
+    "depositValue": 1
 }
 
 ### ID
 @id = {{createCategory.response.body.data.id}}
 
 ### GET ONE
-http://localhost:3000/api/categories/{{id}}
+http://localhost:3000/api/categories/12331
 
 ### PUT
-PUT http://localhost:3000/api/categories/{{id}}
+PUT http://localhost:3000/api/categories/13123
 Content-Type: application/json
 
 {
     "categoryName": "SUV",
     "categoryDescription": "Vehículos robustos y espaciosos, ideales para familias o viajes de aventura.",
     "pricePerDay": 150,
-    "depositValue": 570
+    "depositValue": 1
 }
 
 ### POST 2
@@ -56,5 +56,5 @@ Content-Type: application/json
 
 ### DELETE
 @idToDelete = {{createCategoryToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/categories/{{idToDelete}}
+DELETE http://localhost:3000/api/categories/124
 

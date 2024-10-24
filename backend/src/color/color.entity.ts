@@ -10,7 +10,7 @@ import { Vehicle } from '../vehicle/vehicle.entity.js';
 
 @Entity()
 export class Color extends BaseEntity {
-  @Property({ nullable: false })
+  @Property({ nullable: false, unique: true })
   colorName!: string;
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.color, {

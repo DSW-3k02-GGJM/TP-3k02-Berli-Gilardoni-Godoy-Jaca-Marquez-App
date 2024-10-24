@@ -10,7 +10,7 @@ import { Vehicle } from '../vehicle/vehicle.entity.js';
 
 @Entity()
 export class Location extends BaseEntity {
-  @Property({ nullable: false })
+  @Property({ nullable: false, unique: true })
   locationName!: string;
 
   @Property({ nullable: false })

@@ -16,15 +16,15 @@ Content-Type: application/json
 @id = {{createLocation.response.body.data.id}}
 
 ### GET ONE
-GET http://localhost:3000/api/locations/{{id}}
+GET http://localhost:3000/api/locations/123123
 
 
 ### PUT
-PUT  http://localhost:3000/api/locations/{{id}}
+PUT  http://localhost:3000/api/locations/1
 Content-Type: application/json
 
 {
-    "locationName": "Rosario Sur",
+    "locationName": "Rosario Norte",
     "address": "San Martin 5100",
     "phoneNumber": "3415367981"
 }
@@ -62,4 +62,4 @@ Content-Type: application/json
 
 ### DELETE
 @idToDelete = {{createLocationToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/locations/{{idToDelete}}
+DELETE http://localhost:3000/api/locations/12
