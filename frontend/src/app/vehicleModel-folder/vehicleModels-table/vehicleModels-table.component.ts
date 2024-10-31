@@ -8,6 +8,7 @@ import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { VehicleModelFormComponent } from "../vehicleModel-form/vehicleModel-form.component.js";
 import { Router } from '@angular/router';
+import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 
 @Component({
   selector: 'app-vehicleModels-table',
@@ -48,8 +49,17 @@ export class VehicleModelsTableComponent {
         if (result) {
           this.apiService
             .delete('vehicleModels', Number(vehicleModel.id))
-            .subscribe((response) => {
-              this.vehicleModelDeleted.emit(vehicleModel.id);
+            .subscribe({
+              next: (response) => {
+                this.vehicleModelDeleted.emit(vehicleModel.id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  const modalRef = this.modalService.open(GenericErrorModalComponent);
+                  modalRef.componentInstance.title = 'Error al eliminar el model';
+                  modalRef.componentInstance.message = 'El modelo no se puede eliminar porque tiene vehiculos asociados.';
+                }
+              }
             });
         }
       },

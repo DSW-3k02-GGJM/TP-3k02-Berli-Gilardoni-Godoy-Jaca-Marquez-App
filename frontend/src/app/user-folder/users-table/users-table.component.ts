@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import {  Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../service/auth.service.js';
+import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 @Component({
   selector: 'app-users-table',
   standalone: true,
@@ -64,8 +65,17 @@ export class UsersTableComponent {
         if (result) {
           this.authService
             .deleteUser(Number(user.id))
-            .subscribe((response) => {
-              this.userDeleted.emit(user.id);
+            .subscribe({
+              next: (response) => {
+                this.userDeleted.emit(user.id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  const modalRef = this.modalService.open(GenericErrorModalComponent);
+                  modalRef.componentInstance.title = 'Error al eliminar el usuario';
+                  modalRef.componentInstance.message = 'El usuario no se puede eliminar porque tiene reservas asociadas.';
+                }
+              }
             });
         }
       },

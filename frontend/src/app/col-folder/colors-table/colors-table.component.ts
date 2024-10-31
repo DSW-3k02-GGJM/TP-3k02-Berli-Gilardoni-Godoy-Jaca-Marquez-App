@@ -8,6 +8,7 @@ import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { ColorFormComponent } from '../color-form/color-form.component';
+import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 
 @Component({
   selector: 'app-colors-table',
@@ -50,8 +51,17 @@ export class ColorsTableComponent {
         if (result) {
           this.apiService
             .delete('colors', Number(color.id))
-            .subscribe((response) => {
-              this.colorDeleted.emit(color.id);
+            .subscribe({
+              next: (response) => {
+                this.colorDeleted.emit(color.id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  const modalRef = this.modalService.open(GenericErrorModalComponent);
+                  modalRef.componentInstance.title = 'Error al eliminar el color';
+                  modalRef.componentInstance.message = 'El color no se puede eliminar porque tiene vehículos asociados.';
+                }
+              }
             });
         }
       },

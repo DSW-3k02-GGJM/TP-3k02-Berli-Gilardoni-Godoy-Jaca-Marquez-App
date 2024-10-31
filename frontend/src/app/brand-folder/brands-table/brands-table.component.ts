@@ -8,6 +8,7 @@ import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { BrandFormComponent } from '../brand-form/brand-form.component.js';
 import { Router } from '@angular/router';
+import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 
 @Component({
   selector: 'app-brands-table',
@@ -50,8 +51,17 @@ export class BrandsTableComponent {
         if (result) {
           this.apiService
             .delete('brands', Number(brand.id))
-            .subscribe((response) => {
-              this.brandDeleted.emit(brand.id);
+            .subscribe({
+              next: (response) => {
+                this.brandDeleted.emit(brand.id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  const modalRef = this.modalService.open(GenericErrorModalComponent);
+                  modalRef.componentInstance.title = 'Error al eliminar la marca';
+                  modalRef.componentInstance.message = 'La marca no se puede eliminar porque tiene modelos asociados.';
+                }
+              }
             });
         }
       },

@@ -8,6 +8,7 @@ import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { LocationFormComponent } from '../location-form/location-form.component.js';
+import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 
 @Component({
   selector: 'app-locations-table',
@@ -48,8 +49,17 @@ export class LocationsTableComponent {
         if (result) {
           this.apiService
             .delete('locations', Number(location.id))
-            .subscribe((response) => {
-              this.locationDeleted.emit(location.id);
+            .subscribe({
+              next: (response) => {
+                this.locationDeleted.emit(location.id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  const modalRef = this.modalService.open(GenericErrorModalComponent);
+                  modalRef.componentInstance.title = 'Error al eliminar la sucursal';
+                  modalRef.componentInstance.message = 'La sucursal no se puede eliminar porque tiene vehiculos asociados.';
+                }
+              }
             });
         }
       },

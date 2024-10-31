@@ -8,6 +8,7 @@ import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { CategoryFormComponent } from '../category-form/category-form.component';
 import { Router } from '@angular/router';
+import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 
 @Component({
   selector: 'app-categories-table',
@@ -48,8 +49,17 @@ export class CategoriesTableComponent {
         if (result) {
           this.apiService
             .delete('categories', Number(category.id))
-            .subscribe((response) => {
-              this.categoryDeleted.emit(category.id);
+            .subscribe({
+              next: (response) => {
+                this.categoryDeleted.emit(category.id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  const modalRef = this.modalService.open(GenericErrorModalComponent);
+                  modalRef.componentInstance.title = 'Error al eliminar la categoría';
+                  modalRef.componentInstance.message = 'La categoría no se puede eliminar porque tiene modelos asociados.';
+                }
+              }
             });
         }
       },

@@ -8,6 +8,7 @@ import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
 import { Router } from '@angular/router';
+import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 
 @Component({
   selector: 'app-vehicles-table',
@@ -48,8 +49,17 @@ export class VehiclesTableComponent {
         if (result) {
           this.apiService
             .delete('vehicles', Number(vehicle.id))
-            .subscribe((response) => {
-              this.vehicleDeleted.emit(vehicle.id);
+            .subscribe({
+              next: (response) => {
+                this.vehicleDeleted.emit(vehicle.id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  const modalRef = this.modalService.open(GenericErrorModalComponent);
+                  modalRef.componentInstance.title = 'Error al eliminar el vehículo';
+                  modalRef.componentInstance.message = 'El vehículo no se puede eliminar porque tiene reservas asociadas.';
+                }
+              }
             });
         }
       },
