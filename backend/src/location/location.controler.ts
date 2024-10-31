@@ -156,4 +156,23 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedLocationInput, findAll, findOne, add, update, remove };
+const verifyLocationNameExists = async (req: Request, res: Response) => {
+  try {
+    const locationName = req.params.locationName;
+    const id = Number.parseInt(req.params.id);
+    const location = await em.findOneOrFail(
+      Location,
+      { locationName: locationName });
+    if (location.id === id) {
+      res.status(200).json({ exists: false });
+    }
+    else {
+      res.status(200).json({ exists: true });
+    }
+  }
+  catch (error: any) {
+    res.status(200).json({ exists: false});
+  }
+};
+
+export { sanitizedLocationInput, findAll, findOne, add, update, remove, verifyLocationNameExists };

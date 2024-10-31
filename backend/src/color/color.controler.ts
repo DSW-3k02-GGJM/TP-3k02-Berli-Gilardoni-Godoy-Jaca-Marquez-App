@@ -151,4 +151,23 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedColorInput, findAll, findOne, add, update, remove };
+const verifColorNameExists = async (req: Request, res: Response) => {
+  try {
+    const colorName = req.params.colorName;
+    const id = Number.parseInt(req.params.id);
+    const color = await em.findOneOrFail(
+      Color,
+      { colorName: colorName });
+    if (color.id === id) {
+      res.status(200).json({ exists: false });
+    }
+    else {
+      res.status(200).json({ exists: true });
+    }
+  }
+  catch (error: any) {
+    res.status(200).json({ exists: false});
+  }
+};
+
+export { sanitizedColorInput, findAll, findOne, add, update, remove, verifColorNameExists};

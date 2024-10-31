@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import {add, findAll, findOne, remove, sanitizedCategoryInput, update} from "./category.controler.js";
+import {add, findAll, findOne, remove, sanitizedCategoryInput, update, verifyCategoryNameExists} from "./category.controler.js";
 import { AuthService } from '../shared/db/auth.service.js';
 
 
@@ -11,3 +11,6 @@ categoryRouter.post('/', AuthService.isAuthenticated(["admin"]), sanitizedCatego
 categoryRouter.put('/:id', AuthService.isAuthenticated(["admin"]), sanitizedCategoryInput, update);
 //categoryRouter.patch('/:id', AuthService.isAuthenticated(["admin"]), sanitizedCategoryInput, update);
 categoryRouter.delete('/:id', AuthService.isAuthenticated(["admin"]), remove);
+
+categoryRouter.get('/entityName-exists/:categoryName/:id', AuthService.isAuthenticated(["admin"]), verifyCategoryNameExists)
+

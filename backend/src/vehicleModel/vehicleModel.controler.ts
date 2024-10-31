@@ -167,4 +167,23 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedVehicleModelInput, findAll, findOne, add, update, remove };
+const verifyVehicleModelNameExists = async (req: Request, res: Response) => {
+  try {
+    const vehicleModelName = req.params.vehicleModelName;
+    const id = Number.parseInt(req.params.id);
+    const vehicleModel = await em.findOneOrFail(
+      VehicleModel,
+      { vehicleModelName: vehicleModelName });
+    if (vehicleModel.id === id) {
+      res.status(200).json({ exists: false });
+    }
+    else {
+      res.status(200).json({ exists: true });
+    }
+  }
+  catch (error: any) {
+    res.status(200).json({ exists: false});
+  }
+};
+
+export { sanitizedVehicleModelInput, findAll, findOne, add, update, remove, verifyVehicleModelNameExists };

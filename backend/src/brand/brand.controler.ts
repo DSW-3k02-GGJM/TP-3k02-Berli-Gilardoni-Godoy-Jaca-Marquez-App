@@ -147,4 +147,23 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedBrandInput, findAll, findOne, add, update, remove };
+const verifyBrandNameExists = async (req: Request, res: Response) => {
+  try {
+    const brandName = req.params.brandName;
+    const id = Number.parseInt(req.params.id);
+    const brand = await em.findOneOrFail(
+      Brand,
+      { brandName: brandName });
+    if (brand.id === id) {
+      res.status(200).json({ exists: false });
+    }
+    else {
+      res.status(200).json({ exists: true });
+    }
+  }
+  catch (error: any) {
+    res.status(200).json({ exists: false});
+  }
+};
+
+export { sanitizedBrandInput, findAll, findOne, add, update, remove, verifyBrandNameExists };

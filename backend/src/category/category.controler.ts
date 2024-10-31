@@ -156,4 +156,23 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedCategoryInput, findAll, findOne, add, update, remove };
+const verifyCategoryNameExists = async (req: Request, res: Response) => {
+  try {
+    const categoryName = req.params.categoryName;
+    const id = Number.parseInt(req.params.id);
+    const category = await em.findOneOrFail(
+      Category,
+      { categoryName: categoryName });
+    if (category.id === id) {
+      res.status(200).json({ exists: false });
+    }
+    else {
+      res.status(200).json({ exists: true });
+    }
+  }
+  catch (error: any) {
+    res.status(200).json({ exists: false});
+  }
+};
+
+export { sanitizedCategoryInput, findAll, findOne, add, update, remove, verifyCategoryNameExists };

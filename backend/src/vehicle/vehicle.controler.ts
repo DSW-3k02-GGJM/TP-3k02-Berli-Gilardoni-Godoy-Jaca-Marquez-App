@@ -159,4 +159,23 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedVehicleInput, findAll, findOne, add, update, remove };
+const verifyLicensePlateExists = async (req: Request, res: Response) => {
+  try {
+    const licensePlate = req.params.licensePlate;
+    const id = Number.parseInt(req.params.id);
+    const vehicle = await em.findOneOrFail(
+      Vehicle,
+      { licensePlate: licensePlate });
+    if (vehicle.id === id) {
+      res.status(200).json({ exists: false });
+    }
+    else {
+      res.status(200).json({ exists: true });
+    }
+  }
+  catch (error: any) {
+    res.status(200).json({ exists: false});
+  }
+};
+
+export { sanitizedVehicleInput, findAll, findOne, add, update, remove, verifyLicensePlateExists };
