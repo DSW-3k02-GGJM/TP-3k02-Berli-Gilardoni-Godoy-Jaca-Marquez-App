@@ -23,7 +23,9 @@ export class ApiService {
   }
 
   getOne(entity: string, id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${entity}/${id}`);
+    return this.http.get(`${this.apiUrl}/${entity}/${id}`, {
+      withCredentials: true,
+    });
   }
 
   create(entity: string, data: any): Observable<any> {
@@ -32,6 +34,7 @@ export class ApiService {
     });
     return this.http.post(`${this.apiUrl}/${entity}`, data, {
       headers: headers,
+      withCredentials: true,
     });
   }
 
@@ -41,10 +44,13 @@ export class ApiService {
     });
     return this.http.put(`${this.apiUrl}/${entity}/${id}`, data, {
       headers: headers,
+      withCredentials: true,
     });
   }
 
   delete(entity: string, id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${entity}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${entity}/${id}`, {
+      withCredentials: true,
+    });
   }
 }
