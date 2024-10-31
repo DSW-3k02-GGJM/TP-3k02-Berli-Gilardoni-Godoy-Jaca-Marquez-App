@@ -59,7 +59,7 @@ export class LoginComponent {
       .subscribe(
         res => {
           this.errorMessage = null;
-          const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false });
+          const modalRef = this.modalService.open(SuccessfulModalComponent, { backdrop: 'static', keyboard: false });
           modalRef.componentInstance.title = 'Inicio de sesión exitoso';
         },
         err => {

@@ -1,10 +1,11 @@
 import {NextFunction, Request, Response} from 'express';
 import { orm } from '../shared/db/orm.js';
 import { VehicleModel } from './vehicleModel.entity.js';
+import { Vehicle } from '../vehicle/vehicle.entity.js';
 
 const em = orm.em;
 
-const sanitizedVehicleModelInput = (
+const sanitizedVehicleModelInput = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -26,6 +27,30 @@ const sanitizedVehicleModelInput = (
     }
   });
   // 3. Llamada al siguiente middleware o controlador
+
+  const id = Number.parseInt(req.params.id);
+  const vehicleModelName = req.body.sanitizedInput.vehicleModelName;
+  const transmissionType = req.body.sanitizedInput.transmissionType;
+  const passengerCount = req.body.sanitizedInput.passengerCount;
+  const imagePath = req.body.sanitizedInput.imagePath;
+  const category = req.body.sanitizedInput.category;
+  const brand = req.body.sanitizedInput.brand;
+
+  if (!vehicleModelName || !transmissionType || !passengerCount || !category || !brand) {
+    return res.status(400).json({ message: 'All information is required' });
+  }
+
+  if (passengerCount < 0) {
+    return res.status(400).json({ message: 'Passenger count must be greater than 0' });
+  }
+
+  const vehicleModel = await em.findOne( VehicleModel , { vehicleModelName } , {populate: [] , });
+  if(vehicleModel){
+    if (vehicleModel.id !== id) {
+      return res.status(400).json({ message: 'This name is already used' });
+    }
+  }
+
   next();
 };
 
@@ -51,14 +76,15 @@ const findAll = async (req: Request, res: Response) => {
       data: vehicleModels,
     });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const modelo = await em.findOneOrFail(
+    const modelo = await em.findOne(
       VehicleModel,
       { id },
       {
@@ -73,12 +99,19 @@ const findOne = async (req: Request, res: Response) => {
         ],
       }
     );
-    res.status(200).json({
-      message: 'The vehicle model has been found',
-      data: modelo,
-    });
+    if (!modelo) { 
+      res.status(404).json({ message: 'The vehicle model does not exist' });
+    }
+    else {
+      res.status(200).json({
+        message: 'The vehicle model has been found',
+        data: modelo,
+      });
+    }
+
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -88,30 +121,49 @@ const add = async (req: Request, res: Response) => {
     await em.flush();
     res.status(201).json({ message: 'The vehicle model has been created', data: vehicleModel });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 const update = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const vehicleModel = await em.findOneOrFail(VehicleModel, { id });
-    em.assign(vehicleModel, req.body.sanitizedInput);
-    await em.flush();
-    res.status(200).json({ message: 'The vehicle model has been updated', data: vehicleModel });
+    const vehicleModel = await em.findOne(VehicleModel, { id });
+    if (!vehicleModel) {
+      res.status(404).json({ message: 'The vehicle model does not exist' });
+    }
+    else {
+      em.assign(vehicleModel, req.body.sanitizedInput);
+      await em.flush();
+      res.status(200).json({ message: 'The vehicle model has been updated', data: vehicleModel });
+    }
+    
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 const remove = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const vehicleModel = em.getReference(VehicleModel, id);
-    await em.removeAndFlush(vehicleModel);
-    res.status(200).send({ message: 'The vehicle model has been deleted' });
+    const vehicleModel = await em.findOne(VehicleModel, { id });
+    const vehicleModelInUse = await em.findOne( Vehicle, { vehicleModel: id });
+    if (!vehicleModel) {
+      res.status(404).json({ message: 'The vehicle model does not exist' });
+    }
+    else if (vehicleModelInUse) {
+      res.status(400).json({ message: 'The vehicle model is in use' });
+    }
+    else {
+      const vehicleModelReference = em.getReference(VehicleModel, id);
+      await em.removeAndFlush(vehicleModelReference);
+      res.status(200).send({ message: 'The vehicle model has been deleted' });
+    }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

@@ -7,12 +7,13 @@ import {
   update,
   remove,
 } from './reservation.controler.js';
+import { AuthService } from '../shared/db/auth.service.js';
 
 export const reservationRouter = Router();
 
-reservationRouter.get('/', findAll);
-reservationRouter.get('/:id', findOne);
-reservationRouter.post('/', sanitizedReservationInput, add);
-reservationRouter.put('/:id', sanitizedReservationInput, update);
-reservationRouter.patch('/:id', sanitizedReservationInput, update);
-reservationRouter.delete('/:id', remove);
+reservationRouter.get('/', AuthService.isAuthenticated(["admin","employee"]), findAll);
+reservationRouter.get('/:id', AuthService.isAuthenticated(["admin","employee"]), findOne);
+reservationRouter.post('/', AuthService.isAuthenticated(["admin","employee"]), sanitizedReservationInput, add);
+reservationRouter.put('/:id', AuthService.isAuthenticated(["admin","employee"]), sanitizedReservationInput, update);
+reservationRouter.patch('/:id', AuthService.isAuthenticated(["admin","employee"]), sanitizedReservationInput, update);
+reservationRouter.delete('/:id', AuthService.isAuthenticated(["admin","employee"]), remove);

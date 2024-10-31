@@ -4,7 +4,7 @@ import { AuthService } from "../shared/db/auth.service.js";
 
 export const userRouter = Router()
 
-userRouter.get('/' , AuthService.isAuthenticated(["admin","employee"]) ,findAll) // Se fija si el usuario está autenticado
+userRouter.get('/' , AuthService.isAuthenticated(["admin","employee"]), findAll) // Se fija si el usuario está autenticado
 userRouter.get('/:id', AuthService.isAuthenticated(["employee","client","admin"]) ,findOne)
 userRouter.put('/:id', AuthService.isAuthenticated(["employee","client","admin"]) ,sanitizedUserInput , update)
 userRouter.patch('/:id', AuthService.isAuthenticated(["employee","client","admin"]) ,sanitizedUserInput , update)

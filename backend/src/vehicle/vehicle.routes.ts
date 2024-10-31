@@ -1,11 +1,12 @@
 import { Router } from 'express'
 import { sanitizedVehicleInput, findAll, findOne, add, update, remove } from './vehicle.controler.js'
+import { AuthService } from '../shared/db/auth.service.js'
 
 export const vehicleRouter = Router()
 
-vehicleRouter.get('/', findAll)
-vehicleRouter.get('/:id', findOne)
-vehicleRouter.post('/', sanitizedVehicleInput, add)
-vehicleRouter.put('/:id', sanitizedVehicleInput, update)
-vehicleRouter.patch('/:id', sanitizedVehicleInput, update)
-vehicleRouter.delete('/:id', remove)
+vehicleRouter.get('/', AuthService.isAuthenticated(["admin"]), findAll)
+vehicleRouter.get('/:id', AuthService.isAuthenticated(["admin"]), findOne)
+vehicleRouter.post('/', AuthService.isAuthenticated(["admin"]), sanitizedVehicleInput, add)
+vehicleRouter.put('/:id', AuthService.isAuthenticated(["admin"]), sanitizedVehicleInput, update)
+vehicleRouter.patch('/:id', AuthService.isAuthenticated(["admin"]), sanitizedVehicleInput, update)
+vehicleRouter.delete('/:id', AuthService.isAuthenticated(["admin"]), remove)

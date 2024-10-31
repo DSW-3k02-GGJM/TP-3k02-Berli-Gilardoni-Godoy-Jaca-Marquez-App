@@ -26,6 +26,22 @@ const sanitizedReservationInput = (
       delete req.body.sanitizedInput[key];
     }
   });
+
+  const id = Number.parseInt(req.params.id);
+  const startDate = req.body.sanitizedInput.startDate;
+  const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
+  const initialKms = req.body.sanitizedInput.initialKms;
+  const client = req.body.sanitizedInput.client;
+  const vehicle = req.body.sanitizedInput.vehicle;
+
+  if (!startDate || !plannedEndDate || !initialKms || !client || !vehicle) {
+    return res.status(400).json({ message: 'All information is required' });
+  }
+
+  if (initialKms < 0) {
+    return res.status(400).json({ message: 'Initial kms must be greater than 0' });
+  }
+
   next();
 };
 
@@ -50,7 +66,8 @@ const findAll = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: 'All reservations have been found', data: reservations });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -72,9 +89,15 @@ const findOne = async (req: Request, res: Response) => {
         ],
       }
     );
-    res.status(200).json({ message: 'The reservation has been found', data: reservation });
+    if (!reservation) { 
+      return res.status(404).json({ message: 'Reservation not found' });
+    }
+    else {
+      res.status(200).json({ message: 'The reservation has been found', data: reservation });
+    }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -84,30 +107,44 @@ const add = async (req: Request, res: Response) => {
     await em.flush();
     res.status(201).json({ message: 'The reservation has been created', data: reservation });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 const update = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const reservation = await em.findOneOrFail(Reservation, { id });
-    em.assign(reservation, req.body.sanitizedInput);
-    await em.flush();
-    res.status(200).json({ message: 'The reservation has been updated', data: reservation });
+    const reservation = await em.findOne(Reservation, { id });
+    if (!reservation) { 
+      return res.status(404).json({ message: 'Reservation not found' });
+    }
+    else {
+      em.assign(reservation, req.body.sanitizedInput);
+      await em.flush();
+      res.status(200).json({ message: 'The reservation has been updated', data: reservation });
+    }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 const remove = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const reservation = em.getReference(Reservation, id);
-    await em.removeAndFlush(reservation);
-    res.status(200).send({ message: 'The reservation has been deleted' });
+    const reservation = await em.findOne(Reservation, { id });
+    if (!reservation) {
+      return res.status(404).json({ message: 'Reservation not found' });
+    }
+    else {
+      const reservationReference = em.getReference(Reservation, id);
+      await em.removeAndFlush(reservationReference);
+      res.status(200).send({ message: 'The reservation has been deleted' });
+    }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

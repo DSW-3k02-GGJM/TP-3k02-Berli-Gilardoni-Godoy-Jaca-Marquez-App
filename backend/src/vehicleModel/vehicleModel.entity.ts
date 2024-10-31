@@ -14,7 +14,7 @@ import {Category} from "../category/category.entity.js";
 
 @Entity()
 export class VehicleModel extends BaseEntity {
-  @Property({ nullable: false })
+  @Property({ nullable: false, unique: true })
   vehicleModelName!: string;
 
   @Property()

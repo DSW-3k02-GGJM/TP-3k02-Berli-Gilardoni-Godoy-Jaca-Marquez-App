@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Vehicle } from './vehicle.entity.js';
+import { Reservation } from '../reservation/reservation.entity.js';
 
 const em = orm.em;
 
-const sanitizedVehicleInput = (
+const sanitizedVehicleInput = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -24,6 +25,30 @@ const sanitizedVehicleInput = (
       delete req.body.sanitizedInput[key];
     }
   });
+
+  const id = Number.parseInt(req.params.id);
+  const licensePlate = req.body.sanitizedInput.licensePlate;
+  const manufacturingYear = req.body.sanitizedInput.manufacturingYear;
+  const totalKms = req.body.sanitizedInput.totalKms;
+  const location = req.body.sanitizedInput.location;
+  const color = req.body.sanitizedInput.color;
+  const vehicleModel = req.body.sanitizedInput.vehicleModel;
+
+  if (!licensePlate || !manufacturingYear || !totalKms || !location || !color || !vehicleModel) {
+    return res.status(400).json({ message: 'All information is required' });
+  }
+
+  if (totalKms < 0) { 
+    return res.status(400).json({ message: 'Total kms must be greater than 0' });
+  }
+
+  const vehicle = await em.findOne( Vehicle , { licensePlate } , {populate: [] , });
+  if (vehicle) {
+    if (vehicle.id !== id) {
+      return res.status(400).json({ message: 'This license plate is already used' });
+    }
+  }
+
   next();
 };
 
@@ -48,7 +73,8 @@ const findAll = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: 'All vehicles have been found', data: vehicles });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -70,9 +96,15 @@ const findOne = async (req: Request, res: Response) => {
         ],
       }
     );
-    res.status(200).json({ message: 'The vehicle has been found', data: vehicle });
+    if (!vehicle) {
+      res.status(404).json({ message: 'The vehicle does not exist' });
+    }
+    else {
+      res.status(200).json({ message: 'The vehicle has been found', data: vehicle });
+    }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -82,30 +114,48 @@ const add = async (req: Request, res: Response) => {
     await em.flush();
     res.status(201).json({ message: 'The vehicle has been created', data: vehicle });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 const update = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const vehicle = await em.findOneOrFail(Vehicle, { id });
-    em.assign(vehicle, req.body.sanitizedInput);
-    await em.flush();
-    res.status(200).json({ message: 'The vehicle has been updated', data: vehicle });
+    const vehicle = await em.findOne(Vehicle, { id });
+    if (!vehicle) { 
+      res.status(404).json({ message: 'The vehicle does not exist' });
+    }
+    else {
+      em.assign(vehicle, req.body.sanitizedInput);
+      await em.flush();
+      res.status(200).json({ message: 'The vehicle has been updated', data: vehicle });
+    }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 const remove = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const vehicle = em.getReference(Vehicle, id);
-    await em.removeAndFlush(vehicle);
-    res.status(200).send({ message: 'The vehicle has been deleted' });
+    const vehicle = await em.findOne(Vehicle, { id });
+    const vehicleInUse = await em.findOne( Reservation, { vehicle: id }); //TODO: Deberia poder ponerse a los vehiculos en baja independientemente si estan en una reserva
+    if (!vehicle) {
+      res.status(404).json({ message: 'The vehicle does not exist' });
+    } 
+    else if (vehicleInUse) {
+      res.status(400).json({ message: 'The vehicle is in use' });
+    }
+    else {
+      const vehicleReference = em.getReference(Vehicle, id); //TODO: Problablemente no haga falta obtener las referencias, se podría usar vehicle tal cual
+      await em.removeAndFlush(vehicleReference);
+      res.status(200).json({ message: 'The vehicle has been deleted' });
+    }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

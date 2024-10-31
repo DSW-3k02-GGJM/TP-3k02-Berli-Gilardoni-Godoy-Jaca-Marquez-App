@@ -65,7 +65,7 @@ export class RegisterComponent {
     if (!this.registerForm.invalid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: response => {
-          const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false , size: 'sm' });
+          const modalRef = this.modalService.open(SuccessfulModalComponent, { backdrop: 'static', keyboard: false , size: 'sm' });
           modalRef.componentInstance.title = 'Registro exitoso';
           console.log(response);
         },

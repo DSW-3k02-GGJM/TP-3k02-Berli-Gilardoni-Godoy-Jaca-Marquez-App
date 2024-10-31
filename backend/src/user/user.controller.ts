@@ -4,6 +4,7 @@ import { orm } from '../shared/db/orm.js';
 import { User } from './user.entity.js';
 import { AuthService } from '../shared/db/auth.service.js';
 import { Console } from 'console';
+import { Reservation } from '../reservation/reservation.entity.js';
 
 
 const em = orm.em;
@@ -133,7 +134,8 @@ const add = async (req: Request, res: Response) => {
     await em.flush();
     res.status(200).json({ message: 'The user has been created', data: user });
   } catch (error: any) {
-    res.status(500).json({ message: error.message }); // No es recomendado mandar estos errores al frontend (le gusta a los hackers)
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -167,9 +169,15 @@ const findOne = async (req: Request, res: Response) => {
         ],
       }
     );
-    res.status(200).json({ message: 'The user has been found', data: user });
+    if (!user) {
+      res.status(404).json({ message: 'The user does not exist' });
+    }
+    else {
+      res.status(200).json({ message: 'The user has been found', data: user });
+    }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -201,23 +209,41 @@ const update = async (req: Request, res: Response) => {
   }
   try {
     const id = Number.parseInt(req.params.id);
-    const user = await em.findOneOrFail(User, { id });
-    em.assign(user, req.body.sanitizedInput);
-    await em.flush();
-    res.status(200).json({ message: 'The user has been updated', data: user });
+    const user = await em.findOne(User, { id });
+    if (!user) {
+      res.status(404).json({ message: 'The user does not exist' });
+    }
+    else {
+      em.assign(user, req.body.sanitizedInput);
+      await em.flush();
+      res.status(200).json({ message: 'The user has been updated', data: user });
+    }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
   
   const remove = async (req: Request, res: Response) => {
     try {
       const id = Number.parseInt(req.params.id);
-      const user = em.getReference(User, id);
-      await em.removeAndFlush(user);
-      res.status(200).send({ message: 'The user has been eliminated' });
+      const user = await em.findOne(User, { id });
+      const userInUse = await em.findOne( Reservation, { client: id }); //TODO: Debería ser user
+      if (!user) {
+        res.status(404).json({ message: 'The user does not exist' });
+      }
+      else if (userInUse) {
+          res.status(400).json({ message: 'The user is in use' });
+      }
+      else {
+        const userReference = em.getReference(User, id);
+        await em.removeAndFlush(userReference);
+        res.status(200).send({ message: 'The user has been eliminated' });
+      }
+
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      console.log(error.message);
+      res.status(500).json({ message: "Server error" });
     }
   };
 
@@ -277,7 +303,8 @@ const register = async (req: Request, res: Response) => {
           })
           .status(200).json({ message: 'Sign-up and Login completed', data: publicUser});
   } catch (error: any) {
-    res.status(500).json({ message: error.message }); // No es recomendado mandar estos errores al frontend (le gusta a los hackers)
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -319,7 +346,8 @@ const login = async (req: Request, res: Response) => {
           }
       }
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
