@@ -9,18 +9,20 @@ import { FormsModule } from '@angular/forms';
 import { CategoryFormComponent } from '../category-form/category-form.component';
 import { Router } from '@angular/router';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-categories-table',
   standalone: true,
   templateUrl: './categories-table.component.html',
-  styleUrl: './categories-table.component.scss',
+  styleUrls: ['../../styles/genericSearchInput.scss', './categories-table.component.scss'],
   imports: [
     CommonModule,
     HttpClientModule,
     ConfirmDeletionComponent,
     FilterPipe,
     FormsModule,
+    MatInputModule,
   ],
   providers: [ApiService],
 })

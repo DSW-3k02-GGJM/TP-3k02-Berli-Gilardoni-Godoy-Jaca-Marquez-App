@@ -9,6 +9,7 @@ import {  Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../service/auth.service.js';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
+import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-users-table',
   standalone: true,
@@ -18,9 +19,10 @@ import { GenericErrorModalComponent } from '../../shared/generic-error-modal/gen
     ConfirmDeletionComponent,
     FilterPipe,
     FormsModule,
+    MatInputModule,
   ],
   templateUrl: './users-table.component.html',
-  styleUrl: './users-table.component.scss',
+  styleUrls: ['../../styles/genericSearchInput.scss', './users-table.component.scss'],
   providers: [AuthService],
 })
 export class UsersTableComponent {

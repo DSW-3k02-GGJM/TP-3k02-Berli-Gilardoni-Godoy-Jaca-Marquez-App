@@ -9,18 +9,20 @@ import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { LocationFormComponent } from '../location-form/location-form.component.js';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-locations-table',
   standalone: true,
   templateUrl: './locations-table.component.html',
-  styleUrl: './locations-table.component.scss',
+  styleUrls: ['../../styles/genericSearchInput.scss', './locations-table.component.scss'],
   imports: [
     CommonModule,
     HttpClientModule,
     ConfirmDeletionComponent,
     FilterPipe,
     FormsModule,
+    MatInputModule,
   ],
   providers: [ApiService],
 })

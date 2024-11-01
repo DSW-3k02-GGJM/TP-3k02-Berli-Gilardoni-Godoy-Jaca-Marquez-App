@@ -9,18 +9,20 @@ import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { ColorFormComponent } from '../color-form/color-form.component';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-colors-table',
   standalone: true, // Permite que el componente se use sin necesidad de un módulo Angular tradicional
   templateUrl: './colors-table.component.html', // Ruta del archivo de plantilla HTML
-  styleUrl: './colors-table.component.scss', // Ruta del archivo de estilos SCSS
+  styleUrls: ['../../styles/genericSearchInput.scss', './colors-table.component.scss'], // Ruta del archivo de estilos SCSS
   imports: [
     CommonModule,
     HttpClientModule,
     ConfirmDeletionComponent,
     FilterPipe,
     FormsModule,
+    MatInputModule,
   ], // Importaciones necesarias para el componente
   providers: [ApiService], // Proporciona el servicio ApiService a este componente
 })

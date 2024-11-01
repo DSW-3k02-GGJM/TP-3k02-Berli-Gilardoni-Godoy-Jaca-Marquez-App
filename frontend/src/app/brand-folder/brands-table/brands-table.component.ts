@@ -9,18 +9,20 @@ import { FormsModule } from '@angular/forms';
 import { BrandFormComponent } from '../brand-form/brand-form.component.js';
 import { Router } from '@angular/router';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-brands-table',
   standalone: true, // Permite que el componente se use sin necesidad de un módulo Angular tradicional
   templateUrl: './brands-table.component.html', // Ruta del archivo de plantilla HTML
-  styleUrl: './brands-table.component.scss', // Ruta del archivo de estilos SCSS
+  styleUrls: ['../../styles/genericSearchInput.scss', './brands-table.component.scss', ], // Ruta del archivo de estilos SCSS
   imports: [
     CommonModule,
     HttpClientModule,
     ConfirmDeletionComponent,
     FilterPipe,
     FormsModule,
+    MatInputModule,
   ], // Importaciones necesarias para el componente
   providers: [ApiService], // Proporciona el servicio ApiService a este componente
 })

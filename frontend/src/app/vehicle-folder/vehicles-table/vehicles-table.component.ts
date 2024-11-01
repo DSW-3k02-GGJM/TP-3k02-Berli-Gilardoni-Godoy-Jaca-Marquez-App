@@ -9,18 +9,20 @@ import { FormsModule } from '@angular/forms';
 import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
 import { Router } from '@angular/router';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-vehicles-table',
   standalone: true,
   templateUrl: './vehicles-table.component.html',
-  styleUrl: './vehicles-table.component.scss',
+  styleUrls: ['../../styles/genericSearchInput.scss', './vehicles-table.component.scss'],
   imports: [
     CommonModule,
     HttpClientModule,
     ConfirmDeletionComponent,
     FilterPipe,
     FormsModule,
+    MatInputModule,
   ],
   providers: [ApiService],
 })
