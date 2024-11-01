@@ -55,7 +55,7 @@ export class CategoryFormComponent implements OnInit {
     categoryDescription: new FormControl('', [Validators.required]),
     pricePerDay: new FormControl('', [Validators.required]),
     depositValue: new FormControl('', [Validators.required]),
-  });
+  }, { updateOn: 'submit' });
 
   ngOnInit(): void {
     this.categoryCreatedOrModifiedService.isDataLoaded = false;
@@ -71,10 +71,12 @@ export class CategoryFormComponent implements OnInit {
           });
         this.action = 'Edit'; // Establece la acción como 'Edit'
         this.title = 'Editar categoría';
+        this.categoryForm.controls['categoryName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('categories',this.currentCategoryId)]);
         this.buttonText = 'Guardar cambios';
       } else {
         this.action = 'Create';
         this.title = 'Nueva categoría';
+        this.categoryForm.controls['categoryName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('categories',-1)]);
         this.buttonText = 'Registrar';
       }
     });

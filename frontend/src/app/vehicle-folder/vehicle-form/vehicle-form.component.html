@@ -24,6 +24,9 @@
             formControlName="licensePlate"
             placeholder=""
           >
+          <mat-error *ngIf="vehicleForm.get('licensePlate')?.errors?.entityNameExists">
+            Esta patente ya está siendo usada.
+          </mat-error>
           <mat-error *ngIf="vehicleForm.get('licensePlate')?.errors?.required">
             La patente es requerida.
           </mat-error>

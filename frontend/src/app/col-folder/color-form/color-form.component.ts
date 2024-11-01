@@ -51,7 +51,7 @@ export class ColorFormComponent implements OnInit {
 
   colorForm = new FormGroup({
     colorName: new FormControl('', [Validators.required]),
-  });
+  }, { updateOn: 'submit' });
 
   ngOnInit(): void {
     this.colorCreatedOrModifiedService.isDataLoaded = false;
@@ -67,10 +67,12 @@ export class ColorFormComponent implements OnInit {
           });
         this.action = 'Edit'; 
         this.title = 'Editar color';
+        this.colorForm.controls['colorName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('colors',this.currentColorId)])
         this.buttonText = 'Guardar cambios';
       } else {
         this.action = 'Create'; 
         this.title = 'Nuevo color';
+        this.colorForm.controls['colorName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('colors',-1)])
         this.buttonText = 'Registrar';
       }
    });

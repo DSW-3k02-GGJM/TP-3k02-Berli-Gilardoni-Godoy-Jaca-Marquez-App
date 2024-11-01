@@ -24,6 +24,9 @@
             formControlName="vehicleModelName"
             placeholder=""
           >
+          <mat-error *ngIf="vehicleModelForm.get('vehicleModelName')?.errors?.entityNameExists">
+            Este nombre ya está siendo usado.
+          </mat-error>
           <mat-error *ngIf="vehicleModelForm.get('vehicleModelName')?.errors?.required">
             El nombre es requerido.
           </mat-error>

@@ -53,7 +53,7 @@ export class LocationFormComponent implements OnInit {
     locationName: new FormControl('', [Validators.required]),
     address: new FormControl('', [Validators.required]),
     phoneNumber: new FormControl('', [Validators.required]), //TODO: añadir validador de telefono
-  });
+  }, { updateOn: 'submit' });
 
   ngOnInit(): void {
     this.locationCreatedOrModifiedService.isDataLoaded = false;
@@ -69,10 +69,12 @@ export class LocationFormComponent implements OnInit {
           });
         this.action = 'Edit'; 
         this.title = 'Editar sucursal';
+        this.locationForm.controls['locationName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('locations',this.currentLocationId)])
         this.buttonText = 'Guardar cambios';
       } else {
         this.action = 'Create'; 
         this.title = 'Nueva sucursal';
+        this.locationForm.controls['locationName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('locations',-1)])
         this.buttonText = 'Registrar';
       }
     });

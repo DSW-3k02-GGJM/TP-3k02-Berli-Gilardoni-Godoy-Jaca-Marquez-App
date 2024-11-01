@@ -62,7 +62,7 @@ export class VehicleModelFormComponent implements OnInit {
     category: new FormControl('', [Validators.required]), // Campo para la categoría
     brand: new FormControl('', [Validators.required]), // Campo para la marca
     imagePath: new FormControl(''),
-  });
+  }, { updateOn: 'submit' });
 
   ngOnInit(): void {
     // Inicializa la variable isDataLoaded en el servicio para indicar que los datos aún no han sido cargados.
@@ -90,10 +90,12 @@ export class VehicleModelFormComponent implements OnInit {
           });
         this.action = 'Edit'; 
         this.title = 'Editar modelo';
+        this.vehicleModelForm.controls['vehicleModelName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicleModels',this.currentVehicleModelId)])
         this.buttonText = 'Guardar cambios';
       } else {
         this.action = 'Create'; 
         this.title = 'Nuevo modelo';
+        this.vehicleModelForm.controls['vehicleModelName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicleModels',-1)])
         this.buttonText = 'Registrar';
       }
     });

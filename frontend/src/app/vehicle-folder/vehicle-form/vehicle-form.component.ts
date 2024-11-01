@@ -64,7 +64,7 @@ export class VehicleFormComponent implements OnInit {
     vehicleModel: new FormControl('', [Validators.required]),
     color: new FormControl('', [Validators.required]),
     location: new FormControl('', [Validators.required]),
-  });
+  } , { updateOn: 'submit' });
 
   ngOnInit(): void {
     this.vehicleCreatedOrModifiedService.isDataLoaded = false;
@@ -89,10 +89,12 @@ export class VehicleFormComponent implements OnInit {
           });
         this.action = 'Edit'; 
         this.title = 'Editar vehículo';
+        this.vehicleForm.controls['licensePlate'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicles',this.currentVehicleId)])
         this.buttonText = 'Guardar cambios';
       } else {
         this.action = 'Create'; 
         this.title = 'Nuevo vehículo';
+        this.vehicleForm.controls['licensePlate'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicles',-1)])
         this.buttonText = 'Registrar';
       }
     });

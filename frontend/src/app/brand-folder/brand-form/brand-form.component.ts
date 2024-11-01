@@ -50,7 +50,7 @@ export class BrandFormComponent implements OnInit {
 
   brandForm = new FormGroup({
     brandName: new FormControl('', [Validators.required]),
-  });
+  }, { updateOn: 'submit' });
 
   ngOnInit(): void {
     this.brandCreatedOrModifiedService.isDataLoaded = false;
@@ -66,10 +66,12 @@ export class BrandFormComponent implements OnInit {
           });
         this.action = 'Edit'; 
         this.title = 'Editar marca';
+        this.brandForm.controls['brandName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('brands',this.currentBrandId)])
         this.buttonText = 'Guardar cambios';
       } else {
         this.action = 'Create'; 
         this.title = 'Nueva marca';
+        this.brandForm.controls['brandName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('brands',-1)])
         this.buttonText = 'Registrar';
       }
     });

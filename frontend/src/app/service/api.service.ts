@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, delay, map, Observable, of } from 'rxjs';
+import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -52,5 +53,25 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/${entity}/${id}`, {
       withCredentials: true,
     });
+  }
+
+  entityNameExists(entity: string, entityName: string, id: number): Observable<boolean> {
+    return this.http.get<{ exists: boolean }>(`${this.apiUrl}/${entity}/entityName-exists/${entityName}/${id}`, {
+      withCredentials: true,
+    })
+      .pipe(
+        delay(1000),
+        map(response => response.exists),
+        catchError(() => of(false)) 
+      );
+  }
+  
+  uniqueEntityNameValidator(entity: string, id: number): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      return this.entityNameExists(entity, control.value, id).pipe(
+        map((exists) => (exists ? { entityNameExists: true } : null)),
+        catchError(async () => null)
+      );
+    };
   }
 }
