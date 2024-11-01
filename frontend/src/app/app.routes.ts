@@ -46,33 +46,33 @@ export const routes: Routes = [
   
   { path: 'staff', component: StaffComponent, canActivate: [authEmployeeGuard],
     children: [
-      { path: 'locations', component: LocationsComponent},
-      { path: 'locations/create', component: LocationFormComponent},
-      { path: 'locations/:id', component: LocationFormComponent},
+      { path: 'locations', component: LocationsComponent, canActivate: [authAdminGuard] },
+      { path: 'locations/create', component: LocationFormComponent, canActivate: [authAdminGuard] },
+      { path: 'locations/:id', component: LocationFormComponent, canActivate: [authAdminGuard] },
 
-      { path: 'colors', component: ColorsComponent},
-      { path: 'colors/create', component: ColorFormComponent},
-      { path: 'colors/:id', component: ColorFormComponent},
+      { path: 'colors', component: ColorsComponent, canActivate: [authAdminGuard] },
+      { path: 'colors/create', component: ColorFormComponent, canActivate: [authAdminGuard] },
+      { path: 'colors/:id', component: ColorFormComponent, canActivate: [authAdminGuard] },
 
-      { path: 'brands', component: BrandsComponent, canActivate: [authClientGuard] },
-      { path: 'brands/create', component: BrandFormComponent },
-      { path: 'brands/:id', component: BrandFormComponent },
+      { path: 'brands', component: BrandsComponent, canActivate: [authAdminGuard] },
+      { path: 'brands/create', component: BrandFormComponent, canActivate: [authAdminGuard] },
+      { path: 'brands/:id', component: BrandFormComponent, canActivate: [authAdminGuard] },
 
       { path: 'users', component: UsersComponent, canActivate: [authAdminGuard] },
       { path: 'users/create', component: UserFormComponent, canActivate: [authAdminGuard] },
       { path: 'users/:id', component: UserFormComponent, canActivate: [authAdminGuard] },
 
-      { path: 'categories', component: CategoriesComponent, canActivate: [authEmployeeGuard] },
-      { path: 'categories/create', component: CategoryFormComponent },
-      { path: 'categories/:id', component: CategoryFormComponent },
+      { path: 'categories', component: CategoriesComponent, canActivate: [authAdminGuard] },
+      { path: 'categories/create', component: CategoryFormComponent, canActivate: [authAdminGuard] },
+      { path: 'categories/:id', component: CategoryFormComponent, canActivate: [authAdminGuard] },
 
-      { path: 'vehicleModels', component: VehicleModelsComponent },
-      { path: 'vehicleModels/create', component: VehicleModelFormComponent },
-      { path: 'vehicleModels/:id', component: VehicleModelFormComponent },
+      { path: 'vehicleModels', component: VehicleModelsComponent, canActivate: [authAdminGuard] },
+      { path: 'vehicleModels/create', component: VehicleModelFormComponent, canActivate: [authAdminGuard] },
+      { path: 'vehicleModels/:id', component: VehicleModelFormComponent, canActivate: [authAdminGuard] },
 
-      { path: 'vehiclesS', component: VehiclesComponent },
-      { path: 'vehiclesS/create', component: VehicleFormComponent },
-      { path: 'vehiclesS/:id', component: VehicleFormComponent },
+      { path: 'vehiclesS', component: VehiclesComponent, canActivate: [authAdminGuard] },
+      { path: 'vehiclesS/create', component: VehicleFormComponent, canActivate: [authAdminGuard] },
+      { path: 'vehiclesS/:id', component: VehicleFormComponent, canActivate: [authAdminGuard] },
 
       { path: 'reservations', component: ResComponent },
       { path: 'reservations/create', component: ResFormComponent },

@@ -20,25 +20,25 @@
             <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" aria-current="page" routerLink="/staff/users" routerLinkActive="active">Usuarios</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" routerLink="/staff/categories" routerLinkActive="active">Categorías</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" routerLink="/staff/brands" routerLinkActive="active">Marcas</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" routerLink="/staff/colors" routerLinkActive="active">Colores</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" routerLink="/staff/locations" routerLinkActive="active">Sucursales</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" routerLink="/staff/vehicleModels" routerLinkActive="active">Modelos</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" routerLink="/staff/vehiclesS" routerLinkActive="active">Vehiculos</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" routerLink="/staff/reservations" routerLinkActive="active">Reservas</a>
             </li>
             </ul>
