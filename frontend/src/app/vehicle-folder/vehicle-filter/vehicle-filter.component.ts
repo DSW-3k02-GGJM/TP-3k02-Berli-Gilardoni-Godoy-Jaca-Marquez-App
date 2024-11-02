@@ -61,28 +61,47 @@ export class VehicleFilterComponent implements OnInit {
       });
       this.activeModal.close();
     }
-   /* lo de marcos
-    this.filterApplied.emit({ startDate: this.startDate, endDate: this.endDate });*/
-    /*
-    if (this.startDate) { // por si es nulo
-      if (this.startDate1) {
-        this.dateFilterService.setStartDate(this.startDate1);
-      }
-    }
-    if (this.endDate) {
-      if (this.endDate1) {
-        this.dateFilterService.setEndDate(this.endDate1);
-      }
-    }
-   // DEBERIA HACER Q LAS FECHAS SEAN STRINGS
-   console.log("aaaa");
-      if (this.startDate && this.startDate1) {
-        this.dateFilterService.setStartDate(this.startDate1);
-      }
-      if (this.endDate && this.endDate1) {
-        this.dateFilterService.setEndDate(this.endDate1);
-      }*/
   }
-
-
 }
+
+// PROBAR ESTO DESPUES -----------------------------
+// ES PARA PASAR LAS FECHAS AL COMPONENTE CARD
+/*
+import { Component, Output, EventEmitter } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ApiService } from '../../service/api.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
+@Component({
+  selector: 'app-vehicle-filter',
+  templateUrl: './vehicle-filter.component.html',
+  styleUrls: ['./vehicle-filter.component.css']
+})
+export class VehicleFilterComponent {
+  location: string = '';
+  locations: any[] = [];
+  startDate1: Date | null = null;
+  endDate1: Date | null = null;
+
+  @Output() filterApplied = new EventEmitter<{ startDate: string; endDate: string; location: string }>();
+
+  constructor(
+    private apiService: ApiService,
+    public activeModal: NgbActiveModal,
+  ) {}
+
+  vehicleFilterForm = new FormGroup({
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required]),
+    location: new FormControl('', [Validators.required]),
+  });
+
+  applyFilter() {
+    const startDate = this.vehicleFilterForm.get('startDate')?.value;
+    const endDate = this.vehicleFilterForm.get('endDate')?.value;
+    const location = this.vehicleFilterForm.get('location')?.value;
+
+    this.filterApplied.emit({ startDate, endDate, location });
+  }
+}
+*/
