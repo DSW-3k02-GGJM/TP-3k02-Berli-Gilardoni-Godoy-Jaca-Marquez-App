@@ -12,6 +12,10 @@ import { AuthService } from "./service/auth.service";
 import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; // agrego esto para el modal
 
+// Importa el componente
+import { VehicleCardComponent } from './vehicle-folder/vehicle-card/vehicle-card.component'; // Importa el componente
+
+
 // esto lo agregue recien
 import { HttpClientModule } from '@angular/common/http';
 
@@ -39,6 +43,8 @@ export const MY_DATE_FORMATS = {
     ResponsiveNavbarComponent,
     HttpClientModule, // no hace nada por ahora
     NgbModule, // Agrega el módulo de Bootstrap
+
+    VehicleCardComponent // Importa el componente standalone aquí
   ],
   providers: [
     provideRouter(routes),

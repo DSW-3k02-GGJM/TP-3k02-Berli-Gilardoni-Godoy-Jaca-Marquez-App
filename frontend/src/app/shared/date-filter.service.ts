@@ -7,9 +7,11 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class DateFilterService {
+  //almacenan las fechas de inicio y fin respectivamente.
   private startDateSource = new BehaviorSubject<Date | null>(null);
   private endDateSource = new BehaviorSubject<Date | null>(null);
 
+  // Observables que permiten a otros componentes suscribirse a los cambios en las fechas.
   startDate$ = this.startDateSource.asObservable();
   endDate$ = this.endDateSource.asObservable();
 
