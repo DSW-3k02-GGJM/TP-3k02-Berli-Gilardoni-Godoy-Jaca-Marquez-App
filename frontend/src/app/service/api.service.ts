@@ -56,14 +56,15 @@ export class ApiService {
     return this.http.get<any>('API_URL/vehicleModels/available', { params });
   }*/
 
-  // despues porbar con getAvailableVehicleModelsHandler
+  // despues probar con getAvailableVehicleModelsHandler
   getAvailableVehicleModels(startDate: string, endDate: string, location: string): Observable<any> {
     const params = new HttpParams()
       .set('startDate', startDate)
       .set('endDate', endDate)
       .set('location', location);
-
-    return this.http.get<any>(`${this.apiUrl}/vehicles/available`, { params });
+    console.log(`${this.apiUrl}/vehicles/available?startDate=${startDate}&endDate=${endDate}&location=${location}`);
+    console.log(this.http.get<any>(`${this.apiUrl}/vehicles/available?startDate=${startDate}&endDate=${endDate}&location=${location}`));
+    return this.http.get<any>(`${this.apiUrl}/vehicles/available?startDate=${startDate}&endDate=${endDate}&location=${location}`);
   }
 
 
