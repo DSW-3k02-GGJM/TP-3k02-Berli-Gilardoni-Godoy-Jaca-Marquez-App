@@ -14,7 +14,6 @@ import { reservationRouter  } from './reservation/reservation.routes.js';
 import { vehicleRouter } from './vehicle/vehicle.routes.js';
 import { userRouter } from './user/user.routes.js';
 import { AuthService } from './shared/db/auth.service.js';
-import dotenv from 'dotenv'
 import dotenv from 'dotenv';
 
 dotenv.config();
