@@ -8,13 +8,14 @@ import { categoryRouter } from "./category/category.routes.js";
 import { clientRouter } from './client/client.routes.js';
 import { colorRouter } from './color/color.routes.js';
 import { brandRouter } from './brand/brand.routes.js';
-import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js';
+import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js'; // Aquí ya tienes el router
 import { locationRouter } from './location/location.routes.js';
 import { reservationRouter  } from './reservation/reservation.routes.js';
 import { vehicleRouter } from './vehicle/vehicle.routes.js';
 import { userRouter } from './user/user.routes.js';
 import { AuthService } from './shared/db/auth.service.js';
 import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -28,24 +29,14 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-// luego de los middlewares base
-
+// Luego de los middlewares base
 app.use((req, res, next) => {
-  /*
-  Cuando se realiza una solicitud a, por ejemplo, http://localhost:3000/api/vehiculos,
-  desde la aplicacion Angular (que está ejecutandose en el puerto 4200), la API no está
-  configurada para permitir solicitudes CORS (forma de permitir que un sitio web acceda
-  a recursos de otro sitio web desde un navegador), por lo que obtiene HttpErrorResponse
-  con un estado de 0 y un error desconocido. Al agregar los siguientes encabezados, será
-  posible realizar solicitudes desde cualquier origen.
-
+  // Configurar los encabezados CORS si es necesario
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Accept, Accept-Language, Accept-Encoding'
-  );
-  */
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Accept-Language, Accept-Encoding');
+
+  // Usar RequestContext para MikroORM
   RequestContext.create(orm.em, next);
 });
 
@@ -60,9 +51,10 @@ app.use('/api/vehicles', vehicleRouter);
 app.use('/api/users', userRouter);
 
 app.use((_, res) => {
-  return res.status(404).send({ message: 'Resource not' });
+  return res.status(404).send({ message: 'Resource not found' });
 });
 
+// Sincronización del esquema (evitar en producción)
 await syncSchema(); // never in production
 
 const port = process.env.PORT || 3000;

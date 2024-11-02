@@ -31,7 +31,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatIconModule,
     MatSelectModule
   ],
@@ -75,10 +75,10 @@ export class VehicleModelFormComponent implements OnInit {
 
     this.activatedRoute.params.subscribe(params => {
       this.currentVehicleModelId = params['id'];
-   
+
       if (this.currentVehicleModelId) {
         this.apiService
-          .getOne('vehicleModels', Number(this.currentVehicleModelId)) 
+          .getOne('vehicleModels', Number(this.currentVehicleModelId))
           .subscribe((response) => {
             this.vehicleModelForm.patchValue({
               vehicleModelName: response.data.vehicleModelName,
@@ -88,12 +88,12 @@ export class VehicleModelFormComponent implements OnInit {
               brand: response.data.brand.id,
               imagePath: response.data.imagePath,});
           });
-        this.action = 'Edit'; 
+        this.action = 'Edit';
         this.title = 'Editar modelo';
         this.vehicleModelForm.controls['vehicleModelName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicleModels',this.currentVehicleModelId)])
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; 
+        this.action = 'Create';
         this.title = 'Nuevo modelo';
         this.vehicleModelForm.controls['vehicleModelName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicleModels',-1)])
         this.buttonText = 'Registrar';
@@ -116,6 +116,7 @@ export class VehicleModelFormComponent implements OnInit {
     });
   }
 
+  //aparentemente nos parecia basura atte. LyM
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {

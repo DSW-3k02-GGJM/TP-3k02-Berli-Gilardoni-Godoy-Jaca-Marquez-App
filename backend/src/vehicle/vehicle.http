@@ -20,7 +20,10 @@ Content-Type: application/json
 @id = {{createVehicle.response.body.data.id}}
 
 ### GET ONE
-http://localhost:3000/api/vehicles/{{id}}
+GET http://localhost:3000/api/vehicles/{{id}}
+
+###TEST
+GET http://localhost:3000/api/vehicles/available
 
 ### PUT
 PUT http://localhost:3000/api/vehicles/{{id}}

@@ -4,8 +4,8 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class VehicleCreatedOrModifiedService {
-  vehicleCreatedOrModified = new Subject<void>();
+export class ResCreatedOrModifiedService {
+  resCreatedOrModified = new Subject<void>();
   isDataLoaded = false;
 
   get IsDataLoaded(): boolean {
@@ -16,12 +16,11 @@ export class VehicleCreatedOrModifiedService {
     this.isDataLoaded = value;
   }
 
-  notifyVehicleCreatedOrModified() {
-    this.vehicleCreatedOrModified.next();
+  notifyResCreatedOrModified() {
+    this.resCreatedOrModified.next();
   }
 
   resetDataLoaded() {
     this.isDataLoaded = false;
   }
 }
-

@@ -2,17 +2,26 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, delay, map, Observable, of } from 'rxjs';
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
+  /*
+  getAvailableVehicleModelsHandler(fechaDesde: string, fechaHasta: string) {
+    throw new Error('Method not implemented.');
+  }
+  */
+
   private apiUrl = 'http://localhost:3000/api';
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Credentials': 'true',
   });
 
+  httpClient: any;
 
   constructor(private http: HttpClient) {}
 
@@ -62,10 +71,10 @@ export class ApiService {
       .pipe(
         delay(1000),
         map(response => response.exists),
-        catchError(() => of(false)) 
+        catchError(() => of(false))
       );
   }
-  
+
   uniqueEntityNameValidator(entity: string, id: number): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       return this.entityNameExists(entity, control.value, id).pipe(
@@ -74,4 +83,27 @@ export class ApiService {
       );
     };
   }
+
+  // agregue esto para hacer el filtro...
+  /*getAvailableVehicles(fechaDesde: string, fechaHasta: string) {
+    return this.http.get<any>(`/api/vehicleModels/available?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`);
+  }
+  getAvailableVehicleModels(fechaDesde: string, fechaHasta: string) {
+    const params = { fechaDesde, fechaHasta };
+    return this.http.get<any>('API_URL/vehicleModels/available', { params });
+  }*/
+
+  //TODO: DUDOSO, posiblemente haya que borrar y no sirva para nada
+  // despues probar con getAvailableVehicleModelsHandler
+  getAvailableVehicleModels(startDate: string, endDate: string, location: string): Observable<any> {
+    const params = new HttpParams()
+      .set('startDate', startDate)
+      .set('endDate', endDate)
+      .set('location', location);
+    console.log(`${this.apiUrl}/vehicles/available?startDate=${startDate}&endDate=${endDate}&location=${location}`);
+    console.log(this.http.get<any>(`${this.apiUrl}/vehicles/available?startDate=${startDate}&endDate=${endDate}&location=${location}`));
+    return this.http.get<any>(`${this.apiUrl}/vehicles/available?startDate=${startDate}&endDate=${endDate}&location=${location}`);
+  }
+
+
 }

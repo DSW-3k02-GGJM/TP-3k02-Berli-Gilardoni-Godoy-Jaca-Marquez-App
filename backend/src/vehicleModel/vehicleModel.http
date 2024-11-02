@@ -42,7 +42,8 @@ Content-Type: application/json
     "transmissionType": "Manual",
     "passengerCount": 4,
     "category": 1,
-    "brand": 2
+    "brand": 2,
+    "imagePath": "assets/img/Civic.jpg"
 }
 
 ### POST 3

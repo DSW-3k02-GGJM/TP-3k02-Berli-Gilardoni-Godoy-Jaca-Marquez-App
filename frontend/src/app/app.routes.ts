@@ -29,6 +29,7 @@ import { UserFormComponent } from './user-folder/user-form/user-form.component.j
 import { UsersComponent } from './user-folder/users/users.component.js';
 import { StaffComponent } from './staff-folder/admin/staff.component.js';
 
+
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
   { path: 'clients', component: ClientsComponent, canActivate: [authAdminGuard] },
@@ -43,7 +44,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
 
-  
+
   { path: 'staff', component: StaffComponent, canActivate: [authEmployeeGuard],
     children: [
       { path: 'locations', component: LocationsComponent, canActivate: [authAdminGuard] },
@@ -81,6 +82,10 @@ export const routes: Routes = [
   },
 
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home', pathMatch: 'full' }
-
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
+  //TODO: revisar
+  // esto son para los alquileres hechos por el cliente (usuario)
+  { path: 'reservationCli', component: ResComponent },
+  { path: 'reservationCli/create', component: ResFormComponent },
+  { path: 'reservationCli/modify/:id', component: ResFormComponent },
 ];

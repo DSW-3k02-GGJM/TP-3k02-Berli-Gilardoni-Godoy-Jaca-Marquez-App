@@ -10,6 +10,10 @@ import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { authInterceptor } from "./interceptors/auth.interceptor";
 import { AuthService } from "./service/auth.service";
 import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; // agrego esto para el modal
+
+// esto lo agregue recien
+import { HttpClientModule } from '@angular/common/http';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -23,15 +27,18 @@ export const MY_DATE_FORMATS = {
   },
 };
 
+
 @NgModule({
   declarations: [
-    AppComponent // Declara el componente principal de la aplicación
+    AppComponent, // Declara el componente principal de la aplicación
   ],
   imports: [
     BrowserModule, // Importa BrowserModule para que la aplicación pueda ejecutarse en un navegador
     CommonModule,
     RouterOutlet,
     ResponsiveNavbarComponent,
+    HttpClientModule, // no hace nada por ahora
+    NgbModule, // Agrega el módulo de Bootstrap
   ],
   providers: [
     provideRouter(routes),

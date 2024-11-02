@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Vehicle } from './vehicle.entity.js';
 import { Reservation } from '../reservation/reservation.entity.js';
+import { Location } from '../location/location.entity.js';
+
 
 const em = orm.em;
 
@@ -38,7 +40,7 @@ const sanitizedVehicleInput = async (
     return res.status(400).json({ message: 'All information is required' });
   }
 
-  if (totalKms < 0) { 
+  if (totalKms < 0) {
     return res.status(400).json({ message: 'Total kms must be greater than 0' });
   }
 
@@ -52,7 +54,90 @@ const sanitizedVehicleInput = async (
   next();
 };
 
+const sanitizedFilterInput = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+    ) => {
+      req.query.sanitizedInput = {
+        startDate: req.query.startDate,
+        endDate: req.query.endDate,
+        location: req.query.location,
+      };
+
+  const {startDate, endDate, location} = req.query.sanitizedInput;
+  console.log('Received startDate:', startDate, 'Type:', typeof startDate);
+  console.log('parsed as: ', new Date(startDate as string));
+  console.log('Received endDate:', endDate, 'Type:', typeof endDate);
+  console.log('parsed as: ', new Date(endDate as string));
+  console.log('Received location:', location, 'Type:', typeof location);
+
+
+
+  //TODO: usar timezones
+  if (!isValidDateFormat(startDate as string)) {
+    return res.status(400).json({message: 'Invalid or missing startDate'});
+  } else {
+    //fecha ingresada 1ms antes de medianoche
+    if ( new Date(Date.parse(startDate as string) +86400000-1)  < new Date(Date.now())) {
+      return res.status(400).json({message: "Invalid startDate. You can't book a reservation for the past!"});
+    }}
+
+  if (!isValidDateFormat(endDate as string)) {
+    return res.status(400).json({message: 'Invalid or missing endDate'});
+  } else {
+    //fecha ingresada 1ms antes de medianoche
+    if (new Date(Date.parse(startDate as string) +86400000-1) > new Date(Date.parse(endDate as string) +86400000-1)) {
+      return res.status(400).json({message: "Invalid endDate. You reservation can't end if it never started!"});
+    }}
+
+  if (!Number.isInteger(Number(location)) || Number(location) < 1 || Number(location) > await em.count(Location)) {
+    return res.status(400).json({message: 'Invalid or missing location'});
+  }
+
+  next();
+  }
+
+function isValidDateFormat(dateString: string): boolean {
+  const regex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
+  if (!regex.test(dateString)) {
+    return false;
+  }
+
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+
+  return (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 && // JavaScript months are 0-indexed
+      date.getDate() === day
+  );
+}
+
 const findAll = async (req: Request, res: Response) => {
+    try {
+      const vehicles = await em.find(
+          Vehicle,
+          {},
+          {
+            populate: [
+              'location',
+              'color',
+              'vehicleModel',
+              'vehicleModel.category',
+              'vehicleModel.brand',
+              'reservations',
+              'reservations.client',
+            ],
+          }
+      );
+      res
+          .status(200)
+          .json({message: 'All vehicles have been found', data: vehicles});
+    } catch (error: any) {
+      res.status(500).json({message: error.message});
+    }
+  ;
   try {
     const vehicles = await em.find(
       Vehicle,
@@ -78,35 +163,40 @@ const findAll = async (req: Request, res: Response) => {
   }
 };
 
-const findOne = async (req: Request, res: Response) => {
-  try {
-    const id = Number.parseInt(req.params.id);
-    const vehicle = await em.findOneOrFail(
-      Vehicle,
-      { id },
-      {
-        populate: [
-          'location',
-          'color',
-          'vehicleModel',
-          'vehicleModel.category',
-          'vehicleModel.brand',
-          'reservations',
-          'reservations.client',
-        ],
+  const findOne = async (req: Request, res: Response) => {
+    console.log('findOne called');
+    try {
+      const id = Number.parseInt(req.params.id);
+      console.log('Received ID:', req.params.id); // Log the received ID
+      if (isNaN(id)) {
+        return res.status(400).json({message: 'Invalid ID format'});
       }
-    );
-    if (!vehicle) {
-      res.status(404).json({ message: 'The vehicle does not exist' });
+      const vehicle = await em.findOneOrFail(
+          Vehicle,
+          {id},
+          {
+            populate: [
+              'location',
+              'color',
+              'vehicleModel',
+              'vehicleModel.category',
+              'vehicleModel.brand',
+              'reservations',
+              'reservations.client',
+            ],
+          }
+      );
+        if (!vehicle) {
+            res.status(404).json({ message: 'The vehicle does not exist' });
+        }
+        else {
+            res.status(200).json({ message: 'The vehicle has been found', data: vehicle });
+        }
+    } catch (error: any) {
+        console.log(error.message);
+        res.status(500).json({message: error.message});
     }
-    else {
-      res.status(200).json({ message: 'The vehicle has been found', data: vehicle });
-    }
-  } catch (error: any) {
-    console.log(error.message);
-    res.status(500).json({ message: "Server error" });
-  }
-};
+  };
 
 const add = async (req: Request, res: Response) => {
   try {
@@ -123,7 +213,7 @@ const update = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
     const vehicle = await em.findOne(Vehicle, { id });
-    if (!vehicle) { 
+    if (!vehicle) {
       res.status(404).json({ message: 'The vehicle does not exist' });
     }
     else {
@@ -144,7 +234,7 @@ const remove = async (req: Request, res: Response) => {
     const vehicleInUse = await em.findOne( Reservation, { vehicle: id }); //TODO: Deberia poder ponerse a los vehiculos en baja independientemente si estan en una reserva
     if (!vehicle) {
       res.status(404).json({ message: 'The vehicle does not exist' });
-    } 
+    }
     else if (vehicleInUse) {
       res.status(400).json({ message: 'The vehicle is in use' });
     }
@@ -178,4 +268,46 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedVehicleInput, findAll, findOne, add, update, remove, verifyLicensePlateExists };
+  export const findAvailable = async (req: Request, res: Response) => {
+    try {
+      const filter: any = req.query.sanitizedInput;
+      const filters: any = {};
+
+      filters.$and = [];
+      filters.$and.push({'l1.id': filter.location});
+
+      const reservationFilters: any[] = [];
+      //Cuando  hago los filtros, toma un dia antes, por eso le sumo 1 dia
+      filter.startDate = new Date(filter.startDate);
+      filter.endDate = new Date(filter.endDate);
+      //TODO: usar timezones
+      reservationFilters.push({'r6.startDate': {$eq: null}});
+      reservationFilters.push({'r6.startDate': {$gte: new Date(filter.endDate.setDate(filter.endDate.getDate()+1))}});
+      reservationFilters.push({'r6.planned_end_date': {$lte: new Date(filter.startDate.setDate(filter.startDate.getDate()+1))}});
+      reservationFilters.push({'r6.cancellation_date': {$ne: null}});
+      filters.$and.push({$or: reservationFilters});
+
+      const vehicles = await em.find(
+          Vehicle,
+          filters,
+          {
+            populate: [
+              'location',
+              'color',
+              'vehicleModel',
+              'vehicleModel.category',
+              'vehicleModel.brand',
+              'reservations',
+              'reservations.client',
+            ],
+          }
+      );
+      res.status(200).json({message: 'All vehicles have been found', data: vehicles});
+
+    } catch (error: any) {
+      res.status(500).json({message: error.message});
+    }
+  };
+
+  export {sanitizedVehicleInput, sanitizedFilterInput, findAll, findOne, add, update, remove, verifyLicensePlateExists };
+
