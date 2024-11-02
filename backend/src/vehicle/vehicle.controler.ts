@@ -135,32 +135,9 @@ const findAll = async (req: Request, res: Response) => {
           .status(200)
           .json({message: 'All vehicles have been found', data: vehicles});
     } catch (error: any) {
+      console.log(error.message);
       res.status(500).json({message: error.message});
     }
-  ;
-  try {
-    const vehicles = await em.find(
-      Vehicle,
-      {},
-      {
-        populate: [
-          'location',
-          'color',
-          'vehicleModel',
-          'vehicleModel.category',
-          'vehicleModel.brand',
-          'reservations',
-          'reservations.client',
-        ],
-      }
-    );
-    res
-      .status(200)
-      .json({ message: 'All vehicles have been found', data: vehicles });
-  } catch (error: any) {
-    console.log(error.message);
-    res.status(500).json({ message: "Server error" });
-  }
 };
 
   const findOne = async (req: Request, res: Response) => {
