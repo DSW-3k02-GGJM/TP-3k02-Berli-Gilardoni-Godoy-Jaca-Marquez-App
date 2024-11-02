@@ -229,7 +229,7 @@ import { VehicleFilterComponent } from '../../vehicle-folder/vehicle-filter/vehi
 @Component({
   selector: 'app-res-form',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
+  imports: [CommonModule, HttpClientModule, ReactiveFormsModule, VehicleFilterComponent],
   templateUrl: './rescli-form.component.html',
   styleUrl: './rescli-form.component.scss'
 })
@@ -353,7 +353,7 @@ export class ResFormComponent implements OnInit {
     console.log('Fechas aplicadas desde el filtro:', this.startDate, this.endDate);
     const { startDate, endDate } = filter;
   }
-  
+
 
   onSubmit() {
     if (this.resForm.valid) {

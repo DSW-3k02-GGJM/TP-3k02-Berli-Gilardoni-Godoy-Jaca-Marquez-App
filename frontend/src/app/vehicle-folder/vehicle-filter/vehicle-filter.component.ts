@@ -59,7 +59,6 @@ export class VehicleFilterComponent implements OnInit {
         endDate: formData.endDate || '',
         location: formData.location || ''
       });
-      console.log('Datos enviados:', formData);
       this.activeModal.close();
     }
    /* lo de marcos

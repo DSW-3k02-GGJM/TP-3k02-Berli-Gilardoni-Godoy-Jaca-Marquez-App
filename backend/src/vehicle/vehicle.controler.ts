@@ -47,6 +47,9 @@ const sanitizedFilterInput = async (
   console.log('parsed as: ', new Date(endDate as string));
   console.log('Received location:', location, 'Type:', typeof location);
 
+
+
+  //TODO: usar timezones
   if (!isValidDateFormat(startDate as string)) {
     return res.status(400).json({message: 'Invalid or missing startDate'});
   } else {
@@ -185,7 +188,7 @@ const findAll = async (req: Request, res: Response) => {
       //Cuando  hago los filtros, toma un dia antes, por eso le sumo 1 dia
       filter.startDate = new Date(filter.startDate);
       filter.endDate = new Date(filter.endDate);
-
+      //TODO: usar timezones
       reservationFilters.push({'r6.startDate': {$eq: null}});
       reservationFilters.push({'r6.startDate': {$gte: new Date(filter.endDate.setDate(filter.endDate.getDate()+1))}});
       reservationFilters.push({'r6.planned_end_date': {$lte: new Date(filter.startDate.setDate(filter.startDate.getDate()+1))}});
