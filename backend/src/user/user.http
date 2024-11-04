@@ -1,5 +1,6 @@
 ### GET ALL
 http://localhost:3000/api/users
+Access-Control-Allow-Credentials: true
 ### Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJlamVtcGxvMkBnbWFpbC5jb20iLCJpYXQiOjE3MjQwNzY1NzcsImV4cCI6MTcyNDA4MDE3N30.wkmfb_37Rac7yLxexYLZsMFqeukYhaPxv5Xu_SwkHu0
 
 POST http://localhost:3000/api/users/is-authenticated

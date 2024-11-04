@@ -1,5 +1,6 @@
 ### GET ALL
 GET http://localhost:3000/api/brands
+Access-Control-Allow-Credentials: true
 
 ### POST
 # @name createBrand
@@ -31,6 +32,7 @@ Content-Type: application/json
 ### POST 2
 POST http://localhost:3000/api/brands
 Content-Type: application/json
+Access-Control-Allow-Credentials: true
 
 {
   "brandName": "Honda"
@@ -39,6 +41,7 @@ Content-Type: application/json
 ### POST 3
 POST http://localhost:3000/api/brands
 Content-Type: application/json
+Access-Control-Allow-Credentials: true
 
 {
   "brandName": "Ford"
@@ -48,6 +51,7 @@ Content-Type: application/json
 # @name createBrandToDelete
 POST http://localhost:3000/api/brands
 Content-Type: application/json
+Access-Control-Allow-Credentials: true
 
 {
   "brandName": "Chevrolet"

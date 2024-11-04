@@ -14,7 +14,7 @@ export class ApiService {
   }
   */
 
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = '/api';
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Credentials': 'true',

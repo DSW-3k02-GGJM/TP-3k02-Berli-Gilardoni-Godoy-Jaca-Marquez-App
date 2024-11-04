@@ -1,19 +1,65 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { TestComponenteComponent } from '../test-componente/test-componente.component.js';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ApiService } from '../../service/api.service.js';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-test-mati',
   standalone: true,
-  imports: [TestComponenteComponent, FormsModule, MatFormFieldModule, MatInputModule],
+  imports: [TestComponenteComponent, FormsModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule, MatIconModule],
   templateUrl: './test-mati.component.html',
   styleUrl: './test-mati.component.scss'
 })
-export class TestMatiComponent {
-  constructor(private http: HttpClient) { }
+export class TestMatiComponent implements OnInit, AfterViewInit {
+  dataSource = new MatTableDataSource<Brand>();
+  displayedColumns: string[] = ['id', 'brandName', 'actions'];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  ngOnInit(): void {
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Marcas por página:';
+    this.paginator._intl.nextPageLabel = 'Página siguiente';	
+    this.paginator._intl.previousPageLabel = 'Página anterior';		
+    this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      const endIndex =
+        startIndex < length
+          ? Math.min(startIndex + pageSize, length)
+          : startIndex + pageSize;
+      return `${startIndex + 1} - ${endIndex} de ${length}`;
+    }
+    this.loadBrands();
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  loadBrands() {
+    this.apiService.getAll('brands').subscribe((response) => {
+      this.dataSource.data = response.data;
+    });
+  }
+
+  constructor(
+    private http: HttpClient,
+    private apiService: ApiService
+  ) { }
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Credentials': 'true',
@@ -43,4 +89,9 @@ export class TestMatiComponent {
     });
   }
   
+}
+
+export interface Brand {
+  id: number;
+  brandName: string;
 }
