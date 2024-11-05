@@ -48,8 +48,8 @@ export class VehicleListComponent implements OnInit {
     this.openFilterModal(true);
   }
 
-  fetchVehicles() {
-    this.http.get<any>('http://localhost:3000/api/vehicles/available').subscribe(response => {
+  fetchVehicles(filter: any) {
+    this.http.get<any>(`/api/vehicles/available?startDate=${filter.startDate}&endDate=${filter.endDate}&location=${filter.location}`).subscribe(response => {
       console.log('Response data:', response);
       this.response = response.data.map((vehicle: any) => ({
         vehicleModel: vehicle.vehicleModelName,
@@ -69,23 +69,6 @@ export class VehicleListComponent implements OnInit {
       endDate: typeof filter.endDate,
       location: typeof filter.location
     });
-    this.fetchVehicles();
-    console.log(`Resulting url: http://localhost:3000/api/vehicles/available?startDate=${filter.startDate}&endDate=${filter.endDate}&location=${filter.location}`);
-    console.log(`Expected url:  http://localhost:3000/api/vehicles/available?startDate=2024-11-02&endDate=2024-11-07&location=1`);
-
-    this.http.get<any[]>(`http://localhost:3000/api/vehicles/available?startDate=${filter.startDate}&endDate=${filter.endDate}&location=${filter.location}`).subscribe(data => {
-      this.response = data.map(vehicle => ({
-        vehicleModel: vehicle.vehicle.vehicle_model_name,
-        categoryDescription: vehicle.category_name,
-        passengerCount: vehicle.passenger_count,
-        image: vehicle.image_path
-      }));
-    });
-  console.log('Response:', this.response);
-    console.log('hasta acá anda');
-
-    this.apiService.getAvailableVehicleModels(filter.startDate, filter.endDate, filter.location).subscribe((filteredModels) => {
-      this.response = filteredModels.data;  // Actualiza la lista de modelos de vehículos
-    });
+    this.fetchVehicles(filter);
   }
 }

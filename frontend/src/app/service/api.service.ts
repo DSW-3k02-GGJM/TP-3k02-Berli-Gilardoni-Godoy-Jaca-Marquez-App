@@ -83,26 +83,4 @@ export class ApiService {
     };
   }
 
-  // agregue esto para hacer el filtro...
-  /*getAvailableVehicles(fechaDesde: string, fechaHasta: string) {
-    return this.http.get<any>(`/api/vehicleModels/available?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`);
-  }
-  getAvailableVehicleModels(fechaDesde: string, fechaHasta: string) {
-    const params = { fechaDesde, fechaHasta };
-    return this.http.get<any>('API_URL/vehicleModels/available', { params });
-  }*/
-
-  //TODO: DUDOSO, posiblemente haya que borrar y no sirva para nada
-  // despues probar con getAvailableVehicleModelsHandler
-  getAvailableVehicleModels(startDate: string, endDate: string, location: string): Observable<any> {
-    const params = new HttpParams()
-      .set('startDate', startDate)
-      .set('endDate', endDate)
-      .set('location', location);
-    console.log(`${this.apiUrl}/vehicles/available?startDate=${startDate}&endDate=${endDate}&location=${location}`);
-    console.log(this.http.get<any>(`${this.apiUrl}/vehicles/available?startDate=${startDate}&endDate=${endDate}&location=${location}`));
-    return this.http.get<any>(`${this.apiUrl}/vehicles/available?startDate=${startDate}&endDate=${endDate}&location=${location}`);
-  }
-
-
 }

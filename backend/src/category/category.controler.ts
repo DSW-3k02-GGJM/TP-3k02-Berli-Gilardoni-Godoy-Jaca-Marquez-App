@@ -61,7 +61,7 @@ const findAll = async (req: Request, res: Response) => {
           'vehicleModels.vehicles.color',
           'vehicleModels.vehicles.location',
           'vehicleModels.vehicles.reservations',
-          'vehicleModels.vehicles.reservations.client',
+          'vehicleModels.vehicles.reservations.user',
         ],
       }
     );
@@ -88,7 +88,7 @@ const findOne = async (req: Request, res: Response) => {
           'vehicleModels.vehicles.color',
           'vehicleModels.vehicles.location',
           'vehicleModels.vehicles.reservations',
-          'vehicleModels.vehicles.reservations.client',
+          'vehicleModels.vehicles.reservations.user',
         ],
       }
     );

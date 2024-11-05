@@ -1,7 +1,7 @@
 import { Entity, Property, ManyToOne, Rel } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Client } from '../client/client.entity.js';
 import { Vehicle } from '../vehicle/vehicle.entity.js';
+import {User} from "../user/user.entity.js";
 
 @Entity()
 export class Reservation extends BaseEntity {
@@ -26,8 +26,8 @@ export class Reservation extends BaseEntity {
   @Property({ nullable: true })
   finalKm?: number;
 
-  @ManyToOne(() => Client, { nullable: false })
-  client!: Rel<Client>;
+  @ManyToOne(() => User, { nullable: false })
+  user!: Rel<User>;
 
   @ManyToOne(() => Vehicle, { nullable: false })
   vehicle!: Rel<Vehicle>;

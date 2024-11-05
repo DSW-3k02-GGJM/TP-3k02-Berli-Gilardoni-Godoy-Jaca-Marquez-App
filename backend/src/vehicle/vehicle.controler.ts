@@ -92,6 +92,9 @@ const sanitizedFilterInput = async (
     }}
 
   if (!Number.isInteger(Number(location)) || Number(location) < 1 || Number(location) > await em.count(Location)) {
+    console.log(!Number.isInteger(Number(location)) );
+    console.log(Number(location) < 1);
+    console.log(await em.count(Location));
     return res.status(400).json({message: 'Invalid or missing location'});
   }
 
@@ -127,7 +130,7 @@ const findAll = async (req: Request, res: Response) => {
               'vehicleModel.category',
               'vehicleModel.brand',
               'reservations',
-              'reservations.client',
+              'reservations.user',
             ],
           }
       );
@@ -159,7 +162,7 @@ const findAll = async (req: Request, res: Response) => {
               'vehicleModel.category',
               'vehicleModel.brand',
               'reservations',
-              'reservations.client',
+              'reservations.user',
             ],
           }
       );
@@ -275,7 +278,7 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
               'vehicleModel.category',
               'vehicleModel.brand',
               'reservations',
-              'reservations.client',
+              'reservations.user',
             ],
           }
       );

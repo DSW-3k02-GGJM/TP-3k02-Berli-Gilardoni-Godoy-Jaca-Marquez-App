@@ -26,6 +26,7 @@ const sanitizedLoginInput = (
   });
   next();
 };
+
 const sanitizedUserInput = async (
   req: Request,
   res: Response,
@@ -228,7 +229,7 @@ const update = async (req: Request, res: Response) => {
     try {
       const id = Number.parseInt(req.params.id);
       const user = await em.findOne(User, { id });
-      const userInUse = await em.findOne( Reservation, { client: id }); //TODO: Debería ser user
+      const userInUse = await em.findOne( Reservation, { user: id }); //TODO: Debería ser user
       if (!user) {
         res.status(404).json({ message: 'The user does not exist' });
       }

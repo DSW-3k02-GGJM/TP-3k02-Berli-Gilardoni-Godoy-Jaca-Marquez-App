@@ -5,7 +5,6 @@ import cors from 'cors';
 import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
 import { categoryRouter } from "./category/category.routes.js";
-import { clientRouter } from './client/client.routes.js';
 import { colorRouter } from './color/color.routes.js';
 import { brandRouter } from './brand/brand.routes.js';
 import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js'; // Aquí ya tienes el router
@@ -41,7 +40,6 @@ app.use((req, res, next) => {
 
 app.use('/api/reservations', reservationRouter);
 app.use('/api/categories', categoryRouter);
-app.use('/api/clients', clientRouter);
 app.use('/api/colors', colorRouter);
 app.use('/api/brands', brandRouter);
 app.use('/api/vehicleModels', vehicleModelRouter);

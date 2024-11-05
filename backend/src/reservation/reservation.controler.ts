@@ -17,7 +17,7 @@ const sanitizedReservationInput = (
     cancellationDate: req.body.cancellationDate,
     initialKms: req.body.initialKms,
     finalKm: req.body.finalKm,
-    client: req.body.client,
+    user: req.body.user,
     vehicle: req.body.vehicle,
   };
   // Más validaciones
@@ -31,10 +31,13 @@ const sanitizedReservationInput = (
   const startDate = req.body.sanitizedInput.startDate;
   const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
   const initialKms = req.body.sanitizedInput.initialKms;
-  const client = req.body.sanitizedInput.client;
+  const user = req.body.sanitizedInput.user;
   const vehicle = req.body.sanitizedInput.vehicle;
 
-  if (!startDate || !plannedEndDate || !initialKms || !client || !vehicle) {
+  console.log('Datos de la reserva:', req.body.sanitizedInput);
+  console.log(!startDate, !plannedEndDate, !initialKms, !user, !vehicle);
+  console.log( initialKms);
+  if (!startDate || !plannedEndDate || !user || !vehicle) {
     return res.status(400).json({ message: 'All information is required' });
   }
 
@@ -52,7 +55,7 @@ const findAll = async (req: Request, res: Response) => {
       {},
       {
         populate: [
-          'client',
+          'user',
           'vehicle',
           'vehicle.location',
           'vehicle.color',
@@ -79,7 +82,7 @@ const findOne = async (req: Request, res: Response) => {
       { id },
       {
         populate: [
-          'client',
+          'user',
           'vehicle',
           'vehicle.location',
           'vehicle.color',
@@ -111,6 +114,8 @@ const add = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+//TODO: crear funcion para agregar reserva del pov user con req.session.user.id y asignar vehiculo
 
 const update = async (req: Request, res: Response) => {
   try {

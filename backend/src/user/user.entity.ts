@@ -7,6 +7,8 @@ import {
     Collection,
   } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
+import {Reservation} from "../reservation/reservation.entity.js";
+
 //import { Cliente } from '../cliente/cliente.entity.js';
   
   @Entity()
@@ -47,11 +49,10 @@ import { BaseEntity } from '../shared/db/baseEntity.entity.js';
     @Property({ nullable: false })
     role!: string; //admin, employee, client
 
-    /*
-    @OneToMany(() => Reservation, (reservation) => reservation.client, {
+
+    @OneToMany(() => Reservation, (reservation) => reservation.user, {
       cascade: [Cascade.ALL],
     })
     reservations = new Collection<Reservation>(this);
-    */ //TODO: Cambiar cliente por usuario
   }
   

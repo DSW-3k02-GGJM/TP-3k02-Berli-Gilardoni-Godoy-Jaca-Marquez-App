@@ -52,7 +52,7 @@ const findAll = async (req: Request, res: Response) => {
           'vehicles.vehicleModel.category',
           'vehicles.vehicleModel.brand',
           'vehicles.reservations',
-          'vehicles.reservations.client',
+          'vehicles.reservations.user',
         ],
       }
     );
@@ -80,7 +80,7 @@ const findOne = async (req: Request, res: Response) => {
           'vehicles.vehicleModel.category',
           'vehicles.vehicleModel.brand',
           'vehicles.reservations',
-          'vehicles.reservations.client',
+          'vehicles.reservations.user',
         ],
       }
     );

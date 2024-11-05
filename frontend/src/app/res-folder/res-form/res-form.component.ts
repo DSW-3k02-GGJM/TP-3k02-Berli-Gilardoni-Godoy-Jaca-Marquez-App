@@ -35,7 +35,7 @@ import { formatDate } from '@angular/common';
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatIconModule,
     MatSelectModule,
     MatDatepickerModule
@@ -52,7 +52,7 @@ export class ResFormComponent implements OnInit{
   action: string = '';
   errorMessage: string = '';
 
-  clients: any[] = [];
+  users: any[] = [];
   vehicles: any[] = [];
 
   filteredClients: any[] = [];
@@ -73,7 +73,7 @@ export class ResFormComponent implements OnInit{
     documentID: new FormControl('', [Validators.required]),
     licensePlate: new FormControl('', [Validators.required]),
   }, { validators: this.dateLessThan('startDate', 'plannedEndDate') });
-  
+
   //valida que startDate >= fecha actual y valida que startDate < plannedEndDate
   dateLessThan(startDateField: string, endDateField: string) {
     return (formGroup: AbstractControl) => {
@@ -105,10 +105,10 @@ export class ResFormComponent implements OnInit{
 
     this.activatedRoute.params.subscribe(params => {
       this.currentResId = params['id'];
-   
+
       if (this.currentResId) {
         this.apiService
-          .getOne('reservations', Number(this.currentResId)) 
+          .getOne('reservations', Number(this.currentResId))
           .subscribe((response) => {
             let startDateFormat = this.formatDate(
               response.data.startDate
@@ -116,22 +116,22 @@ export class ResFormComponent implements OnInit{
             let plannedEndDateFormat = this.formatDate(
               response.data.plannedEndDate
             );
-            this.filteredClients = this.clients.filter(client => client.documentType === response.data.client.documentType)
-            console.log('Id del cliente', response.data.client.documentID)
+            this.filteredClients = this.users.filter(user => user.documentType === response.data.user.documentType)
+            console.log('Id del cliente', response.data.user.documentID)
 
             this.resForm.patchValue({
               startDate: startDateFormat,
               plannedEndDate: plannedEndDateFormat,
-              documentType: response.data.client.documentType,
-              documentID: response.data.client.id,
+              documentType: response.data.user.documentType,
+              documentID: response.data.user.id,
               licensePlate: response.data.vehicle.id,
             });
           });
-        this.action = 'Edit'; 
+        this.action = 'Edit';
         this.title = 'Editar reserva';
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; 
+        this.action = 'Create';
         this.title = 'Nueva reserva';
         this.buttonText = 'Registrar';
       }
@@ -158,9 +158,9 @@ export class ResFormComponent implements OnInit{
 
   // Método para cargar los clientes
   loadClients(): void {
-    this.apiService.getAll('clients').subscribe((response) => {
-      this.clients = response.data;
-      console.log(this.clients); //para ver que cleintes trae
+    this.apiService.getAll('users').subscribe((response) => {
+      this.users = response.data;
+      console.log(this.users); //para ver que cleintes trae
     });
   }
 
@@ -170,18 +170,18 @@ export class ResFormComponent implements OnInit{
       this.vehicles = response.data;
     });
   }
- 
+
   //crea un nuevo array de clientes cuyo tipo doc sea el elegido
   onDocumentTypeSelected(event: MatSelectChange): void{
     const selectedDocumentType = event.value;
     console.log('El tipo doc elegido fue:', selectedDocumentType); //para ver el tipo doc elegido
-    this.filteredClients = this.clients.filter(client => client.documentType === selectedDocumentType)
+    this.filteredClients = this.users.filter(user => user.documentType === selectedDocumentType)
     console.log(this.filteredClients); //para ver la lista de clientes filtrados por el tipo doc elegido
   }
 
   onSubmit(){
     const formValues = this.resForm.value;
-  
+
     console.log(this.resForm.get('startDate')?.errors); //para ver los errores de plannedEndDate
     if (!this.resForm.invalid) {
 
@@ -206,12 +206,12 @@ export class ResFormComponent implements OnInit{
           plannedEndDate: formattedPlannedEndDate,
           realEndDate: null,
           cancellationDate: null,
-          initialKms: 0, // Revisar, debería ser null apenas se crea la reserva
+          initialKms: 0, // TODO: No hace falta, salvo que cobremos por kms
           finalKm: null,
-          client: Number(formData.documentID), 
+          user: Number(formData.documentID),
           vehicle: Number(formData.licensePlate),
         };
-        
+
 
         console.log('Datos enviados:', finalData); // para ver los datos que se envían
 
