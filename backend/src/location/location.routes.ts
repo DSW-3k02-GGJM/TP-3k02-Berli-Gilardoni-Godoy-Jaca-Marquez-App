@@ -4,7 +4,7 @@ import { AuthService } from '../shared/db/auth.service.js';
 
 export const locationRouter = Router();
 
-locationRouter.get('/', AuthService.isAuthenticated(["admin"]), findAll);
+locationRouter.get('/', findAll); //sin validacion de autenticacion para poder usar en el filtro de vehiculos
 locationRouter.get('/:id', AuthService.isAuthenticated(["admin"]), findOne);
 locationRouter.post('/', AuthService.isAuthenticated(["admin"]), sanitizedLocationInput, add);
 locationRouter.put('/:id', AuthService.isAuthenticated(["admin"]), sanitizedLocationInput, update);

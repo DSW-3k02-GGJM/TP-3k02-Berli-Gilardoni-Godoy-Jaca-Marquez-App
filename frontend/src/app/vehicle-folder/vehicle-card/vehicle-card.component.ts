@@ -20,6 +20,8 @@ export class VehicleCardComponent {
   @Input() categoryDescription!: string;
   @Input() image!: string;
   @Input() passengerCount!: Int16Array;
+  @Input() pricePerDay!: number;
+  @Input() deposit!: number;
 
   //constructor(private modalService: NgbModal) {}
 
@@ -38,7 +40,7 @@ export class VehicleCardComponent {
     modalRef.componentInstance.title = 'Reservar Vehículo'; // Título del modal
     modalRef.componentInstance.currentResId = -1; // Enviar el ID o datos necesarios al modal
 
-    
+
     modalRef.result.then((result) => {
       console.log('Resultado del modal:', result);
     }).catch((error) => {
@@ -70,7 +72,7 @@ export class VehicleCardComponent {
       }
     );
 
-    
+
   }
 
 

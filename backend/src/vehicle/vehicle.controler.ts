@@ -261,11 +261,19 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
       filter.startDate = new Date(filter.startDate);
       filter.endDate = new Date(filter.endDate);
       //TODO: usar timezones
-      reservationFilters.push({'r6.startDate': {$eq: null}});
-      reservationFilters.push({'r6.startDate': {$gte: new Date(filter.endDate.setDate(filter.endDate.getDate()+1))}});
-      reservationFilters.push({'r6.planned_end_date': {$lte: new Date(filter.startDate.setDate(filter.startDate.getDate()+1))}});
-      reservationFilters.push({'r6.cancellation_date': {$ne: null}});
-      filters.$and.push({$or: reservationFilters});
+      reservationFilters.push({
+        $or: [
+          {'r6.startDate': {$eq: null}},
+          {'r6.cancellation_date': {$ne: null}},
+          {
+            $and: [
+              {'r6.startDate': {$gt: new Date(filter.endDate.setDate(filter.endDate.getDate() + 1))}},
+              {'r6.planned_end_date': {$lt: new Date(filter.startDate.setDate(filter.startDate.getDate() + 1))}}
+            ]
+          }
+        ]
+      });
+      filters.$and.push({$and: reservationFilters});
 
       const vehicles = await em.find(
           Vehicle,
@@ -282,12 +290,20 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
             ],
           }
       );
-      res.status(200).json({message: 'All vehicles have been found', data: vehicles});
+
+      //Descomentar para quélos modelos sean unicos
+      /*
+      const uniqueVehicleModels = Array.from(new Set(vehicles.map(vehicle => vehicle.vehicleModel)));
+
+      res.status(200).json({message: 'All vehicles have been found', data: uniqueVehicleModels});*/
+      res.status(200).json({message: 'All available vehicles have been found', data: vehicles});
 
     } catch (error: any) {
       res.status(500).json({message: error.message});
     }
   };
+
+
 
   export {sanitizedVehicleInput, sanitizedFilterInput, findAll, findOne, add, update, remove, verifyLicensePlateExists };
 
