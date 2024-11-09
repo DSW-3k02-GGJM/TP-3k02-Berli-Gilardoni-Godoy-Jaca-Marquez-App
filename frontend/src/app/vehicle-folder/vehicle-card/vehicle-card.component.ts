@@ -1,3 +1,4 @@
+/*
 import { Component, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 //import { ResFormComponent } from '../../rescli-folder/rescli-form/rescli-form.component.js';
@@ -13,7 +14,8 @@ import { CommonModule } from '@angular/common';
   templateUrl: './vehicle-card.component.html',
   standalone: true,
   styleUrls: ['./vehicle-card.component.scss'],
-  imports: [CommonModule/*, ResFormComponent*/],
+  imports: [CommonModule]
+  //imports: [CommonModule, ResFormComponent],
 })
 export class VehicleCardComponent {
   @Input() vehicleModel!: string;
@@ -28,24 +30,7 @@ export class VehicleCardComponent {
   constructor(private modalService: NgbModal, private apiService: ApiService) {} // Inyecta el servicio ApiService
   // Método que se ejecuta al hacer clic en el botón "Alquilar"
   placeReservation() {
-    /*
-    console.log("se ejecuta la funcioonnnnnnnnnnn");
-    const modalRef = this.modalService.open(ResFormComponent, {
-      //size: 'lg', // tamaño del modal
-      //backdrop: 'static', // evita cerrar el modal haciendo clic fuera
-      size: 'lg',
-      centered: true,
-    });
-    console.log("se ejecuta la funcioonnnnnnnnnnn");
-    modalRef.componentInstance.title = 'Reservar Vehículo'; // Título del modal
-    modalRef.componentInstance.currentResId = -1; // Enviar el ID o datos necesarios al modal
-
-
-    modalRef.result.then((result) => {
-      console.log('Resultado del modal:', result);
-    }).catch((error) => {
-      console.error('Error al cerrar el modal:', error);
-    });*/
+    
 
     console.log("se ejecuta la funcioonnnnnnnnnnn");
 
@@ -76,4 +61,63 @@ export class VehicleCardComponent {
   }
 
 
+}
+*/
+
+// ---------------
+
+import { Component, Input, OnInit } from '@angular/core';
+import { ApiService } from '../../service/api.service';
+import { SharedService } from '../../service/shared.service.ts.service'; // verr
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-vehicle-card',
+  templateUrl: './vehicle-card.component.html',
+  styleUrls: ['./vehicle-card.component.scss'],
+  standalone: true,
+  imports: [CommonModule]
+})
+export class VehicleCardComponent implements OnInit {
+  @Input() vehicleModel!: string;
+  @Input() categoryDescription!: string;
+  @Input() image!: string;
+  @Input() passengerCount!: Int16Array;
+  @Input() pricePerDay!: number;
+  @Input() deposit!: number;
+
+  startDate: string = '';
+  endDate: string = '';
+
+  constructor(private apiService: ApiService, private sharedService: SharedService) {}
+
+  ngOnInit() {
+    this.sharedService.startDate$.subscribe(date => this.startDate = date);
+    this.sharedService.endDate$.subscribe(date => this.endDate = date);
+  }
+
+  placeReservation() {
+    console.log("se ejecuta la funcioonnnnnnnnnnn");
+
+    const reservationData = {
+      reservationDate: new Date().toISOString().split('T')[0],
+      startDate: this.startDate, // Usar la fecha de inicio del filtro
+      plannedEndDate: this.endDate, // Usar la fecha de fin del filtro
+      realEndDate: null,
+      cancellationDate: null,
+      initialKms: 0,
+      finalKm: null,
+      user: 1, // ID del cliente de prueba
+      vehicle: 1, // ID del vehículo de prueba
+    };
+
+    this.apiService.create('reservations', reservationData).subscribe(
+      (response) => {
+        console.log('Reserva creada:', response);
+      },
+      (error) => {
+        console.error('Error al crear la reserva:', error);
+      }
+    );
+  }
 }

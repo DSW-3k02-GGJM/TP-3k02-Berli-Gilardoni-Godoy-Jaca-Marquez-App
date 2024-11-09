@@ -72,4 +72,5 @@ export class VehicleListComponent implements OnInit {
     const { startDate, endDate, location } = filter;
     this.fetchVehicles(filter);
   }
+  
 }
