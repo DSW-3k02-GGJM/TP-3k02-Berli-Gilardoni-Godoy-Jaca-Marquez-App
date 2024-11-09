@@ -32,10 +32,7 @@ import { StaffComponent } from './staff-folder/admin/staff.component.js';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
-  { path: 'clients', component: ClientsComponent, canActivate: [authAdminGuard] },
-  { path: 'clients/create', component: ClientFormComponent },
-  { path: 'clients/:id', component: ClientFormComponent },
-
+  
   // este es el de las tarjetitas
   { path: 'vehicles', component: VehicleListComponent },
   // este es el de alta pero para el admin
