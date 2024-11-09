@@ -58,7 +58,7 @@ export class VehicleCardComponent {
       cancellationDate: null,
       initialKms: 0,
       finalKm: null,
-      client: 1, // ID del cliente de prueba
+      user: 1, // ID del cliente de prueba
       vehicle: 1, // ID del vehículo de prueba
     };
 
