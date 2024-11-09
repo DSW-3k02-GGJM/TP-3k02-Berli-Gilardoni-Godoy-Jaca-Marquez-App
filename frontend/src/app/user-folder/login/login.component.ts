@@ -3,7 +3,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AuthService } from "../../service/auth.service";
 import { HttpClientModule } from "@angular/common/http";
 import {Subscription} from "rxjs";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {SuccessfulModalComponent} from "../successful-modal/successful-modal.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import { CommonModule } from '@angular/common';
@@ -27,7 +27,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatButtonModule, 
     MatIconModule,
-    MatSelectModule
+    MatSelectModule,
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',

@@ -198,8 +198,8 @@ export class ResFormComponent implements OnInit{
         console.error('No se encontró el vehículo seleccionado');
         return; // Detener si no se encuentra el vehículo
       }
-        const formattedStartDate = formValues.startDate ? formatDate(formValues.startDate, 'yyyy/MM/dd', 'en-US') : '';
-        const formattedPlannedEndDate = formValues.plannedEndDate ? formatDate(formValues.plannedEndDate, 'yyyy/MM/dd', 'en-US') : '';
+        const formattedStartDate = formValues.startDate ? formatDate(formValues.startDate, 'yyyy-MM-dd', 'en-US') : '';
+        const formattedPlannedEndDate = formValues.plannedEndDate ? formatDate(formValues.plannedEndDate, 'yyyy-MM-dd', 'en-US') : '';
         const finalData = {
           reservationDate: new Date().toISOString().split('T')[0],
           startDate: formattedStartDate,

@@ -326,7 +326,7 @@ const login = async (req: Request, res: Response) => {
       
       const user = await em.findOne( User , { email } , {populate: [] , });
       if(!user){
-        return res.status(401).json({ message: 'Incorrect email' });
+        return res.status(401).json({ message: 'Wrong email' });
       }
       else {
           const isValid = await bcrypt.compare(password, user.password)

@@ -28,11 +28,12 @@ import { ProfileComponent } from './user-folder/profile/profile.component.js';
 import { UserFormComponent } from './user-folder/user-form/user-form.component.js';
 import { UsersComponent } from './user-folder/users/users.component.js';
 import { StaffComponent } from './staff-folder/admin/staff.component.js';
+import { ResStepperComponent } from './res-folder/res-stepper/res-stepper.component.js';
 
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
-  
+  { path: 'reserva', component: ResStepperComponent, canActivate: [authClientGuard] },
   // este es el de las tarjetitas
   { path: 'vehicles', component: VehicleListComponent },
   // este es el de alta pero para el admin
@@ -85,4 +86,6 @@ export const routes: Routes = [
   { path: 'reservationCli', component: ResComponent },
   { path: 'reservationCli/create', component: ResFormComponent },
   { path: 'reservationCli/modify/:id', component: ResFormComponent },
+
+
 ];

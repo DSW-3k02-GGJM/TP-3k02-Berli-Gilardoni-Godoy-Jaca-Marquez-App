@@ -2,6 +2,11 @@
     margin: 0;
     padding: 0;
   }
+  a {
+    color: blue; 
+    text-decoration: underline; 
+    cursor: pointer; 
+  }
   :host {
       height: auto;
       display: flex;

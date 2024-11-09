@@ -51,10 +51,10 @@
 
       </div>
       <!-- Submit button -->
-      <mat-error *ngIf="!errorMessage"></mat-error>
       <mat-error *ngIf="errorMessage">
         {{errorMessage}}
       </mat-error>
+      <p class="text-center">¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
       <div class="button">
         <button type="submit" [disabled]="loginForm.pending">
           <ng-container *ngIf="!loginForm.pending; else loading">

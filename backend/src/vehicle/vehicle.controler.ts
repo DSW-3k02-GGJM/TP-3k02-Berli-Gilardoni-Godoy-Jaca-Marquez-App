@@ -36,7 +36,7 @@ const sanitizedVehicleInput = async (
   const color = req.body.sanitizedInput.color;
   const vehicleModel = req.body.sanitizedInput.vehicleModel;
 
-  if (!licensePlate || !manufacturingYear || !totalKms || !location || !color || !vehicleModel) {
+  if (!licensePlate || !manufacturingYear || !location || !color || !vehicleModel) {
     return res.status(400).json({ message: 'All information is required' });
   }
 
@@ -292,11 +292,11 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
       );
 
       //Descomentar para quélos modelos sean unicos
-      /*
+
       const uniqueVehicleModels = Array.from(new Set(vehicles.map(vehicle => vehicle.vehicleModel)));
 
-      res.status(200).json({message: 'All vehicles have been found', data: uniqueVehicleModels});*/
-      res.status(200).json({message: 'All available vehicles have been found', data: vehicles});
+      res.status(200).json({message: 'All vehicles have been found', data: uniqueVehicleModels});
+      //res.status(200).json({message: 'All available vehicles have been found', data: vehicles});
 
     } catch (error: any) {
       res.status(500).json({message: error.message});

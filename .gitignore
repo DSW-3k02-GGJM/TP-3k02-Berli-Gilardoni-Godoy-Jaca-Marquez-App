@@ -56,3 +56,4 @@ frontend/.angular/cache/**
 *.vscode/
 backend/src/shared/db/orm.ts
 backend/src/shared/db/orm.ts
+backend/src/shared/db/orm.ts

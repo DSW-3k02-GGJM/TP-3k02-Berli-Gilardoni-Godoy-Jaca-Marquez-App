@@ -1,0 +1,79 @@
+<div class="container">
+  <mat-stepper [linear]="true" #stepper (selectionChange)="onStepChange($event)">
+    <mat-step [stepControl]="vehicleFilterForm">
+      <form [formGroup]="vehicleFilterForm">
+        <ng-template matStepLabel>Seleccionar filtro</ng-template>
+        <div class="user-details">
+          <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+            <mat-label>Ingresa el rango de la reserva</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input
+                matStartDate
+                placeholder="Fecha Inicio"
+                id="startDate"
+                class="form-control"
+                formControlName="startDate"
+              >
+              <input
+                matEndDate
+                placeholder="Fecha Fin"
+                id="plannedEndDate"
+                class="form-control"
+                formControlName="plannedEndDate"
+              >
+            </mat-date-range-input>
+            <mat-error *ngIf="vehicleFilterForm.get('plannedEndDate')?.errors?.dateInvalid || vehicleFilterForm.get('startDate')?.errors?.required">
+              Ambas fechas son requeridas.
+            </mat-error>
+            <mat-error *ngIf="vehicleFilterForm.get('startDate')?.errors?.dateInvalid">
+              El inicio no puede ser menor a la fecha actual.
+            </mat-error>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+
+          <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
+            <mat-label>Sucursal</mat-label>
+            <mat-select
+                id="location"
+                formControlName="location">
+                @for (location of locations; track location) {
+                  <mat-option [value]="location.id">{{location.locationName}}</mat-option>
+                }
+            </mat-select>
+            <mat-error *ngIf="vehicleFilterForm.get('location')?.errors?.required">
+              La sucursal es requerida.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <button mat-button matStepperNext>Siguiente</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="vehicleForm" >
+      <ng-template matStepLabel>Seleccionar modelo</ng-template>
+      <section class="vehicle-list mt-3 mx-5">
+        <ng-container *ngIf="response.length > 0">
+          <app-vehicle-card
+            *ngFor="let vehicle of response"
+            [vehicleModel]="vehicle.vehicleModel"
+            [categoryDescription]="vehicle.category"
+            [passengerCount] = "vehicle.passengerCount"
+            [image]="vehicle.image"
+            [pricePerDay]="vehicle.pricePerDay"
+            [deposit]="vehicle.deposit"
+          ></app-vehicle-card>
+        </ng-container>
+      </section>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <p>You are now done.</p>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</div>
