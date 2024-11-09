@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -42,8 +42,13 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 })
 export class ResStepperComponent implements OnInit {
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isSmallScreen = window.innerWidth < 700;
+  }
   locations: any[] = [];
   response: any[] = [];
+  isSmallScreen = window.innerWidth < 768;
   
   constructor(
     private apiService: ApiService,
@@ -119,7 +124,7 @@ export class ResStepperComponent implements OnInit {
     });
   }
   setFilter() {
-    
+  
     if (!this.vehicleFilterForm.invalid) {
       const formValues = this.vehicleFilterForm.value;
       const formattedStartDate = formValues.startDate ? formatDate(formValues.startDate, 'yyyy-MM-dd', 'en-US') : '';

@@ -1,11 +1,11 @@
 <div class="container">
-  <mat-stepper [linear]="true" #stepper (selectionChange)="onStepChange($event)">
+  <mat-stepper [orientation]="isSmallScreen ? 'vertical' : 'horizontal'" [linear]="true" #stepper (selectionChange)="onStepChange($event)">
     <mat-step [stepControl]="vehicleFilterForm">
       <form [formGroup]="vehicleFilterForm">
         <ng-template matStepLabel>Seleccionar filtro</ng-template>
         <div class="user-details">
           <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
-            <mat-label>Ingresa el rango de la reserva</mat-label>
+            <mat-label>Ingresa fechas</mat-label>
             <mat-date-range-input [rangePicker]="picker">
               <input
                 matStartDate
@@ -53,6 +53,10 @@
     </mat-step>
     <mat-step [stepControl]="vehicleForm" >
       <ng-template matStepLabel>Seleccionar modelo</ng-template>
+      <div *ngIf="response.length === 0" class="container2">
+        <p class="title">No hay autos disponibles para esa fecha en esa sucursal ;\</p>
+        <button style="margin-top: 10px;" mat-button matStepperPrevious>Cambiar Filtro</button>
+      </div>
       <section class="vehicle-list mt-3 mx-5">
         <ng-container *ngIf="response.length > 0">
           <app-vehicle-card
@@ -66,9 +70,12 @@
           ></app-vehicle-card>
         </ng-container>
       </section>
+      <div>
+        <button mat-button matStepperPrevious>Volver</button>
+      </div>
     </mat-step>
     <mat-step>
-      <ng-template matStepLabel>Done</ng-template>
+      <ng-template matStepLabel>Confirmar Reserva</ng-template>
       <p>You are now done.</p>
       <div>
         <button mat-button matStepperPrevious>Back</button>
