@@ -25,11 +25,7 @@
         <td>{{ reservation.vehicle.licensePlate }}</td>
         <!-- Ver fórmula de cálculo para el precio final-->
         <td>
-          {{
-            reservation.finalKm != null && reservation.initialKms != null
-              ? "$" + (reservation.finalKm - reservation.initialKms) * 5
-              : "$0"
-          }}
+          ${{ reservation.realEndDate ? calculatePrice(reservation) : "0" }}
         </td>
         <td>
           <div class="d-flex justify-content-around">

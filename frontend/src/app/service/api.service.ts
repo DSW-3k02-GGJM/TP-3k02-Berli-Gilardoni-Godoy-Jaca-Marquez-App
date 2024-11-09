@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, delay, map, Observable, of } from 'rxjs';
-import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
-
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  ValidationErrors,
+} from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +28,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   getAll(entity: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${entity}`,  {
+    return this.http.get(`${this.apiUrl}/${entity}`, {
       headers: this.headers,
       withCredentials: true,
     });
@@ -63,13 +66,21 @@ export class ApiService {
     });
   }
 
-  entityNameExists(entity: string, entityName: string, id: number): Observable<boolean> {
-    return this.http.get<{ exists: boolean }>(`${this.apiUrl}/${entity}/entityName-exists/${entityName}/${id}`, {
-      withCredentials: true,
-    })
+  entityNameExists(
+    entity: string,
+    entityName: string,
+    id: number
+  ): Observable<boolean> {
+    return this.http
+      .get<{ exists: boolean }>(
+        `${this.apiUrl}/${entity}/entityName-exists/${entityName}/${id}`,
+        {
+          withCredentials: true,
+        }
+      )
       .pipe(
         delay(1000),
-        map(response => response.exists),
+        map((response) => response.exists),
         catchError(() => of(false))
       );
   }
@@ -82,5 +93,4 @@ export class ApiService {
       );
     };
   }
-
 }

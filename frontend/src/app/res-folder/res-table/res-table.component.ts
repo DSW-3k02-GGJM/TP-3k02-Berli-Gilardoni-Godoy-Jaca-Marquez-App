@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { ResFormComponent } from '../res-form/res-form.component.js';
 import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
 import { Router } from '@angular/router';
+import { differenceInDays } from 'date-fns';
 
 @Component({
   selector: 'app-res-table',
@@ -75,10 +76,18 @@ export class ResTableComponent {
     modalRef.result.then(
       (result) => {
         if (result) {
+          const data = {
+            // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
+            startDate: res.startDate,
+            plannedEndDate: res.plannedEndDate,
+            user: res.user.id,
+            vehicle: res.vehicle.id,
+            //
+            initialKms: res.vehicle.totalKms,
+          };
+
           this.apiService
-            .update('reservations', Number(res.id), {
-              initialKms: res.vehicle.totalKms,
-            })
+            .update('reservations', Number(res.id), data)
             .subscribe((response) => {
               this.resCreatedOrModifiedService.notifyResCreatedOrModified();
             });
@@ -96,11 +105,19 @@ export class ResTableComponent {
     modalRef.result.then(
       (result) => {
         if (result) {
+          const data = {
+            // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
+            startDate: res.startDate,
+            plannedEndDate: res.plannedEndDate,
+            user: res.user.id,
+            vehicle: res.vehicle.id,
+            //
+            realEndDate: new Date().toISOString().split('T')[0],
+            finalKm: res.vehicle.totalKms,
+          };
+
           this.apiService
-            .update('reservations', Number(res.id), {
-              realEndDate: new Date().toISOString().split('T')[0],
-              finalKm: res.vehicle.totalKms,
-            })
+            .update('reservations', Number(res.id), data)
             .subscribe((response) => {
               this.resCreatedOrModifiedService.notifyResCreatedOrModified();
             });
@@ -108,5 +125,21 @@ export class ResTableComponent {
       },
       () => {}
     );
+  }
+
+  calculatePrice(res: any): string {
+    const startDate = new Date(res.startDate);
+    const plannedEndDate = new Date(res.plannedEndDate);
+    const realEndDate = new Date(res.realEndDate);
+    const pricePerDay = res.vehicle.vehicleModel.category.pricePerDay;
+
+    // Determinar cuál de las dos fechas es mayor
+    // Si el cliente devuelve el auto antes se le cobra según la fecha de fin planeada de la reserva
+    // Si lo devuelve después de la fecha planeada, se le cobra según la fecha fin real (fecha al momento de la devolucion)
+    const endDate = plannedEndDate > realEndDate ? plannedEndDate : realEndDate;
+
+    // Calcular la diferencia en días y el precio
+    const days = differenceInDays(endDate, startDate);
+    return `${days * pricePerDay}`;
   }
 }

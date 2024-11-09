@@ -36,13 +36,15 @@ const sanitizedReservationInput = (
 
   console.log('Datos de la reserva:', req.body.sanitizedInput);
   console.log(!startDate, !plannedEndDate, !initialKms, !user, !vehicle);
-  console.log( initialKms);
+  console.log(initialKms);
   if (!startDate || !plannedEndDate || !user || !vehicle) {
     return res.status(400).json({ message: 'All information is required' });
   }
 
   if (initialKms < 0) {
-    return res.status(400).json({ message: 'Initial kms must be greater than 0' });
+    return res
+      .status(400)
+      .json({ message: 'Initial kms must be greater than 0' });
   }
 
   next();
@@ -65,12 +67,13 @@ const findAll = async (req: Request, res: Response) => {
         ],
       }
     );
-    res
-      .status(200)
-      .json({ message: 'All reservations have been found', data: reservations });
+    res.status(200).json({
+      message: 'All reservations have been found',
+      data: reservations,
+    });
   } catch (error: any) {
     console.log(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -92,15 +95,16 @@ const findOne = async (req: Request, res: Response) => {
         ],
       }
     );
-    if (!reservation) { 
+    if (!reservation) {
       return res.status(404).json({ message: 'Reservation not found' });
-    }
-    else {
-      res.status(200).json({ message: 'The reservation has been found', data: reservation });
+    } else {
+      res
+        .status(200)
+        .json({ message: 'The reservation has been found', data: reservation });
     }
   } catch (error: any) {
     console.log(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -108,30 +112,40 @@ const add = async (req: Request, res: Response) => {
   try {
     const reservation = em.create(Reservation, req.body.sanitizedInput);
     await em.flush();
-    res.status(201).json({ message: 'The reservation has been created', data: reservation });
+    res
+      .status(201)
+      .json({ message: 'The reservation has been created', data: reservation });
   } catch (error: any) {
     console.log(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
 //TODO: crear funcion para agregar reserva del pov user con req.session.user.id y asignar vehiculo
 
 const update = async (req: Request, res: Response) => {
+  console.log('Datos recibidos en el backend: ', req.body);
+  console.log('Id Reserva Buscada: ' + req.params.id);
+
   try {
     const id = Number.parseInt(req.params.id);
     const reservation = await em.findOne(Reservation, { id });
-    if (!reservation) { 
+
+    console.log('Reserva Encontrada: ' + reservation);
+
+    if (!reservation) {
       return res.status(404).json({ message: 'Reservation not found' });
-    }
-    else {
+    } else {
       em.assign(reservation, req.body.sanitizedInput);
       await em.flush();
-      res.status(200).json({ message: 'The reservation has been updated', data: reservation });
+      res.status(200).json({
+        message: 'The reservation has been updated',
+        data: reservation,
+      });
     }
   } catch (error: any) {
-    console.log(error.message);
-    res.status(500).json({ message: "Server error" });
+    console.log(error);
+    res.status(500).json({ message: 'Server error', error: error });
   }
 };
 
@@ -141,17 +155,15 @@ const remove = async (req: Request, res: Response) => {
     const reservation = await em.findOne(Reservation, { id });
     if (!reservation) {
       return res.status(404).json({ message: 'Reservation not found' });
-    }
-    else {
+    } else {
       const reservationReference = em.getReference(Reservation, id);
       await em.removeAndFlush(reservationReference);
       res.status(200).send({ message: 'The reservation has been deleted' });
     }
   } catch (error: any) {
     console.log(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: 'Server error' });
   }
 };
-
 
 export { sanitizedReservationInput, findAll, findOne, add, update, remove };
