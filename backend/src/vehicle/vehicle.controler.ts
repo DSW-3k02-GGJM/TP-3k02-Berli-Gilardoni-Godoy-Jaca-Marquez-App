@@ -266,7 +266,7 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
           {'r6.startDate': {$eq: null}},
           {'r6.cancellation_date': {$ne: null}},
           {
-            $and: [
+            $or: [
               {'r6.startDate': {$gt: new Date(filter.endDate.setDate(filter.endDate.getDate() + 1))}},
               {'r6.planned_end_date': {$lt: new Date(filter.startDate.setDate(filter.startDate.getDate() + 1))}}
             ]
