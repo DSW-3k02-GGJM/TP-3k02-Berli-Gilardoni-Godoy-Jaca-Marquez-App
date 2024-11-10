@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../../service/auth.service";
 import { HttpClientModule } from "@angular/common/http";
@@ -13,6 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericSuccesDialogComponent } from '../../shared/generic-succes-dialog/generic-succes-dialog.component.js';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +36,18 @@ import { MatSelectModule } from '@angular/material/select';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
+  readonly dialog = inject(MatDialog);
 
+  openDialog(): void {
+    this.dialog.open(GenericSuccesDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Login exitoso',
+      }
+    });
+  }
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -60,8 +73,7 @@ export class LoginComponent {
       .subscribe(
         res => {
           this.errorMessage = null;
-          const modalRef = this.modalService.open(SuccessfulModalComponent, { backdrop: 'static', keyboard: false });
-          modalRef.componentInstance.title = 'Inicio de sesión exitoso';
+          this.openDialog();
         },
         err => {
           if (err.status === 401) {

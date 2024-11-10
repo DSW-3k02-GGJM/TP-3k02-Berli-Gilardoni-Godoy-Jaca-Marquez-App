@@ -6,6 +6,8 @@ import {
   add,
   update,
   remove,
+  reservation,
+  sanitizeUserdReservationInput,
 } from './reservation.controler.js';
 import { AuthService } from '../shared/db/auth.service.js';
 
@@ -26,6 +28,13 @@ reservationRouter.post(
   AuthService.isAuthenticated(['admin', 'employee']),
   sanitizedReservationInput,
   add
+);
+
+reservationRouter.post(
+  '/createUserReservation',
+  AuthService.isAuthenticated(['admin', 'employee','client']),
+  sanitizeUserdReservationInput,
+  reservation
 );
 reservationRouter.put(
   '/:id',

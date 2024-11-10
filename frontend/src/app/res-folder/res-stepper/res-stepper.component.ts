@@ -17,6 +17,11 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { VehicleCardComponent } from '../../vehicle-folder/vehicle-card/vehicle-card.component.js';
 import { formatDate } from '@angular/common';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { MatStepper } from '@angular/material/stepper';
+import { ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericSuccesDialogComponent } from '../../shared/generic-succes-dialog/generic-succes-dialog.component.js';
+
 
 
 @Component({
@@ -40,15 +45,41 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
   templateUrl: './res-stepper.component.html',
   styleUrl: './res-stepper.component.scss'
 })
+
 export class ResStepperComponent implements OnInit {
+  readonly dialog = inject(MatDialog);
+
+  openDialog(): void {
+    this.dialog.open(GenericSuccesDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Reserva exitosa',
+      }
+    });
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isSmallScreen = window.innerWidth < 700;
   }
+  @ViewChild('stepper') stepper!: MatStepper;
+
   locations: any[] = [];
   response: any[] = [];
   isSmallScreen = window.innerWidth < 768;
+
+  startDate: string = '';
+  plannedEndDate: string = '';
+  location: string = '';
+  vehicleModel = '';
+  categoryDescription: string = '';
+  passengerCount: number = 0;
+  pricePerDay: number = 0;
+  deposit: number = 0;
+
+  errorMessage: string = '';
   
   constructor(
     private apiService: ApiService,
@@ -60,6 +91,16 @@ export class ResStepperComponent implements OnInit {
 
   ngOnInit() {
     this.loadLocations();
+    this.vehicleFilterForm.get('startDate')?.valueChanges.subscribe(value => {
+      this.startDate = value ? formatDate(value, 'dd/MM/yyyy', 'en-US') : '';
+    });
+    this.vehicleFilterForm.get('plannedEndDate')?.valueChanges.subscribe(value => {
+      this.plannedEndDate = value ? formatDate(value, 'dd/MM/yyyy', 'en-US') : '';
+    });
+    this.vehicleFilterForm.get('location')?.valueChanges.subscribe(value => {
+      const selectedLocation = this.locations.find(location => location.id === value);
+      this.location = selectedLocation ? selectedLocation.locationName : '';
+    });
   }
 
   vehicleFilterForm: FormGroup = new FormGroup({
@@ -68,9 +109,19 @@ export class ResStepperComponent implements OnInit {
     location: new FormControl('', [Validators.required]),
   }, { validators: this.dateLessThan('startDate', 'plannedEndDate') });
 
-  vehicleForm = new FormGroup({
-    licensePlate: new FormControl('', [Validators.required]),
+  vehicleModelForm = new FormGroup({
+    vehicleModel: new FormControl('', [Validators.required]),
   }, { validators: this.dateLessThan('startDate', 'plannedEndDate') });
+
+  onModelSelected(vehicleModel : any) {
+    this.vehicleModel = vehicleModel.vehicleModel;
+    this.categoryDescription = vehicleModel.categoryDescription;
+    this.passengerCount = vehicleModel.passengerCount;
+    this.pricePerDay = vehicleModel.pricePerDay;
+    this.deposit = vehicleModel.deposit;
+    this.vehicleModelForm.get('vehicleModel')?.setValue(vehicleModel.vehicleModel);
+    this.stepper.next();
+  }
 
   //valida que startDate >= fecha actual y valida que startDate < plannedEndDate
   dateLessThan(startDateField: string, endDateField: string) {
@@ -156,4 +207,37 @@ export class ResStepperComponent implements OnInit {
     );
     return DateFormat;
   }
+
+  submitRes() {
+    const formValues = this.vehicleFilterForm.value;
+    const formattedStartDate = formValues.startDate ? formatDate(formValues.startDate, 'yyyy-MM-dd', 'en-US') : '';
+    const formattedPlannedEndDate = formValues.plannedEndDate ? formatDate(formValues.plannedEndDate, 'yyyy-MM-dd', 'en-US') : '';
+
+    const resData = { 
+      reservationDate: new Date().toISOString().split('T')[0],
+      startDate: formattedStartDate,
+      plannedEndDate: formattedPlannedEndDate,
+      location: this.vehicleFilterForm.value.location,
+      vehicleModel: this.vehicleModel,
+    }
+
+    this.apiService
+      .createUserReservation(resData)
+      .subscribe({
+        next: response => {
+          console.log('Response:', response);
+          this.openDialog();
+        },
+        error: error => {
+          console.log('Error:', error);
+          if (error.status !== 400) {
+            this.errorMessage = "Error en el servidor. Intente de nuevo.";
+          }
+        }
+      });
+
+  }
 }
+
+
+

@@ -5,6 +5,8 @@ import {CommonModule} from "@angular/common";
 import {catchError, map, Observable, of, Subscription,} from "rxjs";
 import {SuccessfulModalComponent} from "../user-folder/successful-modal/successful-modal.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import { MatDialog } from '@angular/material/dialog';
+import { GenericSuccesDialogComponent } from '../shared/generic-succes-dialog/generic-succes-dialog.component.js';
 
 @Component({
   selector: 'app-responsive-navbar',
@@ -14,6 +16,18 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrl: './responsive-navbar.component.scss',
 })
 export class ResponsiveNavbarComponent implements OnInit {
+  readonly dialog = inject(MatDialog);
+
+  openDialog(): void {
+    this.dialog.open(GenericSuccesDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Logout exitoso',
+      }
+    });
+  }
   constructor(
     private authService: AuthService,
     private modalService: NgbModal
@@ -66,8 +80,7 @@ export class ResponsiveNavbarComponent implements OnInit {
     this.authService.logout()
       .subscribe(
       res => {
-        const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true });
-        modalRef.componentInstance.title = 'Logout exitoso';
+        this.openDialog();
         console.log(res);
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../../service/auth.service";
 import { HttpClientModule } from "@angular/common/http";
@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
+import { GenericSuccesDialogComponent } from '../../shared/generic-succes-dialog/generic-succes-dialog.component.js';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-register',
@@ -32,6 +34,18 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
+  readonly dialog = inject(MatDialog);
+
+  openDialog(): void {
+    this.dialog.open(GenericSuccesDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Registro exitoso',
+      }
+    });
+  }
   errorMessage: string = '';
   hide = signal(true);
   clickEvent(event: MouseEvent) {
@@ -65,8 +79,7 @@ export class RegisterComponent {
     if (!this.registerForm.invalid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: response => {
-          const modalRef = this.modalService.open(SuccessfulModalComponent, { backdrop: 'static', keyboard: false , size: 'sm' });
-          modalRef.componentInstance.title = 'Registro exitoso';
+          this.openDialog();
           console.log(response);
         },
         error: error => {

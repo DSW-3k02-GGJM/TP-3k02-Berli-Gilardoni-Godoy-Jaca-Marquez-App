@@ -66,7 +66,7 @@ export class VehicleCardComponent {
 
 // ---------------
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, output } from '@angular/core';
 import { ApiService } from '../../service/api.service';
 import { SharedService } from '../../service/shared.service.ts.service'; // verr
 import { CommonModule } from '@angular/common';
@@ -79,13 +79,14 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class VehicleCardComponent implements OnInit {
-  @Input() vehicleModel!: string;
+  @Input() vehicleModel!: any;
   @Input() categoryDescription!: string;
   @Input() image!: string;
   @Input() passengerCount!: Int16Array;
   @Input() pricePerDay!: number;
   @Input() deposit!: number;
 
+  @Output() modelSelected = new EventEmitter<any>();
   startDate: string = '';
   endDate: string = '';
 
@@ -97,6 +98,15 @@ export class VehicleCardComponent implements OnInit {
   }
 
   placeReservation() {
+    const vehicleData = {
+      vehicleModel: this.vehicleModel,
+      categoryDescription: this.categoryDescription,
+      passengerCount: this.passengerCount,
+      pricePerDay: this.pricePerDay,
+      deposit: this.deposit
+    };
+    this.modelSelected.emit(vehicleData);
+    /*
     console.log("se ejecuta la funcioonnnnnnnnnnn");
 
     const reservationData = {
@@ -118,6 +128,6 @@ export class VehicleCardComponent implements OnInit {
       (error) => {
         console.error('Error al crear la reserva:', error);
       }
-    );
+    );*/
   }
 }

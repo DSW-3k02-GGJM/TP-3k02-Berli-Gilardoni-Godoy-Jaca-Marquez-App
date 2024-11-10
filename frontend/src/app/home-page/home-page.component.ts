@@ -12,6 +12,6 @@ export class HomePageComponent {
   constructor(private router: Router) {}
 
   showVehicles() {
-    this.router.navigate(['/vehicles']);
+    this.router.navigate(['/reserva']);
   }
 }

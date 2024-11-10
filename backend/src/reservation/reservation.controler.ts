@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Reservation } from './reservation.entity.js';
+import { Vehicle } from '../vehicle/vehicle.entity.js';
+import { User } from '../user/user.entity.js';
 
 const em = orm.em;
 
@@ -15,8 +17,6 @@ const sanitizedReservationInput = (
     plannedEndDate: req.body.plannedEndDate,
     realEndDate: req.body.realEndDate,
     cancellationDate: req.body.cancellationDate,
-    initialKms: req.body.initialKms,
-    finalKm: req.body.finalKm,
     user: req.body.user,
     vehicle: req.body.vehicle,
   };
@@ -30,24 +30,82 @@ const sanitizedReservationInput = (
   const id = Number.parseInt(req.params.id);
   const startDate = req.body.sanitizedInput.startDate;
   const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
-  const initialKms = req.body.sanitizedInput.initialKms;
   const user = req.body.sanitizedInput.user;
   const vehicle = req.body.sanitizedInput.vehicle;
 
   console.log('Datos de la reserva:', req.body.sanitizedInput);
-  console.log(!startDate, !plannedEndDate, !initialKms, !user, !vehicle);
-  console.log(initialKms);
+  console.log(!startDate, !plannedEndDate, !user, !vehicle);
   if (!startDate || !plannedEndDate || !user || !vehicle) {
     return res.status(400).json({ message: 'All information is required' });
   }
 
-  if (initialKms < 0) {
-    return res
-      .status(400)
-      .json({ message: 'Initial kms must be greater than 0' });
+
+  next();
+};
+
+const sanitizeUserdReservationInput = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req.body.sanitizedInput = {
+    reservationDate: req.body.reservationDate,
+    startDate: req.body.startDate,
+    plannedEndDate: req.body.plannedEndDate,
+    location: req.body.location,
+    vehicleModel: req.body.vehicleModel,
+  };
+  // Más validaciones
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  });
+
+  const id = Number.parseInt(req.params.id);
+  const reservationDate = req.body.sanitizedInput.reservationDate;
+  const startDate = req.body.sanitizedInput.startDate;
+  const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
+  const location = req.body.sanitizedInput.location;
+  const vehicleModel = req.body.sanitizedInput.vehicleModel;
+
+  if (!startDate || !plannedEndDate || !location || !vehicleModel || !reservationDate) {
+    return res.status(400).json({ message: 'All information is required' });
   }
 
   next();
+};
+
+const reservation = async (req: Request, res: Response) => {
+  try {
+    const reservationDate = req.body.reservationDate;
+    const startDate = req.body.startDate;
+    const plannedEndDate = req.body.plannedEndDate;
+    const location = req.body.location;
+    const vehicleModel = req.body.vehicleModel;
+
+    const userId = req.session.user.id;
+    const user = await em.findOneOrFail(User, { id: userId });
+
+    const vehicleSelected = await em.findOneOrFail( Vehicle, {id : 1}, { populate: [], });
+    const reservation = em.create(Reservation, {
+      reservationDate: reservationDate,
+      startDate: startDate,
+      plannedEndDate: plannedEndDate,
+      realEndDate: null,
+      cancellationDate: null,
+      user: user,
+      vehicle: vehicleSelected,
+    });
+
+    await em.flush();
+    res
+      .status(201)
+      .json({ message: 'The reservation has been created', data: reservation });
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
 };
 
 const findAll = async (req: Request, res: Response) => {
@@ -166,4 +224,4 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedReservationInput, findAll, findOne, add, update, remove };
+export { sanitizedReservationInput, sanitizeUserdReservationInput, findAll, findOne, add, update, remove, reservation };
