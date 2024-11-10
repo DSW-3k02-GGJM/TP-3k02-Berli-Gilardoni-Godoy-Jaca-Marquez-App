@@ -4,13 +4,6 @@
     <button style="margin-bottom: 5px;" mat-stroked-button (click)="navigateToReservations()">Volver</button>
   </div>
   <hr>
-  <div *ngIf="action === 'Edit'" class="information">
-      <div class="information-title">ID</div>
-      <div class="information-content">
-          <span>{{currentResId}}</span>
-      </div>
-  </div>
-  <hr *ngIf="action === 'Edit'">
   <div class="content">
     <form [formGroup]="resForm" (ngSubmit)="onSubmit()" autocomplete="off">
       <div class="user-details">
