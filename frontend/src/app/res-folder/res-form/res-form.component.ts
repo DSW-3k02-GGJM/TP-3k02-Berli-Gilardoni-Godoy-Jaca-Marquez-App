@@ -49,7 +49,6 @@ export class ResFormComponent implements OnInit{
   title: string = '';
   buttonText: string = '';
   currentResId: number = -1;
-  action: string = '';
   errorMessage: string = '';
 
   users: any[] = [];
@@ -102,41 +101,6 @@ export class ResFormComponent implements OnInit{
     // y almacenarlas en una propiedad del componente para usar en el formulario.
     this.loadClients();
     this.loadVehicles();
-
-    this.activatedRoute.params.subscribe(params => {
-      this.currentResId = params['id'];
-
-      if (this.currentResId) {
-        this.apiService
-          .getOne('reservations', Number(this.currentResId))
-          .subscribe((response) => {
-            let startDateFormat = this.formatDate(
-              response.data.startDate
-            );
-            let plannedEndDateFormat = this.formatDate(
-              response.data.plannedEndDate
-            );
-            this.filteredClients = this.users.filter(user => user.documentType === response.data.user.documentType)
-            console.log('Id del cliente', response.data.user.documentID)
-
-            this.resForm.patchValue({
-              startDate: startDateFormat,
-              plannedEndDate: plannedEndDateFormat,
-              documentType: response.data.user.documentType,
-              documentID: response.data.user.id,
-              licensePlate: response.data.vehicle.id,
-            });
-          });
-        this.action = 'Edit';
-        this.title = 'Editar reserva';
-        this.buttonText = 'Guardar cambios';
-      } else {
-        this.action = 'Create';
-        this.title = 'Nueva reserva';
-        this.buttonText = 'Registrar';
-      }
-    });
-
   }
 
   formatDate(DateDB: string): string {
@@ -215,7 +179,6 @@ export class ResFormComponent implements OnInit{
 
         console.log('Datos enviados:', finalData); // para ver los datos que se envían
 
-        if (this.action === 'Create') {
           this.apiService
           .create('reservations', finalData)
           .subscribe({
@@ -229,22 +192,6 @@ export class ResFormComponent implements OnInit{
               }
             }
           });
-        } else if (this.action === 'Edit') {
-          this.apiService
-            .update('reservations', this.currentResId, finalData)
-            .subscribe({
-              next: response => {
-                this.resCreatedOrModifiedService.notifyResCreatedOrModified();
-                this.navigateToReservations();
-              },
-              error: error => {
-                if (error.status !== 400) {
-                  this.errorMessage = "Error en el servidor. Intente de nuevo.";
-                }
-              }
-            });
-        }
-
     }
   }
 

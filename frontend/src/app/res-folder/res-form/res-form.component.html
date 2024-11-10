@@ -1,6 +1,6 @@
 <div class="container unselectable">
   <div class="d-flex justify-content-between">
-    <div class="title">{{title}}</div>
+    <div class="title">Nueva reserva</div>
     <button style="margin-bottom: 5px;" mat-stroked-button (click)="navigateToReservations()">Volver</button>
   </div>
   <hr>
@@ -93,7 +93,7 @@
       <div class="button">
         <button type="submit" [disabled]="resForm.pending">
           <ng-container *ngIf="!resForm.pending; else loading">
-            {{buttonText}}
+            Registrar
           </ng-container>
           <ng-template #loading>
             <mat-spinner diameter="30"></mat-spinner>
