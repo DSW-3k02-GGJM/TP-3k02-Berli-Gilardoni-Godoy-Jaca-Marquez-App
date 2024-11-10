@@ -10,6 +10,7 @@ import { ResFormComponent } from '../res-form/res-form.component.js';
 import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
 import { Router } from '@angular/router';
 import { differenceInDays } from 'date-fns';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-res-table',
@@ -22,6 +23,7 @@ import { differenceInDays } from 'date-fns';
     ConfirmDeletionComponent,
     FilterPipe,
     FormsModule,
+    MatInputModule,
   ],
   providers: [ApiService],
 })
