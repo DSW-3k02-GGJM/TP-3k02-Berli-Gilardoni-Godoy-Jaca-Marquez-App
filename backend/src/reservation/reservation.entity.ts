@@ -20,6 +20,12 @@ export class Reservation extends BaseEntity {
   @Property({ type: 'date', nullable: true })
   cancellationDate?: Date;
 
+  @Property({ nullable: true })
+  initialKms?: number;
+
+  @Property({ nullable: true })
+  finalKm?: number;
+
   @ManyToOne(() => User, { nullable: false })
   user!: Rel<User>;
 

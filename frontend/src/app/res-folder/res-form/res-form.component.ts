@@ -206,6 +206,8 @@ export class ResFormComponent implements OnInit{
           plannedEndDate: formattedPlannedEndDate,
           realEndDate: null,
           cancellationDate: null,
+          initialKms: null,
+          finalKm: null,
           user: Number(formData.documentID),
           vehicle: Number(formData.licensePlate),
         };

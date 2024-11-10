@@ -17,6 +17,8 @@ const sanitizedReservationInput = (
     plannedEndDate: req.body.plannedEndDate,
     realEndDate: req.body.realEndDate,
     cancellationDate: req.body.cancellationDate,
+    initialKms: req.body.initialKms,
+    finalKm: req.body.finalKm,
     user: req.body.user,
     vehicle: req.body.vehicle,
   };
@@ -30,6 +32,7 @@ const sanitizedReservationInput = (
   const id = Number.parseInt(req.params.id);
   const startDate = req.body.sanitizedInput.startDate;
   const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
+  const initialKms = req.body.sanitizedInput.initialKms;
   const user = req.body.sanitizedInput.user;
   const vehicle = req.body.sanitizedInput.vehicle;
 
