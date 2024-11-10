@@ -65,10 +65,18 @@
         </td>
         <td>
           <div class="d-flex justify-content-around">
-            <button class="btn btn-dark fs-5" (click)="editRes(reservation)">
+            <button
+              class="btn btn-dark fs-5"
+              (click)="checkOutRes(reservation)"
+              [disabled]="reservation.finalKm"
+            >
               ✏️
             </button>
-            <button class="btn btn-dark fs-5" (click)="deleteRes(reservation)">
+            <button
+              class="btn btn-dark fs-5"
+              (click)="deleteRes(reservation)"
+              [disabled]="reservation.finalKm"
+            >
               ❌
             </button>
           </div>
