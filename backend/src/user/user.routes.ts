@@ -18,7 +18,7 @@ userRouter.post('/is-authenticated', AuthService.isAuthenticated(["employee","cl
 userRouter.get('/email-exists/:email', verifyEmailExists)
 userRouter.get('/documentID-exists/:documentID/:id', verifyDocumentIDExists)
 userRouter.post('/admin', AuthService.isAuthenticated(["admin"]), verifyAuthentication)
-userRouter.post('/employee', AuthService.isAuthenticated(["employee","admin","client"]), verifyAuthentication)
+userRouter.post('/employee', AuthService.isAuthenticated(["employee","admin"]), verifyAuthentication)
 userRouter.post('/client', AuthService.isAuthenticated(["employee","client","admin"]), verifyAuthentication)
 userRouter.post('/authenticated-id', AuthService.isAuthenticated(["employee","client","admin"]), getAuthenticatedId)
 userRouter.post('/authenticated-role', AuthService.isAuthenticated(["employee","client","admin"]), getAuthenticatedRole)
