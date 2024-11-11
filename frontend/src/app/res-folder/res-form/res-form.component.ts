@@ -1,32 +1,37 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import {
+  AbstractControl,
+  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
-  AbstractControl
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { ApiService } from '../../service/api.service';
-import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import {map, Observable} from "rxjs";
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule, MatSelectChange } from '@angular/material/select';
+import { MatStepperModule } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ApiService } from '../../service/api.service.js';
+import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { VehicleCardComponent } from '../../vehicle-folder/vehicle-card/vehicle-card.component.js';
 import { formatDate } from '@angular/common';
-
-//falta todo lo del service created-or-modified
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { MatStepper } from '@angular/material/stepper';
+import { ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericSuccesDialogComponent } from '../../shared/generic-succes-dialog/generic-succes-dialog.component.js';
+import { differenceInDays } from 'date-fns';
 
 @Component({
-  selector: 'app-res-form',
+  selector: 'app-res-stepper',
   standalone: true,
   imports: [
     CommonModule,
@@ -38,40 +43,100 @@ import { formatDate } from '@angular/common';
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatStepperModule,
+    VehicleCardComponent,
   ],
   providers: [provideNativeDateAdapter()],
-
   templateUrl: './res-form.component.html',
-  styleUrl: '../../styles/genericForm.scss'
+  styleUrl: './res-form.component.scss',
 })
-export class ResFormComponent implements OnInit{
-  title: string = '';
-  buttonText: string = '';
-  currentResId: number = -1;
-  errorMessage: string = '';
+export class ResFormComponent implements OnInit {
+  readonly dialog = inject(MatDialog);
 
+  openDialog(): void {
+    this.dialog.open(GenericSuccesDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data: {
+        title: 'Reserva exitosa',
+      },
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isSmallScreen = window.innerWidth < 700;
+  }
+  @ViewChild('stepper') stepper!: MatStepper;
+
+  locations: any[] = [];
   users: any[] = [];
-  vehicles: any[] = [];
+  filteredUsers: any[] = [];
+  response: any[] = [];
+  isSmallScreen = window.innerWidth < 768;
 
-  filteredClients: any[] = [];
+  startDate: string = '';
+  plannedEndDate: string = '';
+  location: string = '';
+  vehicleModel = '';
+  categoryDescription: string = '';
+  passengerCount: number = 0;
+  pricePerDay: number = 0;
+  deposit: number = 0;
 
+  documentType: string = '';
+  documentID: string = '';
+
+  finalPrice: number = 0;
+
+  errorMessage: string = '';
 
   constructor(
     private apiService: ApiService,
     private resCreatedOrModifiedService: ResCreatedOrModifiedService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private httpClient: HttpClient,
+    private httpClient: HttpClient
   ) {}
 
-  resForm = new FormGroup({
-    startDate: new FormControl('', [Validators.required]),
-    plannedEndDate: new FormControl('', [Validators.required]), //no funciona
+  ngOnInit() {
+    this.loadUsers();
+  }
+
+  userForm = new FormGroup({
     documentType: new FormControl('', [Validators.required]),
     documentID: new FormControl('', [Validators.required]),
-    licensePlate: new FormControl('', [Validators.required]),
-  }, { validators: this.dateLessThan('startDate', 'plannedEndDate') });
+  });
+
+  vehicleFilterForm: FormGroup = new FormGroup(
+    {
+      startDate: new FormControl('', [Validators.required]),
+      plannedEndDate: new FormControl('', [Validators.required]),
+      location: new FormControl('', [Validators.required]),
+    },
+    { validators: this.dateLessThan('startDate', 'plannedEndDate') }
+  );
+
+  vehicleModelForm = new FormGroup(
+    {
+      vehicleModel: new FormControl('', [Validators.required]),
+    },
+    { validators: this.dateLessThan('startDate', 'plannedEndDate') }
+  );
+
+  onModelSelected(vehicleModel: any) {
+    this.vehicleModel = vehicleModel.vehicleModel;
+    this.categoryDescription = vehicleModel.categoryDescription;
+    this.passengerCount = vehicleModel.passengerCount;
+    this.pricePerDay = vehicleModel.pricePerDay;
+    this.deposit = vehicleModel.deposit;
+    this.vehicleModelForm
+      .get('vehicleModel')
+      ?.setValue(vehicleModel.vehicleModel);
+    this.stepper.next();
+  }
 
   //valida que startDate >= fecha actual y valida que startDate < plannedEndDate
   dateLessThan(startDateField: string, endDateField: string) {
@@ -81,7 +146,10 @@ export class ResFormComponent implements OnInit{
       const today = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
 
       if (startDate && new Date(startDate) < new Date(today)) {
-        formGroup.get(startDateField)?.setErrors({ dateInvalid: 'La fecha de inicio debe ser igual o mayor a la fecha actual' });
+        formGroup.get(startDateField)?.setErrors({
+          dateInvalid:
+            'La fecha de inicio debe ser igual o mayor a la fecha actual',
+        });
       } else if (startDate && endDate && startDate > endDate) {
         formGroup.get(endDateField)?.setErrors({ dateInvalid: true });
       } else if (!endDate) {
@@ -93,109 +161,188 @@ export class ResFormComponent implements OnInit{
     };
   }
 
-  ngOnInit(): void {
-    // Inicializa la variable isDataLoaded en el servicio para indicar que los datos aún no han sido cargados.
-    this.resCreatedOrModifiedService.isDataLoaded = false;
+  onStepChange(event: StepperSelectionEvent): void {
+    if (event.selectedIndex === 1) {
+      // Índice del paso "Seleccionar filtro"
+      this.loadLocations();
+      this.vehicleFilterForm
+        .get('startDate')
+        ?.valueChanges.subscribe((value) => {
+          this.startDate = value
+            ? formatDate(value, 'dd/MM/yyyy', 'en-US')
+            : '';
+        });
+      this.vehicleFilterForm
+        .get('plannedEndDate')
+        ?.valueChanges.subscribe((value) => {
+          this.plannedEndDate = value
+            ? formatDate(value, 'dd/MM/yyyy', 'en-US')
+            : '';
+        });
+      this.vehicleFilterForm
+        .get('location')
+        ?.valueChanges.subscribe((value) => {
+          const selectedLocation = this.locations.find(
+            (location) => location.id === value
+          );
+          this.location = selectedLocation ? selectedLocation.locationName : '';
+        });
+    } else if (event.selectedIndex === 2) {
+      // Índice del paso "Seleccionar modelo"
+      this.setFilter();
+    } else if ((event.selectedIndex = 3)) {
+      // Índice del paso "Informacion de la reserva"
+      this.finalPrice = this.calculatePrice(
+        this.startDate,
+        this.plannedEndDate,
+        this.pricePerDay
+      );
+    }
+  }
 
-    // Llama al método loadClients() para obtener la lista de clientes disponibles desde el backend
-    // y almacenarlas en una propiedad del componente para usar en el formulario.
-    this.loadClients();
-    this.loadVehicles();
+  loadLocations(): void {
+    this.apiService.getAll('locations').subscribe((response) => {
+      this.locations = response.data;
+    });
+  }
+
+  loadUsers(): void {
+    this.apiService.getAll('users').subscribe((response) => {
+      this.users = response.data;
+      console.log(this.users); //para ver que usuarios trae
+    });
+  }
+
+  fetchVehicles(filter: any) {
+    this.httpClient
+      .get<any>(
+        `/api/vehicles/available?startDate=${filter.startDate}&endDate=${filter.endDate}&location=${filter.location}`
+      )
+      .subscribe(
+        (response) => {
+          console.log('Response data:', response);
+          this.response = response.data.map((vehicleModel: any) => {
+            console.log('Vehicle data:', vehicleModel);
+            return {
+              vehicleModel: vehicleModel.vehicleModelName,
+              category: vehicleModel.category.categoryName,
+              passengerCount: vehicleModel.passengerCount,
+              image: vehicleModel.imagePath,
+              pricePerDay: vehicleModel.category.pricePerDay,
+              deposit: vehicleModel.category.depositValue,
+            };
+          });
+          console.log('Mapped response:', this.response);
+        },
+        (error) => {
+          console.error('Error fetching vehicles:', error);
+        }
+      );
+  }
+  setFilter() {
+    if (!this.vehicleFilterForm.invalid) {
+      const formValues = this.vehicleFilterForm.value;
+      const formattedStartDate = formValues.startDate
+        ? formatDate(formValues.startDate, 'yyyy-MM-dd', 'en-US')
+        : '';
+      const formattedPlannedEndDate = formValues.plannedEndDate
+        ? formatDate(formValues.plannedEndDate, 'yyyy-MM-dd', 'en-US')
+        : '';
+      const filter = {
+        startDate: formattedStartDate,
+        endDate: formattedPlannedEndDate,
+        location: this.vehicleFilterForm.value.location,
+      };
+      console.log('Filter:', filter);
+      this.fetchVehicles(filter);
+    }
   }
 
   formatDate(DateDB: string): string {
     let DateFormat: string = '${year}-${month}-${day}';
-    DateFormat = DateFormat.replace(
-      '${year}',
-      DateDB.substring(0, 4)
-    );
-    DateFormat = DateFormat.replace(
-      '${month}',
-      DateDB.substring(5, 7)
-    );
-    DateFormat = DateFormat.replace(
-      '${day}',
-      DateDB.substring(8, 10)
-    );
+    DateFormat = DateFormat.replace('${year}', DateDB.substring(0, 4));
+    DateFormat = DateFormat.replace('${month}', DateDB.substring(5, 7));
+    DateFormat = DateFormat.replace('${day}', DateDB.substring(8, 10));
     return DateFormat;
   }
 
-  // Método para cargar los clientes
-  loadClients(): void {
-    this.apiService.getAll('users').subscribe((response) => {
-      this.users = response.data;
-      console.log(this.users); //para ver que cleintes trae
-    });
+  formatDateForFinalPriceCalculation(date: string): Date {
+    let DateFormat: string = '${year}-${month}-${day}';
+    DateFormat = DateFormat.replace('${year}', date.substring(6, 10));
+    DateFormat = DateFormat.replace('${month}', date.substring(3, 5));
+    DateFormat = DateFormat.replace('${day}', date.substring(0, 2));
+    return new Date(DateFormat);
   }
 
-  // Método para cargar los vehiculos
-  loadVehicles(): void {
-    this.apiService.getAll('vehicles').subscribe((response) => {
-      this.vehicles = response.data;
-    });
-  }
-
-  //crea un nuevo array de clientes cuyo tipo doc sea el elegido
-  onDocumentTypeSelected(event: MatSelectChange): void{
+  //crea un nuevo array de usuarios cuyo tipo doc sea el elegido
+  onDocumentTypeSelected(event: MatSelectChange): void {
     const selectedDocumentType = event.value;
     console.log('El tipo doc elegido fue:', selectedDocumentType); //para ver el tipo doc elegido
-    this.filteredClients = this.users.filter(user => user.documentType === selectedDocumentType)
-    console.log(this.filteredClients); //para ver la lista de clientes filtrados por el tipo doc elegido
+    this.filteredUsers = this.users.filter(
+      (user) =>
+        user.documentType === selectedDocumentType &&
+        user.documentID != 'XXXXXXXX'
+    );
+    this.documentType = selectedDocumentType;
+    console.log(this.filteredUsers); //para ver la lista de usurios filtrados por el tipo doc elegido
   }
 
-  onSubmit(){
-    const formValues = this.resForm.value;
+  onDocumentIDSelected(event: MatSelectChange): void {
+    const selectedUserId = event.value;
+    const selectedUser = this.filteredUsers.find(
+      (user) => user.id === selectedUserId
+    );
 
-    console.log(this.resForm.get('startDate')?.errors); //para ver los errores de plannedEndDate
-    if (!this.resForm.invalid) {
-
-      const formData = this.resForm.value;
-
-      console.log('Patente seleccionada:', formData.licensePlate); // Para verificar qué patente se selecciona
-
-      // Encontrar el vehículo seleccionado
-      const selectedVehicle = this.vehicles.find(vehicle => vehicle.id === Number(formData.licensePlate));
-
-      console.log('Vehículo seleccionado:', selectedVehicle); // Verificar si se encuentra el vehículo
-
-      if (!selectedVehicle) {
-        console.error('No se encontró el vehículo seleccionado');
-        return; // Detener si no se encuentra el vehículo
-      }
-        const formattedStartDate = formValues.startDate ? formatDate(formValues.startDate, 'yyyy-MM-dd', 'en-US') : '';
-        const formattedPlannedEndDate = formValues.plannedEndDate ? formatDate(formValues.plannedEndDate, 'yyyy-MM-dd', 'en-US') : '';
-        const finalData = {
-          reservationDate: new Date().toISOString().split('T')[0],
-          startDate: formattedStartDate,
-          plannedEndDate: formattedPlannedEndDate,
-          realEndDate: null,
-          cancellationDate: null,
-          initialKms: null,
-          finalKm: null,
-          user: Number(formData.documentID),
-          vehicle: Number(formData.licensePlate),
-        };
-
-
-        console.log('Datos enviados:', finalData); // para ver los datos que se envían
-
-          this.apiService
-          .create('reservations', finalData)
-          .subscribe({
-            next: response => {
-              this.resCreatedOrModifiedService.notifyResCreatedOrModified();
-              this.navigateToReservations();
-            },
-            error: error => {
-              if (error.status !== 400) {
-                this.errorMessage = "Error en el servidor. Intente de nuevo.";
-              }
-            }
-          });
-    }
+    this.documentID = selectedUser.documentID;
   }
 
-  navigateToReservations() {
-    this.router.navigate(['/staff/reservations']);
+  calculatePrice(
+    startDateAsString: string,
+    plannedEndDateAsString: string,
+    pricePerDay: number
+  ): number {
+    const formattedStartDate =
+      this.formatDateForFinalPriceCalculation(startDateAsString);
+
+    const formattedPlannedEndDate = this.formatDateForFinalPriceCalculation(
+      plannedEndDateAsString
+    );
+
+    // Calcular la diferencia en días y el precio
+    const days = differenceInDays(formattedPlannedEndDate, formattedStartDate);
+
+    return days * pricePerDay;
+  }
+
+  submitRes() {
+    const formValues = this.vehicleFilterForm.value;
+    const formattedStartDate = formValues.startDate
+      ? formatDate(formValues.startDate, 'yyyy-MM-dd', 'en-US')
+      : '';
+    const formattedPlannedEndDate = formValues.plannedEndDate
+      ? formatDate(formValues.plannedEndDate, 'yyyy-MM-dd', 'en-US')
+      : '';
+
+    const resData = {
+      reservationDate: new Date().toISOString().split('T')[0],
+      startDate: formattedStartDate,
+      plannedEndDate: formattedPlannedEndDate,
+      location: this.vehicleFilterForm.value.location,
+      vehicleModel: this.vehicleModel,
+      user: this.userForm.value.documentID,
+    };
+
+    this.apiService.createAdminReservation(resData).subscribe({
+      next: (response) => {
+        console.log('Response:', response);
+        this.openDialog();
+      },
+      error: (error) => {
+        console.log('Error:', error);
+        if (error.status !== 400) {
+          this.errorMessage = 'Error en el servidor. Intente de nuevo.';
+        }
+      },
+    });
   }
 }

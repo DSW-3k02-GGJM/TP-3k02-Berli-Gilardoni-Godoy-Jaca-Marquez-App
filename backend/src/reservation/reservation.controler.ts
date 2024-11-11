@@ -6,7 +6,7 @@ import { User } from '../user/user.entity.js';
 
 const em = orm.em;
 
-const sanitizedReservationInput = (
+const sanitizedAdminReservationInput = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -15,12 +15,9 @@ const sanitizedReservationInput = (
     reservationDate: req.body.reservationDate,
     startDate: req.body.startDate,
     plannedEndDate: req.body.plannedEndDate,
-    realEndDate: req.body.realEndDate,
-    cancellationDate: req.body.cancellationDate,
-    initialKms: req.body.initialKms,
-    finalKm: req.body.finalKm,
+    location: req.body.location,
+    vehicleModel: req.body.vehicleModel,
     user: req.body.user,
-    vehicle: req.body.vehicle,
   };
   // Más validaciones
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -30,23 +27,28 @@ const sanitizedReservationInput = (
   });
 
   const id = Number.parseInt(req.params.id);
+  const reservationDate = req.body.sanitizedInput.reservationDate;
   const startDate = req.body.sanitizedInput.startDate;
   const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
-  const initialKms = req.body.sanitizedInput.initialKms;
+  const location = req.body.sanitizedInput.location;
+  const vehicleModel = req.body.sanitizedInput.vehicleModel;
   const user = req.body.sanitizedInput.user;
-  const vehicle = req.body.sanitizedInput.vehicle;
 
-  console.log('Datos de la reserva:', req.body.sanitizedInput);
-  console.log(!startDate, !plannedEndDate, !user, !vehicle);
-  if (!startDate || !plannedEndDate || !user || !vehicle) {
+  if (
+    !reservationDate ||
+    !startDate ||
+    !plannedEndDate ||
+    !location ||
+    !vehicleModel ||
+    !user
+  ) {
     return res.status(400).json({ message: 'All information is required' });
   }
-
 
   next();
 };
 
-const sanitizeUserdReservationInput = (
+const sanitizedUserReservationInput = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -72,7 +74,13 @@ const sanitizeUserdReservationInput = (
   const location = req.body.sanitizedInput.location;
   const vehicleModel = req.body.sanitizedInput.vehicleModel;
 
-  if (!startDate || !plannedEndDate || !location || !vehicleModel || !reservationDate) {
+  if (
+    !startDate ||
+    !plannedEndDate ||
+    !location ||
+    !vehicleModel ||
+    !reservationDate
+  ) {
     return res.status(400).json({ message: 'All information is required' });
   }
 
@@ -90,13 +98,19 @@ const reservation = async (req: Request, res: Response) => {
     const userId = req.session.user.id;
     const user = await em.findOneOrFail(User, { id: userId });
 
-    const vehicleSelected = await em.findOneOrFail( Vehicle, {id : 1}, { populate: [], });
+    const vehicleSelected = await em.findOneOrFail(
+      Vehicle,
+      { id: 1 },
+      { populate: [] }
+    );
     const reservation = em.create(Reservation, {
       reservationDate: reservationDate,
       startDate: startDate,
       plannedEndDate: plannedEndDate,
       realEndDate: null,
       cancellationDate: null,
+      initialKms: null,
+      finalKm: null,
       user: user,
       vehicle: vehicleSelected,
     });
@@ -171,7 +185,30 @@ const findOne = async (req: Request, res: Response) => {
 
 const add = async (req: Request, res: Response) => {
   try {
-    const reservation = em.create(Reservation, req.body.sanitizedInput);
+    const reservationDate = req.body.reservationDate;
+    const startDate = req.body.startDate;
+    const plannedEndDate = req.body.plannedEndDate;
+    const location = req.body.location;
+    const vehicleModel = req.body.vehicleModel;
+    const user = req.body.user;
+
+    const vehicleSelected = await em.findOneOrFail(
+      Vehicle,
+      { id: 1 },
+      { populate: [] }
+    );
+    const reservation = em.create(Reservation, {
+      reservationDate: reservationDate,
+      startDate: startDate,
+      plannedEndDate: plannedEndDate,
+      realEndDate: null,
+      cancellationDate: null,
+      initialKms: null,
+      finalKm: null,
+      user: user,
+      vehicle: vehicleSelected,
+    });
+
     await em.flush();
     res
       .status(201)
@@ -227,4 +264,13 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export { sanitizedReservationInput, sanitizeUserdReservationInput, findAll, findOne, add, update, remove, reservation };
+export {
+  sanitizedAdminReservationInput,
+  sanitizedUserReservationInput,
+  findAll,
+  findOne,
+  add,
+  update,
+  remove,
+  reservation,
+};

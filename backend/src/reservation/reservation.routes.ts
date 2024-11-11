@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import {
-  sanitizedReservationInput,
+  sanitizedAdminReservationInput,
   findAll,
   findOne,
   add,
   update,
   remove,
   reservation,
-  sanitizeUserdReservationInput,
+  sanitizedUserReservationInput,
 } from './reservation.controler.js';
 import { AuthService } from '../shared/db/auth.service.js';
 
@@ -26,26 +26,31 @@ reservationRouter.get(
 reservationRouter.post(
   '/',
   AuthService.isAuthenticated(['admin', 'employee']),
-  sanitizedReservationInput,
+  sanitizedAdminReservationInput,
   add
 );
-
+reservationRouter.post(
+  '/createAdminReservation',
+  AuthService.isAuthenticated(['admin', 'employee']),
+  sanitizedAdminReservationInput,
+  add
+);
 reservationRouter.post(
   '/createUserReservation',
-  AuthService.isAuthenticated(['admin', 'employee','client']),
-  sanitizeUserdReservationInput,
+  AuthService.isAuthenticated(['admin', 'employee', 'client']),
+  sanitizedUserReservationInput,
   reservation
 );
 reservationRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin', 'employee']),
-  sanitizedReservationInput,
+  sanitizedAdminReservationInput,
   update
 );
 reservationRouter.patch(
   '/:id',
   AuthService.isAuthenticated(['admin', 'employee']),
-  sanitizedReservationInput,
+  sanitizedAdminReservationInput,
   update
 );
 reservationRouter.delete(

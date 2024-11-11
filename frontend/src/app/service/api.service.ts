@@ -27,8 +27,18 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
+  createAdminReservation(resData: any): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/reservations/createAdminReservation`,
+      resData
+    );
+  }
+
   createUserReservation(resData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reservations/createUserReservation`, resData);
+    return this.http.post(
+      `${this.apiUrl}/reservations/createUserReservation`,
+      resData
+    );
   }
 
   getAll(entity: string): Observable<any> {

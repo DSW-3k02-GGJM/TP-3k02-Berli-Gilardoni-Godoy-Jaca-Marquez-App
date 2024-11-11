@@ -1,99 +1,258 @@
 <div class="container unselectable">
-  <div class="d-flex justify-content-between">
-    <div class="title">Nueva reserva</div>
-    <button style="margin-bottom: 5px;" mat-stroked-button (click)="navigateToReservations()">Volver</button>
-  </div>
-  <hr>
-  <div class="content">
-    <form [formGroup]="resForm" (ngSubmit)="onSubmit()" autocomplete="off">
-      <div class="user-details">
-
-        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
-          <mat-label>Ingresa el rango de la reserva</mat-label>
-          <mat-date-range-input [rangePicker]="picker">
-            <input
-              matStartDate
-              placeholder="Fecha Inicio"
-              id="startDate"
-              class="form-control"
-              formControlName="startDate"
-            >
-            <input
-              matEndDate
-              placeholder="Fecha Fin"
-              id="plannedEndDate"
-              class="form-control"
-              formControlName="plannedEndDate"
-            >
-          </mat-date-range-input>
-          <mat-error *ngIf="resForm.get('plannedEndDate')?.errors?.dateInvalid || resForm.get('startDate')?.errors?.required">
-            Ambas fechas son requeridas.
-          </mat-error>
-          <mat-error *ngIf="resForm.get('startDate')?.errors?.dateInvalid">
-            El inicio no puede ser menor a la fecha actual.
-          </mat-error>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
-
-        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
-          <mat-label>Tipo de Documento</mat-label>
-          <mat-select
+  <mat-stepper
+    [orientation]="isSmallScreen ? 'vertical' : 'horizontal'"
+    [linear]="true"
+    #stepper
+    (selectionChange)="onStepChange($event)"
+  >
+    <mat-step [stepControl]="userForm">
+      <form [formGroup]="userForm">
+        <hr />
+        <ng-template matStepLabel>Seleccionar usuario</ng-template>
+        <div class="user-details">
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Tipo de Documento</mat-label>
+            <mat-select
               id="documentType"
               formControlName="documentType"
-              (selectionChange)="onDocumentTypeSelected($event)">
+              (selectionChange)="onDocumentTypeSelected($event)"
+            >
               <mat-option value="DNI">DNI</mat-option>
               <mat-option value="Pasaporte">Pasaporte</mat-option>
               <mat-option value="Libreta">Libreta</mat-option>
-          </mat-select>
-          <mat-error *ngIf="resForm.get('documentType')?.errors?.required">
-            El tipo de documento es requerido.
-          </mat-error>
-        </mat-form-field>
+            </mat-select>
+            <mat-error *ngIf="userForm.get('documentType')?.errors?.required">
+              El tipo de documento es requerido.
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
-          <mat-label>Seleccione Documento</mat-label>
-          <mat-select
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Seleccione Documento</mat-label>
+            <mat-select
               id="documentID"
-              formControlName="documentID">
-              @for (user of filteredClients; track user) {
-                <mat-option [value]="user.id">{{user.documentID}}</mat-option>
+              formControlName="documentID"
+              (selectionChange)="onDocumentIDSelected($event)"
+            >
+              @for (user of filteredUsers; track user) {
+              <mat-option [value]="user.id">{{ user.documentID }}</mat-option>
               }
-          </mat-select>
-          <mat-error *ngIf="resForm.get('documentID')?.errors?.required">
-            El documento es requerido.
-          </mat-error>
-        </mat-form-field>
+            </mat-select>
+            <mat-error *ngIf="userForm.get('documentID')?.errors?.required">
+              El documento es requerido.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <hr />
+        <div>
+          <button mat-button matStepperNext>Siguiente</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="vehicleFilterForm">
+      <form [formGroup]="vehicleFilterForm">
+        <hr />
+        <ng-template matStepLabel>Seleccionar filtro</ng-template>
+        <div class="user-details">
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Ingresa fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input
+                matStartDate
+                placeholder="Fecha Inicio"
+                id="startDate"
+                class="form-control"
+                formControlName="startDate"
+              />
+              <input
+                matEndDate
+                placeholder="Fecha Fin"
+                id="plannedEndDate"
+                class="form-control"
+                formControlName="plannedEndDate"
+              />
+            </mat-date-range-input>
+            <mat-error
+              *ngIf="
+                vehicleFilterForm.get('plannedEndDate')?.errors?.dateInvalid ||
+                vehicleFilterForm.get('startDate')?.errors?.required
+              "
+            >
+              Ambas fechas son requeridas.
+            </mat-error>
+            <mat-error
+              *ngIf="vehicleFilterForm.get('startDate')?.errors?.dateInvalid"
+            >
+              El inicio no puede ser menor a la fecha actual.
+            </mat-error>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
 
-        <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
-          <mat-label>Seleccione vehículo</mat-label>
-          <mat-select
-              id="licensePlate"
-              formControlName="licensePlate">
-              @for (vehicle of vehicles; track vehicle) {
-                <mat-option [value]="vehicle.id">{{vehicle.licensePlate}}</mat-option>
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Sucursal</mat-label>
+            <mat-select id="location" formControlName="location">
+              @for (location of locations; track location) {
+              <mat-option [value]="location.id">{{
+                location.locationName
+              }}</mat-option>
               }
-          </mat-select>
-          <mat-error *ngIf="resForm.get('licensePlate')?.errors?.required">
-            El vehículo es requerido.
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <mat-error *ngIf="errorMessage">
-          {{errorMessage}}
-      </mat-error>
-      <!-- Submit button -->
-      <div class="button">
-        <button type="submit" [disabled]="resForm.pending">
-          <ng-container *ngIf="!resForm.pending; else loading">
-            Registrar
-          </ng-container>
-          <ng-template #loading>
-            <mat-spinner diameter="30"></mat-spinner>
-          </ng-template>
-
+            </mat-select>
+            <mat-error
+              *ngIf="vehicleFilterForm.get('location')?.errors?.required"
+            >
+              La sucursal es requerida.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <hr />
+        <div>
+          <button mat-button matStepperNext>Siguiente</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="vehicleModelForm">
+      <hr />
+      <ng-template matStepLabel>Seleccionar modelo</ng-template>
+      <div *ngIf="response.length === 0" class="container2">
+        <p class="title">
+          No hay autos disponibles para esa fecha en esa sucursal ;\
+        </p>
+        <button style="margin-top: 10px" mat-button matStepperPrevious>
+          Cambiar Filtro
         </button>
       </div>
-    </form>
-  </div>
+      <section class="vehicle-list mt-3 mx-5">
+        <ng-container *ngIf="response.length > 0">
+          <app-vehicle-card
+            *ngFor="let vehicle of response"
+            [vehicleModel]="vehicle.vehicleModel"
+            [categoryDescription]="vehicle.category"
+            [passengerCount]="vehicle.passengerCount"
+            [image]="vehicle.image"
+            [pricePerDay]="vehicle.pricePerDay"
+            [deposit]="vehicle.deposit"
+            (modelSelected)="onModelSelected($event)"
+          ></app-vehicle-card>
+        </ng-container>
+      </section>
+      <hr />
+      <div>
+        <button mat-button matStepperPrevious>Volver</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Confirmar Reserva</ng-template>
+      <p class="title">Información de la Reserva</p>
+      <hr />
+      <div class="information">
+        <div class="information-section">
+          <div class="information-title">Tipo Documento</div>
+          <div class="information-content">
+            <span>{{ documentType }}</span>
+          </div>
+        </div>
+        <div class="information-section">
+          <div class="information-title2">Nro. Documento</div>
+          <div class="information-content">
+            <span>{{ documentID }}</span>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="information">
+        <div class="information-section">
+          <div class="information-title">Fecha de Inicio</div>
+          <div class="information-content">
+            <span>{{ startDate }}</span>
+          </div>
+        </div>
+        <div class="information-section">
+          <div class="information-title2">Fecha de Fin</div>
+          <div class="information-content">
+            <span>{{ plannedEndDate }}</span>
+            <!-- esto deberia estar más abajo o minimamente centrado pero no -->
+          </div>
+        </div>
+        <div class="information-section">
+          <div class="information-title2">Sucursal de Retiro</div>
+          <div class="information-content">
+            <span>{{ location }}</span>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="information">
+        <div class="information-section">
+          <div class="information-title">Modelo</div>
+          <div class="information-content">
+            <span>{{ vehicleModel }}</span>
+          </div>
+        </div>
+        <div class="information-section">
+          <div class="information-title2">Categoria</div>
+          <div class="information-content">
+            <span>{{ categoryDescription }}</span>
+          </div>
+        </div>
+        <div class="information-section">
+          <div class="information-title2">Cantidad de Pasajeros</div>
+          <div class="information-content">
+            <span>{{ passengerCount }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="information">
+        <div class="information-section">
+          <div class="information-title">Precio por Día</div>
+          <div class="information-content">
+            <span>{{ pricePerDay }}</span>
+          </div>
+        </div>
+        <div class="information-section">
+          <div class="information-title2">Valor del Depósito</div>
+          <div class="information-content">
+            <span>{{ deposit }}</span>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="information">
+        <div class="information-section">
+          <div class="information-title">Precio Final</div>
+          <div class="information-content">
+            <span class="fw-bold fs-5"> ${{ finalPrice }} </span>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <mat-error *ngIf="errorMessage">
+        {{ errorMessage }}
+      </mat-error>
+      <div style="margin-top: 20px">
+        <button mat-button matStepperPrevious style="margin-right: 10px">
+          Volver
+        </button>
+        <button mat-flat-button (click)="submitRes()">Finalizar Reserva</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
 </div>
