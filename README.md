@@ -26,6 +26,46 @@ La aplicación a desarrollar pertenece a una empresa que se dedica a el alquiler
 
 ![Desarrollo de Software](assets/tp-dsw.png)
 
+## Instrucciones de Instalación y Ejecución del Proyecto
+
+Para iniciar la aplicación, sigue estos pasos:
+
+1. **Clona el repositorio:**
+```bash
+git clone https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App.git
+```
+
+2. **Navega hacia el backend (Desde la raíz del proyecto):**
+```bash
+cd backend
+```
+
+3. **Instala las dependencias:**
+```bash
+npm install
+```
+
+3. **Ejecuta el backend:**
+```bash
+pnpm run start:dev
+```
+
+4. **Navega hacia el frontend (Desde la raíz del proyecto):**
+```bash
+cd frontend
+```
+
+5. **Instala las dependencias:**
+```bash
+npm install
+```
+
+6. **Ejecuta el frontend:**
+```bash
+ng serve
+```
+
+
 ## Alcance Funcional
 
 ### Alcance Mínimo

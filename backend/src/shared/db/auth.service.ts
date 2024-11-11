@@ -58,7 +58,7 @@ export class AuthService {
       const admin = em.create(User, {
         email: process.env.ADMIN_EMAIL || 'admin@admin.com',
         password: hashedPassword,
-        role: process.env.ADMIN_PASSWORD || 'admin',
+        role: 'admin',
         documentType: 'DNI',
         documentID: 'XXXXXXXX',
         userName: 'Admin',
@@ -69,9 +69,9 @@ export class AuthService {
         nationality: 'Peruano'
       });
       await em.flush();
-      console.log('Admin user created:', admin.email);
+      console.log('Admin user created:', admin.email, ', password: admin');
     } else {
-      console.log('Admin user already exists');
+      console.log('Admin user already exists:', adminUser.email,', password: admin');
     }
   }
 }
