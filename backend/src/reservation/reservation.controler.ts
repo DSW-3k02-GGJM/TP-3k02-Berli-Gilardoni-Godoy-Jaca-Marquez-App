@@ -6,6 +6,45 @@ import { User } from '../user/user.entity.js';
 
 const em = orm.em;
 
+const sanitizedReservationInput = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req.body.sanitizedInput = {
+    reservationDate: req.body.reservationDate,
+    startDate: req.body.startDate,
+    plannedEndDate: req.body.plannedEndDate,
+    realEndDate: req.body.realEndDate,
+    cancellationDate: req.body.cancellationDate,
+    initialKms: req.body.initialKms,
+    finalKm: req.body.finalKm,
+    user: req.body.user,
+    vehicle: req.body.vehicle,
+  };
+  // Más validaciones
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  });
+
+  const id = Number.parseInt(req.params.id);
+  const startDate = req.body.sanitizedInput.startDate;
+  const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
+  const initialKms = req.body.sanitizedInput.initialKms;
+  const user = req.body.sanitizedInput.user;
+  const vehicle = req.body.sanitizedInput.vehicle;
+
+  console.log('Datos de la reserva:', req.body.sanitizedInput);
+  console.log(!startDate, !plannedEndDate, !user, !vehicle);
+  if (!startDate || !plannedEndDate || !user || !vehicle) {
+    return res.status(400).json({ message: 'All information is required' });
+  }
+
+  next();
+};
+
 const sanitizedAdminReservationInput = (
   req: Request,
   res: Response,
@@ -265,6 +304,7 @@ const remove = async (req: Request, res: Response) => {
 };
 
 export {
+  sanitizedReservationInput,
   sanitizedAdminReservationInput,
   sanitizedUserReservationInput,
   findAll,

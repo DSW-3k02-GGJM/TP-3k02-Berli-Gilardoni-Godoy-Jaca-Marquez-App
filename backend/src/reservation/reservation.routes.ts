@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  sanitizedReservationInput,
   sanitizedAdminReservationInput,
   findAll,
   findOne,
@@ -26,13 +27,13 @@ reservationRouter.get(
 reservationRouter.post(
   '/',
   AuthService.isAuthenticated(['admin', 'employee']),
-  sanitizedAdminReservationInput,
+  sanitizedReservationInput,
   add
 );
 reservationRouter.post(
   '/createAdminReservation',
   AuthService.isAuthenticated(['admin', 'employee']),
-  sanitizedAdminReservationInput,
+  sanitizedReservationInput,
   add
 );
 reservationRouter.post(
@@ -44,13 +45,13 @@ reservationRouter.post(
 reservationRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin', 'employee']),
-  sanitizedAdminReservationInput,
+  sanitizedReservationInput,
   update
 );
 reservationRouter.patch(
   '/:id',
   AuthService.isAuthenticated(['admin', 'employee']),
-  sanitizedAdminReservationInput,
+  sanitizedReservationInput,
   update
 );
 reservationRouter.delete(
