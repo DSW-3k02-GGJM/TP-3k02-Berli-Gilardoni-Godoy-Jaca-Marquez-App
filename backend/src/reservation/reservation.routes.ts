@@ -33,7 +33,7 @@ reservationRouter.post(
 reservationRouter.post(
   '/createAdminReservation',
   AuthService.isAuthenticated(['admin', 'employee']),
-  sanitizedReservationInput,
+  sanitizedAdminReservationInput,
   add
 );
 reservationRouter.post(
