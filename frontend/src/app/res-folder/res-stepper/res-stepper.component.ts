@@ -83,6 +83,9 @@ export class ResStepperComponent implements OnInit {
   passengerCount: number = 0;
   pricePerDay: number = 0;
   deposit: number = 0;
+  brand: number = 0;
+
+  vehicleID: number = 0;
 
   finalPrice: number = 0;
 
@@ -138,6 +141,14 @@ export class ResStepperComponent implements OnInit {
     this.passengerCount = vehicleModel.passengerCount;
     this.pricePerDay = vehicleModel.pricePerDay;
     this.deposit = vehicleModel.deposit;
+
+    this.response.forEach((vehicleModel) => {
+      if (vehicleModel.vehicleModel === this.vehicleModel) {
+        this.vehicleID = vehicleModel.vehicle.id;
+        this.brand = vehicleModel.brand;
+      }
+    });
+
     this.vehicleModelForm
       .get('vehicleModel')
       ?.setValue(vehicleModel.vehicleModel);
@@ -193,15 +204,17 @@ export class ResStepperComponent implements OnInit {
       .subscribe(
         (response) => {
           console.log('Response data:', response);
-          this.response = response.data.map((vehicleModel: any) => {
-            console.log('Vehicle data:', vehicleModel);
+          this.response = response.data.map((vm: any) => {
+            console.log('Vehicle model data:', vm);
             return {
-              vehicleModel: vehicleModel.vehicleModelName,
-              category: vehicleModel.category.categoryName,
-              passengerCount: vehicleModel.passengerCount,
-              image: vehicleModel.imagePath,
-              pricePerDay: vehicleModel.category.pricePerDay,
-              deposit: vehicleModel.category.depositValue,
+              vehicleModel: vm.vehicleModel,
+              category: vm.vehicle.vehicleModel.category.categoryName,
+              passengerCount: vm.vehicle.vehicleModel.passengerCount,
+              image: vm.vehicle.vehicleModel.imagePath,
+              pricePerDay: vm.vehicle.vehicleModel.category.pricePerDay,
+              deposit: vm.vehicle.vehicleModel.category.depositValue,
+              vehicle: vm.vehicle,
+              brand: vm.vehicle.brand,
             };
           });
           console.log('Mapped response:', this.response);
@@ -277,8 +290,7 @@ export class ResStepperComponent implements OnInit {
       reservationDate: new Date().toISOString().split('T')[0],
       startDate: formattedStartDate,
       plannedEndDate: formattedPlannedEndDate,
-      location: this.vehicleFilterForm.value.location,
-      vehicleModel: this.vehicleModel,
+      vehicle: this.vehicleID,
     };
 
     this.apiService.createUserReservation(resData).subscribe({

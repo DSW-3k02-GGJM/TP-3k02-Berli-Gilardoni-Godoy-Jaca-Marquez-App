@@ -66,7 +66,14 @@ export class VehicleCardComponent {
 
 // ---------------
 
-import { Component, EventEmitter, Input, OnInit, Output, output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  output,
+} from '@angular/core';
 import { ApiService } from '../../service/api.service';
 import { SharedService } from '../../service/shared.service.ts.service'; // verr
 import { CommonModule } from '@angular/common';
@@ -76,7 +83,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './vehicle-card.component.html',
   styleUrls: ['./vehicle-card.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class VehicleCardComponent implements OnInit {
   @Input() vehicleModel!: any;
@@ -85,16 +92,20 @@ export class VehicleCardComponent implements OnInit {
   @Input() passengerCount!: Int16Array;
   @Input() pricePerDay!: number;
   @Input() deposit!: number;
+  @Input() brand!: number;
 
   @Output() modelSelected = new EventEmitter<any>();
   startDate: string = '';
   endDate: string = '';
 
-  constructor(private apiService: ApiService, private sharedService: SharedService) {}
+  constructor(
+    private apiService: ApiService,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit() {
-    this.sharedService.startDate$.subscribe(date => this.startDate = date);
-    this.sharedService.endDate$.subscribe(date => this.endDate = date);
+    this.sharedService.startDate$.subscribe((date) => (this.startDate = date));
+    this.sharedService.endDate$.subscribe((date) => (this.endDate = date));
   }
 
   placeReservation() {
@@ -103,7 +114,7 @@ export class VehicleCardComponent implements OnInit {
       categoryDescription: this.categoryDescription,
       passengerCount: this.passengerCount,
       pricePerDay: this.pricePerDay,
-      deposit: this.deposit
+      deposit: this.deposit,
     };
     this.modelSelected.emit(vehicleData);
     /*

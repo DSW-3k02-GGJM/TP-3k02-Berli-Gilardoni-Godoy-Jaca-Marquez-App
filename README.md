@@ -22,7 +22,7 @@
 
 La aplicación a desarrollar pertenece a una empresa que se dedica a el alquiler de vehiculos. La empresa en cuestión es propietaria de una serie de vehiculos con distintas características que pone a disposición de clientes externos.
 
-### Modelo
+### Modelo de Datos
 
 ![Desarrollo de Software](assets/tp-dsw.png)
 

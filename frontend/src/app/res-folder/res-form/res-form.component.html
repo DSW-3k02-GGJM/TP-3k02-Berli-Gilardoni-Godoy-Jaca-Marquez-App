@@ -143,13 +143,14 @@
       <section class="vehicle-list mt-3 mx-5">
         <ng-container *ngIf="response.length > 0">
           <app-vehicle-card
-            *ngFor="let vehicle of response"
-            [vehicleModel]="vehicle.vehicleModel"
-            [categoryDescription]="vehicle.category"
-            [passengerCount]="vehicle.passengerCount"
-            [image]="vehicle.image"
-            [pricePerDay]="vehicle.pricePerDay"
-            [deposit]="vehicle.deposit"
+            *ngFor="let vm of response"
+            [vehicleModel]="vm.vehicleModel"
+            [categoryDescription]="vm.category"
+            [passengerCount]="vm.passengerCount"
+            [image]="vm.image"
+            [pricePerDay]="vm.pricePerDay"
+            [deposit]="vm.deposit"
+            [brand]="vm.brand"
             (modelSelected)="onModelSelected($event)"
           ></app-vehicle-card>
         </ng-container>
@@ -201,6 +202,12 @@
       </div>
       <hr />
       <div class="information">
+        <div class="information-section me-2">
+          <div class="information-title">Marca</div>
+          <div class="information-content">
+            <span>{{ brand }}</span>
+          </div>
+        </div>
         <div class="information-section">
           <div class="information-title">Modelo</div>
           <div class="information-content">

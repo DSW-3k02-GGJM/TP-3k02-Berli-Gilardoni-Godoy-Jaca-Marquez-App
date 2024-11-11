@@ -54,9 +54,8 @@ const sanitizedAdminReservationInput = (
     reservationDate: req.body.reservationDate,
     startDate: req.body.startDate,
     plannedEndDate: req.body.plannedEndDate,
-    location: req.body.location,
-    vehicleModel: req.body.vehicleModel,
     user: req.body.user,
+    vehicle: req.body.vehicle,
   };
   // Más validaciones
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -69,18 +68,10 @@ const sanitizedAdminReservationInput = (
   const reservationDate = req.body.sanitizedInput.reservationDate;
   const startDate = req.body.sanitizedInput.startDate;
   const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
-  const location = req.body.sanitizedInput.location;
-  const vehicleModel = req.body.sanitizedInput.vehicleModel;
   const user = req.body.sanitizedInput.user;
+  const vehicle = req.body.sanitizedInput.vehicle;
 
-  if (
-    !reservationDate ||
-    !startDate ||
-    !plannedEndDate ||
-    !location ||
-    !vehicleModel ||
-    !user
-  ) {
+  if (!reservationDate || !startDate || !plannedEndDate || !user || !vehicle) {
     return res.status(400).json({ message: 'All information is required' });
   }
 
@@ -96,8 +87,7 @@ const sanitizedUserReservationInput = (
     reservationDate: req.body.reservationDate,
     startDate: req.body.startDate,
     plannedEndDate: req.body.plannedEndDate,
-    location: req.body.location,
-    vehicleModel: req.body.vehicleModel,
+    vehicle: req.body.vehicle,
   };
   // Más validaciones
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -110,16 +100,9 @@ const sanitizedUserReservationInput = (
   const reservationDate = req.body.sanitizedInput.reservationDate;
   const startDate = req.body.sanitizedInput.startDate;
   const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
-  const location = req.body.sanitizedInput.location;
-  const vehicleModel = req.body.sanitizedInput.vehicleModel;
+  const vehicle = req.body.sanitizedInput.vehicle;
 
-  if (
-    !startDate ||
-    !plannedEndDate ||
-    !location ||
-    !vehicleModel ||
-    !reservationDate
-  ) {
+  if (!reservationDate || !startDate || !plannedEndDate || !vehicle) {
     return res.status(400).json({ message: 'All information is required' });
   }
 
@@ -131,17 +114,17 @@ const reservation = async (req: Request, res: Response) => {
     const reservationDate = req.body.reservationDate;
     const startDate = req.body.startDate;
     const plannedEndDate = req.body.plannedEndDate;
-    const location = req.body.location;
-    const vehicleModel = req.body.vehicleModel;
+    const vehicle = req.body.vehicle;
 
-    const userId = req.session.user.id;
-    const user = await em.findOneOrFail(User, { id: userId });
+    const userID = req.session.user.id;
+    const user = await em.findOneOrFail(User, { id: userID });
 
     const vehicleSelected = await em.findOneOrFail(
       Vehicle,
-      { id: 1 },
+      { id: vehicle },
       { populate: [] }
     );
+
     const reservation = em.create(Reservation, {
       reservationDate: reservationDate,
       startDate: startDate,
@@ -227,15 +210,15 @@ const add = async (req: Request, res: Response) => {
     const reservationDate = req.body.reservationDate;
     const startDate = req.body.startDate;
     const plannedEndDate = req.body.plannedEndDate;
-    const location = req.body.location;
-    const vehicleModel = req.body.vehicleModel;
     const user = req.body.user;
+    const vehicle = req.body.vehicle;
 
     const vehicleSelected = await em.findOneOrFail(
       Vehicle,
-      { id: 1 },
+      { id: vehicle },
       { populate: [] }
     );
+
     const reservation = em.create(Reservation, {
       reservationDate: reservationDate,
       startDate: startDate,
