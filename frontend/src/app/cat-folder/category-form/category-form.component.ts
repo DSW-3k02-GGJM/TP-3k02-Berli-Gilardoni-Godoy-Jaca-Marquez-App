@@ -24,13 +24,13 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './category-form.component.html',
   styleUrl: '../../styles/genericForm.scss',
   imports: [
-    CommonModule, 
-    HttpClientModule, 
+    CommonModule,
+    HttpClientModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatIconModule,
     MatSelectModule
   ],
@@ -53,8 +53,8 @@ export class CategoryFormComponent implements OnInit {
   categoryForm = new FormGroup({
     categoryName: new FormControl('', [Validators.required]),
     categoryDescription: new FormControl('', [Validators.required]),
-    pricePerDay: new FormControl('', [Validators.required]),
-    depositValue: new FormControl('', [Validators.required]),
+    pricePerDay: new FormControl('', [Validators.required, Validators.min(1)]),
+    depositValue: new FormControl('', [Validators.required, Validators.min(1)]),
   }, { updateOn: 'submit' });
 
   ngOnInit(): void {
@@ -65,7 +65,7 @@ export class CategoryFormComponent implements OnInit {
         // Si hay un ID en los parámetros, es una edición
       if (this.currentCategoryId) {
         this.apiService
-          .getOne('categories', Number(this.currentCategoryId)) 
+          .getOne('categories', Number(this.currentCategoryId))
           .subscribe((response) => {
             this.categoryForm.patchValue(response.data);
           });

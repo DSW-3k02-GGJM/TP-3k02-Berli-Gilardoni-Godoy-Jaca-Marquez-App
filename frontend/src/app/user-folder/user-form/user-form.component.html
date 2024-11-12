@@ -128,6 +128,9 @@
                 <mat-error *ngIf="userForm.get('userName')?.errors?.required">
                 El nombre es requerido.
                 </mat-error>
+                <mat-error *ngIf="userForm.get('userName')?.errors?.pattern">
+                  El nombre solo puede contener letras.
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
@@ -143,6 +146,9 @@
                 <mat-error *ngIf="userForm.get('userSurname')?.errors?.required">
                 El apellido es requerido.
                 </mat-error>
+                <mat-error *ngIf="userForm.get('userSurname')?.errors?.pattern">
+                  El apellido solo puede contener letras.
+                  </mat-error>
             </mat-form-field>
 
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
@@ -166,7 +172,7 @@
               <mat-error
                 *ngIf="userForm.get('birthDate')?.errors?.dateInvalid"
               >
-                Sos muy joven.
+                Debes ser mayor de edad.
               </mat-error>
             </mat-form-field>
 
@@ -198,6 +204,12 @@
                 <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.required">
                 El teléfono es requerido.
                 </mat-error>
+                <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.pattern">
+                  El teléfono solo puede contener dígitos.
+                  </mat-error>
+                <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.minlength && !userForm.get('phoneNumber')?.errors?.pattern">
+                  Debes ingresar al menos 7 dígitos.
+                  </mat-error>
             </mat-form-field>
 
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">

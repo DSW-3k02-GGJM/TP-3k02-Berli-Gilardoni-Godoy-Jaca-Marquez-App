@@ -23,7 +23,7 @@ import { AuthService } from '../../service/auth.service.js';
   selector: 'app-user-form',
   standalone: true,
   templateUrl: './user-form.component.html',
-  styleUrls: ['../../styles/genericForm.scss'],
+  styleUrls: [ '../../styles/genericForm.scss'],
   imports: [CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
@@ -62,11 +62,11 @@ export class UserFormComponent implements OnInit {
     role: new FormControl('', [Validators.required]),
     documentType: new FormControl('', [Validators.required]),
     documentID: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
-    userName: new FormControl('', [Validators.required]),
-    userSurname: new FormControl('', [Validators.required]),
-    birthDate: new FormControl('', [Validators.required]), //TODO: ver si parsea bien la fecha //TODO: verifica que sea maxima pero por alguna razon no se detiene el submit
+    userName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$")]),
+    userSurname: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$")]),
+    birthDate: new FormControl('', [Validators.required, this.dateLessThan('birthDate')]),
     address: new FormControl('', [Validators.required]),
-    phoneNumber: new FormControl('', [Validators.required]), //TODO: añadir validador de telefono
+    phoneNumber: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(7)]),
     nationality: new FormControl('', [Validators.required]),
 
   },
@@ -109,7 +109,7 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if(!this.userForm.invalid) {
+    if(this.userForm.valid) {
       if (this.action === 'Create') {
         this.authService
           .createUser(this.userForm.value)
@@ -142,6 +142,8 @@ export class UserFormComponent implements OnInit {
             }
           });
       }
+    } else {
+      this.userForm.markAllAsTouched();
     }
   }
 
@@ -165,11 +167,12 @@ export class UserFormComponent implements OnInit {
   dateLessThan(birthDateField: string) {
     return (formGroup: AbstractControl) => {
       const birthDate = formGroup.get(birthDateField)?.value;
-      const today = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
-      if (birthDate && new Date(birthDate) >= new Date(today)) {
+      const today = new Date();
+      const minAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()).toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
+      if (birthDate && new Date(birthDate) > new Date(minAgeDate)) {
         formGroup.get(birthDateField)?.setErrors({
           dateInvalid:
-            'La fecha de nacimiento debe ser  menor a la fecha actual',
+            'Debe ser mayor de edad',
         })
       } else {
         formGroup.get(birthDateField)?.setErrors(null);

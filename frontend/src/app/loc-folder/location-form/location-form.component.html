@@ -16,7 +16,7 @@
       <div class="user-details">
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Nombre</mat-label>
-          <input 
+          <input
             matInput
             id="locationName"
             class="form-control"
@@ -34,7 +34,7 @@
 
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Domicilio</mat-label>
-          <input 
+          <input
             matInput
             id="address"
             class="form-control"
@@ -49,7 +49,7 @@
 
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Teléfono</mat-label>
-          <input 
+          <input
             matInput
             id="phoneNumber"
             class="form-control"
@@ -59,6 +59,12 @@
           >
           <mat-error *ngIf="locationForm.get('phoneNumber')?.errors?.required">
             El teléfono es requerido.
+          </mat-error>
+          <mat-error *ngIf="locationForm.get('phoneNumber')?.errors?.pattern">
+            El teléfono solo puede contener dígitos.
+          </mat-error>
+          <mat-error *ngIf="locationForm.get('phoneNumber')?.errors?.minlength && !locationForm.get('phoneNumber')?.errors?.pattern">
+            Debes ingresar al menos 7 dígitos.
           </mat-error>
         </mat-form-field>
       </div>
@@ -74,7 +80,7 @@
           <ng-template #loading>
             <mat-spinner diameter="30"></mat-spinner>
           </ng-template>
-          
+
         </button>
       </div>
     </form>

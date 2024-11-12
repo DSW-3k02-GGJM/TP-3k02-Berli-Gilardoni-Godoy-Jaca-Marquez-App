@@ -16,7 +16,7 @@
       <div class="user-details">
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Nombre</mat-label>
-          <input 
+          <input
             matInput
             id="brandName"
             class="form-control"
@@ -29,6 +29,9 @@
           </mat-error>
           <mat-error *ngIf="brandForm.get('brandName')?.errors?.required">
             El nombre es requerido.
+          </mat-error>
+          <mat-error *ngIf="brandForm.get('brandName')?.errors?.pattern">
+            El nombre sólo puede contener letras.
           </mat-error>
         </mat-form-field>
       </div>
@@ -44,7 +47,7 @@
           <ng-template #loading>
             <mat-spinner diameter="30"></mat-spinner>
           </ng-template>
-          
+
         </button>
       </div>
     </form>

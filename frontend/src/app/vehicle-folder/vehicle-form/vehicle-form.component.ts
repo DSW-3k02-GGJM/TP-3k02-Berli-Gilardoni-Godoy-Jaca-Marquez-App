@@ -26,13 +26,13 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './vehicle-form.component.html',
   styleUrls: ['../../styles/genericForm.scss'],
   imports: [
-    CommonModule, 
-    HttpClientModule, 
+    CommonModule,
+    HttpClientModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatIconModule,
     MatSelectModule
   ],
@@ -59,8 +59,8 @@ export class VehicleFormComponent implements OnInit {
 
   vehicleForm = new FormGroup({
     licensePlate: new FormControl('', [Validators.required]),
-    manufacturingYear: new FormControl('', [Validators.required]),
-    totalKms: new FormControl('', [Validators.required]),
+    manufacturingYear: new FormControl('', [Validators.required, Validators.min(1900),Validators.max(new Date().getFullYear())]),
+    totalKms: new FormControl('', [Validators.required, Validators.min(0)]),
     vehicleModel: new FormControl('', [Validators.required]),
     color: new FormControl('', [Validators.required]),
     location: new FormControl('', [Validators.required]),
@@ -75,10 +75,10 @@ export class VehicleFormComponent implements OnInit {
 
     this.activatedRoute.params.subscribe(params => {
       this.currentVehicleId = params['id'];
-   
+
       if (this.currentVehicleId) {
         this.apiService
-          .getOne('vehicles', Number(this.currentVehicleId)) 
+          .getOne('vehicles', Number(this.currentVehicleId))
           .subscribe((response) => {
             this.vehicleForm.patchValue({
               ...response.data,
@@ -87,12 +87,12 @@ export class VehicleFormComponent implements OnInit {
               location: response.data.location.id,
             });
           });
-        this.action = 'Edit'; 
+        this.action = 'Edit';
         this.title = 'Editar vehículo';
         this.vehicleForm.controls['licensePlate'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicles',this.currentVehicleId)])
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; 
+        this.action = 'Create';
         this.title = 'Nuevo vehículo';
         this.vehicleForm.controls['licensePlate'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicles',-1)])
         this.buttonText = 'Registrar';

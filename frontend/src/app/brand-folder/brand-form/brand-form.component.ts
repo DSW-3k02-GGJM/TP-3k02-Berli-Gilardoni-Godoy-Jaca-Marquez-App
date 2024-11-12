@@ -22,13 +22,13 @@ import { MatSelectModule } from '@angular/material/select';
   standalone: true,
   templateUrl: './brand-form.component.html',
   styleUrls: ['../../styles/genericForm.scss'],
-  imports: [CommonModule, 
-    HttpClientModule, 
-    ReactiveFormsModule, 
+  imports: [CommonModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatIconModule,
     MatSelectModule
   ],
@@ -49,27 +49,27 @@ export class BrandFormComponent implements OnInit {
   ) {}
 
   brandForm = new FormGroup({
-    brandName: new FormControl('', [Validators.required]),
+    brandName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$")]),
   }, { updateOn: 'submit' });
 
   ngOnInit(): void {
     this.brandCreatedOrModifiedService.isDataLoaded = false;
-    
+
     this.activatedRoute.params.subscribe(params => {
       this.currentBrandId = params['id'];
-   
+
       if (this.currentBrandId) {
         this.apiService
-          .getOne('brands', Number(this.currentBrandId)) 
+          .getOne('brands', Number(this.currentBrandId))
           .subscribe((response) => {
             this.brandForm.patchValue(response.data);
           });
-        this.action = 'Edit'; 
+        this.action = 'Edit';
         this.title = 'Editar marca';
         this.brandForm.controls['brandName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('brands',this.currentBrandId)])
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; 
+        this.action = 'Create';
         this.title = 'Nueva marca';
         this.brandForm.controls['brandName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('brands',-1)])
         this.buttonText = 'Registrar';
@@ -98,7 +98,7 @@ export class BrandFormComponent implements OnInit {
           .update('brands', this.currentBrandId, this.brandForm.value)
           .subscribe({
             next: response => {
-              
+
               this.brandCreatedOrModifiedService.notifyBrandCreatedOrModified();
               this.navigateToBrands();
             },

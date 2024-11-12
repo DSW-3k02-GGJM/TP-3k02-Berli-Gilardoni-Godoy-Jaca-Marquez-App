@@ -57,7 +57,7 @@ export class VehicleModelFormComponent implements OnInit {
   vehicleModelForm = new FormGroup({
     vehicleModelName: new FormControl('', [Validators.required]),
     transmissionType: new FormControl('', [Validators.required]),
-    passengerCount: new FormControl('', [Validators.required]),
+    passengerCount: new FormControl('', [Validators.required, Validators.min(1)]),
     category: new FormControl('', [Validators.required]), // Campo para la categoría
     brand: new FormControl('', [Validators.required]), // Campo para la marca
     imagePath: new FormControl(''),
