@@ -1,7 +1,5 @@
 import { Routes } from '@angular/router';
 import { HomePageComponent } from './home-page/home-page.component';
-import { ClientsComponent } from './cli-folder/clients/clients.component';
-import { ClientFormComponent } from './cli-folder/client-form/client-form.component';
 import { CategoriesComponent } from './cat-folder/categories/categories.component';
 import { CategoryFormComponent } from './cat-folder/category-form/category-form.component';
 import { BrandsComponent } from './brand-folder/brands/brands.component.js';

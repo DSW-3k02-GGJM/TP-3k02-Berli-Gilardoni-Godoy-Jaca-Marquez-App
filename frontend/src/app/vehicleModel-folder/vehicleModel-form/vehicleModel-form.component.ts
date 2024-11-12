@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { VehicleModelCreatedOrModifiedService } from '../vehicleModel-created-or-modified/vehicleModel.service.js';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import {map, Observable} from "rxjs";
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -193,23 +192,4 @@ export class VehicleModelFormComponent implements OnInit {
   navigateToVehicleModels() {
     this.router.navigate(['/staff/vehicleModels']);
   }
-  /*
-  onSubmit() {
-    this.activeModal.close();
-    if (this.action === 'Create') {
-      this.apiService
-        .create('vehicleModels', this.vehicleModelForm.value)
-        .subscribe((response) => {
-          this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
-        });
-    } else if (this.action === 'Edit') {
-      this.apiService
-        .update('vehicleModels', this.currentVehicleModelId, this.vehicleModelForm.value)
-        .subscribe((response) => {
-          this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
-        });
-    }
-    this.vehicleModelCreatedOrModifiedService.isDataLoaded = true;
-  }
-*/
 }
