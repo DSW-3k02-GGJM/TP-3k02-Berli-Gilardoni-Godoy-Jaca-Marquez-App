@@ -23,6 +23,7 @@
         <th>Domicilio</th>
         <th>Telefono</th>
         <th>Nacionalidad</th>
+        <th>Verificado</th>
         <th>Mas</th>
       </tr>
     </thead>
@@ -39,6 +40,7 @@
         <td>{{ user.address }}</td>
         <td>{{ user.phoneNumber }}</td>
         <td>{{ user.nationality }}</td>
+        <td>{{ user.verified }}</td>
         <td>
           <div class="d-flex justify-content-around">
             <button class="btn btn-dark fs-5" (click)="editUser(user)">

@@ -8,17 +8,20 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ApiService } from '../../service/api.service.js';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-test-mati',
   standalone: true,
-  imports: [TestComponenteComponent, FormsModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule, MatIconModule],
+  imports: [TestComponenteComponent, FormsModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule, MatIconModule, MatSlideToggleModule, MatButtonModule],
   templateUrl: './test-mati.component.html',
   styleUrl: './test-mati.component.scss'
 })
 export class TestMatiComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Brand>();
   displayedColumns: string[] = ['id', 'brandName', 'actions'];
+  isChecked = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {

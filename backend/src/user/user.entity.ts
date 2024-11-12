@@ -49,6 +49,8 @@ import {Reservation} from "../reservation/reservation.entity.js";
     @Property({ nullable: false })
     role!: string; //admin, employee, client
 
+    @Property({ nullable: false })
+    verified!: boolean;
 
     @OneToMany(() => Reservation, (reservation) => reservation.user, {
       cascade: [Cascade.ALL],

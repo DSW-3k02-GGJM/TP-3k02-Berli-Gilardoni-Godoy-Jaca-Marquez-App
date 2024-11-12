@@ -19,10 +19,10 @@ try {
     transporter.verify().then(() => {
         console.log('Ready for send emails');
     }).catch((error) => {
-        console.error('Error verifying email transporter');
+        console.error('Mail Service is not working:\n\tError verifying email transporter');
     });
 } catch (error) {
-    console.error('Error creating email transporter');
+    console.error('Mail Service is not working:\n\tError creating email transporter');
 }
 
 export { transporter };

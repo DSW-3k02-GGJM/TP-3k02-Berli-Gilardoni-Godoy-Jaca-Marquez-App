@@ -9,14 +9,16 @@ dotenv.config();
 
 const em = orm.em.fork();
 const SECRET_KEY = process.env.SECRET_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era';
+const SECRET_EMAIL_KEY = process.env.SECRET_EMAIL_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era parte 2';
+const SECRET_PASSWORD_KEY = process.env.SECRET_PASSWORD_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era parte 3';
 
 export class AuthService {
-  static generateToken(user: User): string {
+  static generateToken(user: User, SECRET_KEY: string, expiresIn: string): string {
     const payload = { id: user.id, email: user.email, role: user.role };
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+    return jwt.sign(payload, SECRET_KEY, { expiresIn: expiresIn });
   }
 
-  static verifyToken(token: string): any {
+  static verifyToken(token: string, SECRET_KEY: string): any {
     try {
       return jwt.verify(token, SECRET_KEY);
     } catch (error) {
@@ -34,7 +36,7 @@ export class AuthService {
         return res.status(401).json({ message: 'Unauthorized access (no token)'});
       }
       try {
-        data = AuthService.verifyToken(token);
+        data = AuthService.verifyToken(token, SECRET_KEY);
         if (!roles.includes(data.role)) {
           return res.status(401).json({ message: 'Unauthorized access (role)'});
         }
@@ -53,8 +55,9 @@ export class AuthService {
 
   static async ensureAdminExists() {
     const adminUser = await em.findOne(User, { role: 'admin' });
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin';
     if (!adminUser) {
-      const hashedPassword = await bcrypt.hash('admin', 10);
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
       const admin = em.create(User, {
         email: process.env.ADMIN_EMAIL || 'admin@admin.com',
         password: hashedPassword,
@@ -66,12 +69,13 @@ export class AuthService {
         birthDate: new Date(),
         address: 'Admin',
         phoneNumber: 'XXXX-XXXX',
-        nationality: 'Peruano'
+        nationality: 'Peruano',
+        verified: true,
       });
       await em.flush();
-      console.log('Admin user created:', admin.email, ', password: admin');
+      console.log('Admin user created:\n\temail:', admin.email, '\n\tpassword:', adminPassword);
     } else {
-      console.log('Admin user already exists:', adminUser.email,', password: admin');
+      console.log('Admin user already exists:\n\temail:', adminUser.email,'\n\tpassword:', adminPassword);
     }
   }
 }

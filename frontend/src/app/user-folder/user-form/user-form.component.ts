@@ -2,6 +2,7 @@ import { Component, Input, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -17,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { AuthService } from '../../service/auth.service.js';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-user-form',
@@ -31,7 +33,9 @@ import { AuthService } from '../../service/auth.service.js';
     MatInputModule,
     MatButtonModule, 
     MatIconModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSlideToggleModule,
+    FormsModule
   ],
   providers: [ApiService],
 })
@@ -67,6 +71,7 @@ export class UserFormComponent implements OnInit {
     address: new FormControl('', [Validators.required]),
     phoneNumber: new FormControl('', [Validators.required]), //TODO: añadir validador de telefono
     nationality: new FormControl('', [Validators.required]),
+    verified: new FormControl(false, [Validators.required]),
 
   }, { updateOn: 'submit' });
 
@@ -106,6 +111,7 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.userForm);
     if(!this.userForm.invalid) {
       if (this.action === 'Create') {
         this.authService
@@ -124,7 +130,7 @@ export class UserFormComponent implements OnInit {
           });
       } else if (this.action === 'Edit') {
         this.authService
-          .updateUser(this.currentUserId, this.userForm.value)
+          .staffUpdateUser(this.currentUserId, this.userForm.value)
           .subscribe({
             next: response => {
               

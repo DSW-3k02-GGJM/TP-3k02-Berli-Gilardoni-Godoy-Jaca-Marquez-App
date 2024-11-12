@@ -37,6 +37,13 @@ export class AuthService {
     });
   }
 
+  staffUpdateUser(id: number, data: any): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/users/staff-update/${id}`, data, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
+
   deleteUser(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/users/${id}`, {
       withCredentials: true,

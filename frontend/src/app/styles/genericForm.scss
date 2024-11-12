@@ -60,6 +60,15 @@
     margin-bottom: 10px;
     width: calc(100% / 2 - 20px);
   }
+  form .user-details .input-toggle-box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: calc(100% / 2 - 20px);
+  }
+  form .user-details .input-toggle-box .text {
+    margin-right: 5px;
+  }
   form .input-box span.details {
     display: block;
     margin-bottom: 5px;

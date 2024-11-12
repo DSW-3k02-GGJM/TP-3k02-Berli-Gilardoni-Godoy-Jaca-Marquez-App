@@ -6,8 +6,39 @@ import { AuthService } from '../shared/db/auth.service.js';
 import { Console } from 'console';
 import { Reservation } from '../reservation/reservation.entity.js';
 import { MailService } from '../shared/db/mail.service.js';
+import dotenv from 'dotenv'
+
+dotenv.config();
+
+const SECRET_KEY = process.env.SECRET_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era';
+const SECRET_EMAIL_KEY = process.env.SECRET_EMAIL_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era parte 2';
+const SECRET_PASSWORD_KEY = process.env.SECRET_PASSWORD_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era parte 3';
+const frontendURL = process.env.FRONTEND_URL || 'http://localhost:4200';
 
 const em = orm.em;
+
+const sanitizedVerifyEmailInput = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req.body.sanitizedInput = {
+    email: req.body.email,
+  };
+
+  const email = req.body.sanitizedInput.email;
+
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
+  }
+  // Más validaciones
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  });
+  next();
+};
 
 const sanitizedLoginInput = (
   req: Request,
@@ -36,6 +67,7 @@ const sanitizedUserInput = async (
     email: req.body.email,
     password: req.body.password,
     role: req.body.role,
+    verified: req.body.verified,
     documentType: req.body.documentType,
     documentID: req.body.documentID,
     userName: req.body.userName,
@@ -64,6 +96,7 @@ const sanitizedNewUser = async (
     email: req.body.email,
     password: req.body.password,
     role: req.body.role,
+    verified: req.body.verified,
 
     documentType: req.body.documentType,
     documentID: req.body.documentID,
@@ -96,6 +129,7 @@ const add = async (req: Request, res: Response) => {
   const phoneNumber = req.body.sanitizedInput.phoneNumber;
   const nationality = req.body.sanitizedInput.nationality;
   const role = req.body.sanitizedInput.role;
+  const verified = req.body.sanitizedInput.verified;
 
 
   if (!password || !email || !role) {
@@ -110,7 +144,7 @@ const add = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Invalid email' });
   }
 
-  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality) {
+  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality || verified === null) {
     return res.status(400).json({ message: 'All information are required'});
   }
   const userE = await em.findOne( User , { email } , {populate: [] , });
@@ -182,7 +216,7 @@ const findOne = async (req: Request, res: Response) => {
   }
 };
 
-const update = async (req: Request, res: Response) => {
+const staffUpdate = async (req: Request, res: Response) => {
   const documentType = req.body.sanitizedInput.documentType;
   const documentID = req.body.sanitizedInput.documentID;
   const userName = req.body.sanitizedInput.userName;
@@ -192,9 +226,10 @@ const update = async (req: Request, res: Response) => {
   const phoneNumber = req.body.sanitizedInput.phoneNumber;
   const nationality = req.body.sanitizedInput.nationality;
   const role = req.body.sanitizedInput.role;
+  const verified = req.body.sanitizedInput.verified;
   const id = Number.parseInt(req.params.id);
 
-  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality || !role) {
+  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality || !role || verified === null) {
     return res.status(400).json({ message: 'All information is required'});
   }
 
@@ -202,6 +237,44 @@ const update = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Role does not exist' });
   }
   
+  const userD = await em.findOne( User , { documentID } , {populate: [] , });
+  if(userD){
+    if (userD.id !== id) {
+      return res.status(400).json({ message: 'This document ID is already used' });
+    }
+  }
+  try {
+    const id = Number.parseInt(req.params.id);
+    const user = await em.findOne(User, { id });
+    if (!user) {
+      res.status(404).json({ message: 'The user does not exist' });
+    }
+    else {
+      em.assign(user, req.body.sanitizedInput);
+      await em.flush();
+      res.status(200).json({ message: 'The user has been updated', data: user });
+    }
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const update = async (req: Request, res: Response) => {
+  const documentType = req.body.sanitizedInput.documentType;
+  const documentID = req.body.sanitizedInput.documentID;
+  const userName = req.body.sanitizedInput.userName;
+  const userSurname = req.body.sanitizedInput.userSurname;
+  const birthDate = req.body.sanitizedInput.birthDate;
+  const address = req.body.sanitizedInput.address;
+  const phoneNumber = req.body.sanitizedInput.phoneNumber;
+  const nationality = req.body.sanitizedInput.nationality;
+  const id = Number.parseInt(req.params.id);
+
+  if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality) {
+    return res.status(400).json({ message: 'All information is required'});
+  }
+
   const userD = await em.findOne( User , { documentID } , {populate: [] , });
   if(userD){
     if (userD.id !== id) {
@@ -290,12 +363,13 @@ const register = async (req: Request, res: Response) => {
         ...req.body.sanitizedInput,
         password: hashedPassword,
         role: 'client', // Por defecto se crea como cliente
+        verified: false, // Por defecto no está verificado
       });
     await em.flush();
 
     //const token = AuthService.generateToken(usuario); // Crea un token y lo asocia al usuario
     const { password: _, ...publicUser} = user;
-    const token = AuthService.generateToken(user); // Crea un token y lo asocia al usuario
+    const token = AuthService.generateToken(user, SECRET_KEY, '1h'); // Crea un token y lo asocia al usuario
     res.cookie('access_token', token, {
               httpOnly: true, // La cookie solo se puede acceder en el servidor (No se puede ver desde el cliente)
               secure: true, // Funciona solo con https
@@ -334,7 +408,7 @@ const login = async (req: Request, res: Response) => {
             return res.status(401).json({ message: 'Wrong password' });
           }
           else {
-              const token = AuthService.generateToken(user); // Crea un token y lo asocia al usuario
+              const token = AuthService.generateToken(user, SECRET_KEY, '1h'); // Crea un token y lo asocia al usuario
               const { password: _, ...publicUser} = user;
               res
                   .cookie('access_token', token, {
@@ -430,14 +504,45 @@ const mailExample = async (req: Request, res: Response) => {
   }
 }
 
+const sendEmailVerification = async (req: Request, res: Response) => {
+  try {
+    const email = req.body.sanitizedInput.email;
+    const user = await em.findOne(
+      User,
+      { email: email });
+    if (!user) { 
+      return res.status(404).json({ message: 'User not found' });
+    }
+    else {
+      const token = AuthService.generateToken(user, SECRET_EMAIL_KEY, '10m'); // Crea un token y lo asocia al usuario
+      const verificationLink = `${frontendURL}/verify-email/${token}`;
+      await MailService.sendMail(
+        [email],
+        'Verificación de correo',
+        'Para verificar su correo haga click en el siguiente enlace: ' + verificationLink,
+        ''
+      );
+      res.status(200).json({ message: 'Verification email sent' });
+    }
+  }
+  catch (error: any) {
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+
 export { 
   sanitizedNewUser, 
   sanitizedLoginInput, 
-  sanitizedUserInput, 
+  sanitizedUserInput,
+  sanitizedVerifyEmailInput,
+  sendEmailVerification, 
   add, 
   findAll, 
   findOne, 
-  update, 
+  update,
+  staffUpdate, 
   remove, 
   register, 
   login, 

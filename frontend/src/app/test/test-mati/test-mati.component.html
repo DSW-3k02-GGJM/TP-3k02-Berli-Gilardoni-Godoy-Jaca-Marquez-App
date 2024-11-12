@@ -2,6 +2,7 @@
   <mat-label>Buscar por Nombre...</mat-label>
   <input matInput (keyup)="applyFilter($event)"  #input>
 </mat-form-field>
+<mat-slide-toggle ngModel name="isChecked">Slide Toggle Checked: {{isChecked}}</mat-slide-toggle>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
 

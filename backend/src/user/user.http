@@ -1,5 +1,13 @@
-### EMAIL EXAMPLE
+### EMAIL TEST 1
 POST http://localhost:3000/api/users/mail-example
+
+### EMAIL TEST 2
+POST http://localhost:3000/api/users/send-email-verification
+Content-Type: application/json
+
+{
+    "email": "matiastmarquez@gmail.com"
+}
 
 ### GET ALL
 http://localhost:3000/api/users

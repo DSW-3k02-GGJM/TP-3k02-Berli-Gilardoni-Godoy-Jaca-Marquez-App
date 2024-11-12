@@ -16,10 +16,10 @@ import { AuthService } from './shared/db/auth.service.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
+const frontendURL = (process.env.FRONTEND_DOMAIN || 'http://localhost') + (process.env.FRONTEND_PORT || ':4200');
 const app = express();
 const corsOptions = {
-  origin: 'http://localhost:4200', // Frontend URL
+  origin: frontendURL, // Frontend URL
   credentials: true, // Permite credenciales
 };
 
@@ -55,8 +55,8 @@ app.use((_, res) => {
 await syncSchema(); // never in production
 
 const port = process.env.PORT || 3000;
-const domain = process.env.DOMAIN || 'http://localhost:';
+const domain = process.env.DOMAIN || 'http://localhost:'
 app.listen(port, () => {
   AuthService.ensureAdminExists();
-  console.log('Servidor operando en'+ domain + port + '/'); //Si no aparece con este link probar con 'localhost:8000'
+  console.log('Servidor operando en ' + domain + port + '/'); //Si no aparece con este link probar con 'localhost:8000'
 });

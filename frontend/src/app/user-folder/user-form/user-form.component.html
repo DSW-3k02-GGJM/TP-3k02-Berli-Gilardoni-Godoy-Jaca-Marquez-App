@@ -77,6 +77,11 @@
                 El rol es requerido.
                 </mat-error>
             </mat-form-field>
+            <div class="input-toggle-box">
+              <p class="text">Verificado: </p>
+              <mat-slide-toggle formControlName="verified" name="verified"></mat-slide-toggle>
+            </div>
+            
         </div>
         <hr>
         <div class="user-details">
@@ -207,6 +212,8 @@
                 La nacionalidad es requerida.
                 </mat-error>
             </mat-form-field>
+            
+            
         </div>
         <mat-error *ngIf="errorMessage">
             {{errorMessage}}
