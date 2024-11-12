@@ -20,7 +20,7 @@
 
 - [Video de demostración](https://drive.google.com/file/d/1scrp8AMluKXIfDH-DRuDaw3F2Sh5x_VA/view)
 
-### Pull Request Pedido
+## Pull Request Pedido
 
 - [Pull request](https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App/pull/8)
   
@@ -53,26 +53,55 @@ cd backend
 npm install
 ```
 
-3. **Ejecuta el backend:**
+4. **Modifica el clientUrl del archivo orm.ts (en la ruta backend/src/shared/db/orm.ts) por un string de conexión propio a MySQL, de la forma:**
+```bash
+mysql://username:password@host:port/alquilerVehiculos
+```
+
+5. **Ejecuta el backend:**
 ```bash
 pnpm run start:dev
 ```
 
-4. **Navega hacia el frontend (Desde la raíz del proyecto):**
+6. **Navega hacia el frontend (Desde la raíz del proyecto):**
 ```bash
 cd frontend
 ```
 
-5. **Instala las dependencias:**
+7. **Instala las dependencias:**
 ```bash
 npm install
 ```
 
-6. **Ejecuta el frontend:**
+8. **Ejecuta el frontend:**
 ```bash
 ng serve
 ```
 
+---
+
+### Opcional
+
+9. **Importa datos pre-cargados desde el siguiente archivo .mysql, para facilitar la prueba de la aplicación:**
+- [Base de Datos](https://drive.google.com/file/d/1rJ_2cEqSNhJfKDsY0TP6gxTyr0Z9dpVc/view)
+
+10. **Vuelve a navegar hacia el backend (Desde la raíz del proyecto):**
+```bash
+cd backend
+```
+
+11. **Vuelve a ejecutar el backend:**
+```bash
+pnpm run start:dev
+```
+
+---
+
+## Mecanismo actual para subir imagenes a la hora de dar de alta un nuevo modelo de vehículo
+
+**Seleccionar una imagen ya pre-cargada en el proyecto en la carpeta frontend/src/assets/img, ya que la aplicación guarda la ruta de la imagen y la busca en dicha ubicación al momento de mostrarla**
+
+---
 
 ## Alcance Funcional
 
