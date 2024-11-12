@@ -97,6 +97,12 @@ pnpm run start:dev
 
 ---
 
+## Mecanismo actual para subir imagenes a la hora de dar de alta un nuevo modelo de vehículo
+
+**Seleccionar una imagen ya pre-cargada en el proyecto en la carpeta frontend/src/assets/img, ya que la aplicación guarda la ruta de la imagen y la busca en dicha ubicación al momento de mostrarla**
+
+---
+
 ## Alcance Funcional
 
 ### Alcance Mínimo
