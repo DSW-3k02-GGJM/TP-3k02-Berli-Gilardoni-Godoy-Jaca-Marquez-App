@@ -5,7 +5,7 @@ import { User } from './user.entity.js';
 import { AuthService } from '../shared/db/auth.service.js';
 import { Console } from 'console';
 import { Reservation } from '../reservation/reservation.entity.js';
-
+import { MailService } from '../shared/db/mail.service.js';
 
 const em = orm.em;
 
@@ -415,4 +415,37 @@ const getAuthenticatedRole = async (req: Request, res: Response) => {
   }
 }
 
-export { sanitizedNewUser, sanitizedLoginInput, sanitizedUserInput, add, findAll, findOne, update, remove, register, login, logout, verifyAuthentication, verifyEmailExists, verifyDocumentIDExists, getAuthenticatedId, getAuthenticatedRole};
+const mailExample = async (req: Request, res: Response) => {
+  try {
+    await MailService.sendMail(
+      ['matiastmarquez@gmail.com'],
+      'Prueba de correo',
+      'Esto es una prueba de correo',
+      ''
+    );
+
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+export { 
+  sanitizedNewUser, 
+  sanitizedLoginInput, 
+  sanitizedUserInput, 
+  add, 
+  findAll, 
+  findOne, 
+  update, 
+  remove, 
+  register, 
+  login, 
+  logout, 
+  verifyAuthentication, 
+  verifyEmailExists, 
+  verifyDocumentIDExists, 
+  getAuthenticatedId, 
+  getAuthenticatedRole,
+  mailExample
+};

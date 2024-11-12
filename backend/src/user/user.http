@@ -1,3 +1,6 @@
+### EMAIL EXAMPLE
+POST http://localhost:3000/api/users/mail-example
+
 ### GET ALL
 http://localhost:3000/api/users
 Access-Control-Allow-Credentials: true

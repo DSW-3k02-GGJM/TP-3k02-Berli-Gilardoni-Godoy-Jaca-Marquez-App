@@ -16,6 +16,7 @@ import {
   verifyDocumentIDExists,
   getAuthenticatedId,
   getAuthenticatedRole,
+  mailExample,
 } from './user.controller.js';
 import { AuthService } from '../shared/db/auth.service.js';
 
@@ -34,6 +35,7 @@ userRouter.delete('/:id', remove);
 userRouter.post('/register', sanitizedUserInput, register);
 userRouter.post('/login', sanitizedLoginInput, login);
 userRouter.post('/logout', logout);
+userRouter.post('/mail-example', mailExample);
 
 userRouter.post(
   '/is-authenticated',
