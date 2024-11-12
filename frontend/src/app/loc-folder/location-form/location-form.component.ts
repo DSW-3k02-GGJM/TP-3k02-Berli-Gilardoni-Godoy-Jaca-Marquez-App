@@ -29,7 +29,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatIconModule,
     MatSelectModule
   ],
@@ -52,7 +52,7 @@ export class LocationFormComponent implements OnInit {
   locationForm = new FormGroup({
     locationName: new FormControl('', [Validators.required]),
     address: new FormControl('', [Validators.required]),
-    phoneNumber: new FormControl('', [Validators.required]), //TODO: añadir validador de telefono
+    phoneNumber: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(7)]),
   }, { updateOn: 'submit' });
 
   ngOnInit(): void {
@@ -60,19 +60,19 @@ export class LocationFormComponent implements OnInit {
 
     this.activatedRoute.params.subscribe(params => {
       this.currentLocationId = params['id'];
-   
+
       if (this.currentLocationId) {
         this.apiService
-          .getOne('locations', Number(this.currentLocationId)) 
+          .getOne('locations', Number(this.currentLocationId))
           .subscribe((response) => {
             this.locationForm.patchValue(response.data);
           });
-        this.action = 'Edit'; 
+        this.action = 'Edit';
         this.title = 'Editar sucursal';
         this.locationForm.controls['locationName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('locations',this.currentLocationId)])
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; 
+        this.action = 'Create';
         this.title = 'Nueva sucursal';
         this.locationForm.controls['locationName'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('locations',-1)])
         this.buttonText = 'Registrar';

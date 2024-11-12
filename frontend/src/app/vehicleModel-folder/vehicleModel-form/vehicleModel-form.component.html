@@ -16,7 +16,7 @@
       <div class="user-details">
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Nombre</mat-label>
-          <input 
+          <input
             matInput
             id="vehicleModelName"
             class="form-control"
@@ -47,7 +47,7 @@
 
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Cantidad de Pasajeros</mat-label>
-          <input  
+          <input
             matInput
             id="passengerCount"
             class="form-control"
@@ -58,6 +58,9 @@
           >
           <mat-error *ngIf="vehicleModelForm.get('passengerCount')?.errors?.required">
             La cantidad de pasajeros es requerida.
+          </mat-error>
+          <mat-error *ngIf="vehicleModelForm.get('passengerCount')?.errors?.min">
+            Debe llevar a 1 o más pasajeros.
           </mat-error>
         </mat-form-field>
 
@@ -90,7 +93,7 @@
         </mat-form-field>
       </div>
       <div class="information-title">Imagen</div>
-      <input  
+      <input
         id="imagePath"
         class="form-control"
         type="file"
@@ -111,7 +114,7 @@
           <ng-template #loading>
             <mat-spinner diameter="30"></mat-spinner>
           </ng-template>
-          
+
         </button>
       </div>
     </form>

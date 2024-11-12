@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, signal } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   FormsModule,
@@ -25,13 +26,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   standalone: true,
   templateUrl: './user-form.component.html',
   styleUrls: ['../../styles/genericForm.scss'],
-  imports: [CommonModule, 
-    HttpClientModule, 
-    ReactiveFormsModule, 
+  imports: [CommonModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatIconModule,
     MatSelectModule,
     MatSlideToggleModule,
@@ -65,25 +66,27 @@ export class UserFormComponent implements OnInit {
     role: new FormControl('', [Validators.required]),
     documentType: new FormControl('', [Validators.required]),
     documentID: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
-    userName: new FormControl('', [Validators.required]),
-    userSurname: new FormControl('', [Validators.required]),
-    birthDate: new FormControl('', [Validators.required, this.authService.maxDateValidator]), //TODO: ver si parsea bien la fecha //TODO: verifica que sea maxima pero por alguna razon no se detiene el submit
+    userName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$")]),
+    userSurname: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$")]),
+    birthDate: new FormControl('', [Validators.required, this.dateLessThan('birthDate')]),
     address: new FormControl('', [Validators.required]),
-    phoneNumber: new FormControl('', [Validators.required]), //TODO: añadir validador de telefono
+    phoneNumber: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(7)]),
     nationality: new FormControl('', [Validators.required]),
     verified: new FormControl(false, [Validators.required]),
 
-  }, { updateOn: 'submit' });
+  },
+    { validators: this.dateLessThan('birthDate'),  updateOn: 'submit'  }
+  );
 
   ngOnInit(): void {
     this.userCreatedOrModifiedService.isDataLoaded = false;
-    
+
     this.activatedRoute.params.subscribe(params => {
       this.currentUserId = params['id'];
-   
+
       if (this.currentUserId) {
         this.authService
-          .findUser(Number(this.currentUserId)) 
+          .findUser(Number(this.currentUserId))
           .subscribe((response) => {
             let birthDateFormat = this.formatBirthDate(
               response.data.birthDate
@@ -96,11 +99,11 @@ export class UserFormComponent implements OnInit {
               birthDate: birthDateFormat,
             });
           });
-        this.action = 'Edit'; 
+        this.action = 'Edit';
         this.title = 'Editar usuario';
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; 
+        this.action = 'Create';
         this.title = 'Nuevo usuario';
         this.buttonText = 'Registrar';
         this.userForm.addControl('email', new FormControl('', [Validators.required, Validators.email],[this.authService.uniqueEmailValidator()]));
@@ -112,7 +115,7 @@ export class UserFormComponent implements OnInit {
 
   onSubmit() {
     console.log(this.userForm);
-    if(!this.userForm.invalid) {
+    if(this.userForm.valid) {
       if (this.action === 'Create') {
         this.authService
           .createUser(this.userForm.value)
@@ -133,7 +136,7 @@ export class UserFormComponent implements OnInit {
           .staffUpdateUser(this.currentUserId, this.userForm.value)
           .subscribe({
             next: response => {
-              
+
               this.userCreatedOrModifiedService.notifyUserCreatedOrModified();
               this.navigateToUsers();
             },
@@ -145,6 +148,8 @@ export class UserFormComponent implements OnInit {
             }
           });
       }
+    } else {
+      this.userForm.markAllAsTouched();
     }
   }
 
@@ -164,6 +169,23 @@ export class UserFormComponent implements OnInit {
     );
     return birthDateFormat;
   }
+
+  dateLessThan(birthDateField: string) {
+    return (formGroup: AbstractControl) => {
+      const birthDate = formGroup.get(birthDateField)?.value;
+      const today = new Date();
+      const minAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()).toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
+      if (birthDate && new Date(birthDate) > new Date(minAgeDate)) {
+        formGroup.get(birthDateField)?.setErrors({
+          dateInvalid:
+            'Debe ser mayor de edad',
+        })
+      } else {
+        formGroup.get(birthDateField)?.setErrors(null);
+      }
+      return null;
+      }
+    };
 
   navigateToUsers() {
     this.router.navigate(['/staff/users']);
