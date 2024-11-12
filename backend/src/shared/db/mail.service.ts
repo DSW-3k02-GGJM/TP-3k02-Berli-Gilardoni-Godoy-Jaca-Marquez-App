@@ -15,8 +15,8 @@ export class MailService {
                 html: html, 
               });
             console.log("Message sent: %s", info.messageId);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error(error.message);
         }
     }
 }
