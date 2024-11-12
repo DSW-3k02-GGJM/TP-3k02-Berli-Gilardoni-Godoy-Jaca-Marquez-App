@@ -20,7 +20,7 @@
 
 - [Video de demostración](https://drive.google.com/file/d/1scrp8AMluKXIfDH-DRuDaw3F2Sh5x_VA/view)
 
-### Pull Request Pedido
+## Pull Request Pedido
 
 - [Pull request](https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App/pull/8)
   
