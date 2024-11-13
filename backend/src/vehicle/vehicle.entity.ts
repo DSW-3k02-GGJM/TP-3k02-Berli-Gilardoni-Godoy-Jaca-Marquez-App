@@ -19,7 +19,7 @@ export class Vehicle extends BaseEntity {
   licensePlate!: string;
 
   @Property({ nullable: false })
-  manufacturingYear!: string;
+  manufacturingYear!: number;
 
   @Property({ nullable: false })
   totalKms!: number;

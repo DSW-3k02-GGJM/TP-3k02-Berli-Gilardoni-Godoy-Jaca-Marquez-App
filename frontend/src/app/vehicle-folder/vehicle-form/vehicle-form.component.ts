@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
-  ReactiveFormsModule,
+  ReactiveFormsModule, ValidationErrors, ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -26,13 +27,13 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './vehicle-form.component.html',
   styleUrls: ['../../styles/genericForm.scss'],
   imports: [
-    CommonModule, 
-    HttpClientModule, 
+    CommonModule,
+    HttpClientModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatIconModule,
     MatSelectModule
   ],
@@ -58,9 +59,9 @@ export class VehicleFormComponent implements OnInit {
   ) {}
 
   vehicleForm = new FormGroup({
-    licensePlate: new FormControl('', [Validators.required]),
-    manufacturingYear: new FormControl('', [Validators.required]),
-    totalKms: new FormControl('', [Validators.required]),
+    licensePlate: new FormControl('', [Validators.required, this.licensePlateValidator()]),
+    manufacturingYear: new FormControl('', [Validators.required, Validators.min(1900),Validators.max(new Date().getFullYear())]),
+    totalKms: new FormControl('', [Validators.required, Validators.min(0)]),
     vehicleModel: new FormControl('', [Validators.required]),
     color: new FormControl('', [Validators.required]),
     location: new FormControl('', [Validators.required]),
@@ -75,10 +76,10 @@ export class VehicleFormComponent implements OnInit {
 
     this.activatedRoute.params.subscribe(params => {
       this.currentVehicleId = params['id'];
-   
+
       if (this.currentVehicleId) {
         this.apiService
-          .getOne('vehicles', Number(this.currentVehicleId)) 
+          .getOne('vehicles', Number(this.currentVehicleId))
           .subscribe((response) => {
             this.vehicleForm.patchValue({
               ...response.data,
@@ -87,12 +88,12 @@ export class VehicleFormComponent implements OnInit {
               location: response.data.location.id,
             });
           });
-        this.action = 'Edit'; 
+        this.action = 'Edit';
         this.title = 'Editar vehículo';
         this.vehicleForm.controls['licensePlate'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicles',this.currentVehicleId)])
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; 
+        this.action = 'Create';
         this.title = 'Nuevo vehículo';
         this.vehicleForm.controls['licensePlate'].setAsyncValidators([this.apiService.uniqueEntityNameValidator('vehicles',-1)])
         this.buttonText = 'Registrar';
@@ -154,8 +155,20 @@ export class VehicleFormComponent implements OnInit {
             }
           });
       }
-
     }
+  }
+
+  licensePlateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      const pattern1 = /^[A-Za-z]{3}\d{3}$/; // 3 letters 3 numbers
+      const pattern2 = /^[A-Za-z]{2}\d{3}[A-Za-z]{2}$/; // 2 letters 3 numbers 2 letters
+
+      if (!value || pattern1.test(value) || pattern2.test(value)) {
+        return null; // valid
+      }
+      return { ARpattern: true }; // invalid
+    };
   }
 
   navigateToVehicles() {

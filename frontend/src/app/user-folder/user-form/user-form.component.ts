@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, signal } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   FormsModule,
-  ReactiveFormsModule,
+  ReactiveFormsModule, ValidationErrors, ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -25,13 +26,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   standalone: true,
   templateUrl: './user-form.component.html',
   styleUrls: ['../../styles/genericForm.scss'],
-  imports: [CommonModule, 
-    HttpClientModule, 
-    ReactiveFormsModule, 
+  imports: [CommonModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatIconModule,
     MatSelectModule,
     MatSlideToggleModule,
@@ -62,28 +63,27 @@ export class UserFormComponent implements OnInit {
   ) {}
 
   userForm = new FormGroup<any>({
-    role: new FormControl('', [Validators.required]),
+    role: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
     documentType: new FormControl('', [Validators.required]),
-    documentID: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
-    userName: new FormControl('', [Validators.required]),
-    userSurname: new FormControl('', [Validators.required]),
-    birthDate: new FormControl('', [Validators.required, this.authService.maxDateValidator]), //TODO: ver si parsea bien la fecha //TODO: verifica que sea maxima pero por alguna razon no se detiene el submit
-    address: new FormControl('', [Validators.required]),
-    phoneNumber: new FormControl('', [Validators.required]), //TODO: añadir validador de telefono
+    documentID: new FormControl('',[Validators.required, Validators.pattern("^[0-9]*$")]),
+    userName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$")]),
+    userSurname: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$")]),
+    birthDate: new FormControl('', [Validators.required, this.dateLessThan('birthDate')]),
+    address: new FormControl('',[Validators.required]),
+    phoneNumber: new FormControl('',[Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(7)]),
     nationality: new FormControl('', [Validators.required]),
     verified: new FormControl(false, [Validators.required]),
-
-  }, { updateOn: 'submit' });
+  }, { validators: this.dateLessThan('birthDate'), updateOn: 'blur' });
 
   ngOnInit(): void {
     this.userCreatedOrModifiedService.isDataLoaded = false;
-    
+
     this.activatedRoute.params.subscribe(params => {
       this.currentUserId = params['id'];
-   
+
       if (this.currentUserId) {
         this.authService
-          .findUser(Number(this.currentUserId)) 
+          .findUser(Number(this.currentUserId))
           .subscribe((response) => {
             let birthDateFormat = this.formatBirthDate(
               response.data.birthDate
@@ -96,11 +96,11 @@ export class UserFormComponent implements OnInit {
               birthDate: birthDateFormat,
             });
           });
-        this.action = 'Edit'; 
+        this.action = 'Edit';
         this.title = 'Editar usuario';
         this.buttonText = 'Guardar cambios';
       } else {
-        this.action = 'Create'; 
+        this.action = 'Create';
         this.title = 'Nuevo usuario';
         this.buttonText = 'Registrar';
         this.userForm.addControl('email', new FormControl('', [Validators.required, Validators.email],[this.authService.uniqueEmailValidator()]));
@@ -111,6 +111,8 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit() {
+    this.userForm.markAllAsTouched();
+    this.userForm.updateValueAndValidity();
     console.log(this.userForm);
     if(!this.userForm.invalid) {
       if (this.action === 'Create') {
@@ -133,7 +135,6 @@ export class UserFormComponent implements OnInit {
           .staffUpdateUser(this.currentUserId, this.userForm.value)
           .subscribe({
             next: response => {
-              
               this.userCreatedOrModifiedService.notifyUserCreatedOrModified();
               this.navigateToUsers();
             },
@@ -145,6 +146,8 @@ export class UserFormComponent implements OnInit {
             }
           });
       }
+    }else {
+      this.userForm.markAllAsTouched();
     }
   }
 
@@ -164,6 +167,24 @@ export class UserFormComponent implements OnInit {
     );
     return birthDateFormat;
   }
+
+  dateLessThan(birthDateField: string) {
+    return (formGroup: AbstractControl) => {
+      const birthDate = formGroup.get(birthDateField)?.value;
+      const today = new Date();
+      const minAgeDate = (new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())).toISOString().split('T')[0];
+      if (new Date(birthDate) > new Date(minAgeDate)) {
+        console.log('no cumple con el requisito de edad');
+        formGroup.get(birthDateField)?.setErrors({
+          dateInvalid:
+            'Debes ser mayor de edad',
+        })
+      } else {
+        formGroup.get(birthDateField)?.setErrors(null);
+      }
+      return null;
+    }
+  };
 
   navigateToUsers() {
     this.router.navigate(['/staff/users']);

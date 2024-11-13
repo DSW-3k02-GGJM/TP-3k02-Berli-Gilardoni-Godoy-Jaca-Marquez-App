@@ -20,7 +20,7 @@
         <div class="user-details">
             <mat-form-field *ngIf="action === 'Create'" disabled class="input-box" appearance="outline" hideRequiredMarker="true">
                 <mat-label>Email</mat-label>
-                <input 
+                <input
                   matInput
                   id="email"
                   class="form-control"
@@ -38,10 +38,10 @@
                   El email no es un email válido.
                 </mat-error>
             </mat-form-field>
-      
+
             <mat-form-field *ngIf="action === 'Create'" class="input-box" appearance="outline" hideRequiredMarker="true">
                 <mat-label>Contraseña</mat-label>
-                <input 
+                <input
                   matInput
                   id="password"
                   class="form-control"
@@ -81,7 +81,7 @@
               <p class="text">Verificado: </p>
               <mat-slide-toggle formControlName="verified" name="verified"></mat-slide-toggle>
             </div>
-            
+
         </div>
         <hr>
         <div class="user-details">
@@ -98,10 +98,10 @@
                 El tipo de documento es requerido.
                 </mat-error>
             </mat-form-field>
-    
+
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
                 <mat-label>Numero Documento</mat-label>
-                <input 
+                <input
                     matInput
                     id="documentID"
                     class="form-control"
@@ -119,7 +119,7 @@
                 El numero de documento no es válido.
                 </mat-error>
             </mat-form-field>
-    
+
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
                 <mat-label>Nombre</mat-label>
                 <input
@@ -133,11 +133,14 @@
                 <mat-error *ngIf="userForm.get('userName')?.errors?.required">
                 El nombre es requerido.
                 </mat-error>
+                <mat-error *ngIf="userForm.get('userName')?.errors?.pattern">
+                  El nombre solo puede contener letras.
+                </mat-error>
             </mat-form-field>
-    
+
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
                 <mat-label>Apellido</mat-label>
-                <input 
+                <input
                     matInput
                     id="Surname"
                     class="form-control"
@@ -148,11 +151,14 @@
                 <mat-error *ngIf="userForm.get('userSurname')?.errors?.required">
                 El apellido es requerido.
                 </mat-error>
+                <mat-error *ngIf="userForm.get('userSurname')?.errors?.pattern">
+                  El apellido solo puede contener letras.
+                </mat-error>
             </mat-form-field>
-    
+
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
                 <mat-label>Fecha de Nacimiento</mat-label>
-                <input 
+                <input
                     matInput
                     id="birthDate"
                     class="form-control"
@@ -163,14 +169,15 @@
                 <mat-error *ngIf="userForm.get('birthDate')?.errors?.required">
                 La fecha de nacimiento es requerida.
                 </mat-error>
-                <mat-error *ngIf="userForm.get('birthDate')?.errors?.maxDate">
-                La fecha de nacimiento es incorrecta.
+                <mat-error
+                  *ngIf="userForm.get('birthDate')?.errors?.dateInvalid">
+                  Debes ser mayor de edad.
                 </mat-error>
             </mat-form-field>
-    
+
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
                 <mat-label>Domicilio</mat-label>
-                <input 
+                <input
                     matInput
                     id="address"
                     class="form-control"
@@ -182,10 +189,10 @@
                 El domicilio es requerido.
                 </mat-error>
             </mat-form-field>
-    
+
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
                 <mat-label>Teléfono</mat-label>
-                    <input 
+                    <input
                     matInput
                     id="phoneNumber"
                     class="form-control"
@@ -196,11 +203,17 @@
                 <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.required">
                 El teléfono es requerido.
                 </mat-error>
+                <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.pattern">
+                  El teléfono solo puede contener dígitos.
+                </mat-error>
+                <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.minlength && !userForm.get('phoneNumber')?.errors?.pattern">
+                  Debes ingresar al menos 7 dígitos.
+                </mat-error>
             </mat-form-field>
-    
+
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
                 <mat-label>Nacionalidad</mat-label>
-                    <input 
+                    <input
                     matInput
                     id="nationality"
                     class="form-control"
@@ -212,8 +225,8 @@
                 La nacionalidad es requerida.
                 </mat-error>
             </mat-form-field>
-            
-            
+
+
         </div>
         <mat-error *ngIf="errorMessage">
             {{errorMessage}}
@@ -227,7 +240,7 @@
             <ng-template #loading>
               <mat-spinner diameter="30"></mat-spinner>
             </ng-template>
-            
+
           </button>
         </div>
       </form>

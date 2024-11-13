@@ -16,7 +16,7 @@
       <div class="user-details">
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Patente</mat-label>
-          <input 
+          <input
             matInput
             id="licensePlate"
             class="form-control"
@@ -30,11 +30,14 @@
           <mat-error *ngIf="vehicleForm.get('licensePlate')?.errors?.required">
             La patente es requerida.
           </mat-error>
+          <mat-error *ngIf="vehicleForm.get('licensePlate')?.errors?.ARpattern">
+            La patente debe tener formato argentino.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Año de Fabricación</mat-label>
-          <input  
+          <input
             matInput
             id="manufacturingYear"
             class="form-control"
@@ -46,11 +49,17 @@
           <mat-error *ngIf="vehicleForm.get('manufacturingYear')?.errors?.required">
             El año de fabricación es requerido.
           </mat-error>
+          <mat-error *ngIf="vehicleForm.get('manufacturingYear')?.errors?.max">
+            No puede ser del futuro.
+          </mat-error>
+          <mat-error *ngIf="vehicleForm.get('manufacturingYear')?.errors?.min">
+            No puede ser de antes del 1900.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Km Recorridos</mat-label>
-          <input  
+          <input
             matInput
             id="totalKms"
             class="form-control"
@@ -61,6 +70,9 @@
           >
           <mat-error *ngIf="vehicleForm.get('totalKms')?.errors?.required">
             Los km recorridos son requeridos.
+          </mat-error>
+          <mat-error *ngIf="vehicleForm.get('totalKms')?.errors?.min">
+            No puede recorrer distancia negativa.
           </mat-error>
         </mat-form-field>
 
@@ -118,7 +130,7 @@
           <ng-template #loading>
             <mat-spinner diameter="30"></mat-spinner>
           </ng-template>
-          
+
         </button>
       </div>
     </form>
