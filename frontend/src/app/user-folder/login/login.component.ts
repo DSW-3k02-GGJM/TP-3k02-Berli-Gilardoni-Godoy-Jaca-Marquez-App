@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { GenericSuccesDialogComponent } from '../../shared/generic-succes-dialog/generic-succes-dialog.component.js';
+import { ValidationDialogComponent } from '../validation-dialog/validation-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -45,6 +46,30 @@ export class LoginComponent {
       exitAnimationDuration: '0ms',
       data:{
         title: 'Login exitoso',
+      }
+    });
+  }
+
+  openValidationDialog(): void {
+    const dialogRef = this.dialog.open(ValidationDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const email = this.loginForm.value.email;
+        if (email) {
+          this.authService.sendEmailVerification(email).subscribe(
+            res => {
+              this.errorMessage = "Se ha enviado un email de verificación a tu correo";
+            },
+            err => {
+              console.log(err);
+            }
+          );
+        }
       }
     });
   }
@@ -79,7 +104,11 @@ export class LoginComponent {
           if (err.status === 401) {
             this.errorMessage = 'El email o la contraseña son incorrectas';
             console.log(this.errorMessage);
-          } else {
+          } 
+          else if (err.status === 403) {
+            this.openValidationDialog();
+          }
+          else{
             this.errorMessage = 'Error en el servidor';
           }
         });

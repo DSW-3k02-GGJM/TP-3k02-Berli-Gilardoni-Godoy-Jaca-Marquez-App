@@ -17,28 +17,6 @@ const frontendURL = process.env.FRONTEND_URL || 'http://localhost:4200';
 
 const em = orm.em;
 
-const sanitizedVerifyEmailInput = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    email: req.body.email,
-  };
-
-  const email = req.body.sanitizedInput.email;
-
-  if (!email) {
-    return res.status(400).json({ message: 'Email is required' });
-  }
-  // Más validaciones
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-  next();
-};
 
 const sanitizedLoginInput = (
   req: Request,
@@ -367,6 +345,16 @@ const register = async (req: Request, res: Response) => {
       });
     await em.flush();
 
+    const token = AuthService.generateToken(user, SECRET_EMAIL_KEY, '10m');
+    const verificationLink = `${frontendURL}/verify-email/${token}`;
+    await MailService.sendMail(
+      [email],
+      'Verificación de correo',
+      '',
+      'Para verificar su correo haga click <a href="'+ verificationLink +'">aquí</a>.'
+    );
+    res.status(200).json({ message: 'Sign-up completed and verification email sent' });
+    /*
     //const token = AuthService.generateToken(usuario); // Crea un token y lo asocia al usuario
     const { password: _, ...publicUser} = user;
     const token = AuthService.generateToken(user, SECRET_KEY, '1h'); // Crea un token y lo asocia al usuario
@@ -376,7 +364,8 @@ const register = async (req: Request, res: Response) => {
               sameSite: 'strict', // Solo se puede acceder en el mismo dominio
               maxAge: 1000 * 60 * 60, // Dura 1h
           })
-          .status(200).json({ message: 'Sign-up and Login completed', data: publicUser});
+          .status(200).json({ message: 'Sign-up completed', data: publicUser});
+    */
   } catch (error: any) {
     console.log(error.message);
     res.status(500).json({ message: "Server error" });
@@ -403,6 +392,10 @@ const login = async (req: Request, res: Response) => {
         return res.status(401).json({ message: 'Wrong email' });
       }
       else {
+        if (!user.verified) {
+          return res.status(403).json({ message: 'Email not verified' });
+        } 
+        else {
           const isValid = await bcrypt.compare(password, user.password)
           if(!isValid){
             return res.status(401).json({ message: 'Wrong password' });
@@ -419,7 +412,9 @@ const login = async (req: Request, res: Response) => {
                   })
                   .status(200).json({ message: 'Login completed'});
           }
+        }
       }
+        
   } catch (error: any) {
     console.log(error.message);
     res.status(500).json({ message: "Server error" });
@@ -506,7 +501,10 @@ const mailExample = async (req: Request, res: Response) => {
 
 const sendEmailVerification = async (req: Request, res: Response) => {
   try {
-    const email = req.body.sanitizedInput.email;
+    const email = req.params.email;
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
     const user = await em.findOne(
       User,
       { email: email });
@@ -519,8 +517,8 @@ const sendEmailVerification = async (req: Request, res: Response) => {
       await MailService.sendMail(
         [email],
         'Verificación de correo',
-        'Para verificar su correo haga click en el siguiente enlace: ' + verificationLink,
-        ''
+        '',
+        'Para verificar su correo haga click <a href="'+ verificationLink +'">aquí</a>.'
       );
       res.status(200).json({ message: 'Verification email sent' });
     }
@@ -531,12 +529,31 @@ const sendEmailVerification = async (req: Request, res: Response) => {
   }
 }
 
+const verifyEmailToken = async (req: Request, res: Response) => {
+  try {
+    const token = req.params.token;
+    console.log(token);
+    if (!token) {
+      return res.status(400).json({ message: 'Token is required' });
+    }
+    const user = AuthService.verifyToken(token, SECRET_EMAIL_KEY);
+    const userToUpdate = await em.findOneOrFail(
+      User,
+      { email: user.email });
+    userToUpdate.verified = true;
+    await em.flush();
+    res.status(200).json({ message: 'Email verified' });
+  }
+  catch (error: any) {
+    return res.status(401).json({ message: 'Unauthorized access (invalid token)' });
+  }  
+}
+
 
 export { 
   sanitizedNewUser, 
   sanitizedLoginInput, 
   sanitizedUserInput,
-  sanitizedVerifyEmailInput,
   sendEmailVerification, 
   add, 
   findAll, 
@@ -552,5 +569,6 @@ export {
   verifyDocumentIDExists, 
   getAuthenticatedId, 
   getAuthenticatedRole,
-  mailExample
+  mailExample,
+  verifyEmailToken
 };

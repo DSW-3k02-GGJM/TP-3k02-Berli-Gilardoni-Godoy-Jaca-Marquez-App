@@ -1,6 +1,10 @@
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,12 +15,13 @@ import { Router } from '@angular/router';
     MatDialogContent, 
     MatDialogActions, 
     MatDialogClose, 
-    MatButtonModule
+    MatButtonModule,
+    CommonModule,
   ],
   templateUrl: './generic-succes-dialog.component.html',
-  styleUrl: './generic-succes-dialog.component.scss'
+  styleUrl: './generic-succes-dialog.component.scss',
 })
-export class GenericSuccesDialogComponent{
+export class GenericSuccesDialogComponent {
   
   data = inject(MAT_DIALOG_DATA);
 

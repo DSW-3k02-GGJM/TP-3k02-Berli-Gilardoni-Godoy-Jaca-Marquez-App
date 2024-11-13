@@ -38,11 +38,12 @@ export class RegisterComponent {
 
   openDialog(): void {
     this.dialog.open(GenericSuccesDialogComponent, {
-      width: '250px',
+      width: '350px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data:{
         title: 'Registro exitoso',
+        message: 'Por favor, revise su correo para verificar su cuenta.'
       }
     });
   }
@@ -74,8 +75,6 @@ export class RegisterComponent {
   }, { updateOn: 'submit' });
 
   onSubmit() {
-    console.log(this.registerForm.value);
-    console.log(this.registerForm.invalid);
     if (!this.registerForm.invalid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: response => {

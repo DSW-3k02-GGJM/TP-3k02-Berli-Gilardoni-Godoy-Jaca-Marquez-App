@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../../service/auth.service";
 import { HttpClientModule } from "@angular/common/http";
@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { GenericSuccesDialogComponent } from '../../shared/generic-succes-dialog/generic-succes-dialog.component.js';
 
 @Component({
   selector: 'app-profile',
@@ -31,7 +33,19 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent implements OnInit{
+export class ProfileComponent implements OnInit {
+  readonly dialog = inject(MatDialog);
+
+  openDialog(): void {
+    this.dialog.open(GenericSuccesDialogComponent, {
+      width: '300px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Cambios registrados',
+      }
+    });
+  }
   idUsuario: number = -1;
   hide = signal(true);
   errorMessage: string = '';
@@ -84,8 +98,7 @@ export class ProfileComponent implements OnInit{
     if (!this.profileForm.invalid) {
       this.authService.updateUser(this.idUsuario, this.profileForm.value).subscribe({
         next: response => {
-          const modalRef = this.modalService.open(SuccessfulModalComponent, { centered: true , backdrop: 'static', keyboard: false , size: 'sm' });
-          modalRef.componentInstance.title = 'Usuario actualizado';
+          this.openDialog();
         },
         error: error => {
           if (error.status !== 400) {

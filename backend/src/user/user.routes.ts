@@ -17,9 +17,9 @@ import {
   getAuthenticatedId,
   getAuthenticatedRole,
   mailExample,
-  sanitizedVerifyEmailInput,
   sendEmailVerification,
   staffUpdate,
+  verifyEmailToken,
 } from './user.controller.js';
 import { AuthService } from '../shared/db/auth.service.js';
 
@@ -40,7 +40,8 @@ userRouter.post('/register', sanitizedUserInput, register);
 userRouter.post('/login', sanitizedLoginInput, login);
 userRouter.post('/logout', logout);
 userRouter.post('/mail-example', mailExample);
-userRouter.post('/send-email-verification', sanitizedVerifyEmailInput, sendEmailVerification);
+userRouter.post('/send-email-verification/:email', sendEmailVerification);
+userRouter.post('/verify-email-token/:token', verifyEmailToken);
 
 userRouter.post(
   '/is-authenticated',

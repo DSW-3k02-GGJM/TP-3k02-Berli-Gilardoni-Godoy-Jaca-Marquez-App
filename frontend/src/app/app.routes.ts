@@ -27,6 +27,7 @@ import { UserFormComponent } from './user-folder/user-form/user-form.component.j
 import { UsersComponent } from './user-folder/users/users.component.js';
 import { StaffComponent } from './staff-folder/admin/staff.component.js';
 import { ResStepperComponent } from './res-folder/res-stepper/res-stepper.component.js';
+import { EmailVerificationComponent } from './user-folder/email-verification/email-verification.component.js';
 
 
 export const routes: Routes = [
@@ -40,6 +41,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
 
+  { path: 'verify-email/:token', component: EmailVerificationComponent },
 
   { path: 'staff', component: StaffComponent, canActivate: [authEmployeeGuard],
     children: [

@@ -109,9 +109,17 @@ export class AuthService {
   }
 
   isAuthenticated(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/users/is-authenticated`, {
+    return this.http.post(`${this.apiUrl}/users/is-authenticated`, {})
+  }
+
+  sendEmailVerification(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/send-email-verification/${email}`, {
       withCredentials: true,
     })
+  }
+
+  verifyEmailToken(token: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/verify-email-token/${token}`, {})
   }
 
   emailExists(email: string): Observable<boolean> {
