@@ -30,6 +30,9 @@
           <mat-error *ngIf="vehicleForm.get('licensePlate')?.errors?.required">
             La patente es requerida.
           </mat-error>
+          <mat-error *ngIf="vehicleForm.get('licensePlate')?.errors?.ARpattern">
+            La patente debe tener formato argentino.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">

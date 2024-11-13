@@ -153,7 +153,7 @@
                 </mat-error>
                 <mat-error *ngIf="userForm.get('userSurname')?.errors?.pattern">
                   El apellido solo puede contener letras.
-                  </mat-error>
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
@@ -166,19 +166,13 @@
                     formControlName="birthDate"
                     placeholder=""
                     >
-              <mat-error
-                *ngIf="
-                userForm.get('birthDate')?.errors?.dateInvalid &&
-                userForm.get('birthDate')?.errors?.required
-              "
-              >
+                <mat-error *ngIf="userForm.get('birthDate')?.errors?.required">
                 La fecha de nacimiento es requerida.
-              </mat-error>
-              <mat-error
-                *ngIf="userForm.get('birthDate')?.errors?.dateInvalid"
-              >
-                Debes ser mayor de edad.
-              </mat-error>
+                </mat-error>
+                <mat-error
+                  *ngIf="userForm.get('birthDate')?.errors?.dateInvalid">
+                  Debes ser mayor de edad.
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
@@ -211,10 +205,10 @@
                 </mat-error>
                 <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.pattern">
                   El teléfono solo puede contener dígitos.
-                  </mat-error>
+                </mat-error>
                 <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.minlength && !userForm.get('phoneNumber')?.errors?.pattern">
                   Debes ingresar al menos 7 dígitos.
-                  </mat-error>
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
@@ -231,6 +225,8 @@
                 La nacionalidad es requerida.
                 </mat-error>
             </mat-form-field>
+
+
         </div>
         <mat-error *ngIf="errorMessage">
             {{errorMessage}}

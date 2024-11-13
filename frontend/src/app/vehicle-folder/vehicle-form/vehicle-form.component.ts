@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
-  ReactiveFormsModule,
+  ReactiveFormsModule, ValidationErrors, ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -58,7 +59,7 @@ export class VehicleFormComponent implements OnInit {
   ) {}
 
   vehicleForm = new FormGroup({
-    licensePlate: new FormControl('', [Validators.required]),
+    licensePlate: new FormControl('', [Validators.required, this.licensePlateValidator()]),
     manufacturingYear: new FormControl('', [Validators.required, Validators.min(1900),Validators.max(new Date().getFullYear())]),
     totalKms: new FormControl('', [Validators.required, Validators.min(0)]),
     vehicleModel: new FormControl('', [Validators.required]),
@@ -154,8 +155,20 @@ export class VehicleFormComponent implements OnInit {
             }
           });
       }
-
     }
+  }
+
+  licensePlateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      const pattern1 = /^[A-Za-z]{3}\d{3}$/; // 3 letters 3 numbers
+      const pattern2 = /^[A-Za-z]{2}\d{3}[A-Za-z]{2}$/; // 2 letters 3 numbers 2 letters
+
+      if (!value || pattern1.test(value) || pattern2.test(value)) {
+        return null; // valid
+      }
+      return { ARpattern: true }; // invalid
+    };
   }
 
   navigateToVehicles() {

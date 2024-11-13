@@ -61,7 +61,7 @@
             El teléfono es requerido.
           </mat-error>
           <mat-error *ngIf="locationForm.get('phoneNumber')?.errors?.pattern">
-            El teléfono solo puede contener dígitos.
+          El teléfono solo puede contener dígitos.
           </mat-error>
           <mat-error *ngIf="locationForm.get('phoneNumber')?.errors?.minlength && !locationForm.get('phoneNumber')?.errors?.pattern">
             Debes ingresar al menos 7 dígitos.
