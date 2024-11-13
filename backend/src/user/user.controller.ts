@@ -536,13 +536,23 @@ const verifyEmailToken = async (req: Request, res: Response) => {
     if (!token) {
       return res.status(400).json({ message: 'Token is required' });
     }
-    const user = AuthService.verifyToken(token, SECRET_EMAIL_KEY);
-    const userToUpdate = await em.findOneOrFail(
-      User,
-      { email: user.email });
-    userToUpdate.verified = true;
-    await em.flush();
-    res.status(200).json({ message: 'Email verified' });
+    else {
+      const user = AuthService.verifyToken(token, SECRET_EMAIL_KEY);
+      const userToUpdate = await em.findOne(
+        User,
+        { email: user.email });
+      if (!userToUpdate) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      else if (userToUpdate.verified) {
+        return res.status(401).json({ message: 'The user is already verified' });
+      }
+      else {
+        userToUpdate.verified = true;
+        await em.flush();
+        res.status(200).json({ message: 'User verified' });
+      }
+    } 
   }
   catch (error: any) {
     return res.status(401).json({ message: 'Unauthorized access (invalid token)' });

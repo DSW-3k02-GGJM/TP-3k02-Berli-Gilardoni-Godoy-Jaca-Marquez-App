@@ -35,11 +35,9 @@ export class EmailVerificationComponent implements OnInit {
       setTimeout(() => {
         this.authService.verifyEmailToken(token).subscribe({
             next: response => {
-              console.log(response);
               this.status = "success";
             },
             error: error => {
-              console.log(error);
               if (error.status === 401) {
                 this.status = "error";
               }
