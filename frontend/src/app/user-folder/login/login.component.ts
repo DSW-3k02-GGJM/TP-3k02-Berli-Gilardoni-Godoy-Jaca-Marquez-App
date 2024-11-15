@@ -91,16 +91,20 @@ export class LoginComponent {
     password: new FormControl('', [Validators.required]),
   }, { updateOn: 'submit' });
   errorMessage: string | null = null
+  pending = false;
 
   onSubmit() {
     if (!this.loginForm.invalid) {
+      this.pending = true;
       this.authService.login(this.loginForm.value)
       .subscribe(
         res => {
+          this.pending = false;
           this.errorMessage = null;
           this.openDialog();
         },
         err => {
+          this.pending = false;
           if (err.status === 401) {
             this.errorMessage = 'El email o la contraseña son incorrectas';
             console.log(this.errorMessage);

@@ -7,6 +7,9 @@
     text-decoration: underline; 
     cursor: pointer; 
   }
+  .link {
+    cursor: pointer
+  }
   :host {
       height: auto;
       display: flex;

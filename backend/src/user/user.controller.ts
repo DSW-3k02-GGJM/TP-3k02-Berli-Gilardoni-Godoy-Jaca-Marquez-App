@@ -17,6 +17,35 @@ const frontendURL = process.env.FRONTEND_URL || 'http://localhost:4200';
 
 const em = orm.em;
 
+const sanitizedPasswordResetInput = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req.body.sanitizedInput = {
+    newPassword: req.body.newPassword,
+    confirmPassword: req.body.confirmPassword,
+  };
+  // Más validaciones
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  });
+
+  const newPassword = req.body.sanitizedInput.newPassword;
+  const confirmPassword = req.body.sanitizedInput.confirmPassword;
+
+  if (!newPassword || !confirmPassword) {
+    return res.status(400).json({ message: 'New password and confirm password are required' });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ message: 'Passwords do not match' });
+  }
+
+  next();
+};
 
 const sanitizedLoginInput = (
   req: Request,
@@ -499,11 +528,68 @@ const mailExample = async (req: Request, res: Response) => {
   }
 }
 
-const sendEmailVerification = async (req: Request, res: Response) => {
+const sendPasswordReset = async (req: Request, res: Response) => {
   try {
     const email = req.params.email;
     if (!email) {
       return res.status(400).json({ message: 'Email is required' });
+    }
+    const user = await em.findOne(
+      User,
+      { email: email });
+    if (!user) { 
+      return res.status(404).json({ message: 'User not found' });
+    }
+    else {
+      const token = AuthService.generateToken(user, SECRET_PASSWORD_KEY, '10m'); // Crea un token y lo asocia al usuario
+      const resetLink = `${frontendURL}/reset-password/${token}`;
+      await MailService.sendMail(
+        [email],
+        'Restablecimiento de contraseña',
+        '',
+        'Para restablecer su contraseña haga click <a href="'+ resetLink +'">aquí</a>.'
+      );
+      res.status(200).json({ message: 'Password reset email sent' });
+    }
+  }
+  catch (error: any) {
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+const verifyPasswordResetToken = async (req: Request, res: Response) => { 
+  try {
+    const newPassword = req.body.sanitizedInput.newPassword;
+    const token = req.params.token;
+    if (!token) {
+      return res.status(401).json({ message: 'Token is required' });
+    }
+    else {
+      const user = AuthService.verifyToken(token, SECRET_PASSWORD_KEY);
+      const userToUpdate = await em.findOne(
+        User,
+        { email: user.email });
+      if (!userToUpdate) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      else {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        userToUpdate.password = hashedPassword;
+        await em.flush();
+        res.status(200).json({ message: 'Password updated' });
+      }
+    } 
+  }
+  catch (error: any) {    return res.status(401).json({ message: 'Unauthorized access (invalid token)' });
+  } 
+}
+
+const sendEmailVerification = async (req: Request, res: Response) => {
+  try {
+    const email = req.params.email;
+    if (!email) {
+      return res.status(401).json({ message: 'Email is required' });
     }
     const user = await em.findOne(
       User,
@@ -524,17 +610,15 @@ const sendEmailVerification = async (req: Request, res: Response) => {
     }
   }
   catch (error: any) {
-    console.log(error.message);
-    res.status(500).json({ message: "Server error" });
-  }
+    return res.status(401).json({ message: 'Unauthorized access (invalid token)' });
+  }  
 }
 
 const verifyEmailToken = async (req: Request, res: Response) => {
   try {
     const token = req.params.token;
-    console.log(token);
     if (!token) {
-      return res.status(400).json({ message: 'Token is required' });
+      return res.status(401).json({ message: 'Token is required' });
     }
     else {
       const user = AuthService.verifyToken(token, SECRET_EMAIL_KEY);
@@ -565,6 +649,7 @@ export {
   sanitizedLoginInput, 
   sanitizedUserInput,
   sendEmailVerification, 
+  sanitizedPasswordResetInput,
   add, 
   findAll, 
   findOne, 
@@ -580,5 +665,7 @@ export {
   getAuthenticatedId, 
   getAuthenticatedRole,
   mailExample,
-  verifyEmailToken
+  verifyEmailToken,
+  verifyPasswordResetToken,
+  sendPasswordReset,
 };

@@ -114,8 +114,21 @@ export class AuthService {
 
   sendEmailVerification(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/users/send-email-verification/${email}`, {
-      withCredentials: true,
     })
+  }
+
+  sendPasswordReset(email: string): Observable<any> { 
+    return this.http.post(`${this.apiUrl}/users/send-password-reset/${email}`, {
+    })
+  }
+
+  verifyPasswordResetToken(token: string, data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/verify-password-reset-token/${token}`, data , {
+      headers: this.headers,
+    })
+    .pipe(
+      delay(1000),
+    );
   }
 
   verifyEmailToken(token: string): Observable<any> {

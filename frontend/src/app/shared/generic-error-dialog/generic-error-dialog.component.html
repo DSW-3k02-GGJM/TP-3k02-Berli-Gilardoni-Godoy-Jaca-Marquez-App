@@ -1,0 +1,11 @@
+<h2 mat-dialog-title class="title unselectable">{{data.title}}</h2>
+<mat-dialog-content class="content unselectable">
+<img src="assets/wrongmark.png" alt="Wrongmark" class="checkmark-image" style="width: 100px;height: 100px;">
+<div>
+    <hr>
+    <p class="message">{{data.message}}</p>
+</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close cdkFocusInitial (click)="router.navigate(['/home']);">Aceptar</button>
+</mat-dialog-actions>

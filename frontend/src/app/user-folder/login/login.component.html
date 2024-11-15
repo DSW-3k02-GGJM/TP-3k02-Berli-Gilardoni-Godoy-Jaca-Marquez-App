@@ -15,6 +15,7 @@
             placeholder="Email"
             [class.ng-invalid]="errorMessage"
           >
+          <mat-hint routerLink="/register" class="link">¿No tienes cuenta? <a routerLink="/register">Regístrate</a></mat-hint>
           <!--<mat-spinner *ngIf="registerForm.pending" matSuffix diameter="25" style="margin-right: 10px;"></mat-spinner>-->
           <mat-error *ngIf="loginForm.get('email')?.errors?.required">
             El email es requerido.
@@ -44,6 +45,7 @@
           >
             <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
+          <mat-hint routerLink="/forgot-password" class="link">¿Olvidaste tu <a routerLink="/forgot-password">contraseña</a>?</mat-hint>
           <mat-error *ngIf="loginForm.get('password')?.errors?.required">
             La contraseña es requerida.
           </mat-error>
@@ -54,10 +56,10 @@
       <mat-error *ngIf="errorMessage">
         {{errorMessage}}
       </mat-error>
-      <p class="text-center">¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
+
       <div class="button">
         <button type="submit" [disabled]="loginForm.pending">
-          <ng-container *ngIf="!loginForm.pending; else loading">
+          <ng-container *ngIf="!loginForm.pending && !pending else loading">
             Ingresar
           </ng-container>
           <ng-template #loading>

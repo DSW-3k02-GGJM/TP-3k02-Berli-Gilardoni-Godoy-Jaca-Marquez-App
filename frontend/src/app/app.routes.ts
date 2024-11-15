@@ -28,6 +28,8 @@ import { UsersComponent } from './user-folder/users/users.component.js';
 import { StaffComponent } from './staff-folder/admin/staff.component.js';
 import { ResStepperComponent } from './res-folder/res-stepper/res-stepper.component.js';
 import { EmailVerificationComponent } from './user-folder/email-verification/email-verification.component.js';
+import { ResetPasswordComponent } from './user-folder/reset-password/reset-password.component.js';
+import { ForgotPasswordComponent } from './user-folder/forgot-password/forgot-password.component.js';
 
 
 export const routes: Routes = [
@@ -42,6 +44,9 @@ export const routes: Routes = [
   { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
 
   { path: 'verify-email/:token', component: EmailVerificationComponent },
+  { path: 'reset-password/:token', component: ResetPasswordComponent },
+
+  { path: 'forgot-password', component: ForgotPasswordComponent },
 
   { path: 'staff', component: StaffComponent, canActivate: [authEmployeeGuard],
     children: [
