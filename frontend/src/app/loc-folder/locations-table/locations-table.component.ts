@@ -3,12 +3,8 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
-import { LocationFormComponent } from '../location-form/location-form.component.js';
-import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-dialog/confirm-deletion-dialog.component.js';
@@ -22,7 +18,6 @@ import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/g
   imports: [
     CommonModule,
     HttpClientModule,
-    ConfirmDeletionComponent,
     FilterPipe,
     FormsModule,
     MatInputModule,

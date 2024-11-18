@@ -4,11 +4,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http'; // Módulo para hacer solicitudes HTTP
 import { ApiService } from '../../service/api.service'; // Servicio para manejar la API
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component.js';
 import { FilterPipe } from '../../shared/filter/filter.pipe';
 import { FormsModule } from '@angular/forms';
 import { ColorFormComponent } from '../color-form/color-form.component';
-import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-dialog/confirm-deletion-dialog.component.js';
@@ -22,7 +20,6 @@ import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/g
   imports: [
     CommonModule,
     HttpClientModule,
-    ConfirmDeletionComponent,
     FilterPipe,
     FormsModule,
     MatInputModule,
