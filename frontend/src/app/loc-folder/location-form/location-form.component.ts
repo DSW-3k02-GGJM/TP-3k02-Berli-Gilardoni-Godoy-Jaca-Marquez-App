@@ -41,6 +41,7 @@ export class LocationFormComponent implements OnInit {
   currentLocationId: number = -1;
   action: string = '';
   errorMessage: string = '';
+  pending = false;
 
   constructor(
     private apiService: ApiService,
@@ -82,15 +83,18 @@ export class LocationFormComponent implements OnInit {
 
   onSubmit() {
     if(!this.locationForm.invalid) {
+      this.pending = true;
       if (this.action == 'Create') {
         this.apiService
           .create('locations', this.locationForm.value)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.locationCreatedOrModifiedService.notifyLocationCreatedOrModified();
               this.navigateToLocations();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
@@ -101,10 +105,12 @@ export class LocationFormComponent implements OnInit {
           .update('locations', this.currentLocationId, this.locationForm.value)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.locationCreatedOrModifiedService.notifyLocationCreatedOrModified();
               this.navigateToLocations();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }

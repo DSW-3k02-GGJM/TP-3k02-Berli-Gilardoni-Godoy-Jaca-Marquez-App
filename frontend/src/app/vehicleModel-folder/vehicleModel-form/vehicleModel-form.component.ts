@@ -45,6 +45,7 @@ export class VehicleModelFormComponent implements OnInit {
 
   categories: any[] = []; // Agrega esta propiedad para almacenar las categorías
   brands: any[] = [];
+  pending = false;
 
   constructor(
     private apiService: ApiService,
@@ -143,7 +144,7 @@ export class VehicleModelFormComponent implements OnInit {
 
   onSubmit() {
     if (!this.vehicleModelForm.invalid) {
-
+      this.pending = true;
       const formData = this.vehicleModelForm.value;
 
       // Modifica el valor de imagenRuta
@@ -162,10 +163,12 @@ export class VehicleModelFormComponent implements OnInit {
         .create('vehicleModels', formData)
         .subscribe({
           next: response => {
+            this.pending = false;
             this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
             this.navigateToVehicleModels();
           },
           error: error => {
+            this.pending = false;
             if (error.status !== 400) {
               this.errorMessage = "Error en el servidor. Intente de nuevo.";
             }
@@ -176,10 +179,12 @@ export class VehicleModelFormComponent implements OnInit {
           .update('vehicleModels', this.currentVehicleModelId, formData)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
               this.navigateToVehicleModels();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }

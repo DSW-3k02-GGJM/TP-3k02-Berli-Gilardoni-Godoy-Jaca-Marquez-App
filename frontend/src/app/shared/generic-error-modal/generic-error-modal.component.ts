@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-generic-error-modal',
@@ -9,8 +8,5 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './generic-error-modal.component.scss'
 })
 export class GenericErrorModalComponent {
-  @Input() title: string = '';
-  @Input() message: string = '';
 
-  constructor(public activeModal: NgbActiveModal) {}
 }

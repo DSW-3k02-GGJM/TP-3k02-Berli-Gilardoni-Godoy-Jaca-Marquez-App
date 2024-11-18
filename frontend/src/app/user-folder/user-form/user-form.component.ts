@@ -47,7 +47,7 @@ export class UserFormComponent implements OnInit {
   currentEmail: string = '';
   action: string = '';
   errorMessage: string = '';
-
+  pending = false;
   hide = signal(true);
   clickEvent(event: MouseEvent) {
     event.preventDefault();
@@ -115,15 +115,18 @@ export class UserFormComponent implements OnInit {
     this.userForm.updateValueAndValidity();
     console.log(this.userForm);
     if(!this.userForm.invalid) {
+      this.pending = true;
       if (this.action === 'Create') {
         this.authService
           .createUser(this.userForm.value)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.userCreatedOrModifiedService.notifyUserCreatedOrModified();
               this.navigateToUsers();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
@@ -135,10 +138,12 @@ export class UserFormComponent implements OnInit {
           .staffUpdateUser(this.currentUserId, this.userForm.value)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.userCreatedOrModifiedService.notifyUserCreatedOrModified();
               this.navigateToUsers();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }

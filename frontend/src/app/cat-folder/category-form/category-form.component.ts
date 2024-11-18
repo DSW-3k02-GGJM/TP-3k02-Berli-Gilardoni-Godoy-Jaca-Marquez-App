@@ -42,6 +42,7 @@ export class CategoryFormComponent implements OnInit {
   currentCategoryId: number = -1;
   action: string = '';
   errorMessage: string = '';
+  pending = false;
 
   constructor(
     private apiService: ApiService,
@@ -84,15 +85,18 @@ export class CategoryFormComponent implements OnInit {
 
   onSubmit() {
     if(!this.categoryForm.invalid) {
+      this.pending = true;
       if (this.action == 'Create') {
         this.apiService
           .create('categories', this.categoryForm.value)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.categoryCreatedOrModifiedService.notifyCategoryCreatedOrModified();
               this.navigatesToCategories();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
@@ -103,10 +107,12 @@ export class CategoryFormComponent implements OnInit {
           .update('categories', this.currentCategoryId, this.categoryForm.value)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.categoryCreatedOrModifiedService.notifyCategoryCreatedOrModified();
               this.navigatesToCategories();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }

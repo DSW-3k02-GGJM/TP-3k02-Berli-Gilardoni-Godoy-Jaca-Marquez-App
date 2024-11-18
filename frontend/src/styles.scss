@@ -25,7 +25,7 @@ $alquiler-vehiculos-theme: custom.$light-theme;
 // @include mat.typography-hierarchy($alquiler-vehiculos-theme);
 
 // Comment out the line below if you want to use the deprecated `color` inputs.
-// @include mat.color-variants-backwards-compatibility($alquiler-vehiculos-theme);
+@include mat.color-variants-backwards-compatibility($alquiler-vehiculos-theme);
 $primary: #21303A;
 $secondary: #FFF5D0;
 $success: #28a745;

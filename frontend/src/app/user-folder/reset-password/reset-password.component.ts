@@ -53,7 +53,9 @@ export class ResetPasswordComponent {
       exitAnimationDuration: '0ms',
       data:{
         title: 'Error al cambiar la contraseña',
-        message: 'El cambio de contraseña ha expirado o es inválido'
+        message: 'El cambio de contraseña ha expirado o es inválido',
+        haveRouterLink: true,
+        goTo: '/home'
       }
     });
   }

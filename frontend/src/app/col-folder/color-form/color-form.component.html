@@ -38,7 +38,7 @@
       <!-- Submit button -->
       <div class="button">
         <button type="submit" [disabled]="colorForm.pending">
-          <ng-container *ngIf="!colorForm.pending; else loading">
+          <ng-container *ngIf="!colorForm.pending && !pending; else loading">
             {{buttonText}}
           </ng-container>
           <ng-template #loading>

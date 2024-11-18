@@ -45,7 +45,7 @@ export class VehicleFormComponent implements OnInit {
   currentVehicleId: number = -1;
   action: string = '';
   errorMessage: string = '';
-
+  pending = false;
   vehicleModels: any[] = [];
   colors: any[] = [];
   locations: any[] = [];
@@ -121,7 +121,7 @@ export class VehicleFormComponent implements OnInit {
 
   onSubmit() {
     if (!this.vehicleForm.invalid) {
-
+      this.pending = true;
       const formData = this.vehicleForm.value;
 
       console.log('Datos enviados:', formData); // para ver los datos que se envían
@@ -131,10 +131,12 @@ export class VehicleFormComponent implements OnInit {
         .create('vehicles', formData)
         .subscribe({
           next: response => {
+            this.pending = false;
             this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
             this.navigateToVehicles();
           },
           error: error => {
+            this.pending = false;
             if (error.status !== 400) {
               this.errorMessage = "Error en el servidor. Intente de nuevo.";
             }
@@ -145,10 +147,12 @@ export class VehicleFormComponent implements OnInit {
           .update('vehicles', this.currentVehicleId, formData)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.vehicleCreatedOrModifiedService.notifyVehicleCreatedOrModified();
               this.navigateToVehicles();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }

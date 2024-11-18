@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -10,6 +10,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../service/auth.service.js';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-dialog/confirm-deletion-dialog.component.js';
+import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/generic-error-dialog.component.js';
 @Component({
   selector: 'app-users-table',
   standalone: true,
@@ -26,6 +29,48 @@ import { MatInputModule } from '@angular/material/input';
   providers: [AuthService],
 })
 export class UsersTableComponent {
+  readonly dialog = inject(MatDialog);
+
+  openErrorDialog(): void {
+    this.dialog.open(GenericErrorDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Error al eliminar al usuario',
+        message: 'El usuario no se puede eliminar porque tiene reservas asociadas.',
+        haveRouterLink: false,
+      }
+    });
+  }
+
+  openConfirmDialog(name: string, surname: string, id: number): void {
+    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Eliminar usuario',
+        message: `¿Está seguro de que desea eliminar al usuario ${surname}, ${name}?`
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.authService
+            .deleteUser(Number(id))
+            .subscribe({
+              next: (response) => {
+                this.userDeleted.emit(id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  this.openErrorDialog();
+                }
+              }
+            });
+      }
+    });
+  }
   @Input() users!: any[];
   @Output() userDeleted = new EventEmitter();
   filterRows = '';
@@ -58,30 +103,6 @@ export class UsersTableComponent {
   }
 
   deleteUser(user: any): void {
-    const modalRef = this.modalService.open(ConfirmDeletionComponent);
-    modalRef.componentInstance.title = 'Eliminar usuario';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar al usuario ${user.userSurname}, ${user.userName}?`;
-
-    modalRef.result.then(
-      (result) => {
-        if (result) {
-          this.authService
-            .deleteUser(Number(user.id))
-            .subscribe({
-              next: (response) => {
-                this.userDeleted.emit(user.id);
-              },
-              error: (error) => {
-                if (error.status === 400) { 
-                  const modalRef = this.modalService.open(GenericErrorModalComponent);
-                  modalRef.componentInstance.title = 'Error al eliminar el usuario';
-                  modalRef.componentInstance.message = 'El usuario no se puede eliminar porque tiene reservas asociadas.';
-                }
-              }
-            });
-        }
-      },
-      () => {}
-    );
+    this.openConfirmDialog(user.userName, user.userSurname, user.id);
   }
 }

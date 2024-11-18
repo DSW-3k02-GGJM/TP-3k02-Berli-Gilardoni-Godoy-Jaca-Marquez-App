@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -11,6 +11,9 @@ import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.serv
 import { Router } from '@angular/router';
 import { differenceInDays } from 'date-fns';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-dialog/confirm-deletion-dialog.component.js';
+import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/generic-error-dialog.component.js';
 
 @Component({
   selector: 'app-res-table',
@@ -28,13 +31,98 @@ import { MatInputModule } from '@angular/material/input';
   providers: [ApiService],
 })
 export class ResTableComponent {
+  readonly dialog = inject(MatDialog);
+
+
+  openConfirmDialog(id: number): void {
+    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Eliminar reserva',
+        message: '¿Está seguro de que desea eliminar la reserva?'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.apiService
+            .delete('reservations', Number(id))
+            .subscribe((response) => {
+              this.resDeleted.emit(id);
+            });
+      }
+    });
+  }
+
+  openCheckInDialog(res: any): void {
+    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Check-in Reserva',
+        message: '¿Está seguro de que desea realizar el check-in de la reserva?'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const data = {
+          // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
+          startDate: res.startDate,
+          plannedEndDate: res.plannedEndDate,
+          user: res.user.id,
+          vehicle: res.vehicle.id,
+          //
+          initialKms: res.vehicle.totalKms,
+        };
+
+        this.apiService
+          .update('reservations', Number(res.id), data)
+          .subscribe((response) => {
+            this.resCreatedOrModifiedService.notifyResCreatedOrModified();
+          });
+      }
+    });
+  }
+
+  openCheckOutDialog(res: any): void {
+    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Check-out Reserva',
+        message: '¿Está seguro de que desea realizar el check-out de la reserva?'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const data = {
+          // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
+          startDate: res.startDate,
+          plannedEndDate: res.plannedEndDate,
+          user: res.user.id,
+          vehicle: res.vehicle.id,
+          //
+          realEndDate: new Date().toISOString().split('T')[0],
+          finalKm: res.vehicle.totalKms,
+        };
+
+        this.apiService
+          .update('reservations', Number(res.id), data)
+          .subscribe((response) => {
+            this.resCreatedOrModifiedService.notifyResCreatedOrModified();
+          });
+      }
+    });
+  }
   @Input() reservations!: any[];
   @Output() resDeleted = new EventEmitter();
   filterRows = '';
 
   constructor(
     private apiService: ApiService,
-    private modalService: NgbModal,
     private resCreatedOrModifiedService: ResCreatedOrModifiedService,
     private router: Router
   ) {}
@@ -52,81 +140,15 @@ export class ResTableComponent {
   }
 
   deleteRes(res: any): void {
-    const modalRef = this.modalService.open(ConfirmDeletionComponent);
-    modalRef.componentInstance.title = 'Eliminar reserva?';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar la reserva?`;
-
-    modalRef.result.then(
-      (result) => {
-        if (result) {
-          this.apiService
-            .delete('reservations', Number(res.id))
-            .subscribe((response) => {
-              this.resDeleted.emit(res.id);
-            });
-        }
-      },
-      () => {}
-    );
+    this.openConfirmDialog(res.id);
   }
 
   checkInRes(res: any): void {
-    const modalRef = this.modalService.open(ConfirmDeletionComponent);
-    modalRef.componentInstance.title = 'Check-in Reserva';
-    modalRef.componentInstance.message = `¿Está seguro de que desea realizar el check-in de la reserva?`;
-
-    modalRef.result.then(
-      (result) => {
-        if (result) {
-          const data = {
-            // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
-            startDate: res.startDate,
-            plannedEndDate: res.plannedEndDate,
-            user: res.user.id,
-            vehicle: res.vehicle.id,
-            //
-            initialKms: res.vehicle.totalKms,
-          };
-
-          this.apiService
-            .update('reservations', Number(res.id), data)
-            .subscribe((response) => {
-              this.resCreatedOrModifiedService.notifyResCreatedOrModified();
-            });
-        }
-      },
-      () => {}
-    );
+    this.openCheckInDialog(res);
   }
 
   checkOutRes(res: any): void {
-    const modalRef = this.modalService.open(ConfirmDeletionComponent);
-    modalRef.componentInstance.title = 'Check-out Reserva';
-    modalRef.componentInstance.message = `¿Está seguro de que desea realizar el check-out de la reserva?`;
-
-    modalRef.result.then(
-      (result) => {
-        if (result) {
-          const data = {
-            // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
-            startDate: res.startDate,
-            plannedEndDate: res.plannedEndDate,
-            user: res.user.id,
-            vehicle: res.vehicle.id,
-            //
-            realEndDate: new Date().toISOString().split('T')[0],
-            finalKm: res.vehicle.totalKms,
-          };
-
-          this.apiService
-            .update('reservations', Number(res.id), data)
-            .subscribe((response) => {
-              this.resCreatedOrModifiedService.notifyResCreatedOrModified();
-            });
-        }
-      },
-      () => {}
-    );
+    this.openCheckOutDialog(res);
   }
 
   calculatePrice(res: any): string {

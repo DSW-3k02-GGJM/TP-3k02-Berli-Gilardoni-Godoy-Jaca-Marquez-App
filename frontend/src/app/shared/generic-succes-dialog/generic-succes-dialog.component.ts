@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
     CommonModule,
   ],
   templateUrl: './generic-succes-dialog.component.html',
-  styleUrl: './generic-succes-dialog.component.scss',
+  styleUrl: '../../styles/genericDialog.scss',
 })
 export class GenericSuccesDialogComponent {
   

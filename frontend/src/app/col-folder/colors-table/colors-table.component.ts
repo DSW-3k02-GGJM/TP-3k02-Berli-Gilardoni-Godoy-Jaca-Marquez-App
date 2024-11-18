@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http'; // Módulo para hacer solicitudes HTTP
@@ -10,6 +10,9 @@ import { FormsModule } from '@angular/forms';
 import { ColorFormComponent } from '../color-form/color-form.component';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-dialog/confirm-deletion-dialog.component.js';
+import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/generic-error-dialog.component.js';
 
 @Component({
   selector: 'app-colors-table',
@@ -27,13 +30,54 @@ import { MatInputModule } from '@angular/material/input';
   providers: [ApiService], // Proporciona el servicio ApiService a este componente
 })
 export class ColorsTableComponent {
+  readonly dialog = inject(MatDialog);
+
+  openErrorDialog(): void {
+    this.dialog.open(GenericErrorDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Error al eliminar el color',
+        message: 'El color no se puede eliminar porque tiene vehículos asociados.',
+        haveRouterLink: false,
+      }
+    });
+  }
+
+  openConfirmDialog(name: string, id: number): void {
+    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Eliminar color',
+        message: `¿Está seguro de que desea eliminar el color ${name}?`
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.apiService
+            .delete('colors', Number(id))
+            .subscribe({
+              next: (response) => {
+                this.colorDeleted.emit(id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  this.openErrorDialog();
+                }
+              }
+            });
+      }
+    });
+  }
   @Input() colors!: any[]; // Entrada de datos: lista de colores
   @Output() colorDeleted = new EventEmitter(); // Evento que emite el ID de la marca eliminada
   filterRows = '';
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
-    private modalService: NgbModal,
     private router: Router
   ) {}
 
@@ -44,30 +88,6 @@ export class ColorsTableComponent {
 
   // Métod0 para eliminar un color
   deleteColor(color: any): void {
-    const modalRef = this.modalService.open(ConfirmDeletionComponent);
-    modalRef.componentInstance.title = 'Eliminar color';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar el color ${color.colorName}?`;
-
-    modalRef.result.then(
-      (result) => {
-        if (result) {
-          this.apiService
-            .delete('colors', Number(color.id))
-            .subscribe({
-              next: (response) => {
-                this.colorDeleted.emit(color.id);
-              },
-              error: (error) => {
-                if (error.status === 400) { 
-                  const modalRef = this.modalService.open(GenericErrorModalComponent);
-                  modalRef.componentInstance.title = 'Error al eliminar el color';
-                  modalRef.componentInstance.message = 'El color no se puede eliminar porque tiene vehículos asociados.';
-                }
-              }
-            });
-        }
-      },
-      () => {}
-    );
+    this.openConfirmDialog(color.colorName, color.id);
   }
 }

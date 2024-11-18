@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -10,6 +10,9 @@ import { VehicleModelFormComponent } from "../vehicleModel-form/vehicleModel-for
 import { Router } from '@angular/router';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-dialog/confirm-deletion-dialog.component.js';
+import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/generic-error-dialog.component.js';
 
 @Component({
   selector: 'app-vehicleModels-table',
@@ -27,13 +30,54 @@ import { MatInputModule } from '@angular/material/input';
   providers: [ApiService],
 })
 export class VehicleModelsTableComponent {
+  readonly dialog = inject(MatDialog);
+
+  openErrorDialog(): void {
+    this.dialog.open(GenericErrorDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Error al eliminar el modelo',
+        message: 'El modelo no se puede eliminar porque tiene vehiculos asociados.',
+        haveRouterLink: false,
+      }
+    });
+  }
+
+  openConfirmDialog(name: string, id: number): void {
+    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Eliminar modelo',
+        message: `¿Está seguro de que desea eliminar el modelo ${name}?`
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.apiService
+            .delete('vehicleModels', Number(id))
+            .subscribe({
+              next: (response) => {
+                this.vehicleModelDeleted.emit(id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  this.openErrorDialog();
+                }
+              }
+            });
+      }
+    });
+  }
   @Input() vehicleModels!: any[];
   @Output() vehicleModelDeleted = new EventEmitter();
   filterRows = '';
 
   constructor(
     private apiService: ApiService, 
-    private modalService: NgbModal,
     private router: Router
   ) {}
 
@@ -42,30 +86,6 @@ export class VehicleModelsTableComponent {
   }
 
   deleteVehicleModel(vehicleModel: any): void {
-    const modalRef = this.modalService.open(ConfirmDeletionComponent);
-    modalRef.componentInstance.title = 'Eliminar modelo?';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar el modelo ${vehicleModel.vehicleModelName}?`;
-
-    modalRef.result.then(
-      (result) => {
-        if (result) {
-          this.apiService
-            .delete('vehicleModels', Number(vehicleModel.id))
-            .subscribe({
-              next: (response) => {
-                this.vehicleModelDeleted.emit(vehicleModel.id);
-              },
-              error: (error) => {
-                if (error.status === 400) { 
-                  const modalRef = this.modalService.open(GenericErrorModalComponent);
-                  modalRef.componentInstance.title = 'Error al eliminar el model';
-                  modalRef.componentInstance.message = 'El modelo no se puede eliminar porque tiene vehiculos asociados.';
-                }
-              }
-            });
-        }
-      },
-      () => {}
-    );
+    this.openConfirmDialog(vehicleModel.vehicleModelName, vehicleModel.id);
   }
 }

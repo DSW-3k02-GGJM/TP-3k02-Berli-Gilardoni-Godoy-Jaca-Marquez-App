@@ -41,6 +41,7 @@ export class ColorFormComponent implements OnInit {
   currentColorId: number = -1;
   action: string = '';
   errorMessage: string = '';
+  pending = false;
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
@@ -80,15 +81,18 @@ export class ColorFormComponent implements OnInit {
 
   onSubmit() {
     if(!this.colorForm.invalid) {
+      this.pending = true;
       if (this.action === 'Create') {
         this.apiService
           .create('colors', this.colorForm.value)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.colorCreatedOrModifiedService.notifyColorCreatedOrModified();
               this.navigateToColors();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
@@ -99,10 +103,12 @@ export class ColorFormComponent implements OnInit {
           .update('colors', this.currentColorId, this.colorForm.value)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.colorCreatedOrModifiedService.notifyColorCreatedOrModified();
               this.navigateToColors();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }

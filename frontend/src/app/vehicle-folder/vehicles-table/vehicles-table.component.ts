@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -10,6 +10,9 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
 import { Router } from '@angular/router';
 import { GenericErrorModalComponent } from '../../shared/generic-error-modal/generic-error-modal.component.js';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-dialog/confirm-deletion-dialog.component.js';
+import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/generic-error-dialog.component.js';
 
 @Component({
   selector: 'app-vehicles-table',
@@ -27,13 +30,54 @@ import { MatInputModule } from '@angular/material/input';
   providers: [ApiService],
 })
 export class VehiclesTableComponent {
+  readonly dialog = inject(MatDialog);
+
+  openErrorDialog(): void {
+    this.dialog.open(GenericErrorDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Error al eliminar el vehículo',	
+        message: 'El vehículo no se puede eliminar porque tiene reservas asociadas.',
+        haveRouterLink: false,
+      }
+    });
+  }
+
+  openConfirmDialog(name: string, id: number): void {
+    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data:{
+        title: 'Eliminar vehículo',
+        message: `¿Está seguro de que desea eliminar el vehículo ${name}?`
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.apiService
+            .delete('vehicles', Number(id))
+            .subscribe({
+              next: (response) => {
+                this.vehicleDeleted.emit(id);
+              },
+              error: (error) => {
+                if (error.status === 400) { 
+                  this.openErrorDialog();
+                }
+              }
+            });
+      }
+    });
+  }
   @Input() vehicles!: any[];
   @Output() vehicleDeleted = new EventEmitter()
   filterRows = '';
 
   constructor(
     private apiService: ApiService, 
-    private modalService: NgbModal,
     private router: Router
   ) {}
 
@@ -42,30 +86,6 @@ export class VehiclesTableComponent {
   }
 
   deleteVehicle(vehicle: any): void {
-    const modalRef = this.modalService.open(ConfirmDeletionComponent);
-    modalRef.componentInstance.title = 'Eliminar Vehiculo';
-    modalRef.componentInstance.message = `¿Está seguro de que desea eliminar el Vehiculo ${vehicle.licensePlate}?`;
-
-    modalRef.result.then(
-      (result) => {
-        if (result) {
-          this.apiService
-            .delete('vehicles', Number(vehicle.id))
-            .subscribe({
-              next: (response) => {
-                this.vehicleDeleted.emit(vehicle.id);
-              },
-              error: (error) => {
-                if (error.status === 400) { 
-                  const modalRef = this.modalService.open(GenericErrorModalComponent);
-                  modalRef.componentInstance.title = 'Error al eliminar el vehículo';
-                  modalRef.componentInstance.message = 'El vehículo no se puede eliminar porque tiene reservas asociadas.';
-                }
-              }
-            });
-        }
-      },
-      () => {}
-    );
+    this.openConfirmDialog(vehicle.licensePlate, vehicle.id);
   }
 }

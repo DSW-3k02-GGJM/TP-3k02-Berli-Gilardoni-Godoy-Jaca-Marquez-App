@@ -16,3 +16,11 @@
     font-weight: 500;
     margin-bottom: 0px;
 }
+
+.red-text {
+    color: #dc3545;
+}
+
+.mat-red::before {
+    background-color: #dc3545;
+}

@@ -40,6 +40,7 @@ export class BrandFormComponent implements OnInit {
   currentBrandId: number = -1;
   action: string = '';
   errorMessage: string = '';
+  pending = false;
 
   constructor(
     private apiService: ApiService, // Servicio para interactuar con la API
@@ -79,15 +80,18 @@ export class BrandFormComponent implements OnInit {
 
   onSubmit() {
     if(!this.brandForm.invalid) {
+      this.pending = true;
       if (this.action === 'Create') {
         this.apiService
           .create('brands', this.brandForm.value)
           .subscribe({
             next: response => {
+              this.pending = false;
               this.brandCreatedOrModifiedService.notifyBrandCreatedOrModified();
               this.navigateToBrands();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }
@@ -98,11 +102,12 @@ export class BrandFormComponent implements OnInit {
           .update('brands', this.currentBrandId, this.brandForm.value)
           .subscribe({
             next: response => {
-
+              this.pending = false;
               this.brandCreatedOrModifiedService.notifyBrandCreatedOrModified();
               this.navigateToBrands();
             },
             error: error => {
+              this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = "Error en el servidor. Intente de nuevo.";
               }

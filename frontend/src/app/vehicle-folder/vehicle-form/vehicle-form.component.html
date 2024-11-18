@@ -124,7 +124,7 @@
       <!-- Submit button -->
       <div class="button">
         <button type="submit" [disabled]="vehicleForm.pending">
-          <ng-container *ngIf="!vehicleForm.pending; else loading">
+          <ng-container *ngIf="!vehicleForm.pending && !pending; else loading">
             {{buttonText}}
           </ng-container>
           <ng-template #loading>
