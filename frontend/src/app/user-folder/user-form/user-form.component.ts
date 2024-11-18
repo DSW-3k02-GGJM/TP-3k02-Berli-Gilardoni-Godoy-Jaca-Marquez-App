@@ -73,7 +73,7 @@ export class UserFormComponent implements OnInit {
     phoneNumber: new FormControl('',[Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(7)]),
     nationality: new FormControl('', [Validators.required]),
     verified: new FormControl(false, [Validators.required]),
-  }, { validators: this.dateLessThan('birthDate'), updateOn: 'blur' });
+  }, { validators: this.dateLessThan('birthDate'), updateOn: 'submit' });
 
   ngOnInit(): void {
     this.userCreatedOrModifiedService.isDataLoaded = false;
@@ -111,8 +111,6 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.userForm.markAllAsTouched();
-    this.userForm.updateValueAndValidity();
     console.log(this.userForm);
     if(!this.userForm.invalid) {
       if (this.action === 'Create') {
