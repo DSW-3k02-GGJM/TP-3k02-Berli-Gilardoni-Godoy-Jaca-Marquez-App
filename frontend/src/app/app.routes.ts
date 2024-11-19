@@ -30,7 +30,7 @@ import { ResStepperComponent } from './res-folder/res-stepper/res-stepper.compon
 import { EmailVerificationComponent } from './user-folder/email-verification/email-verification.component.js';
 import { ResetPasswordComponent } from './user-folder/reset-password/reset-password.component.js';
 import { ForgotPasswordComponent } from './user-folder/forgot-password/forgot-password.component.js';
-
+import { ViboritaGameComponent } from './viborita-game/viborita-game.component.js';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -47,6 +47,7 @@ export const routes: Routes = [
   { path: 'reset-password/:token', component: ResetPasswordComponent },
 
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'testMati2', component: ViboritaGameComponent },
 
   { path: 'staff', component: StaffComponent, canActivate: [authEmployeeGuard],
     children: [
