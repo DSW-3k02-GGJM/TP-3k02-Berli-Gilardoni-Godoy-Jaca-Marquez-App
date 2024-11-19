@@ -29,19 +29,22 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
     let snakeLength = 3;
     let snakeHeadCell = 'c13'
     let newSnakeHeadCell = 'c14';
+    let newCol = 1;
+    let newRow = 4;
     let nextSnakeBodyCell = 'c13';
     this.newApple();
+
     this.gameId = setInterval(() => {
-      if (this.key === 'w') {
+      if (this.key === 'w' && dir !== 'down') {
         dir = 'up';
       } 
-      else if (this.key === 's') {
+      else if (this.key === 's' && dir !== 'up') {
         dir = 'down';
       } 
-      else if (this.key === 'a') {
+      else if (this.key === 'a' && dir !== 'right') {
         dir = 'left';
       } 
-      else if (this.key === 'd') {
+      else if (this.key === 'd' && dir !== 'left') {
         dir = 'right';
       }
 
@@ -49,21 +52,32 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
       snakeHeadCell = this.getSnakeId('1');
       if (dir === 'right') {
         newSnakeHeadCell = "c" + snakeHeadCell[1] + (parseInt(snakeHeadCell[2]) + 1);
+        newCol = parseInt(snakeHeadCell[2]) + 1;
+        newRow = parseInt(snakeHeadCell[1]);
       } 
       else if (dir === 'left') {
         newSnakeHeadCell = "c" + snakeHeadCell[1] + (parseInt(snakeHeadCell[2]) - 1);
+        newCol = parseInt(snakeHeadCell[2]) - 1;
+        newRow = parseInt(snakeHeadCell[1]);
       } 
       else if (dir === 'up') {
         newSnakeHeadCell = "c" + (parseInt(snakeHeadCell[1]) - 1) + snakeHeadCell[2];
+        newCol = parseInt(snakeHeadCell[2]);
+        newRow = parseInt(snakeHeadCell[1]) - 1;
       } 
       else if (dir === 'down') {
         newSnakeHeadCell = "c" + (parseInt(snakeHeadCell[1]) + 1) + snakeHeadCell[2];
+        newCol = parseInt(snakeHeadCell[2]);
+        newRow = parseInt(snakeHeadCell[1]) + 1;
       }
+      
       if(this.cellHaveApple(newSnakeHeadCell)) {
         this.removeClass(newSnakeHeadCell, 'apple');
         snakeLength++;
         this.newApple();
       }
+
+
       this.removeClass(snakeHeadCell, 'snake-head');
       this.removeClass(snakeHeadCell, '1');
 
@@ -85,6 +99,12 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
       }
     
       this.addClass(nextSnakeBodyCell, 'empty');
+
+      if (this.cellIsDead(newSnakeHeadCell)) {
+        this.stopLoop();
+        console.log('Game Over');
+      }
+
     }, 150);
   }
 
@@ -131,5 +151,10 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
   cellHaveApple(cellId: string): boolean {
     const cell = document.getElementById(cellId);
     return cell ? cell.classList.contains('apple') : false;
+  }
+
+  cellIsDead(cellId: string): boolean {
+    const cell = document.getElementById(cellId);
+    return cell ? cell.classList.contains('snake-body') : true;
   }
 }
