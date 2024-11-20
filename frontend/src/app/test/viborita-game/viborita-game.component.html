@@ -14,9 +14,9 @@
         </div>
         <div class="game-row">
             <div id="c10" class="game-cell empty"></div>
-            <div id="c11" class="game-cell snake-body 3"></div>
-            <div id="c12" class="game-cell snake-body 2"></div>
-            <div id="c13" class="game-cell snake-head 1"></div>
+            <div id="c11" class="game-cell empty"></div>
+            <div id="c12" class="game-cell empty"></div>
+            <div id="c13" class="game-cell empty"></div>
             <div id="c14" class="game-cell empty"></div>
             <div id="c15" class="game-cell empty"></div>
             <div id="c16" class="game-cell empty"></div>
@@ -119,6 +119,38 @@
             <div id="c97" class="game-cell empty"></div>
             <div id="c98" class="game-cell empty"></div>
             <div id="c99" class="game-cell empty"></div>
+        </div>
+    </div>
+
+    <div class="game-menu">
+        <div class="game-row">
+            <div *ngFor="let cell of cells" class="menu-cell menu-empty"></div>
+        </div>
+        <div class="game-row">
+            <div *ngFor="let cell of cells" class="menu-cell menu-empty"></div>
+        </div>
+        <div class="menu-row0">
+            <div class="menu-col0">
+                <div *ngFor="let row of rows" class="menu-row1">
+                    <div class="menu-cell menu-empty"></div>
+                    <div class="menu-cell menu-empty"></div>
+                </div>
+            </div>
+            <div class="menu-col1">
+                
+            </div>
+            <div class="menu-col0">
+                <div *ngFor="let row of rows" class="menu-row1">
+                    <div class="menu-cell menu-empty"></div>
+                    <div class="menu-cell menu-empty"></div>
+                </div>
+            </div>
+        </div>
+        <div class="game-row">
+            <div *ngFor="let cell of cells" class="menu-cell menu-empty"></div>
+        </div>
+        <div class="game-row">
+            <div *ngFor="let cell of cells" class="menu-cell menu-empty"></div>
         </div>
     </div>
 </div>

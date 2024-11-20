@@ -1,15 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-viborita-game',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule
+  ],
   templateUrl: './viborita-game.component.html',
   styleUrl: './viborita-game.component.scss'
 })
 export class ViboritaGameComponent implements OnInit, OnDestroy {
   private gameId: any;
   private key: string | undefined;
+  win = false
+  cells: number[] = Array(10).fill(0);
+  rows: number[] = Array(6).fill(0);
+
 
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
@@ -17,14 +24,14 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.startLoop();
+    this.startGame();
   }
   
   ngOnDestroy(): void {
-    this.stopLoop();
+    this.stopGame();
   }
 
-  startLoop() {
+  startGame(){
     let dir = 'right';
     let snakeLength = 3;
     let snakeHeadCell = 'c13'
@@ -32,6 +39,7 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
     let newCol = 1;
     let newRow = 4;
     let nextSnakeBodyCell = 'c13';
+    this.generateSnake();
     this.newApple();
 
     this.gameId = setInterval(() => {
@@ -74,6 +82,10 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
       if(this.cellHaveApple(newSnakeHeadCell)) {
         this.removeClass(newSnakeHeadCell, 'apple');
         snakeLength++;
+        if (snakeLength > 100) { 
+          this.stopGame();
+          this.win = true;
+        }
         this.newApple();
       }
 
@@ -101,15 +113,17 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
       this.addClass(nextSnakeBodyCell, 'empty');
 
       if (this.cellIsDead(newSnakeHeadCell)) {
-        this.stopLoop();
-        console.log('Game Over');
+        this.stopGame();
+        this.win = false;
+        return false;
       }
 
     }, 150);
   }
 
-  stopLoop() {
+  stopGame() {
     clearInterval(this.gameId);
+    console.log(this.win);
   }
 
 
@@ -156,5 +170,19 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
   cellIsDead(cellId: string): boolean {
     const cell = document.getElementById(cellId);
     return cell ? cell.classList.contains('snake-body') : true;
+  }
+
+  generateSnake(){
+    this.removeClass('c11', 'empty');
+    this.removeClass('c12', 'empty');
+    this.removeClass('c13', 'empty');
+
+    this.addClass('c11', 'snake-body');
+    this.addClass('c12', 'snake-body');
+    this.addClass('c13', 'snake-head');
+
+    this.addClass('c11', '3');
+    this.addClass('c12', '2');
+    this.addClass('c13', '1');
   }
 }

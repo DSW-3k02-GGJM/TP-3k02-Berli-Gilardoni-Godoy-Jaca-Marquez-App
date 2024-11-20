@@ -28,6 +28,20 @@ align-items: center;
     flex-direction: column;
     justify-content: space-between;
     padding: 10px;
+    display: none;
+    transition: display 0.5s;
+}
+
+.game-menu {
+    background-color: whitesmoke;
+    border-radius: 10px;
+    border: 1px solid black;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
 }
 
 .game-row  {
@@ -40,8 +54,6 @@ align-items: center;
     border-radius: 8px;
     width: calc(100% / 10 - 4px); 
     margin: 2px;
-    z-index: 1;
-    
 }
 
 .snake-head {
@@ -60,3 +72,41 @@ align-items: center;
     background-color: #00ff00;
 }
 
+.menu-row0 {
+    height: calc((100% / 10) * 6);
+    width: 100%;
+    display: flex;
+}
+
+.menu-row1 {
+    width: 100%;
+    height: calc(100% / 6);
+    display: flex;
+}
+
+.menu-row1 .menu-cell {
+    width: calc(100% / 2 - 4px); 
+}
+
+.menu-col0 {
+    width: calc((100% / 10)* 2);;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.menu-col1 {
+    width: calc((100% / 10)* 6);;
+    height: 100%;
+    display: flex;
+} 
+
+.menu-cell {
+    border-radius: 8px;
+    width: calc(100% / 10 - 4px); 
+    margin: 2px;
+}
+
+.menu-empty {
+    background-color: #dddddd;
+}
