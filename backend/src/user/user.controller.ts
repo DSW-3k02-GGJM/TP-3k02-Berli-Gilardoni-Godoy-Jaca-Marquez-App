@@ -436,7 +436,7 @@ const login = async (req: Request, res: Response) => {
                   .cookie('access_token', token, {
                       httpOnly: true, // La cookie solo se puede acceder en el servidor (No se puede ver desde el cliente)
                       secure: true, // Funciona solo con https
-                      sameSite: 'none', // Solo se puede acceder en el mismo dominio
+                      sameSite: 'strict', // Solo se puede acceder en el mismo dominio
                       maxAge: 1000 * 60 * 60, // Dura 1h
                   })
                   .status(200).json({ message: 'Login completed'});
