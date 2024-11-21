@@ -17,9 +17,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const frontendURL = (process.env.FRONTEND_DOMAIN || 'http://localhost') + (process.env.FRONTEND_PORT || ':4200');
+const whitelist = [frontendURL, 'https://tp-3k02-berli-gilardoni-godoy-jaca.onrender.com'];
 const app = express();
 const corsOptions = {
-  origin: frontendURL, // Frontend URL
+  origin: whitelist, // Frontend URL
   credentials: true, // Permite credenciales
 };
 
