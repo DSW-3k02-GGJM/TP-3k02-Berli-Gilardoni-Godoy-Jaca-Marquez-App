@@ -1,5 +1,5 @@
 <div class="container"> 
-    <div class="game-board">
+    <div id="game" class="unselectable game-board">
         <div class="game-row">
             <div id="c00" class="game-cell empty"></div>
             <div id="c01" class="game-cell empty"></div>
@@ -122,7 +122,7 @@
         </div>
     </div>
 
-    <div class="game-menu">
+    <div id="menu" class="unselectable game-menu active">
         <div class="game-row">
             <div *ngFor="let cell of cells" class="menu-cell menu-empty"></div>
         </div>
@@ -137,7 +137,80 @@
                 </div>
             </div>
             <div class="menu-col1">
-                
+                <div class="menu-row4">
+                    <h1 class="menu-title">Snake Game</h1>
+                    <p class="menu-subtitle">v0.1</p>
+                </div>
+                <div class="menu-row7" >
+                    <button mat-fab class="custom-button" color="primary" (click)="setGame()">
+                        <mat-icon fontIcon="play_arrow"></mat-icon>
+                    </button>
+                </div>
+                <div class="menu-row6">
+                    <p class="menu-p">Controles</p>
+                    <div class="menu-row5">
+                        <div class="menu-cell2 menu-key">W</div>
+                    </div>
+                    <div class="menu-row5">
+                        <div class="menu-cell2 menu-key">A</div>
+                        <div class="menu-cell2 menu-key">S</div>
+                        <div class="menu-cell2 menu-key">D</div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-col0">
+                <div *ngFor="let row of rows" class="menu-row1">
+                    <div class="menu-cell menu-empty"></div>
+                    <div class="menu-cell menu-empty"></div>
+                </div>
+            </div>
+        </div>
+        <div class="game-row">
+            <div *ngFor="let cell of cells" class="menu-cell menu-empty"></div>
+        </div>
+        <div class="game-row">
+            <div *ngFor="let cell of cells" class="menu-cell menu-empty"></div>
+        </div>
+    </div>
+
+    <div id="after" class="unselectable game-after">
+        <div class="game-row">
+            <div *ngFor="let cell of cells" class="menu-cell menu-empty"></div>
+        </div>
+        <div class="game-row">
+            <div *ngFor="let cell of cells" class="menu-cell menu-empty"></div>
+        </div>
+        <div class="menu-row0">
+            <div class="menu-col0">
+                <div *ngFor="let row of rows" class="menu-row1">
+                    <div class="menu-cell menu-empty"></div>
+                    <div class="menu-cell menu-empty"></div>
+                </div>
+            </div>
+            <div class="menu-col1">
+                <div class="menu-row4" style="display: flex; align-items: center; justify-content: center;">
+                    <h1 *ngIf="!win" class="menu-title" style="margin-top: 0px;">Perdiste :(</h1>
+                    <h1 *ngIf="win" class="menu-title" >Ganaste :D</h1>
+                </div>
+                <div class="menu-row7" >
+                    <button mat-flat-button class="custom-button" style="margin-right: 10px;" color="primary" (click)="goToMenu()">
+                        Menu
+                    </button>
+                    <button mat-fab class="custom-button" color="primary" (click)="setGame()">
+                        <mat-icon fontIcon="play_arrow"></mat-icon>
+                    </button>
+                </div>
+                <div class="menu-row6">
+                    <p class="menu-p">Controles</p>
+                    <div class="menu-row5">
+                        <div class="menu-cell2 menu-key">W</div>
+                    </div>
+                    <div class="menu-row5">
+                        <div class="menu-cell2 menu-key">A</div>
+                        <div class="menu-cell2 menu-key">S</div>
+                        <div class="menu-cell2 menu-key">D</div>
+                    </div>
+                </div>
             </div>
             <div class="menu-col0">
                 <div *ngFor="let row of rows" class="menu-row1">

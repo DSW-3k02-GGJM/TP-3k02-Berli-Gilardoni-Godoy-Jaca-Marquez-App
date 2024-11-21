@@ -9,9 +9,14 @@ import { Router } from '@angular/router';
   styleUrl: './home-page.component.scss',
 })
 export class HomePageComponent {
+
   constructor(private router: Router) {}
 
   showVehicles() {
     this.router.navigate(['/reserva']);
+  }
+
+  navigateToEasterEgg() {
+    this.router.navigate(['/testMati2']);
   }
 }
