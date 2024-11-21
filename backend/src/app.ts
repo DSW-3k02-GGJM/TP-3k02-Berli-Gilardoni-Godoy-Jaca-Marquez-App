@@ -18,8 +18,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const frontendURL = (process.env.FRONTEND_DOMAIN || 'http://localhost') + (process.env.FRONTEND_PORT || ':4200');
 const app = express();
-const corsOptions = {
-  origin: '*', // Frontend URL
+const corsOptions = { // Frontend URL
   credentials: true, // Permite credenciales
 };
 
