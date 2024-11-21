@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://tp-3k02-berli-gilardoni-godoy-jaca-1ab2.onrender.com:3000",
+    "target": "https://tp-3k02-berli-gilardoni-godoy-jaca-1ab2.onrender.com",
     "secure": false
   }
 }
