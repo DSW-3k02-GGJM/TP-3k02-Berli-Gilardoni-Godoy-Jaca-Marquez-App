@@ -31,7 +31,6 @@ app.use(cookieParser());
 // Luego de los middlewares base
 app.use((req, res, next) => {
   // Configurar los encabezados CORS si es necesario
-  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Accept-Language, Accept-Encoding');
 
