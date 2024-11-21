@@ -19,7 +19,7 @@ dotenv.config();
 const frontendURL = (process.env.FRONTEND_DOMAIN || 'http://localhost') + (process.env.FRONTEND_PORT || ':4200');
 const app = express();
 const corsOptions = {
-  origin: frontendURL, // Frontend URL
+  origin: '*', // Frontend URL
   credentials: true, // Permite credenciales
 };
 
