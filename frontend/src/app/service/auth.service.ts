@@ -10,7 +10,7 @@ export class AuthService {
 
   loginOrLogout = new Subject<void>();
   isLogged = false;
-  private apiUrl = '/api';
+  private apiUrl = 'https://tp-3k02-berli-gilardoni-godoy-jaca-1ab2.onrender.com/api';
 
   notifyLoginOrLogout(isLogged : boolean) {
     this.isLogged = isLogged;

@@ -1,5 +1,5 @@
 ### EMAIL TEST 1
-POST http://localhost:3000/api/users/mail-example
+POST https://tp-3k02-berli-gilardoni-godoy-jaca-1ab2.onrender.com/api/users/mail-example
 
 ### EMAIL TEST 2
 POST http://localhost:3000/api/users/send-email-verification/matiastmarquez@gmail.com
