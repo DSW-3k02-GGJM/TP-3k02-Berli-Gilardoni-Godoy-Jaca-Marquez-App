@@ -20,7 +20,7 @@ const frontendURL = (process.env.FRONTEND_DOMAIN || 'http://localhost') + (proce
 const whitelist = [frontendURL, 'https://tp-3k02-berli-gilardoni-godoy-jaca.onrender.com'];
 const app = express();
 const corsOptions = {
-  origin: whitelist, // Frontend URL
+  origin: 'https://tp-3k02-berli-gilardoni-godoy-jaca.onrender.com', // Frontend URL
   credentials: true, // Permite credenciales
 };
 
