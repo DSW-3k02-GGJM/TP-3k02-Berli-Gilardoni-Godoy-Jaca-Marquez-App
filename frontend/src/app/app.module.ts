@@ -11,8 +11,6 @@ import { authInterceptor } from "./interceptors/auth.interceptor";
 import { AuthService } from "./service/auth.service";
 import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; // agrego esto para el modal
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-
 
 // Importa el componente
 import { VehicleCardComponent } from './vehicle-folder/vehicle-card/vehicle-card.component'; // Importa el componente
@@ -57,7 +55,6 @@ export const MY_DATE_FORMATS = {
     AuthService,
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, // Configurar el locale
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }, // Proveer los formatos de fecha personalizados
-    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent] // Especifica el componente raíz que Angular debe inicializar al arrancar la aplicación
 })
