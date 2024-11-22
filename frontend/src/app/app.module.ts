@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { provideRouter, RouterOutlet } from '@angular/router';
 import { ResponsiveNavbarComponent } from './responsive-navbar/responsive-navbar.component.js';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -55,6 +55,7 @@ export const MY_DATE_FORMATS = {
     AuthService,
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, // Configurar el locale
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }, // Proveer los formatos de fecha personalizados
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
   bootstrap: [AppComponent] // Especifica el componente raíz que Angular debe inicializar al arrancar la aplicación
 })
