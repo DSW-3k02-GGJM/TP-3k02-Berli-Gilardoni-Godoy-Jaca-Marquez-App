@@ -19,6 +19,7 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
   private gameId: any;
   private key: string | undefined;
   win = false
+  disabled = false
   cells: number[] = Array(10).fill(0);
   rows: number[] = Array(6).fill(0);
 
@@ -39,25 +40,28 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
     this.stopGame();
   }
 
-  setGame(){
-    this.win = false;
-    this.removeClass('menu', 'active');
-    this.removeClass('after', 'active');
-    this.addClass('game', 'active');
-    this.startGame();
+  setGame(){  
+    if (!this.disabled) {
+      clearInterval(this.gameId);
+      this.clearSnake();
+      this.disabled = true;
+      this.win = false;
+      this.removeClass('menu', 'active');
+      this.removeClass('after', 'active');
+      this.addClass('game', 'active');
+      this.startGame();
+    }  
   }
 
   startGame(){
     console.log('start game');
+
     let dir = 'right';
+    this.key = 'd';
     let snakeLength = 3;
-    let snakeHeadCell = 'c13'
-    let newSnakeHeadCell = 'c14';
-    let newCol = 1;
-    let newRow = 4;
-    let nextSnakeBodyCell = 'c13';
     this.generateSnake();
     this.newApple();
+
     setTimeout(() => {
       this.gameId = setInterval(() => {
         if (this.key === 'w' && dir !== 'down') {
@@ -73,8 +77,11 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
           dir = 'right';
         }
   
-  
-        snakeHeadCell = this.getSnakeId('1');
+        let snakeHeadCell = this.getSnakeId('1');
+        let newSnakeHeadCell = '';
+        let newCol = 0;
+        let newRow = 0;
+
         if (dir === 'right') {
           newSnakeHeadCell = "c" + snakeHeadCell[1] + (parseInt(snakeHeadCell[2]) + 1);
           newCol = parseInt(snakeHeadCell[2]) + 1;
@@ -113,7 +120,7 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
         this.removeClass(newSnakeHeadCell, 'empty');
         this.addClass(newSnakeHeadCell, 'snake-head');
         this.addClass(newSnakeHeadCell, '1');
-        nextSnakeBodyCell = snakeHeadCell;
+        let nextSnakeBodyCell = snakeHeadCell;
         for (let i = 2; i <= snakeLength; i++) {
           let tempSnakeBodyCell = this.getSnakeId(i.toString());
           if (tempSnakeBodyCell !== '') {
@@ -140,10 +147,15 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
   }
 
   stopGame() {
+    console.log('stop game');
     clearInterval(this.gameId);
-    this.clearSnake();
-    this.removeClass('game', 'active');
-    this.addClass('after', 'active');
+    setTimeout(() => {
+      this.clearSnake();
+      this.removeClass('game', 'active');
+      this.addClass('after', 'active');
+      this.disabled = false;
+    }, 500);
+    
   }
 
   clearSnake() {
@@ -215,7 +227,9 @@ export class ViboritaGameComponent implements OnInit, OnDestroy {
   }
 
   goToMenu (){
+    this.disabled = true;
     this.removeClass('after', 'active');
     this.addClass('menu', 'active');
+    this.disabled = false;
   }
 }
