@@ -17,7 +17,7 @@ export class ApiService {
   }
   */
 
-  private apiUrl = 'https://tp-3k02-berli-gilardoni-godoy-jaca-1ab2.onrender.com/api';
+  private apiUrl = '/api';
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Credentials': 'true',
