@@ -2,12 +2,16 @@ import { MikroORM } from '@mikro-orm/core';
 import { MySqlDriver } from '@mikro-orm/mysql';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 export const orm = await MikroORM.init({
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   dbName: 'alquilervehiculos',
   driver: MySqlDriver,
-  clientUrl: 'mysql://dsw:dsw@127.0.0.1:3307/alquilerVehiculos', //Juan Pablo
+  clientUrl: process.env.MYSQL_CONNECTION, //Juan Pablo
   //clientUrl: 'mysql://dsw:dsw@localhost:3308/alquilerVehiculos', //Nahuel
   // clientUrl: 'mysql://miUsuario:miContraseña@localhost:3306/alquilerVehiculos',// marcos
   //clientUrl: 'mysql://root:root@localhost:3306/alquilervehiculos', //Lucio
