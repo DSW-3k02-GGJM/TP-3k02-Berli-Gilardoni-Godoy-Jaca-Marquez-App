@@ -1,0 +1,144 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+:host {
+    height: auto;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.mat-mdc-table-sticky-border-elem-left {
+    border-right: 1px solid #e0e0e0;
+}
+
+.container {
+    max-width: 900px;
+    width: 100%;
+    height: auto;
+    background-color: whitesmoke;
+    margin: 0 20px;
+    margin-bottom: 1.5em;
+    padding: 15px 30px;
+    border-radius: 5px;
+
+}
+
+.stepper {
+    padding: 0;
+}
+
+.table-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.noData{
+    text-align: center;
+    height: 100px;
+    font-size: 20px;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+    cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+    background-color: #e2e2e2;
+}
+
+.row-is-clicked {
+    background-color: #e2e2e2;
+    font-weight: 600;
+}
+
+.input-box {
+    width: 100%;
+}
+
+.title {
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.button {
+    height: 45px;
+    margin-bottom: 10px;
+  }
+  form .button button:disabled {
+    background: #21303A;
+    cursor: default;
+  }
+  form .button button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #0F222D ;
+  }
+  form .button button:hover {
+    background: #21303A; //no cambia cuando esta en modo celu
+  }
+
+  .user-details .input-box {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  .input-box span.details {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .user-details .input-box input {
+    width: 100%;
+  }
+  
+  .container .information-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-right: 10px;
+  }
+  .container .information {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+  .container .information .information-content {
+    display: flex;
+    align-items: center;
+    user-select: text;
+  }
+
+@media(max-width: 610px) {
+    .title {
+        margin-top:15px;
+        margin-right: 30px;
+        margin-left: 30px;
+    }
+
+    .mat-vertical-content {
+      padding: 0px 0px 0px 0px;
+    }
+    .container {
+      margin: 0 0px;
+      max-width: 100%;
+      padding: 0px 0px;
+    }
+  }

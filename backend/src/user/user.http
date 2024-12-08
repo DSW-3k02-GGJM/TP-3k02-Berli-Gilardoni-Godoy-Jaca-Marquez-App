@@ -4,6 +4,15 @@ POST http://localhost:3000/api/users/mail-example
 ### EMAIL TEST 2
 POST http://localhost:3000/api/users/send-email-verification/matiastmarquez@gmail.com
 
+### EMAIL TEST 3
+POST http://localhost:3000/api/users/send-email/matiastmarquez@gmail.com
+Content-Type: application/json
+
+{
+    "subject": "asdads",
+    "message": "test"
+}
+
 ### GET ALL
 http://localhost:3000/api/users
 Access-Control-Allow-Credentials: true

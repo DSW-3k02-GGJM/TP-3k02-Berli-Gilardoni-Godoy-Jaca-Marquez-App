@@ -643,6 +643,39 @@ const verifyEmailToken = async (req: Request, res: Response) => {
   }  
 }
 
+const sendEmail = async (req: Request, res: Response) => {
+  try {
+    const email = req.params.email;
+    const subject = req.body.subject;
+    const message = req.body.message;
+    if (!email || !subject || !message) {
+      return res.status(400).json({ message: 'Subject and message are required' });
+    }
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+    const user = await em.findOne(
+      User,
+      { email: email });
+    if (!user) { 
+      return res.status(404).json({ message: 'User not found' });
+    }
+    else {
+      await MailService.sendMail(
+        [email],
+        subject,
+        message,
+        ''
+      );
+      res.status(200).json({ message: 'Email sent' });
+    }
+  }
+  catch (error: any) {
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 
 export { 
   sanitizedNewUser, 
@@ -668,4 +701,5 @@ export {
   verifyEmailToken,
   verifyPasswordResetToken,
   sendPasswordReset,
+  sendEmail,
 };

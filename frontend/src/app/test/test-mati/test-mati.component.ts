@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class TestMatiComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Brand>();
-  displayedColumns: string[] = ['id', 'brandName', 'actions'];
+  displayedColumns: string[] = ['id', 'email', 'documentType', 'documentID', 'userName', 'role'];
   isChecked = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -29,7 +29,7 @@ export class TestMatiComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Marcas por página:';
+    this.paginator._intl.itemsPerPageLabel = 'Usuarios por página:';
     this.paginator._intl.nextPageLabel = 'Página siguiente';	
     this.paginator._intl.previousPageLabel = 'Página anterior';		
     this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
@@ -54,7 +54,7 @@ export class TestMatiComponent implements OnInit, AfterViewInit {
   }
 
   loadBrands() {
-    this.apiService.getAll('brands').subscribe((response) => {
+    this.apiService.getAll('users').subscribe((response) => {
       this.dataSource.data = response.data;
     });
   }

@@ -30,7 +30,7 @@ import { ResStepperComponent } from './res-folder/res-stepper/res-stepper.compon
 import { EmailVerificationComponent } from './user-folder/email-verification/email-verification.component.js';
 import { ResetPasswordComponent } from './user-folder/reset-password/reset-password.component.js';
 import { ForgotPasswordComponent } from './user-folder/forgot-password/forgot-password.component.js';
-
+import { ComunicationByEmailComponent } from './user-folder/comunication-by-email/comunication-by-email.component.js';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -81,6 +81,8 @@ export const routes: Routes = [
       { path: 'reservations', component: ResComponent },
       { path: 'reservations/create', component: ResFormComponent },
       { path: 'reservations/:id', component: ResFormComponent },
+
+      { path: 'comunication', component: ComunicationByEmailComponent },
     ]
   },
 

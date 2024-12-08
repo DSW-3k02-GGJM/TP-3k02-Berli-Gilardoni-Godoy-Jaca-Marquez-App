@@ -20,6 +20,9 @@
             <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" aria-current="page" routerLink="/staff/users" routerLinkActive="active">Usuarios</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link texto-blanco" aria-current="page" routerLink="/staff/comunication" routerLinkActive="active">Comunicación</a>
+            </li>
             <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" routerLink="/staff/categories" routerLinkActive="active">Categorías</a>
             </li>
@@ -38,7 +41,7 @@
             <li class="nav-item" *ngIf="role === 'Admin'">
                 <a class="nav-link texto-blanco" routerLink="/staff/vehiclesS" routerLinkActive="active">Vehiculos</a>
             </li>
-            <li class="nav-item" *ngIf="role === 'Admin'">
+            <li class="nav-item">
                 <a class="nav-link texto-blanco" routerLink="/staff/reservations" routerLinkActive="active">Reservas</a>
             </li>
             </ul>

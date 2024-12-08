@@ -80,6 +80,15 @@ export class ApiService {
     });
   }
 
+  sendEmail(resData: any,email: string): Observable<any> {
+
+    return this.http.post(`${this.apiUrl}/users/send-email/${email}`, resData ,
+      {
+      headers: this.headers,
+      withCredentials: true,
+    })
+  }
+
   entityNameExists(
     entity: string,
     entityName: string,
