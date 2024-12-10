@@ -1,0 +1,63 @@
+### GET ALL
+http://localhost:3000/api/reservations
+
+### POST
+# @name createReservations
+POST http://localhost:3000/api/reservations
+Content-Type: application/json
+
+{
+    "startDate": "2023-08-16",
+    "plannedEndDate": "2023-08-20",
+    "initialKms": 100,
+    "client": 1,
+    "vehicle": 1
+}
+
+### ID
+@id = {{createReservations.response.body.data.id}}
+
+### GET ONE
+http://localhost:3000/api/reservations/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/reservations/{{id}}
+Content-Type: application/json
+
+{
+    "startDate": "2023-08-16",
+    "plannedEndDate": "2023-08-20",
+    "initialKms": 30000,
+    "client": 1,
+    "vehicle": 1
+}
+
+### POST 2
+POST http://localhost:3000/api/reservations
+Content-Type: application/json
+
+{
+    "startDate": "2023-08-28",
+    "plannedEndDate": "2023-09-02",
+    "initialKms": 15000,
+    "client": 2,
+    "vehicle": 2
+}
+
+### POST to DELETE
+# @name createReservationToDelete
+POST http://localhost:3000/api/reservations
+Content-Type: application/json
+
+{
+    "startDate": "2023-09-12",
+    "plannedEndDate": "2023-09-17",
+    "initialKms": 20000,
+    "client": 7,
+    "vehicle": 5
+}
+
+### DELETE
+@idToDelete = {{createReservationToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/reservations/{{idToDelete}}
+
