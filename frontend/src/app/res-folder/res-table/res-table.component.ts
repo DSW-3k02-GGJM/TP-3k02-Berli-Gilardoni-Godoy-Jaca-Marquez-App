@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  inject,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
@@ -28,24 +35,23 @@ import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-di
 export class ResTableComponent {
   readonly dialog = inject(MatDialog);
 
-
   openConfirmDialog(id: number): void {
     const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
-      data:{
+      data: {
         title: 'Eliminar reserva',
-        message: '¿Está seguro de que desea eliminar la reserva?'
-      }
+        message: '¿Está seguro de que desea eliminar la reserva?',
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.apiService
-            .delete('reservations', Number(id))
-            .subscribe((response) => {
-              this.resDeleted.emit(id);
-            });
+          .delete('reservations', Number(id))
+          .subscribe((response) => {
+            this.resDeleted.emit(id);
+          });
       }
     });
   }
@@ -55,12 +61,13 @@ export class ResTableComponent {
       width: '350px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
-      data:{
+      data: {
         title: 'Check-in Reserva',
-        message: '¿Está seguro de que desea realizar el check-in de la reserva?'
-      }
+        message:
+          '¿Está seguro de que desea realizar el check-in de la reserva?',
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const data = {
           // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
@@ -86,12 +93,13 @@ export class ResTableComponent {
       width: '350px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
-      data:{
+      data: {
         title: 'Check-out Reserva',
-        message: '¿Está seguro de que desea realizar el check-out de la reserva?'
-      }
+        message:
+          '¿Está seguro de que desea realizar el check-out de la reserva?',
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const data = {
           // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
@@ -116,11 +124,22 @@ export class ResTableComponent {
   @Output() resDeleted = new EventEmitter();
   filterRows = '';
 
+  filterDate: string = '';
+
+  filteredReservations: any[] = [];
+
   constructor(
     private apiService: ApiService,
     private resCreatedOrModifiedService: ResCreatedOrModifiedService,
     private router: Router
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Comprueba si el valor de 'reservations' ha cambiado
+    if (changes['reservations'] && !changes['reservations'].firstChange) {
+      this.filterReservations();
+    }
+  }
 
   formatDate(DateDB: string): string {
     let DateTable: string = '${day}/${month}/${year}';
@@ -160,5 +179,27 @@ export class ResTableComponent {
     // Calcular la diferencia en días y el precio
     const days = differenceInDays(endDate, startDate);
     return `${days * pricePerDay}`;
+  }
+
+  filterReservations(): void {
+    // Verificar si la fecha está vacía
+    const date = this.filterDate ? new Date(this.filterDate) : null;
+
+    // Si no se proporciona la fecha, devolver todas las reservas
+    if (!this.filterDate) {
+      this.filteredReservations = this.reservations;
+    } else if (!date || isNaN(date.getTime())) {
+      // Si la fecha es inválida, devolver todas las reservas
+      this.filteredReservations = this.reservations;
+    } else {
+      // Si la fecha es válida, filtrar las reservas
+      this.filteredReservations = this.reservations.filter((reservation) => {
+        const startDate = new Date(reservation.startDate);
+        const plannedEndDate = new Date(reservation.plannedEndDate);
+
+        // Comprobar si la fecha está dentro del rango de startDate y plannedEndDate
+        return date >= startDate && date <= plannedEndDate;
+      });
+    }
   }
 }

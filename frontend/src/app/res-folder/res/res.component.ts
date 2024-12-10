@@ -3,20 +3,17 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../service/api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ResTableComponent } from '../res-table/res-table.component.js';
-import { ResFormComponent } from '../res-form/res-form.component.js';
 import { HttpClientModule } from '@angular/common/http';
 import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
-
-
 @Component({
   selector: 'app-res',
   standalone: true,
-  imports: [CommonModule, ResTableComponent, ResFormComponent],
+  imports: [CommonModule, ResTableComponent],
   templateUrl: './res.component.html',
-  styleUrl: './res.component.scss'
+  styleUrl: './res.component.scss',
 })
 export class ResComponent implements OnInit {
   reservations: any[] = [];
@@ -25,7 +22,7 @@ export class ResComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private resCreatedOrModifiedService: ResCreatedOrModifiedService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -44,11 +41,9 @@ export class ResComponent implements OnInit {
 
   fillData() {
     this.subscription =
-      this.resCreatedOrModifiedService.resCreatedOrModified.subscribe(
-        () => {
-          this.loadData();
-        }
-      );
+      this.resCreatedOrModifiedService.resCreatedOrModified.subscribe(() => {
+        this.loadData();
+      });
 
     if (!this.resCreatedOrModifiedService.isDataLoaded) {
       this.loadData();
