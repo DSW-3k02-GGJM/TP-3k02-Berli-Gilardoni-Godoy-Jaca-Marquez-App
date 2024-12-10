@@ -83,7 +83,7 @@ ng serve
 ### Opcional
 
 9. **Importa datos pre-cargados desde el siguiente archivo .mysql, para facilitar la prueba de la aplicación:**
-- [Base de Datos](https://drive.google.com/file/d/1rJ_2cEqSNhJfKDsY0TP6gxTyr0Z9dpVc/view)
+- [Base de Datos](https://drive.google.com/file/d/18Ke_5dfucvCnFviTAPYEoa0z0qCKn2Lp/view?usp=sharing)
 
 ---
 > ⚠️ **Nota:** Los datos cargados en este script son aquellos mostrados en el video de demostración de las principales funcionalidades de la aplicación, en el que se buscó alcanzar una alta claridad en lo que se estaba haciendo, por lo que pueden no ser los más representativos a situaciones reales, y no atenerse a validaciones agregadas posteriormente para ciertos casos!
