@@ -4,19 +4,21 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
-import { categoryRouter } from "./category/category.routes.js";
+import { categoryRouter } from './category/category.routes.js';
 import { colorRouter } from './color/color.routes.js';
 import { brandRouter } from './brand/brand.routes.js';
 import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js'; // Aquí ya tienes el router
 import { locationRouter } from './location/location.routes.js';
-import { reservationRouter  } from './reservation/reservation.routes.js';
+import { reservationRouter } from './reservation/reservation.routes.js';
 import { vehicleRouter } from './vehicle/vehicle.routes.js';
 import { userRouter } from './user/user.routes.js';
 import { AuthService } from './shared/db/auth.service.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const frontendURL = (process.env.FRONTEND_DOMAIN || 'http://localhost') + (process.env.FRONTEND_PORT || ':4200');
+const frontendURL =
+  (process.env.FRONTEND_DOMAIN || 'http://localhost') +
+  (process.env.FRONTEND_PORT || ':4200');
 const app = express();
 const corsOptions = {
   origin: frontendURL, // Frontend URL
@@ -32,7 +34,10 @@ app.use((req, res, next) => {
   // Configurar los encabezados CORS si es necesario
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Accept-Language, Accept-Encoding');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Accept, Accept-Language, Accept-Encoding'
+  );
 
   // Usar RequestContext para MikroORM
   RequestContext.create(orm.em, next);
@@ -55,7 +60,7 @@ app.use((_, res) => {
 await syncSchema(); // never in production
 
 const port = process.env.PORT || 3000;
-const domain = process.env.DOMAIN || 'http://localhost:'
+const domain = process.env.DOMAIN || 'http://localhost:';
 app.listen(port, () => {
   AuthService.ensureAdminExists();
   console.log('Servidor operando en ' + domain + port + '/'); //Si no aparece con este link probar con 'localhost:8000'

@@ -286,6 +286,46 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
+const getReservationsByUser = async (req: Request, res: Response) => {
+  try {
+    const userID = req.session.user.id;
+
+    if (!userID) {
+      return res.status(400).json({ message: 'User ID not found in session' });
+    }
+
+    const reservationsByUser = await em.find(
+      Reservation,
+      { user: userID },
+      {
+        populate: [
+          'user',
+          'vehicle',
+          'vehicle.location',
+          'vehicle.color',
+          'vehicle.vehicleModel',
+          'vehicle.vehicleModel.category',
+          'vehicle.vehicleModel.brand',
+        ],
+      }
+    );
+
+    if (reservationsByUser.length === 0) {
+      return res
+        .status(404)
+        .json({ message: 'No reservations found for this user' });
+    }
+
+    res.status(200).json({
+      message: 'All reservations have been found',
+      data: reservationsByUser,
+    });
+  } catch (error: any) {
+    console.error('Error fetching reservations:', error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 export {
   sanitizedReservationInput,
   sanitizedAdminReservationInput,
@@ -296,4 +336,5 @@ export {
   update,
   remove,
   reservation,
+  getReservationsByUser,
 };

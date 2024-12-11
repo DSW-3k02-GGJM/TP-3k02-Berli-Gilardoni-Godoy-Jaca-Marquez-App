@@ -1,14 +1,4 @@
-<div class="d-flex justify-content-between gap-3" style="align-items: stretch">
-  <mat-form-field class="input-box flex-grow-1" hideRequiredMarker="true">
-    <mat-label>Busqueda por Nro. Documento...</mat-label>
-    <input
-      matInput
-      type="text"
-      [(ngModel)]="filterRows"
-      name="filterPost"
-      placeholder=""
-    />
-  </mat-form-field>
+<div class="d-flex gap-3" style="align-items: stretch">
   <mat-form-field
     class="input-box"
     hideRequiredMarker="true"
@@ -19,10 +9,10 @@
   </mat-form-field>
   <button
     class="btn btn-dark border border-white"
-    style="height: 56px; flex: 0 0 150px"
+    style="height: 56px; flex: 0 0 100px"
     (click)="filterReservations()"
   >
-    Filtrar por Fecha
+    Filtrar
   </button>
 </div>
 <div class="div-tablas">
@@ -34,27 +24,18 @@
         <th>Fecha de Reserva</th>
         <th>Fecha Inicio Reserva</th>
         <th>Fecha Fin Reserva</th>
-        <th>Tipo Doc.</th>
-        <th>Nro. Doc.</th>
         <th>Vehículo</th>
         <th>Estado</th>
+        <th>Devolucion del Vehiculo</th>
         <th>Precio Final</th>
-        <th>Check-in / Check-out</th>
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="
-          let reservation of filteredReservations
-            | filter : filterRows : 'user.documentID'
-        "
-      >
+      <tr *ngFor="let reservation of filteredReservations">
         <td>{{ formatDate(reservation.reservationDate) }}</td>
         <td>{{ formatDate(reservation.startDate) }}</td>
         <td>{{ formatDate(reservation.plannedEndDate) }}</td>
-        <td>{{ reservation.user.documentType }}</td>
-        <td>{{ reservation.user.documentID }}</td>
         <td>{{ reservation.vehicle.licensePlate }}</td>
         <td>
           {{
@@ -68,35 +49,16 @@
         <td>
           {{
             reservation.realEndDate
-              ? "$" + calculatePrice(reservation)
-              : "Reserva no finalizada"
+              ? formatDate(reservation.realEndDate)
+              : "No devuelto"
           }}
         </td>
         <td>
-          <div class="d-flex justify-content-around">
-            <button
-              class="btn btn-dark fs-5"
-              (click)="checkInRes(reservation)"
-              [disabled]="reservation.initialKms"
-            >
-              <img
-                src="../../../assets/check-in-img.png"
-                alt="Check-in"
-                class="check"
-              />
-            </button>
-            <button
-              class="btn btn-dark fs-5"
-              (click)="checkOutRes(reservation)"
-              [disabled]="!reservation.initialKms || reservation.finalKm"
-            >
-              <img
-                src="../../../assets/check-out-img.png"
-                alt="Check-out"
-                class="check"
-              />
-            </button>
-          </div>
+          {{
+            reservation.realEndDate
+              ? "$" + calculatePrice(reservation)
+              : "Reserva no finalizada"
+          }}
         </td>
         <td>
           <div class="d-flex justify-content-around">

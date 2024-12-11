@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ApiService } from '../../service/api.service';
-import { FilterPipe } from '../../shared/filter/filter.pipe';
+import { ApiService } from '../../service/api.service.js';
+import { FilterPipe } from '../../shared/filter/filter.pipe.js';
 import { FormsModule } from '@angular/forms';
 import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
 import { Router } from '@angular/router';
@@ -19,10 +19,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-dialog/confirm-deletion-dialog.component.js';
 
 @Component({
-  selector: 'app-res-table',
+  selector: 'app-res-client-table',
   standalone: true,
-  templateUrl: './res-table.component.html',
-  styleUrl: './res-table.component.scss',
+  templateUrl: './res-client-table.component.html',
+  styleUrl: './res-client-table.component.scss',
   imports: [
     CommonModule,
     HttpClientModule,
@@ -32,7 +32,7 @@ import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-di
   ],
   providers: [ApiService],
 })
-export class ResTableComponent {
+export class ResClientTableComponent {
   readonly dialog = inject(MatDialog);
 
   openConfirmDialog(id: number): void {
@@ -60,91 +60,13 @@ export class ResTableComponent {
     });
   }
 
-  openCheckInDialog(res: any): void {
-    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Check-in Reserva',
-        titleColor: 'black',
-        image: 'assets/check-in-img.png',
-        message:
-          '¿Está seguro de que desea realizar el check-in de la reserva?',
-        buttonTitle: 'Confirmar',
-        buttonColor: 'primary',
-      },
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const data = {
-          // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
-          startDate: res.startDate,
-          plannedEndDate: res.plannedEndDate,
-          user: res.user.id,
-          vehicle: res.vehicle.id,
-          //
-          initialKms: res.vehicle.totalKms,
-        };
-
-        this.apiService
-          .update('reservations', Number(res.id), data)
-          .subscribe((response) => {
-            this.resCreatedOrModifiedService.notifyResCreatedOrModified();
-          });
-      }
-    });
-  }
-
-  openCheckOutDialog(res: any): void {
-    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Check-out Reserva',
-        titleColor: 'black',
-        image: 'assets/check-out-img.png',
-        message:
-          '¿Está seguro de que desea realizar el check-out de la reserva?',
-        buttonTitle: 'Confirmar',
-        buttonColor: 'primary',
-      },
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const data = {
-          // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
-          startDate: res.startDate,
-          plannedEndDate: res.plannedEndDate,
-          user: res.user.id,
-          vehicle: res.vehicle.id,
-          //
-          realEndDate: new Date().toISOString().split('T')[0],
-          finalKm: res.vehicle.totalKms,
-        };
-
-        this.apiService
-          .update('reservations', Number(res.id), data)
-          .subscribe((response) => {
-            this.resCreatedOrModifiedService.notifyResCreatedOrModified();
-          });
-      }
-    });
-  }
   @Input() reservations!: any[];
   @Output() resDeleted = new EventEmitter();
-  filterRows = '';
-
   filterDate: string = '';
 
   filteredReservations: any[] = [];
 
-  constructor(
-    private apiService: ApiService,
-    private resCreatedOrModifiedService: ResCreatedOrModifiedService,
-    private router: Router
-  ) {}
+  constructor(private apiService: ApiService, private router: Router) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // Comprueba si el valor de 'reservations' ha cambiado
@@ -161,20 +83,8 @@ export class ResTableComponent {
     return DateTable;
   }
 
-  editRes(res: any): void {
-    this.router.navigate(['/staff/reservations/' + res.id]);
-  }
-
   deleteRes(res: any): void {
     this.openConfirmDialog(res.id);
-  }
-
-  checkInRes(res: any): void {
-    this.openCheckInDialog(res);
-  }
-
-  checkOutRes(res: any): void {
-    this.openCheckOutDialog(res);
   }
 
   calculatePrice(res: any): string {
