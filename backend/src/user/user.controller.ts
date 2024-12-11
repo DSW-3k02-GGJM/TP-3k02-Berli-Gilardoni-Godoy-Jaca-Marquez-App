@@ -152,7 +152,7 @@ const add = async (req: Request, res: Response) => {
   }
 
   if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality || verified === null) {
-    return res.status(400).json({ message: 'All information are required'});
+    return res.status(400).json({ message: 'All information is required'});
   }
   const userE = await em.findOne( User , { email } , {populate: [] , });
   if(userE){
@@ -349,7 +349,7 @@ const register = async (req: Request, res: Response) => {
   }
 
   if(!documentType || !documentID || !userName || !userSurname || !birthDate || !address || !phoneNumber || !nationality) {
-    return res.status(400).json({ message: 'All information are required'});
+    return res.status(400).json({ message: 'All information is required'});
   }
   const userE = await em.findOne( User , { email } , {populate: [] , });
   if(userE){

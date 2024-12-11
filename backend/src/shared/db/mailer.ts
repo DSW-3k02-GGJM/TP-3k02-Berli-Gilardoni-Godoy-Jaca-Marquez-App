@@ -22,7 +22,7 @@ try {
   transporter
     .verify()
     .then(() => {
-      console.log('Ready for send emails');
+      console.log('Ready to send emails');
     })
     .catch((error) => {
       console.error(

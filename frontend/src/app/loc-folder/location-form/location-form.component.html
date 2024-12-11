@@ -27,7 +27,7 @@
           <mat-error *ngIf="locationForm.get('locationName')?.errors?.entityNameExists">
             Este nombre ya está siendo usado.
           </mat-error>
-          <mat-error *ngIf="locationForm.get('brandName')?.errors?.required">
+          <mat-error *ngIf="locationForm.get('locationName')?.errors?.required">
             El nombre es requerido.
           </mat-error>
         </mat-form-field>
