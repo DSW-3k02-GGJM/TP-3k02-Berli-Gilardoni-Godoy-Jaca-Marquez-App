@@ -46,8 +46,12 @@ export class VehicleModelsTableComponent {
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data:{
-        title: 'Eliminar modelo',
-        message: `¿Está seguro de que desea eliminar el modelo ${name}?`
+              title: 'Eliminar modelo',
+              titleColor: 'danger',
+              image: 'assets/delete.png',
+              message: `¿Está seguro de que desea eliminar el modelo ${name}?`,
+              buttonTitle: 'Eliminar',
+              buttonColor: 'danger',
       }
     });
     dialogRef.afterClosed().subscribe(result => {

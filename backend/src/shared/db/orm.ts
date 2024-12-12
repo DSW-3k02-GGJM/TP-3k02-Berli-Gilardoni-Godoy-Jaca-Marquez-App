@@ -1,6 +1,9 @@
 import { MikroORM } from '@mikro-orm/core';
 import { MySqlDriver } from '@mikro-orm/mysql';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 import dotenv from 'dotenv';
 
@@ -11,10 +14,7 @@ export const orm = await MikroORM.init({
   entitiesTs: ['src/**/*.entity.ts'],
   dbName: 'alquilervehiculos',
   driver: MySqlDriver,
-  clientUrl: process.env.MYSQL_CONNECTION, //Juan Pablo
-  //clientUrl: 'mysql://dsw:dsw@localhost:3308/alquilerVehiculos', //Nahuel
-  // clientUrl: 'mysql://miUsuario:miContraseña@localhost:3306/alquilerVehiculos',// marcos
-  //clientUrl: 'mysql://root:root@localhost:3306/alquilervehiculos', //Lucio
+  clientUrl: process.env.MYSQL_CONNECTION,
   highlighter: new SqlHighlighter(),
   debug: true,
   schemaGenerator: {

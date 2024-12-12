@@ -48,8 +48,12 @@ export class ColorsTableComponent {
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data:{
-        title: 'Eliminar color',
-        message: `¿Está seguro de que desea eliminar el color ${name}?`
+              title: 'Eliminar color',
+              titleColor: 'danger',
+              image: 'assets/delete.png',
+              message: `¿Está seguro de que desea eliminar el color ${name}?`,
+              buttonTitle: 'Eliminar',
+              buttonColor: 'danger',
       }
     });
     dialogRef.afterClosed().subscribe(result => {

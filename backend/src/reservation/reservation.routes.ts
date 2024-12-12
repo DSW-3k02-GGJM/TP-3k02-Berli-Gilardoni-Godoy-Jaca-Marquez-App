@@ -9,6 +9,7 @@ import {
   remove,
   reservation,
   sanitizedUserReservationInput,
+  getReservationsByUser,
 } from './reservation.controler.js';
 import { AuthService } from '../shared/db/auth.service.js';
 
@@ -18,6 +19,11 @@ reservationRouter.get(
   '/',
   AuthService.isAuthenticated(['admin', 'employee']),
   findAll
+);
+reservationRouter.get(
+  '/user-reservations',
+  AuthService.isAuthenticated(['client']),
+  getReservationsByUser
 );
 reservationRouter.get(
   '/:id',
@@ -44,13 +50,13 @@ reservationRouter.post(
 );
 reservationRouter.put(
   '/:id',
-  AuthService.isAuthenticated(['admin', 'employee']),
+  AuthService.isAuthenticated(['admin', 'employee', 'client']),
   sanitizedReservationInput,
   update
 );
 reservationRouter.patch(
   '/:id',
-  AuthService.isAuthenticated(['admin', 'employee']),
+  AuthService.isAuthenticated(['admin', 'employee', 'client']),
   sanitizedReservationInput,
   update
 );

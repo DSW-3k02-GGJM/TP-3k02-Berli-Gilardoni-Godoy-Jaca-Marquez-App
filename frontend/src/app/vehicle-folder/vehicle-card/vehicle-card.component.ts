@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
 })
 export class VehicleCardComponent implements OnInit {
+  @Input() id!: number;
   @Input() vehicleModel!: any;
   @Input() categoryDescription!: string;
   @Input() image!: string;

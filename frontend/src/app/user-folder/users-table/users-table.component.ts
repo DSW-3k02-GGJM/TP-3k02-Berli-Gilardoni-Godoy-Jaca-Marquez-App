@@ -47,8 +47,12 @@ export class UsersTableComponent {
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data:{
-        title: 'Eliminar usuario',
-        message: `¿Está seguro de que desea eliminar al usuario ${surname}, ${name}?`
+              title: 'Eliminar usuario',
+              titleColor: 'danger',
+              image: 'assets/delete.png',
+              message: `¿Está seguro de que desea eliminar al usuario ${surname}, ${name}?`,
+              buttonTitle: 'Eliminar',
+              buttonColor: 'danger',
       }
     });
     dialogRef.afterClosed().subscribe(result => {

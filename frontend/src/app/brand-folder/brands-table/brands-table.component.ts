@@ -52,8 +52,12 @@ export class BrandsTableComponent {
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data:{
-        title: 'Eliminar marca',
-        message: `¿Está seguro de que desea eliminar la marca ${name}?`
+              title: 'Eliminar marca',
+              titleColor: 'danger',
+              image: 'assets/delete.png',
+              message: `¿Está seguro de que desea eliminar la marca ${name}?`,
+              buttonTitle: 'Eliminar',
+              buttonColor: 'danger',
       }
     });
     dialogRef.afterClosed().subscribe(result => {

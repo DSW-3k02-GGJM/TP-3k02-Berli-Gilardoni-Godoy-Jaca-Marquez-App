@@ -80,13 +80,18 @@ export class ApiService {
     });
   }
 
-  sendEmail(resData: any,email: string): Observable<any> {
-
-    return this.http.post(`${this.apiUrl}/users/send-email/${email}`, resData ,
-      {
+  sendEmail(resData: any, email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/send-email/${email}`, resData, {
       headers: this.headers,
       withCredentials: true,
-    })
+    });
+  }
+
+  getReservationsByUser(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/reservations/user-reservations`, {
+      headers: this.headers,
+      withCredentials: true,
+    });
   }
 
   entityNameExists(

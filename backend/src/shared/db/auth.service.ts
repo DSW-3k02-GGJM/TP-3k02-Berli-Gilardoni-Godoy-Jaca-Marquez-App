@@ -3,17 +3,27 @@ import { User } from '../../user/user.entity.js';
 import { Request, Response, NextFunction } from 'express';
 import { orm } from './orm.js';
 import bcrypt from 'bcrypt';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const em = orm.em.fork();
-const SECRET_KEY = process.env.SECRET_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era';
-const SECRET_EMAIL_KEY = process.env.SECRET_EMAIL_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era parte 2';
-const SECRET_PASSWORD_KEY = process.env.SECRET_PASSWORD_KEY || 'Aca va una clave secretisima que está publicada en github usea que tan secreta no era parte 3';
+const SECRET_KEY =
+  process.env.SECRET_KEY ||
+  'Aca va una clave secretisima que está publicada en github usea que tan secreta no era';
+const SECRET_EMAIL_KEY =
+  process.env.SECRET_EMAIL_KEY ||
+  'Aca va una clave secretisima que está publicada en github usea que tan secreta no era parte 2';
+const SECRET_PASSWORD_KEY =
+  process.env.SECRET_PASSWORD_KEY ||
+  'Aca va una clave secretisima que está publicada en github usea que tan secreta no era parte 3';
 
 export class AuthService {
-  static generateToken(user: User, SECRET_KEY: string, expiresIn: string): string {
+  static generateToken(
+    user: User,
+    SECRET_KEY: string,
+    expiresIn: string
+  ): string {
     const payload = { id: user.id, email: user.email, role: user.role };
     return jwt.sign(payload, SECRET_KEY, { expiresIn: expiresIn });
   }
@@ -33,20 +43,21 @@ export class AuthService {
       req.session = { user: null };
 
       if (!token) {
-        return res.status(401).json({ message: 'Unauthorized access (no token)'});
+        return res
+          .status(401)
+          .json({ message: 'Unauthorized access (no token)' });
       }
       try {
         data = AuthService.verifyToken(token, SECRET_KEY);
+
         if (!roles.includes(data.role)) {
-          return res.status(401).json({ message: 'Unauthorized access (role)'});
+          return res
+            .status(401)
+            .json({ message: 'Unauthorized access (role)' });
         }
-        if ( req.params.id && data.role == 'client' && data.id != req.params.id) {
-          return res.status(401).json({ message: 'Unauthorized access (id)'}); // verifica si es el mismo usuario en caso de ser cliente
-        }
-        
+
         req.session.user = data;
-      } 
-      catch (error: any) {
+      } catch (error: any) {
         return res.status(401).json({ message: error.message });
       }
       next();
@@ -73,9 +84,19 @@ export class AuthService {
         verified: true,
       });
       await em.flush();
-      console.log('Admin user created:\n\temail:', admin.email, '\n\tpassword:', adminPassword);
+      console.log(
+        'Admin user created:\n\temail:',
+        admin.email,
+        '\n\tpassword:',
+        adminPassword
+      );
     } else {
-      console.log('Admin user already exists:\n\temail:', adminUser.email,'\n\tpassword:', adminPassword);
+      console.log(
+        'Admin user already exists:\n\temail:',
+        adminUser.email,
+        '\n\tpassword:',
+        adminPassword
+      );
     }
   }
 }
