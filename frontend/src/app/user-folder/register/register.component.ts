@@ -43,7 +43,9 @@ export class RegisterComponent {
       exitAnimationDuration: '0ms',
       data:{
         title: 'Registro exitoso',
-        message: 'Por favor, revise su correo para verificar su cuenta.'
+        message: 'Por favor, revise su correo para verificar su cuenta.',
+        haveRouterLink: true,
+        goTo: '/home'
       }
     });
   }

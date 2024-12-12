@@ -42,6 +42,8 @@ export class ComunicationByEmailComponent implements AfterViewInit {
       exitAnimationDuration: '0ms',
       data: {
         title: 'Email envíado',
+        haveRouterLink: true,
+        goTo: '/home'
       },
     });
   }

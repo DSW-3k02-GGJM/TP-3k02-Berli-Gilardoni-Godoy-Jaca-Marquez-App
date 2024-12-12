@@ -46,6 +46,8 @@ export class LoginComponent {
       exitAnimationDuration: '0ms',
       data:{
         title: 'Login exitoso',
+        haveRouterLink: true,
+        goTo: '/home'
       }
     });
   }

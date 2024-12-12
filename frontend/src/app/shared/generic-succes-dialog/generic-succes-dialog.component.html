@@ -7,5 +7,6 @@
 </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close cdkFocusInitial (click)="router.navigate(['/home']);">Aceptar</button>
+  <button *ngIf="data.haveRouterLink" mat-button mat-dialog-close cdkFocusInitial (click)="router.navigate([data.goTo]);">Aceptar</button>
+  <button *ngIf="!data.haveRouterLink" mat-button mat-dialog-close cdkFocusInitial>Aceptar</button>
 </mat-dialog-actions>

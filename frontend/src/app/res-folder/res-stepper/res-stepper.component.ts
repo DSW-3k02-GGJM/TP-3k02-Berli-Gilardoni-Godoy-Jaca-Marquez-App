@@ -61,6 +61,8 @@ export class ResStepperComponent implements OnInit {
       exitAnimationDuration: '0ms',
       data: {
         title: 'Reserva exitosa',
+        haveRouterLink: true,
+        goTo: '/home'
       },
     });
   }
