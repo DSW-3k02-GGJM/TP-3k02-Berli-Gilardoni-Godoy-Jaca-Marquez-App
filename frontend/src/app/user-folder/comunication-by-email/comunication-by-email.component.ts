@@ -52,7 +52,7 @@ export class ComunicationByEmailComponent implements AfterViewInit {
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
-        title: 'Email envíado',
+        title: 'Email enviado',
         haveRouterLink: true,
         goTo: '/home'
       },
