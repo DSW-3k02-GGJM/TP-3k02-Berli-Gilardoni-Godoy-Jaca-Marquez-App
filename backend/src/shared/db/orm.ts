@@ -5,10 +5,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-import dotenv from 'dotenv';
-
-dotenv.config();
-
 export const orm = await MikroORM.init({
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
