@@ -54,7 +54,7 @@ export class ComunicationByEmailComponent implements AfterViewInit {
       data: {
         title: 'Email enviado',
         haveRouterLink: true,
-        goTo: '/home'
+        goTo: '/staff/comunication'
       },
     });
   }
