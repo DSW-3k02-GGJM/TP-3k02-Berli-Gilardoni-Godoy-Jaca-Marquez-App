@@ -9,7 +9,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../service/api.service.js';
-import { FilterPipe } from '../../shared/filter/filter.pipe.js';
 import { FormsModule } from '@angular/forms';
 import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
 import { Router } from '@angular/router';
@@ -23,50 +22,57 @@ import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-di
   standalone: true,
   templateUrl: './res-client-table.component.html',
   styleUrl: './res-client-table.component.scss',
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    FilterPipe,
-    FormsModule,
-    MatInputModule,
-  ],
+  imports: [CommonModule, HttpClientModule, FormsModule, MatInputModule],
   providers: [ApiService],
 })
 export class ResClientTableComponent {
   readonly dialog = inject(MatDialog);
 
-  openConfirmDialog(id: number): void {
+  openCancelDialog(res: any): void {
     const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
-        title: 'Eliminar reserva',
+        title: 'Cancelar reserva',
         titleColor: 'danger',
-        image: 'assets/delete.png',
-        message: '¿Está seguro de que desea eliminar la reserva?',
-        buttonTitle: 'Eliminar',
+        image: 'assets/wrongmark.png',
+        message: '¿Está seguro de que desea cancelar la reserva?',
         buttonColor: 'danger',
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        const data = {
+          // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
+          startDate: res.startDate,
+          plannedEndDate: res.plannedEndDate,
+          user: res.user.id,
+          vehicle: res.vehicle.id,
+          //
+          cancellationDate: new Date(),
+        };
+
         this.apiService
-          .delete('reservations', Number(id))
+          .update('reservations', Number(res.id), data)
           .subscribe((response) => {
-            this.resDeleted.emit(id);
+            this.resCancelled.emit();
           });
       }
     });
   }
 
   @Input() reservations!: any[];
-  @Output() resDeleted = new EventEmitter();
+  @Output() resCancelled = new EventEmitter();
   filterDate: string = '';
 
   filteredReservations: any[] = [];
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private apiService: ApiService,
+    private resCreatedOrModifiedService: ResCreatedOrModifiedService,
+    private router: Router
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // Comprueba si el valor de 'reservations' ha cambiado
@@ -83,8 +89,8 @@ export class ResClientTableComponent {
     return DateTable;
   }
 
-  deleteRes(res: any): void {
-    this.openConfirmDialog(res.id);
+  cancelRes(res: any): void {
+    this.openCancelDialog(res);
   }
 
   calculatePrice(res: any): string {

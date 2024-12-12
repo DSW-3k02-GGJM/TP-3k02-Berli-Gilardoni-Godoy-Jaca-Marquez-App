@@ -40,7 +40,7 @@
         <th>Estado</th>
         <th>Precio Final</th>
         <th>Check-in / Check-out</th>
-        <th>Acciones</th>
+        <th>Eliminar</th>
       </tr>
     </thead>
     <tbody>
@@ -60,6 +60,8 @@
           {{
             reservation.realEndDate
               ? "Finalizada"
+              : reservation.cancellationDate
+              ? "Cancelada"
               : reservation.initialKms
               ? "Check-in realizado"
               : "Sin iniciar"
@@ -69,6 +71,8 @@
           {{
             reservation.realEndDate
               ? "$" + calculatePrice(reservation)
+              : reservation.cancellationDate
+              ? "Reserva cancelada"
               : "Reserva no finalizada"
           }}
         </td>
@@ -77,7 +81,9 @@
             <button
               class="btn btn-dark fs-5"
               (click)="checkInRes(reservation)"
-              [disabled]="reservation.initialKms"
+              [disabled]="
+                reservation.initialKms || reservation.cancellationDate
+              "
             >
               <img
                 src="../../../assets/check-in-img.png"
@@ -88,7 +94,11 @@
             <button
               class="btn btn-dark fs-5"
               (click)="checkOutRes(reservation)"
-              [disabled]="!reservation.initialKms || reservation.finalKm"
+              [disabled]="
+                !reservation.initialKms ||
+                reservation.finalKm ||
+                reservation.cancellationDate
+              "
             >
               <img
                 src="../../../assets/check-out-img.png"
@@ -103,7 +113,9 @@
             <button
               class="btn btn-dark fs-5"
               (click)="deleteRes(reservation)"
-              [disabled]="reservation.realEndDate"
+              [disabled]="
+                reservation.realEndDate || reservation.cancellationDate
+              "
             >
               ❌
             </button>

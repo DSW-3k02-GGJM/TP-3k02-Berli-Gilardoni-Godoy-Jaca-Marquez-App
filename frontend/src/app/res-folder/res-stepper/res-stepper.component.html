@@ -89,15 +89,16 @@
       <section class="vehicle-list mt-3 mx-5">
         <ng-container *ngIf="response.length > 0">
           <app-vehicle-card
-            *ngFor="let vm of response"
-            [vehicleModel]="vm.vehicleModel"
-            [categoryDescription]="vm.category"
-            [passengerCount]="vm.passengerCount"
-            [image]="vm.image"
-            [pricePerDay]="vm.pricePerDay"
-            [deposit]="vm.deposit"
-            [brand]="vm.brand"
-            (modelSelected)="onModelSelected($event)"
+            *ngFor="let vehicle of response"
+            [id]="vehicle.id"
+            [vehicleModel]="vehicle.vehicleModel.vehicleModelName"
+            [categoryDescription]="vehicle.vehicleModel.category.categoryName"
+            [passengerCount]="vehicle.vehicleModel.passengerCount"
+            [image]="vehicle.vehicleModel.imagePath"
+            [pricePerDay]="vehicle.vehicleModel.category.pricePerDay"
+            [deposit]="vehicle.vehicleModel.category.depositValue"
+            [brand]="vehicle.vehicleModel.brand.brandName"
+            (modelSelected)="onModelSelected(vehicle)"
           ></app-vehicle-card>
         </ng-container>
       </section>
@@ -120,7 +121,6 @@
           <div class="information-title2">Fecha de Fin</div>
           <div class="information-content">
             <span>{{ plannedEndDate }}</span>
-            <!-- esto deberia estar más abajo o minimamente centrado pero no -->
           </div>
         </div>
         <div class="information-section">

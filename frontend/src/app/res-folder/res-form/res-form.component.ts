@@ -3,7 +3,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -17,9 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule, MatSelectChange } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../service/api.service.js';
-import { ResCreatedOrModifiedService } from '../res-created-or-modified/res.service.js';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { VehicleCardComponent } from '../../vehicle-folder/vehicle-card/vehicle-card.component.js';
 import { formatDate } from '@angular/common';
@@ -66,7 +63,7 @@ export class ResFormComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  onResize() {
     this.isSmallScreen = window.innerWidth < 700;
   }
   @ViewChild('stepper') stepper!: MatStepper;
@@ -80,29 +77,23 @@ export class ResFormComponent implements OnInit {
   startDate: string = '';
   plannedEndDate: string = '';
   location: string = '';
-  vehicleModel = '';
+
+  documentType: string = '';
+  documentID: string = '';
+
+  vehicleID: number = 0;
+  vehicleModel: string = '';
   categoryDescription: string = '';
   passengerCount: number = 0;
   pricePerDay: number = 0;
   deposit: number = 0;
-  brand: number = 0;
-
-  vehicleID: number = 0;
-
-  documentType: string = '';
-  documentID: string = '';
+  brand: string = '';
 
   finalPrice: number = 0;
 
   errorMessage: string = '';
 
-  constructor(
-    private apiService: ApiService,
-    private resCreatedOrModifiedService: ResCreatedOrModifiedService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private httpClient: HttpClient
-  ) {}
+  constructor(private apiService: ApiService, private httpClient: HttpClient) {}
 
   ngOnInit() {
     this.loadUsers();
@@ -122,39 +113,28 @@ export class ResFormComponent implements OnInit {
     { validators: this.dateLessThan('startDate', 'plannedEndDate') }
   );
 
-  vehicleModelForm = new FormGroup(
-    {
-      vehicleModel: new FormControl('', [Validators.required]),
-    },
-    { validators: this.dateLessThan('startDate', 'plannedEndDate') }
-  );
+  vehicleModelForm = new FormGroup({
+    vehicleModel: new FormControl('', [Validators.required]),
+  });
 
-  onModelSelected(vehicleModel: any) {
-    this.vehicleModel = vehicleModel.vehicleModel;
-    this.categoryDescription = vehicleModel.categoryDescription;
-    this.passengerCount = vehicleModel.passengerCount;
-    this.pricePerDay = vehicleModel.pricePerDay;
-    this.deposit = vehicleModel.deposit;
+  onModelSelected(vehicle: any) {
+    this.vehicleID = vehicle.id;
+    this.vehicleModel = vehicle.vehicleModel.vehicleModelName;
+    this.categoryDescription = vehicle.vehicleModel.category.categoryName;
+    this.passengerCount = vehicle.vehicleModel.passengerCount;
+    this.pricePerDay = vehicle.vehicleModel.category.pricePerDay;
+    this.deposit = vehicle.vehicleModel.category.depositValue;
+    this.brand = vehicle.vehicleModel.brand.brandName;
 
-    this.response.forEach((vehicleModel) => {
-      if (vehicleModel.vehicleModel === this.vehicleModel) {
-        this.vehicleID = vehicleModel.vehicle;
-        this.brand = vehicleModel.brand;
-      }
-    });
-
-    this.vehicleModelForm
-      .get('vehicleModel')
-      ?.setValue(vehicleModel.vehicleModel);
+    this.vehicleModelForm.get('vehicleModel')?.setValue(this.vehicleModel);
     this.stepper.next();
   }
 
-  //valida que startDate >= fecha actual y valida que startDate < plannedEndDate
   dateLessThan(startDateField: string, endDateField: string) {
     return (formGroup: AbstractControl) => {
       const startDate = formGroup.get(startDateField)?.value;
       const endDate = formGroup.get(endDateField)?.value;
-      const today = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
+      const today = new Date().toISOString().split('T')[0];
 
       if (startDate && new Date(startDate) < new Date(today)) {
         formGroup.get(startDateField)?.setErrors({
@@ -174,7 +154,6 @@ export class ResFormComponent implements OnInit {
 
   onStepChange(event: StepperSelectionEvent): void {
     if (event.selectedIndex === 1) {
-      // Índice del paso "Seleccionar filtro"
       this.loadLocations();
       this.vehicleFilterForm
         .get('startDate')
@@ -199,10 +178,8 @@ export class ResFormComponent implements OnInit {
           this.location = selectedLocation ? selectedLocation.locationName : '';
         });
     } else if (event.selectedIndex === 2) {
-      // Índice del paso "Seleccionar modelo"
       this.setFilter();
-    } else if ((event.selectedIndex = 3)) {
-      // Índice del paso "Informacion de la reserva"
+    } else if (event.selectedIndex === 3) {
       this.finalPrice = this.calculatePrice(
         this.startDate,
         this.plannedEndDate,
@@ -220,7 +197,6 @@ export class ResFormComponent implements OnInit {
   loadUsers(): void {
     this.apiService.getAll('users').subscribe((response) => {
       this.users = response.data;
-      console.log(this.users); //para ver que usuarios trae
     });
   }
 
@@ -231,52 +207,25 @@ export class ResFormComponent implements OnInit {
       )
       .subscribe(
         (response) => {
-          console.log('Response data:', response);
-          this.response = response.data.map((vm: any) => {
-            console.log('Vehicle model data:', vm);
-            return {
-              vehicleModel: vm.vehicleModel,
-              category: vm.vehicle.vehicleModel.category.categoryName,
-              passengerCount: vm.vehicle.vehicleModel.passengerCount,
-              image: vm.vehicle.vehicleModel.imagePath,
-              pricePerDay: vm.vehicle.vehicleModel.category.pricePerDay,
-              deposit: vm.vehicle.vehicleModel.category.depositValue,
-              vehicle: vm.vehicle.id,
-              brand: vm.vehicle.brand,
-            };
-          });
-          console.log('Mapped response:', this.response);
+          this.response = response.data;
         },
         (error) => {
           console.error('Error fetching vehicles:', error);
         }
       );
   }
+
   setFilter() {
     if (!this.vehicleFilterForm.invalid) {
       const formValues = this.vehicleFilterForm.value;
-      const formattedStartDate = formValues.startDate
-        ? formatDate(formValues.startDate, 'yyyy-MM-dd', 'en-US')
-        : '';
-      const formattedPlannedEndDate = formValues.plannedEndDate
-        ? formatDate(formValues.plannedEndDate, 'yyyy-MM-dd', 'en-US')
-        : '';
+
       const filter = {
-        startDate: formattedStartDate,
-        endDate: formattedPlannedEndDate,
-        location: this.vehicleFilterForm.value.location,
+        startDate: formValues.startDate.toISOString().split('T')[0],
+        endDate: formValues.plannedEndDate.toISOString().split('T')[0],
+        location: formValues.location,
       };
-      console.log('Filter:', filter);
       this.fetchVehicles(filter);
     }
-  }
-
-  formatDate(DateDB: string): string {
-    let DateFormat: string = '${year}-${month}-${day}';
-    DateFormat = DateFormat.replace('${year}', DateDB.substring(0, 4));
-    DateFormat = DateFormat.replace('${month}', DateDB.substring(5, 7));
-    DateFormat = DateFormat.replace('${day}', DateDB.substring(8, 10));
-    return DateFormat;
   }
 
   formatDateForFinalPriceCalculation(date: string): Date {
@@ -287,17 +236,14 @@ export class ResFormComponent implements OnInit {
     return new Date(DateFormat);
   }
 
-  //crea un nuevo array de usuarios cuyo tipo doc sea el elegido
   onDocumentTypeSelected(event: MatSelectChange): void {
     const selectedDocumentType = event.value;
-    console.log('El tipo doc elegido fue:', selectedDocumentType); //para ver el tipo doc elegido
     this.filteredUsers = this.users.filter(
       (user) =>
         user.documentType === selectedDocumentType &&
         user.documentID != 'XXXXXXXX'
     );
     this.documentType = selectedDocumentType;
-    console.log(this.filteredUsers); //para ver la lista de usurios filtrados por el tipo doc elegido
   }
 
   onDocumentIDSelected(event: MatSelectChange): void {
@@ -321,7 +267,6 @@ export class ResFormComponent implements OnInit {
       plannedEndDateAsString
     );
 
-    // Calcular la diferencia en días y el precio
     const days = differenceInDays(formattedPlannedEndDate, formattedStartDate);
 
     return days * pricePerDay;
@@ -329,28 +274,20 @@ export class ResFormComponent implements OnInit {
 
   submitRes() {
     const formValues = this.vehicleFilterForm.value;
-    const formattedStartDate = formValues.startDate
-      ? formatDate(formValues.startDate, 'yyyy-MM-dd', 'en-US')
-      : '';
-    const formattedPlannedEndDate = formValues.plannedEndDate
-      ? formatDate(formValues.plannedEndDate, 'yyyy-MM-dd', 'en-US')
-      : '';
 
     const resData = {
       reservationDate: new Date().toISOString().split('T')[0],
-      startDate: formattedStartDate,
-      plannedEndDate: formattedPlannedEndDate,
+      startDate: formValues.startDate,
+      plannedEndDate: formValues.plannedEndDate,
       user: this.userForm.value.documentID,
       vehicle: this.vehicleID,
     };
 
     this.apiService.createAdminReservation(resData).subscribe({
-      next: (response) => {
-        console.log('Response:', response);
+      next: () => {
         this.openDialog();
       },
       error: (error) => {
-        console.log('Error:', error);
         if (error.status !== 400) {
           this.errorMessage = 'Error en el servidor. Intente de nuevo.';
         }

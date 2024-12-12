@@ -45,7 +45,6 @@ export class ResTableComponent {
         titleColor: 'danger',
         image: 'assets/delete.png',
         message: '¿Está seguro de que desea eliminar la reserva?',
-        buttonTitle: 'Eliminar',
         buttonColor: 'danger',
       },
     });
@@ -71,7 +70,6 @@ export class ResTableComponent {
         image: 'assets/check-in-img.png',
         message:
           '¿Está seguro de que desea realizar el check-in de la reserva?',
-        buttonTitle: 'Confirmar',
         buttonColor: 'primary',
       },
     });
@@ -107,7 +105,6 @@ export class ResTableComponent {
         image: 'assets/check-out-img.png',
         message:
           '¿Está seguro de que desea realizar el check-out de la reserva?',
-        buttonTitle: 'Confirmar',
         buttonColor: 'primary',
       },
     });

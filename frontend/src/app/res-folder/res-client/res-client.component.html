@@ -5,7 +5,7 @@
   <section class="reservation-list mt-3 mx-5">
     <app-res-client-table
       [reservations]="reservations"
-      (resDeleted)="onResDeleted($event)"
+      (resCancelled)="onResCancelled()"
     ></app-res-client-table>
   </section>
 </div>

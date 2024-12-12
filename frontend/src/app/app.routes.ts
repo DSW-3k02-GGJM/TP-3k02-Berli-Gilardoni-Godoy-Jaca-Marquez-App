@@ -48,15 +48,15 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
 
-  {
-    path: 'user-reservations',
-    component: ResClientComponent,
-  },
-
   { path: 'verify-email/:token', component: EmailVerificationComponent },
   { path: 'reset-password/:token', component: ResetPasswordComponent },
 
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  {
+    path: 'user-reservations',
+    component: ResClientComponent,
+    canActivate: [authClientGuard],
+  },
 
   {
     path: 'staff',

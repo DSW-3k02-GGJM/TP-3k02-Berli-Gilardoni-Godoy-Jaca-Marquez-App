@@ -27,8 +27,8 @@ export class ResClientComponent implements OnInit {
     }
   }
 
-  onResDeleted(resId: number): void {
-    this.reservations = this.reservations.filter((res) => res.id !== resId);
+  onResCancelled(): void {
+    this.fillData();
   }
 
   fillData() {
