@@ -49,7 +49,11 @@ export class VehiclesTableComponent {
       exitAnimationDuration: '0ms',
       data:{
         title: 'Eliminar vehículo',
-        message: `¿Está seguro de que desea eliminar el vehículo ${name}?`
+        titleColor: 'danger',
+        image: 'assets/delete.png',
+        message: `¿Está seguro de que desea eliminar el vehículo ${name}?`,
+        buttonTitle: 'Eliminar',
+        buttonColor: 'danger',
       }
     });
     dialogRef.afterClosed().subscribe(result => {
