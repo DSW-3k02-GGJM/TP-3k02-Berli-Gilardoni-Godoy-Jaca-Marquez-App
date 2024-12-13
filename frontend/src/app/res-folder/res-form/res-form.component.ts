@@ -59,7 +59,7 @@ export class ResFormComponent implements OnInit {
       data: {
         title: 'Reserva exitosa',
         haveRouterLink: true,
-        goTo: '/home'
+        goTo: '/staff/reservations'
       },
     });
   }

@@ -183,10 +183,5 @@ export const routes: Routes = [
   },
 
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home', pathMatch: 'full' },
-  //TODO: revisar
-  // esto son para los alquileres hechos por el cliente (usuario)
-  { path: 'reservationCli', component: ResComponent },
-  { path: 'reservationCli/create', component: ResFormComponent },
-  { path: 'reservationCli/modify/:id', component: ResFormComponent },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' }
 ];
