@@ -14,25 +14,17 @@ export class ScheduleService {
         const reminderDay = format(remiderDate, 'd');
         const todayDay = format(new Date(), 'd');
         const formattedDate = format(parsedDate, 'dd/MM/yyyy');
-        if (reminderDay === todayDay) {
-            await MailService.sendMail(
-                [email],
-                'Recordatorio de reserva',
-                `Este es un recordatorio de que tienes una reserva por comenzar. Recuerda que la fecha de inicio es ${formattedDate}. \n\n¡Que disfrutes tu viaje! \nAlquilcar Rerservas`,
-                ''
-              );
-        }
-        else {
+        if (reminderDay > todayDay) {
             const cronDate = ScheduleService.convertToCronFormat(remiderDate);
             console.log(`Scheduling reminder for ${email} at ${cronDate}`);
             cron.schedule(cronDate, async () => {
+                console.log(`Sending reminder to ${email}`);
                 await MailService.sendMail(
                         [email],
                         'Recordatorio de reserva',
                         `Este es un recordatorio de que tienes una reserva por comenzar. Recuerda que la fecha de inicio es ${formattedDate}. \n\n¡Que disfrutes tu viaje! \nAlquilcar Rerservas`,
                         ''
                     );
-                console.log(`Sending reminder to ${email}`);
             });
         }
         
