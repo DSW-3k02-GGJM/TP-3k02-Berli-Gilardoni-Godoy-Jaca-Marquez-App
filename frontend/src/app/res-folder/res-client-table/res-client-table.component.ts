@@ -93,6 +93,15 @@ export class ResClientTableComponent {
     this.openCancelDialog(res);
   }
 
+  disableCancellation(res: any){
+    const today = new Date();
+    const startDate = new Date(res.startDate);
+    if(startDate <= today){
+      return true
+    }
+    return false
+  }
+
   calculatePrice(res: any): string {
     const startDate = new Date(res.startDate);
     const plannedEndDate = new Date(res.plannedEndDate);
