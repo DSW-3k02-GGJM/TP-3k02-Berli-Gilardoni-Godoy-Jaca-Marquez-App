@@ -21,7 +21,7 @@ import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-di
   selector: 'app-res-client-table',
   standalone: true,
   templateUrl: './res-client-table.component.html',
-  styleUrl: './res-client-table.component.scss',
+  styleUrl: '../../styles/genericTable.scss',
   imports: [CommonModule, HttpClientModule, FormsModule, MatInputModule],
   providers: [ApiService],
 })

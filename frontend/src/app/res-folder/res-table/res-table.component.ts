@@ -22,7 +22,7 @@ import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-di
   selector: 'app-res-table',
   standalone: true,
   templateUrl: './res-table.component.html',
-  styleUrl: './res-table.component.scss',
+  styleUrl: '../../styles/genericTable.scss',
   imports: [
     CommonModule,
     HttpClientModule,

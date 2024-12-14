@@ -22,7 +22,7 @@ import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/g
     MatInputModule,
   ],
   templateUrl: './users-table.component.html',
-  styleUrls: ['../../styles/genericSearchInput.scss', './users-table.component.scss'],
+  styleUrls: ['../../styles/genericSearchInput.scss', '../../styles/genericTable.scss'],
   providers: [AuthService],
 })
 export class UsersTableComponent {

@@ -16,7 +16,7 @@ import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-di
   selector: 'app-brands-table',
   standalone: true, // Permite que el componente se use sin necesidad de un módulo Angular tradicional
   templateUrl: './brands-table.component.html', // Ruta del archivo de plantilla HTML
-  styleUrls: ['../../styles/genericSearchInput.scss', './brands-table.component.scss', ], // Ruta del archivo de estilos SCSS
+  styleUrls: ['../../styles/genericSearchInput.scss', '../../styles/genericTable.scss', ], // Ruta del archivo de estilos SCSS
   imports: [
     CommonModule,
     HttpClientModule,
