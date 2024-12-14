@@ -83,7 +83,7 @@
               class="btn btn-dark fs-5"
               (click)="checkInRes(reservation)"
               [disabled]="
-                reservation.initialKms || reservation.cancellationDate
+                reservation.initialKms || reservation.cancellationDate  || disableCheckIn(reservation)
               "
             >
               <img
@@ -115,7 +115,7 @@
               class="btn btn-dark fs-5"
               (click)="cancelRes(reservation)"
               [disabled]="
-                reservation.realEndDate || reservation.cancellationDate || reservation.initialKms
+                reservation.realEndDate || reservation.cancellationDate || reservation.initialKms || disableCancellation(reservation)
               "
             >
               🚫

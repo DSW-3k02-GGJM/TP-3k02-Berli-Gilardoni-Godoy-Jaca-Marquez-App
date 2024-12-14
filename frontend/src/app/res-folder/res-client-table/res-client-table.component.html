@@ -72,7 +72,7 @@
               class="btn btn-dark fs-5"
               (click)="cancelRes(reservation)"
               [disabled]="
-                reservation.realEndDate || reservation.cancellationDate || reservation.initialKms
+                reservation.realEndDate || reservation.cancellationDate || reservation.initialKms || disableCancellation(reservation)
               "
             >
               🚫
