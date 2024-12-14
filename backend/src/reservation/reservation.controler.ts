@@ -3,6 +3,7 @@ import { orm } from '../shared/db/orm.js';
 import { Reservation } from './reservation.entity.js';
 import { Vehicle } from '../vehicle/vehicle.entity.js';
 import { User } from '../user/user.entity.js';
+import { ScheduleService } from '../shared/db/schedule.service.js';
 
 const em = orm.em;
 
@@ -130,7 +131,7 @@ const reservation = async (req: Request, res: Response) => {
       user: user,
       vehicle: vehicleSelected,
     });
-
+    ScheduleService.reservationReminder(user.email, startDate);
     await em.flush();
     res.status(201).end();
   } catch (error: any) {
