@@ -40,6 +40,7 @@
         <th>Estado</th>
         <th>Precio Final</th>
         <th>Check-in / Check-out</th>
+        <th>Cancelar</th>
         <th>Eliminar</th>
       </tr>
     </thead>
@@ -112,9 +113,22 @@
           <div class="d-flex justify-content-around">
             <button
               class="btn btn-dark fs-5"
+              (click)="cancelRes(reservation)"
+              [disabled]="
+                reservation.realEndDate || reservation.cancellationDate || reservation.initialKms
+              "
+            >
+              🚫
+            </button>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex justify-content-around">
+            <button
+              class="btn btn-dark fs-5"
               (click)="deleteRes(reservation)"
               [disabled]="
-                reservation.realEndDate || reservation.cancellationDate
+                reservation.realEndDate || reservation.cancellationDate || reservation.initialKms
               "
             >
               ❌

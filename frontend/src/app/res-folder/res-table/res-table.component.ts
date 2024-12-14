@@ -59,6 +59,41 @@ export class ResTableComponent {
     });
   }
 
+  openCancelDialog(res: any){
+    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data: {
+        title: 'Cancelar Reserva',
+        titleColor: 'black',
+        image: 'assets/wrongmark.png',
+        message:
+          '¿Está seguro de que desea cancelar la reserva?',
+        buttonColor: 'primary',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const data = {
+          // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
+          startDate: res.startDate,
+          plannedEndDate: res.plannedEndDate,
+          user: res.user.id,
+          vehicle: res.vehicle.id,
+          //
+          cancellationDate: new Date(),
+        };
+
+        this.apiService
+          .update('reservations', Number(res.id), data)
+          .subscribe((response) => {
+            this.resCreatedOrModifiedService.notifyResCreatedOrModified();
+          });
+      }
+    });
+  }
+
   openCheckInDialog(res: any): void {
     const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
       width: '350px',
@@ -117,7 +152,7 @@ export class ResTableComponent {
           user: res.user.id,
           vehicle: res.vehicle.id,
           //
-          realEndDate: new Date().toISOString().split('T')[0],
+          realEndDate: new Date(),
           finalKm: res.vehicle.totalKms,
         };
 
@@ -164,6 +199,10 @@ export class ResTableComponent {
 
   deleteRes(res: any): void {
     this.openConfirmDialog(res.id);
+  }
+
+  cancelRes(res: any){
+    this.openCancelDialog(res);
   }
 
   checkInRes(res: any): void {
