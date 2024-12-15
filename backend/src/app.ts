@@ -14,6 +14,10 @@ import { vehicleRouter } from './vehicle/vehicle.routes.js';
 import { userRouter } from './user/user.routes.js';
 import { AuthService } from './shared/db/auth.service.js';
 import dotenv from 'dotenv';
+// importo el archivo de las rutas
+import { uploadRouter } from './upload/upload.routes.js';
+
+
 
 dotenv.config();
 const frontendURL =
@@ -52,7 +56,14 @@ app.use('/api/locations', locationRouter);
 app.use('/api/vehicles', vehicleRouter);
 app.use('/api/users', userRouter);
 
+// ... otras importaciones y configuraciones
+
+app.use('/api/upload', uploadRouter);
+
+// ... otras configuraciones y middlewares
+
 app.use((_, res) => {
+  console.log('Ruta no encontrada');
   return res.status(404).send({ message: 'Resource not found' });
 });
 
