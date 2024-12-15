@@ -9,7 +9,7 @@
   </mat-form-field>
   <button
     class="btn btn-dark border border-white"
-    style="height: 56px; flex: 0 0 100px"
+    style="height: 56px; flex: 0 0 100px;  display: flex; align-items: center"
     (click)="filterReservations()"
   >
     Filtrar
@@ -17,7 +17,7 @@
 </div>
 <div class="div-tablas">
   <table
-    class="table table-dark table-hover table-bordered table-sm border border-white text-center reservations-table"
+    class="table table-dark table-hover table-bordered table-sm border border-white text-center"
   >
     <thead>
       <tr class="text-danger">
@@ -28,7 +28,7 @@
         <th>Estado</th>
         <th>Devolucion del Vehiculo</th>
         <th>Precio Final</th>
-        <th>Acciones</th>
+        <th>Cancelar</th>
       </tr>
     </thead>
     <tbody>
@@ -41,6 +41,8 @@
           {{
             reservation.realEndDate
               ? "Finalizada"
+              : reservation.cancellationDate
+              ? "Cancelada"
               : reservation.initialKms
               ? "Check-in realizado"
               : "Sin iniciar"
@@ -50,6 +52,8 @@
           {{
             reservation.realEndDate
               ? formatDate(reservation.realEndDate)
+              : reservation.cancellationDate
+              ? "Reserva cancelada"
               : "No devuelto"
           }}
         </td>
@@ -57,6 +61,8 @@
           {{
             reservation.realEndDate
               ? "$" + calculatePrice(reservation)
+              : reservation.cancellationDate
+              ? "Reserva cancelada"
               : "Reserva no finalizada"
           }}
         </td>
@@ -64,10 +70,12 @@
           <div class="d-flex justify-content-around">
             <button
               class="btn btn-dark fs-5"
-              (click)="deleteRes(reservation)"
-              [disabled]="reservation.realEndDate"
+              (click)="cancelRes(reservation)"
+              [disabled]="
+                reservation.realEndDate || reservation.cancellationDate || reservation.initialKms || disableCancellation(reservation)
+              "
             >
-              ❌
+              🚫
             </button>
           </div>
         </td>

@@ -50,18 +50,18 @@ reservationRouter.post(
 );
 reservationRouter.put(
   '/:id',
-  AuthService.isAuthenticated(['admin', 'employee']),
+  AuthService.isAuthenticated(['admin', 'employee', 'client']),
   sanitizedReservationInput,
   update
 );
 reservationRouter.patch(
   '/:id',
-  AuthService.isAuthenticated(['admin', 'employee']),
+  AuthService.isAuthenticated(['admin', 'employee', 'client']),
   sanitizedReservationInput,
   update
 );
 reservationRouter.delete(
   '/:id',
-  AuthService.isAuthenticated(['admin', 'employee', 'client']),
+  AuthService.isAuthenticated(['admin', 'employee']),
   remove
 );

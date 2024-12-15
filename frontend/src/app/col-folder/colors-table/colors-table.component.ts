@@ -16,7 +16,7 @@ import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/g
   selector: 'app-colors-table',
   standalone: true, // Permite que el componente se use sin necesidad de un módulo Angular tradicional
   templateUrl: './colors-table.component.html', // Ruta del archivo de plantilla HTML
-  styleUrls: ['../../styles/genericSearchInput.scss', './colors-table.component.scss'], // Ruta del archivo de estilos SCSS
+  styleUrls: ['../../styles/genericSearchInput.scss', '../../styles/genericTable.scss'], // Ruta del archivo de estilos SCSS
   imports: [
     CommonModule,
     HttpClientModule,

@@ -48,15 +48,15 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
 
-  {
-    path: 'user-reservations',
-    component: ResClientComponent,
-  },
-
   { path: 'verify-email/:token', component: EmailVerificationComponent },
   { path: 'reset-password/:token', component: ResetPasswordComponent },
 
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  {
+    path: 'user-reservations',
+    component: ResClientComponent,
+    canActivate: [authClientGuard],
+  },
 
   {
     path: 'staff',
@@ -183,10 +183,5 @@ export const routes: Routes = [
   },
 
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home', pathMatch: 'full' },
-  //TODO: revisar
-  // esto son para los alquileres hechos por el cliente (usuario)
-  { path: 'reservationCli', component: ResComponent },
-  { path: 'reservationCli/create', component: ResFormComponent },
-  { path: 'reservationCli/modify/:id', component: ResFormComponent },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' }
 ];

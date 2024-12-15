@@ -42,7 +42,9 @@ export class ForgotPasswordComponent {
       exitAnimationDuration: '0ms',
       data:{
         title: 'Solicitud exitosa',
-        message: 'Por favor, revise su correo para recuperar su contraseña.'
+        message: 'Por favor, revise su correo para recuperar su contraseña.',
+        haveRouterLink: true,
+        goTo: '/home'
       }
     });
   }

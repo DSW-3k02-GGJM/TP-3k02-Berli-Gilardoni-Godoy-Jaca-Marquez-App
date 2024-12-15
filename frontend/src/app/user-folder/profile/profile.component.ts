@@ -43,6 +43,8 @@ export class ProfileComponent implements OnInit {
       exitAnimationDuration: '0ms',
       data:{
         title: 'Cambios registrados',
+        haveRouterLink: true,
+        goTo: '/home'
       }
     });
   }

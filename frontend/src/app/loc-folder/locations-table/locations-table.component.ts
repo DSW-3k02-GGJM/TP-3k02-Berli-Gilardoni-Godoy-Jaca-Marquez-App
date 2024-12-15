@@ -14,7 +14,7 @@ import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/g
   selector: 'app-locations-table',
   standalone: true,
   templateUrl: './locations-table.component.html',
-  styleUrls: ['../../styles/genericSearchInput.scss', './locations-table.component.scss'],
+  styleUrls: ['../../styles/genericSearchInput.scss', '../../styles/genericTable.scss'],
   imports: [
     CommonModule,
     HttpClientModule,

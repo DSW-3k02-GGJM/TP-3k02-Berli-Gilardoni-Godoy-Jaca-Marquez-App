@@ -25,6 +25,8 @@ export class ResponsiveNavbarComponent implements OnInit {
       exitAnimationDuration: '0ms',
       data:{
         title: 'Logout exitoso',
+        haveRouterLink: true,
+        goTo: '/home'
       }
     });
   }

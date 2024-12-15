@@ -22,7 +22,7 @@ import { ConfirmDeletionDialogComponent } from '../../shared/confirm-deletion-di
   selector: 'app-res-table',
   standalone: true,
   templateUrl: './res-table.component.html',
-  styleUrl: './res-table.component.scss',
+  styleUrl: '../../styles/genericTable.scss',
   imports: [
     CommonModule,
     HttpClientModule,
@@ -45,7 +45,6 @@ export class ResTableComponent {
         titleColor: 'danger',
         image: 'assets/delete.png',
         message: '¿Está seguro de que desea eliminar la reserva?',
-        buttonTitle: 'Eliminar',
         buttonColor: 'danger',
       },
     });
@@ -55,6 +54,41 @@ export class ResTableComponent {
           .delete('reservations', Number(id))
           .subscribe((response) => {
             this.resDeleted.emit(id);
+          });
+      }
+    });
+  }
+
+  openCancelDialog(res: any){
+    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+      data: {
+        title: 'Cancelar Reserva',
+        titleColor: 'black',
+        image: 'assets/wrongmark.png',
+        message:
+          '¿Está seguro de que desea cancelar la reserva?',
+        buttonColor: 'primary',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const data = {
+          // Se envían los cuatro primeros atributos porque son requeridos en el sanitizedInput del backend
+          startDate: res.startDate,
+          plannedEndDate: res.plannedEndDate,
+          user: res.user.id,
+          vehicle: res.vehicle.id,
+          //
+          cancellationDate: new Date(),
+        };
+
+        this.apiService
+          .update('reservations', Number(res.id), data)
+          .subscribe((response) => {
+            this.resCreatedOrModifiedService.notifyResCreatedOrModified();
           });
       }
     });
@@ -71,7 +105,6 @@ export class ResTableComponent {
         image: 'assets/check-in-img.png',
         message:
           '¿Está seguro de que desea realizar el check-in de la reserva?',
-        buttonTitle: 'Confirmar',
         buttonColor: 'primary',
       },
     });
@@ -107,7 +140,6 @@ export class ResTableComponent {
         image: 'assets/check-out-img.png',
         message:
           '¿Está seguro de que desea realizar el check-out de la reserva?',
-        buttonTitle: 'Confirmar',
         buttonColor: 'primary',
       },
     });
@@ -120,7 +152,7 @@ export class ResTableComponent {
           user: res.user.id,
           vehicle: res.vehicle.id,
           //
-          realEndDate: new Date().toISOString().split('T')[0],
+          realEndDate: new Date(),
           finalKm: res.vehicle.totalKms,
         };
 
@@ -169,12 +201,35 @@ export class ResTableComponent {
     this.openConfirmDialog(res.id);
   }
 
+  cancelRes(res: any){
+    this.openCancelDialog(res);
+  }
+
   checkInRes(res: any): void {
     this.openCheckInDialog(res);
   }
 
   checkOutRes(res: any): void {
     this.openCheckOutDialog(res);
+  }
+
+  disableCheckIn(res: any){
+    const today = new Date();
+    const startDate = new Date(res.startDate);
+    const plannedEndDate = new Date(res.plannedEndDate);
+    if(startDate > today || plannedEndDate < today){
+      return true
+    }
+    return false
+  }
+
+  disableCancellation(res: any){
+    const today = new Date();
+    const startDate = new Date(res.startDate);
+    if(startDate <= today){
+      return true
+    }
+    return false
   }
 
   calculatePrice(res: any): string {

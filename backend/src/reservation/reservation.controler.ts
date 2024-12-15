@@ -3,6 +3,7 @@ import { orm } from '../shared/db/orm.js';
 import { Reservation } from './reservation.entity.js';
 import { Vehicle } from '../vehicle/vehicle.entity.js';
 import { User } from '../user/user.entity.js';
+import { ScheduleService } from '../shared/db/schedule.service.js';
 
 const em = orm.em;
 
@@ -22,22 +23,18 @@ const sanitizedReservationInput = (
     user: req.body.user,
     vehicle: req.body.vehicle,
   };
-  // Más validaciones
+
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined) {
       delete req.body.sanitizedInput[key];
     }
   });
 
-  const id = Number.parseInt(req.params.id);
   const startDate = req.body.sanitizedInput.startDate;
   const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
-  const initialKms = req.body.sanitizedInput.initialKms;
   const user = req.body.sanitizedInput.user;
   const vehicle = req.body.sanitizedInput.vehicle;
 
-  console.log('Datos de la reserva:', req.body.sanitizedInput);
-  console.log(!startDate, !plannedEndDate, !user, !vehicle);
   if (!startDate || !plannedEndDate || !user || !vehicle) {
     return res.status(400).json({ message: 'All information is required' });
   }
@@ -57,14 +54,13 @@ const sanitizedAdminReservationInput = (
     user: req.body.user,
     vehicle: req.body.vehicle,
   };
-  // Más validaciones
+
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined) {
       delete req.body.sanitizedInput[key];
     }
   });
 
-  const id = Number.parseInt(req.params.id);
   const reservationDate = req.body.sanitizedInput.reservationDate;
   const startDate = req.body.sanitizedInput.startDate;
   const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
@@ -89,14 +85,13 @@ const sanitizedUserReservationInput = (
     plannedEndDate: req.body.plannedEndDate,
     vehicle: req.body.vehicle,
   };
-  // Más validaciones
+
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined) {
       delete req.body.sanitizedInput[key];
     }
   });
 
-  const id = Number.parseInt(req.params.id);
   const reservationDate = req.body.sanitizedInput.reservationDate;
   const startDate = req.body.sanitizedInput.startDate;
   const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
@@ -125,7 +120,7 @@ const reservation = async (req: Request, res: Response) => {
       { populate: [] }
     );
 
-    const reservation = em.create(Reservation, {
+    em.create(Reservation, {
       reservationDate: reservationDate,
       startDate: startDate,
       plannedEndDate: plannedEndDate,
@@ -136,13 +131,10 @@ const reservation = async (req: Request, res: Response) => {
       user: user,
       vehicle: vehicleSelected,
     });
-
+    ScheduleService.reservationReminder(user.email, startDate);
     await em.flush();
-    res
-      .status(201)
-      .json({ message: 'The reservation has been created', data: reservation });
+    res.status(201).end();
   } catch (error: any) {
-    console.log(error.message);
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -169,7 +161,6 @@ const findAll = async (req: Request, res: Response) => {
       data: reservations,
     });
   } catch (error: any) {
-    console.log(error.message);
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -200,7 +191,6 @@ const findOne = async (req: Request, res: Response) => {
         .json({ message: 'The reservation has been found', data: reservation });
     }
   } catch (error: any) {
-    console.log(error.message);
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -219,7 +209,7 @@ const add = async (req: Request, res: Response) => {
       { populate: [] }
     );
 
-    const reservation = em.create(Reservation, {
+    em.create(Reservation, {
       reservationDate: reservationDate,
       startDate: startDate,
       plannedEndDate: plannedEndDate,
@@ -232,26 +222,16 @@ const add = async (req: Request, res: Response) => {
     });
 
     await em.flush();
-    res
-      .status(201)
-      .json({ message: 'The reservation has been created', data: reservation });
+    res.status(201).end();
   } catch (error: any) {
-    console.log(error.message);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-//TODO: crear funcion para agregar reserva del pov user con req.session.user.id y asignar vehiculo
-
 const update = async (req: Request, res: Response) => {
-  console.log('Datos recibidos en el backend: ', req.body);
-  console.log('Id Reserva Buscada: ' + req.params.id);
-
   try {
     const id = Number.parseInt(req.params.id);
     const reservation = await em.findOne(Reservation, { id });
-
-    console.log('Reserva Encontrada: ' + reservation);
 
     if (!reservation) {
       return res.status(404).json({ message: 'Reservation not found' });
@@ -264,7 +244,6 @@ const update = async (req: Request, res: Response) => {
       });
     }
   } catch (error: any) {
-    console.log(error);
     res.status(500).json({ message: 'Server error', error: error });
   }
 };
@@ -281,7 +260,6 @@ const remove = async (req: Request, res: Response) => {
       res.status(200).send({ message: 'The reservation has been deleted' });
     }
   } catch (error: any) {
-    console.log(error.message);
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -321,7 +299,6 @@ const getReservationsByUser = async (req: Request, res: Response) => {
       data: reservationsByUser,
     });
   } catch (error: any) {
-    console.error('Error fetching reservations:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 };

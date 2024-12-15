@@ -42,6 +42,8 @@ export class ResetPasswordComponent {
       exitAnimationDuration: '0ms',
       data:{
         title: 'Contraseña cambiada correctamente',
+        haveRouterLink: true,
+        goTo: '/home'
       }
     });
   }

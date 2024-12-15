@@ -14,7 +14,7 @@ import { GenericErrorDialogComponent } from '../../shared/generic-error-dialog/g
   selector: 'app-vehicleModels-table',
   standalone: true,
   templateUrl: './vehicleModels-table.component.html',
-  styleUrls: ['../../styles/genericSearchInput.scss', './vehicleModels-table.component.scss'],
+  styleUrls: ['../../styles/genericSearchInput.scss', '../../styles/genericTable.scss'],
   imports: [
     CommonModule,
     HttpClientModule,

@@ -14,6 +14,7 @@ import { vehicleRouter } from './vehicle/vehicle.routes.js';
 import { userRouter } from './user/user.routes.js';
 import { AuthService } from './shared/db/auth.service.js';
 import dotenv from 'dotenv';
+import { ScheduleService } from './shared/db/schedule.service.js';
 // importo el archivo de las rutas
 import { uploadRouter } from './upload/upload.routes.js';
 
@@ -73,6 +74,7 @@ await syncSchema(); // never in production
 const port = process.env.PORT || 3000;
 const domain = process.env.DOMAIN || 'http://localhost:';
 app.listen(port, () => {
-  AuthService.ensureAdminExists();
   console.log('Servidor operando en ' + domain + port + '/'); //Si no aparece con este link probar con 'localhost:8000'
+  AuthService.ensureAdminExists();
+  ScheduleService.startReminders();
 });

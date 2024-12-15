@@ -1,10 +1,14 @@
-.reservations-table {
+.table {
   position: relative;
 }
 
-.reservations-table td {
+.table td {
   vertical-align: middle;
   word-wrap: break-word;
+}
+
+.actions-column {
+  width: 10%;
 }
 
 .check {
