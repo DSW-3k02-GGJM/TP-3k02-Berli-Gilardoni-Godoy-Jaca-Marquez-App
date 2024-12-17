@@ -7,7 +7,7 @@ import { RequestContext } from '@mikro-orm/core';
 import { categoryRouter } from './category/category.routes.js';
 import { colorRouter } from './color/color.routes.js';
 import { brandRouter } from './brand/brand.routes.js';
-import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js'; // Aquí ya tienes el router
+import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js';
 import { locationRouter } from './location/location.routes.js';
 import { reservationRouter } from './reservation/reservation.routes.js';
 import { vehicleRouter } from './vehicle/vehicle.routes.js';
@@ -15,10 +15,14 @@ import { userRouter } from './user/user.routes.js';
 import { AuthService } from './shared/db/auth.service.js';
 import dotenv from 'dotenv';
 import { ScheduleService } from './shared/db/schedule.service.js';
+import path from 'path';
+//import { fileURLToPath } from 'url';
 // importo el archivo de las rutas
 import { uploadRouter } from './upload/upload.routes.js';
 
-
+// Obtén la ruta del directorio actual
+//const __filename = fileURLToPath(import.meta.url);
+//const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const frontendURL =
@@ -57,11 +61,10 @@ app.use('/api/locations', locationRouter);
 app.use('/api/vehicles', vehicleRouter);
 app.use('/api/users', userRouter);
 
-// ... otras importaciones y configuraciones
+// Configura el servidor para servir archivos estáticos desde la carpeta 'assets/img'
+//app.use('/assets/img', express.static(path.join(__dirname, '../frontend/src/assets/img')));
 
 app.use('/api/upload', uploadRouter);
-
-// ... otras configuraciones y middlewares
 
 app.use((_, res) => {
   console.log('Ruta no encontrada');

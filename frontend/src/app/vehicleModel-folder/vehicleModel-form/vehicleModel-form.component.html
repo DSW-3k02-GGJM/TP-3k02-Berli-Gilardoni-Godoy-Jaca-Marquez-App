@@ -12,7 +12,7 @@
   </div>
   <hr *ngIf="action === 'Edit'">
   <div class="content">
-    <form [formGroup]="vehicleModelForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <form [formGroup]="vehicleModelForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" autocomplete="off">
       <div class="user-details">
         <mat-form-field class="input-box" appearance="outline" hideRequiredMarker="true">
           <mat-label>Nombre</mat-label>
@@ -69,9 +69,7 @@
           <mat-select
               id="category"
               formControlName="category">
-              @for (category of categories; track category) {
-                <mat-option [value]="category.id">{{category.categoryName}}</mat-option>
-              }
+              <mat-option *ngFor="let category of categories" [value]="category.id">{{category.categoryName}}</mat-option>
           </mat-select>
           <mat-error *ngIf="vehicleModelForm.get('category')?.errors?.required">
             La categoría es requerida.
@@ -83,21 +81,20 @@
           <mat-select
               id="brand"
               formControlName="brand">
-              @for (brand of brands; track brand) {
-                <mat-option [value]="brand.id">{{brand.brandName}}</mat-option>
-              }
+              <mat-option *ngFor="let brand of brands" [value]="brand.id">{{brand.brandName}}</mat-option>
           </mat-select>
           <mat-error *ngIf="vehicleModelForm.get('brand')?.errors?.required">
             La marca es requerida.
           </mat-error>
         </mat-form-field>
       </div>
+      
       <div class="information-title">Imagen</div>
       <input
         id="imagePath"
         class="form-control"
         type="file"
-        formControlName="imagePath"
+        (change)="onFileSelected($event)"
         accept="image/*"
         class="form-control border border-secondary rounded w-100 mt-2"
         style="margin-bottom: 10px; padding: 5px;"

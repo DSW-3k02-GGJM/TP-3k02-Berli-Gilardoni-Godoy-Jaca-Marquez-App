@@ -9,7 +9,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { VehicleModelCreatedOrModifiedService } from '../vehicleModel-created-or-modified/vehicleModel.service.js';
-import {map, Observable} from "rxjs";
+import { VehicleModelService } from './vehicleModel.service'; // Importa el servicio
+import { map, Observable } from "rxjs";
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -46,10 +47,12 @@ export class VehicleModelFormComponent implements OnInit {
   categories: any[] = []; // Agrega esta propiedad para almacenar las categorías
   brands: any[] = [];
   pending = false;
+  selectedFile: File | null = null;
 
   constructor(
     private apiService: ApiService,
     private vehicleModelCreatedOrModifiedService: VehicleModelCreatedOrModifiedService,
+    private vehicleModelService: VehicleModelService, // Inyecta el servicio
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private httpClient: HttpClient,
@@ -116,81 +119,74 @@ export class VehicleModelFormComponent implements OnInit {
     });
   }
 
-  //aparentemente nos parecia basura atte. LyM
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      // Obtén el nombre del archivo
-      const fileName = file.name;
-
-      // Construye la ruta relativa en tu carpeta assets
-      const imagePath = `assets/img/${fileName}`;
-
-      // Aquí puedes usar imagePath como quieras, por ejemplo:
-      this.vehicleModelForm.patchValue({ imagePath: imagePath });
-      console.log('Ruta de la imagen:', imagePath);
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
     }
   }
 
   uploadImage(file: File): Observable<string> {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('image', file);
 
     return this.httpClient.post<{ path: string }>('/api/upload', formData).pipe(
       map((response) => response.path)
     );
   }
 
-
   onSubmit() {
     if (!this.vehicleModelForm.invalid) {
       this.pending = true;
-      const formData = this.vehicleModelForm.value;
 
-      // Modifica el valor de imagenRuta
-      if(formData.imagePath != null)
-      {
-        //formData.imagenRuta = formData.imagenRuta.replace('C:\fakepath\', 'assets\img\');
-        formData.imagePath = formData.imagePath.replace('C:\\fakepath\\', 'assets/img/');
-
-      } // en realidad se guarda como C:\fakepath
-
-
-      console.log('Datos enviados:', formData); // para ver los datos que se envían
-
-      if (this.action === 'Create') {
-        this.apiService
-        .create('vehicleModels', formData)
-        .subscribe({
-          next: response => {
-            this.pending = false;
-            this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
-            this.navigateToVehicleModels();
+      if (this.selectedFile) {
+        this.uploadImage(this.selectedFile).subscribe({
+          next: (imagePath) => {
+            this.vehicleModelForm.patchValue({ imagePath });
+            this.submitForm();
           },
-          error: error => {
+          error: (error) => {
             this.pending = false;
-            if (error.status !== 400) {
-              this.errorMessage = "Error en el servidor. Intente de nuevo.";
-            }
+            this.errorMessage = 'Error al subir la imagen. Intente de nuevo.';
           }
         });
-      } else if (this.action === 'Edit') {
-        this.apiService
-          .update('vehicleModels', this.currentVehicleModelId, formData)
-          .subscribe({
-            next: response => {
-              this.pending = false;
-              this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
-              this.navigateToVehicleModels();
-            },
-            error: error => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = "Error en el servidor. Intente de nuevo.";
-              }
-            }
-          });
+      } else {
+        this.submitForm();
       }
+    }
+  }
+
+  submitForm() {
+    const formData = this.vehicleModelForm.value;
+
+    if (this.action === 'Create') {
+      this.apiService.create('vehicleModels', formData).subscribe({
+        next: () => {
+          this.pending = false;
+          this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
+          this.navigateToVehicleModels();
+        },
+        error: (error) => {
+          this.pending = false;
+          if (error.status !== 400) {
+            this.errorMessage = 'Error en el servidor. Intente de nuevo.';
+          }
+        }
+      });
+    } else if (this.action === 'Edit') {
+      this.apiService.update('vehicleModels', this.currentVehicleModelId, formData).subscribe({
+        next: () => {
+          this.pending = false;
+          this.vehicleModelCreatedOrModifiedService.notifyVehicleModelCreatedOrModified();
+          this.navigateToVehicleModels();
+        },
+        error: (error) => {
+          this.pending = false;
+          if (error.status !== 400) {
+            this.errorMessage = 'Error en el servidor. Intente de nuevo.';
+          }
+        }
+      });
     }
   }
 
