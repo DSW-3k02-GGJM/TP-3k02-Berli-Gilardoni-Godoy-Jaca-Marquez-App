@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class VehicleModelService {
-  private apiUrl = 'http://localhost:3000/api/upload'; // Ajusta la URL según sea necesario
+export class VehicleModelService { // No se bien si lo estoy usando actualmente (revisar)
+  private apiUrl = 'http://localhost:3000/api/upload';
 
   constructor(private http: HttpClient) {}
 
@@ -14,5 +14,4 @@ export class VehicleModelService {
     return this.http.post<any>(this.apiUrl, formData);
   }
 
-  // Otros métodos del servicio
 }

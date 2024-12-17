@@ -44,7 +44,7 @@ export class VehicleModelFormComponent implements OnInit {
   action: string = '';
   errorMessage: string = '';
 
-  categories: any[] = []; // Agrega esta propiedad para almacenar las categorías
+  categories: any[] = [];
   brands: any[] = [];
   pending = false;
   selectedFile: File | null = null;
@@ -150,7 +150,7 @@ export class VehicleModelFormComponent implements OnInit {
           },
           error: (error) => {
             this.pending = false;
-            this.errorMessage = 'Error al subir la imagen. Intente de nuevo.';
+            this.errorMessage = 'Error uploading the image. Please try again.';
           }
         });
       } else {
@@ -167,7 +167,7 @@ export class VehicleModelFormComponent implements OnInit {
         },
         error: (error) => {
           if (error.status !== 400) {
-            this.errorMessage = 'Error en el servidor. Intente de nuevo.';
+            this.errorMessage = 'Server Error. Please try again.';
           }
         }
       });
@@ -182,7 +182,7 @@ export class VehicleModelFormComponent implements OnInit {
         error: (error) => {
           this.pending = false;
           if (error.status !== 400) {
-            this.errorMessage = 'Error en el servidor. Intente de nuevo.';
+            this.errorMessage = 'Server Error. Please try again.';
           }
         }
       });
@@ -196,7 +196,7 @@ export class VehicleModelFormComponent implements OnInit {
         error: (error) => {
           this.pending = false;
           if (error.status !== 400) {
-            this.errorMessage = 'Error en el servidor. Intente de nuevo.';
+            this.errorMessage = 'Server Error. Please try again.';
           }
         }
       });

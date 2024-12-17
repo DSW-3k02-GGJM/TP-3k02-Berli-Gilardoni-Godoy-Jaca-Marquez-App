@@ -15,14 +15,7 @@ import { userRouter } from './user/user.routes.js';
 import { AuthService } from './shared/db/auth.service.js';
 import dotenv from 'dotenv';
 import { ScheduleService } from './shared/db/schedule.service.js';
-import path from 'path';
-//import { fileURLToPath } from 'url';
-// importo el archivo de las rutas
 import { uploadRouter } from './upload/upload.routes.js';
-
-// Obtén la ruta del directorio actual
-//const __filename = fileURLToPath(import.meta.url);
-//const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const frontendURL =
@@ -60,13 +53,9 @@ app.use('/api/vehicleModels', vehicleModelRouter);
 app.use('/api/locations', locationRouter);
 app.use('/api/vehicles', vehicleRouter);
 app.use('/api/users', userRouter);
-
-// Configura el servidor para servir archivos estáticos desde la carpeta 'assets/img'
-//app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-
 app.use('/api/upload', uploadRouter);
 
-// agrego esto para probar
+// Ruta para servir archivos estáticos
 app.use(express.static('public'));
 
 app.use((_, res) => {
