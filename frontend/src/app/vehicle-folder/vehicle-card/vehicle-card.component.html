@@ -1,8 +1,9 @@
 <div class="card" (click)="placeReservation()">
   <!-- pongo la funcion tambien aca, para que ande cuando sea responsive-->
   <div class="image-box">
-    <img src="{{ image }}" alt="Imagen del Modelo" />
-    <!--<img [src]="'http://localhost:3000' + image" alt="Imagen del Modelo" />-->
+    <!--<img src="{{ image }}" alt="Imagen del Modelo" /> -->
+    <!--<img src="'../../../' + {{image}}" alt="Imagen del Modelo" />-->
+    <img [src]="'http://localhost:3000/' + image" alt="Imagen del Modelo" />
   </div>
   <div class="content">
     <h2>{{ brand + " " + vehicleModel }}</h2>

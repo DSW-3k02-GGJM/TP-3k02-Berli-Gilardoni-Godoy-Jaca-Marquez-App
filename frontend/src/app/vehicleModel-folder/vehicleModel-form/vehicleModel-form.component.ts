@@ -142,6 +142,9 @@ export class VehicleModelFormComponent implements OnInit {
       if (this.selectedFile) {
         this.uploadImage(this.selectedFile).subscribe({
           next: (imagePath) => {
+            const oldPath = this.vehicleModelForm.get('imagePath')?.value;
+            console.log('oldPath', oldPath);
+
             this.vehicleModelForm.patchValue({ imagePath });
             this.submitForm();
           },

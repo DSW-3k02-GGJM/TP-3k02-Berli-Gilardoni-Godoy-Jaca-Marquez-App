@@ -62,9 +62,12 @@ app.use('/api/vehicles', vehicleRouter);
 app.use('/api/users', userRouter);
 
 // Configura el servidor para servir archivos estáticos desde la carpeta 'assets/img'
-//app.use('/assets/img', express.static(path.join(__dirname, '../frontend/src/assets/img')));
+//app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use('/api/upload', uploadRouter);
+
+// agrego esto para probar
+app.use(express.static('public'));
 
 app.use((_, res) => {
   console.log('Ruta no encontrada');
