@@ -56,4 +56,18 @@ router.post('/', upload.single('image'), (req, res) => {
   res.json({ message: 'Imagen subida exitosamente', path: filePath });
 });
 
+// Ruta para eliminar imágenes
+router.delete('/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.resolve('public', filename);
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error al eliminar la imagen' });
+    }
+    console.log('Imagen eliminada exitosamente:', filename);
+    res.json({ message: 'Imagen eliminada exitosamente' });
+  });
+});
+
 export { router as uploadRouter };

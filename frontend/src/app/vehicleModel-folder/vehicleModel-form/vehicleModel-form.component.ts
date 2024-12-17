@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ApiService } from '../../service/api.service';
 import { VehicleModelCreatedOrModifiedService } from '../vehicleModel-created-or-modified/vehicleModel.service.js';
-import { VehicleModelService } from './vehicleModel.service'; // Importa el servicio
+import { VehicleModelService } from './vehicleModel.service';
 import { map, Observable } from "rxjs";
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -146,7 +146,7 @@ export class VehicleModelFormComponent implements OnInit {
             console.log('oldPath', oldPath);
 
             this.vehicleModelForm.patchValue({ imagePath });
-            this.submitForm();
+            this.submitForm(oldPath);
           },
           error: (error) => {
             this.pending = false;
@@ -154,14 +154,24 @@ export class VehicleModelFormComponent implements OnInit {
           }
         });
       } else {
-        this.submitForm();
+        this.submitForm(null);
       }
     }
   }
 
-  submitForm() {
+  submitForm(oldPath: string | null | undefined){
     const formData = this.vehicleModelForm.value;
-
+    if (oldPath) {
+      this.httpClient.delete(`/api/upload/${oldPath}`).subscribe({
+        next: () => {
+        },
+        error: (error) => {
+          if (error.status !== 400) {
+            this.errorMessage = 'Error en el servidor. Intente de nuevo.';
+          }
+        }
+      });
+    }
     if (this.action === 'Create') {
       this.apiService.create('vehicleModels', formData).subscribe({
         next: () => {
