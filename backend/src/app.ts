@@ -1,39 +1,42 @@
-import 'reflect-metadata';
+// Express
 import express from 'express';
+
+// MikroORM
+import { RequestContext } from '@mikro-orm/core';
+import { orm, syncSchema } from './shared/database/orm.js';
+
+// Routes
+import { routes } from './routes.js';
+
+// Services
+import { AuthService } from './shared/services/auth.service.js';
+import { ScheduleService } from './shared/services/schedule.service.js';
+
+// Configuration
+import {
+  FRONTEND_DOMAIN,
+  FRONTEND_PORT,
+  BACKEND_DOMAIN,
+  BACKEND_PORT,
+} from './config.js';
+
+// External Libraries
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { orm, syncSchema } from './shared/db/orm.js';
-import { RequestContext } from '@mikro-orm/core';
-import { categoryRouter } from './category/category.routes.js';
-import { colorRouter } from './color/color.routes.js';
-import { brandRouter } from './brand/brand.routes.js';
-import { vehicleModelRouter } from './vehicleModel/vehicleModel.routes.js';
-import { locationRouter } from './location/location.routes.js';
-import { reservationRouter } from './reservation/reservation.routes.js';
-import { vehicleRouter } from './vehicle/vehicle.routes.js';
-import { userRouter } from './user/user.routes.js';
-import { AuthService } from './shared/db/auth.service.js';
-import dotenv from 'dotenv';
-import { ScheduleService } from './shared/db/schedule.service.js';
-import { uploadRouter } from './upload/upload.routes.js';
 
-dotenv.config();
-const frontendURL =
-  (process.env.FRONTEND_DOMAIN || 'http://localhost') +
-  (process.env.FRONTEND_PORT || ':4200');
 const app = express();
+
 const corsOptions = {
-  origin: frontendURL, // Frontend URL
-  credentials: true, // Permite credenciales
+  origin: `${FRONTEND_DOMAIN}${FRONTEND_PORT}`,
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.static('public'));
 app.use(cookieParser());
 
-// Luego de los middlewares base
-app.use((req, res, next) => {
-  // Configurar los encabezados CORS si es necesario
+app.use((_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header(
@@ -41,35 +44,21 @@ app.use((req, res, next) => {
     'Content-Type, Accept, Accept-Language, Accept-Encoding'
   );
 
-  // Usar RequestContext para MikroORM
   RequestContext.create(orm.em, next);
 });
 
-app.use('/api/reservations', reservationRouter);
-app.use('/api/categories', categoryRouter);
-app.use('/api/colors', colorRouter);
-app.use('/api/brands', brandRouter);
-app.use('/api/vehicleModels', vehicleModelRouter);
-app.use('/api/locations', locationRouter);
-app.use('/api/vehicles', vehicleRouter);
-app.use('/api/users', userRouter);
-app.use('/api/upload', uploadRouter);
-
-// Ruta para servir archivos estáticos
-app.use(express.static('public'));
-
-app.use((_, res) => {
-  console.log('Ruta no encontrada');
-  return res.status(404).send({ message: 'Resource not found' });
+Object.entries(routes).forEach(([path, router]) => {
+  app.use(`/api/${path}`, router);
 });
 
-// Sincronización del esquema (evitar en producción)
-await syncSchema(); // never in production
+app.use((_, res) => {
+  res.status(404).send({ message: 'Resource not found' });
+});
 
-const port = process.env.PORT || 3000;
-const domain = process.env.DOMAIN || 'http://localhost:';
-app.listen(port, () => {
-  console.log('Servidor operando en ' + domain + port + '/'); //Si no aparece con este link probar con 'localhost:8000'
-  AuthService.ensureAdminExists();
-  ScheduleService.startReminders();
+await syncSchema();
+
+app.listen(BACKEND_PORT, async () => {
+  await AuthService.ensureAdminExists();
+  await ScheduleService.initializeScheduler();
+  console.log(`Server running at ${BACKEND_DOMAIN}${BACKEND_PORT}/`);
 });

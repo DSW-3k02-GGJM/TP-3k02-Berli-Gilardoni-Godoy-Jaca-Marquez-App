@@ -50,9 +50,9 @@ pnpm-lock.yaml
 .DS_Store
 Thumbs.db
 
-# Agregados
-backend/dist
-frontend/.angular/cache/**
+# Added
 *.vscode/
+backend/dist
 backend/src/shared/db/orm.ts
+frontend/.angular/cache/**
 

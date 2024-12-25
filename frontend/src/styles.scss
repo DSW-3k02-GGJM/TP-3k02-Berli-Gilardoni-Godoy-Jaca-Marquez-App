@@ -1,33 +1,17 @@
+@use "@angular/material" as mat;
+@use "./app/shared/styles/m3-theme.scss" as custom;
 
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
-@use './app/styles/m3-theme.scss' as custom;
-// Plus imports for other components in your app.
-
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
 @include mat.core();
 
-// Define the theme object.
 $alquiler-vehiculos-theme: custom.$light-theme;
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
 :root {
   @include mat.all-component-themes($alquiler-vehiculos-theme);
 }
 
-// Comment out the line below if you want to use the pre-defined typography utility classes.
-// For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
-// @include mat.typography-hierarchy($alquiler-vehiculos-theme);
-
-// Comment out the line below if you want to use the deprecated `color` inputs.
 @include mat.color-variants-backwards-compatibility($alquiler-vehiculos-theme);
-$primary: #21303A;
-$secondary: #FFF5D0;
+$primary: #21303a;
+$secondary: #fff5d0;
 $success: #28a745;
 $info: #17a2b8;
 $warning: #ffc107;
@@ -35,79 +19,64 @@ $danger: #dc3545;
 $light: #f8f9fa;
 $dark: #343a40;
 
-/* Estilos para el contenedor del formulario */
-.form-style {
-  background-color: #000; /* Un color de fondo oscuro (gris oscuro) */
-  color: #ffffff; /* Texto blanco para el contraste */
-  padding: 20px; /* Espaciado interno del formulario */
-  border-radius: 5px; /* Bordes redondeados */
-  border: 1px solid #6c757d; /* Borde gris oscuro para el contenedor */
-}
-
-/* Estilos para el campo de entrada dentro del contenedor */
-.form-style input {
-  background-color: #212529; /* Fondo más oscuro para el campo de entrada */
-  color: #ffffff; /* Texto blanco en el campo de entrada */
-  border: 1px solid #6c757d; /* Borde gris oscuro para el campo de entrada */
-  border-radius: 6px; /* Bordes ligeramente redondeados para el campo de entrada */
-  padding: 10px; /* Espaciado interno del campo de entrada */
-}
-
-.form-control.is-invalid:focus {
-  border-color: rgb(0,0,0,0);
-  box-shadow: none;
-}
-.form-control:focus{
-  border-color: rgb(0,0,0,0);
-  box-shadow: none;
-}
-.form-control:hover {
-  background-color: rgb(0,0,0,0);
+html,
+body {
+  background-color: #21303a;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .form {
   padding: 0.5em 2em 2em 2em;
 }
 
-.form-style input::placeholder {
-  color: #ffffff; /* Color del texto del placeholder */
+.form-style {
+  background-color: #000;
+  color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #6c757d;
 }
 
-.danger-text {
-  color: $danger; 
-  font-weight: bold;
+.form-style input {
+  background-color: #212529;
+  color: #fff;
+  border: 1px solid #6c757d;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.form-control:focus {
+  border-color: rgb(0, 0, 0, 0);
+  box-shadow: none;
+}
+
+.form-control:hover {
+  background-color: rgb(0, 0, 0, 0);
+}
+
+.form-control .is-invalid:focus {
+  border-color: rgb(0, 0, 0, 0);
+  box-shadow: none;
+}
+
+.form-style input::placeholder {
+  color: #ffffff;
 }
 
 /* Controla el overflow de las tablas*/
-.div-tablas {
+.tables-div {
   overflow: auto;
   margin-bottom: 2vh;
-  //user-select: none; /* hace que no se pueda seleccionar el text */
 }
 
 .unselectable {
   user-select: none;
 }
 
-html, body { 
-  background-color: #21303A;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .modal-header {
   justify-content: center;
 }
-
-.texto-blanco {
-  color: whitesmoke;
-}
-
-.texto-negro {
-  color: #181C14;
-}
-
-
-
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

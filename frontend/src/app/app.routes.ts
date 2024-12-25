@@ -1,68 +1,91 @@
+// Angular
 import { Routes } from '@angular/router';
-import { HomePageComponent } from './home-page/home-page.component';
-import { CategoriesComponent } from './cat-folder/categories/categories.component';
-import { CategoryFormComponent } from './cat-folder/category-form/category-form.component';
-import { BrandsComponent } from './brand-folder/brands/brands.component.js';
-import { BrandFormComponent } from './brand-folder/brand-form/brand-form.component.js';
-import { ColorsComponent } from './col-folder/colors/colors.component';
-import { ColorFormComponent } from './col-folder/color-form/color-form.component';
-import { LocationsComponent } from './loc-folder/locations/locations.component.js';
-import { LocationFormComponent } from './loc-folder/location-form/location-form.component.js';
-import { VehicleModelsComponent } from './vehicleModel-folder/vehicleModels/vehicleModels.component.js';
-import { VehicleModelFormComponent } from './vehicleModel-folder/vehicleModel-form/vehicleModel-form.component.js';
-import { VehicleListComponent } from './vehicle-folder/vehicle-list/vehicle-list.component';
-import { TestMatiComponent } from './test/test-mati/test-mati.component.js';
-import { LoginComponent } from './user-folder/login/login.component';
-import { RegisterComponent } from './user-folder/register/register.component';
-import { authGuard } from './guards/auth.guard';
-import { VehiclesComponent } from './vehicle-folder/vehicles/vehicles.component';
-import { VehicleFormComponent } from './vehicle-folder/vehicle-form/vehicle-form.component';
-import { ResComponent } from './res-folder/res/res.component.js';
-import { ResFormComponent } from './res-folder/res-form/res-form.component.js';
-import { authAdminGuard } from './guards/auth-admin.guard.js';
-import { authEmployeeGuard } from './guards/auth-employee.guard.js';
-import { authClientGuard } from './guards/auth-client.guard.js';
-import { ProfileComponent } from './user-folder/profile/profile.component.js';
-import { UserFormComponent } from './user-folder/user-form/user-form.component.js';
-import { UsersComponent } from './user-folder/users/users.component.js';
-import { StaffComponent } from './staff-folder/admin/staff.component.js';
-import { ResStepperComponent } from './res-folder/res-stepper/res-stepper.component.js';
-import { ResClientComponent } from './res-folder/res-client/res-client.component.js';
-import { EmailVerificationComponent } from './user-folder/email-verification/email-verification.component.js';
-import { ResetPasswordComponent } from './user-folder/reset-password/reset-password.component.js';
-import { ForgotPasswordComponent } from './user-folder/forgot-password/forgot-password.component.js';
-import { ComunicationByEmailComponent } from './user-folder/comunication-by-email/comunication-by-email.component.js';
+
+// Pages
+import { HomePageComponent } from '@pages/home/home.component';
+import { StaffMenuComponent } from '@pages/staff/components/staff-menu/staff-menu.component';
+
+// Brand
+import { BrandsComponent } from '@core/brand/components/brands/brands.component';
+import { BrandFormComponent } from '@core/brand/components/brand-form/brand-form.component';
+
+// Category
+import { CategoriesComponent } from '@core/category/components/categories/categories.component';
+import { CategoryFormComponent } from '@core/category/components/category-form/category-form.component';
+
+// Color
+import { ColorsComponent } from '@core/color/components/colors/colors.component';
+import { ColorFormComponent } from '@core/color/components/color-form/color-form.component';
+
+// Location
+import { LocationsComponent } from '@core/location/components/locations/locations.component';
+import { LocationFormComponent } from '@core/location/components/location-form/location-form.component';
+
+// Vehicle
+import { VehiclesComponent } from '@core/vehicle/components/vehicles/vehicles.component';
+import { VehicleFormComponent } from '@core/vehicle/components/vehicle-form/vehicle-form.component';
+
+// Vehicle Model
+import { VehicleModelsComponent } from '@core/vehicle-model/components/vehicle-models/vehicle-models.component';
+import { VehicleModelFormComponent } from '@core/vehicle-model/components/vehicle-model-form/vehicle-model-form.component';
+
+// Reservation
+import { ReservationsComponent } from '@core/reservation/components/reservations/reservations.component';
+import { ReservationsClientComponent } from '@core/reservation/components/reservations-client/reservations-client.component';
+import { ReservationFormComponent } from '@core/reservation/components/reservation-form/reservation-form.component';
+import { ReservationStepperComponent } from '@core/reservation/components/reservation-stepper/reservation-stepper.component';
+
+// User
+import { ComunicationByEmailComponent } from '@core/user/components/comunication-by-email/comunication-by-email.component';
+import { EmailVerificationComponent } from '@core/user/components/email-verification/email-verification.component';
+import { ForgotPasswordComponent } from '@core/user/components/forgot-password/forgot-password.component';
+import { LoginComponent } from '@core/user/components/login/login.component';
+import { ProfileComponent } from '@core/user/components/profile/profile.component';
+import { RegisterComponent } from '@core/user/components/register/register.component';
+import { ResetPasswordComponent } from '@core/user/components/reset-password/reset-password.component';
+import { UsersComponent } from '@core/user/components/users/users.component';
+import { UserFormComponent } from '@core/user/components/user-form/user-form.component';
+
+// Guards
+import { authAdminGuard } from '@security/guards/auth-admin.guard';
+import { authClientGuard } from '@security/guards/auth-client.guard';
+import { authEmployeeGuard } from '@security/guards/auth-employee.guard';
+import { authGuard } from '@security/guards/auth.guard';
+
+// Test
+import { TestMatiComponent } from '@test/components/test-mati/test-mati.component';
 
 export const routes: Routes = [
+  // Home-Page
   { path: 'home', component: HomePageComponent },
-  {
-    path: 'reserva',
-    component: ResStepperComponent,
-    canActivate: [authClientGuard],
-  },
-  // este es el de las tarjetitas
-  { path: 'vehicles', component: VehicleListComponent },
-  // este es el de alta pero para el admin
-  { path: 'testMati', component: TestMatiComponent },
+
+  // Authentication
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
-
   { path: 'verify-email/:token', component: EmailVerificationComponent },
   { path: 'reset-password/:token', component: ResetPasswordComponent },
-
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
+
+  // Reservations
+  {
+    path: 'reservation',
+    component: ReservationStepperComponent,
+    canActivate: [authClientGuard],
+  },
   {
     path: 'user-reservations',
-    component: ResClientComponent,
+    component: ReservationsClientComponent,
     canActivate: [authClientGuard],
   },
 
+  // Staff and Administration
   {
     path: 'staff',
-    component: StaffComponent,
+    component: StaffMenuComponent,
     canActivate: [authEmployeeGuard],
     children: [
+      // Locations
       {
         path: 'locations',
         component: LocationsComponent,
@@ -78,22 +101,8 @@ export const routes: Routes = [
         component: LocationFormComponent,
         canActivate: [authAdminGuard],
       },
-      {
-        path: 'colors',
-        component: ColorsComponent,
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'colors/create',
-        component: ColorFormComponent,
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'colors/:id',
-        component: ColorFormComponent,
-        canActivate: [authAdminGuard],
-      },
 
+      // Brands
       {
         path: 'brands',
         component: BrandsComponent,
@@ -110,22 +119,24 @@ export const routes: Routes = [
         canActivate: [authAdminGuard],
       },
 
+      // Colors
       {
-        path: 'users',
-        component: UsersComponent,
+        path: 'colors',
+        component: ColorsComponent,
         canActivate: [authAdminGuard],
       },
       {
-        path: 'users/create',
-        component: UserFormComponent,
+        path: 'colors/create',
+        component: ColorFormComponent,
         canActivate: [authAdminGuard],
       },
       {
-        path: 'users/:id',
-        component: UserFormComponent,
+        path: 'colors/:id',
+        component: ColorFormComponent,
         canActivate: [authAdminGuard],
       },
 
+      // Categories
       {
         path: 'categories',
         component: CategoriesComponent,
@@ -142,46 +153,79 @@ export const routes: Routes = [
         canActivate: [authAdminGuard],
       },
 
+      // Reservations
       {
-        path: 'vehicleModels',
-        component: VehicleModelsComponent,
-        canActivate: [authAdminGuard],
+        path: 'reservations',
+        component: ReservationsComponent,
       },
       {
-        path: 'vehicleModels/create',
-        component: VehicleModelFormComponent,
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'vehicleModels/:id',
-        component: VehicleModelFormComponent,
-        canActivate: [authAdminGuard],
+        path: 'reservations/create',
+        component: ReservationFormComponent,
       },
 
+      // Vehicles
       {
-        path: 'vehiclesS',
+        path: 'vehicles',
         component: VehiclesComponent,
         canActivate: [authAdminGuard],
       },
       {
-        path: 'vehiclesS/create',
+        path: 'vehicles/create',
         component: VehicleFormComponent,
         canActivate: [authAdminGuard],
       },
       {
-        path: 'vehiclesS/:id',
+        path: 'vehicles/:id',
         component: VehicleFormComponent,
         canActivate: [authAdminGuard],
       },
 
-      { path: 'reservations', component: ResComponent },
-      { path: 'reservations/create', component: ResFormComponent },
-      { path: 'reservations/:id', component: ResFormComponent },
+      // Vehicle Models
+      {
+        path: 'vehicle-models',
+        component: VehicleModelsComponent,
+        canActivate: [authAdminGuard],
+      },
+      {
+        path: 'vehicle-models/create',
+        component: VehicleModelFormComponent,
+        canActivate: [authAdminGuard],
+      },
+      {
+        path: 'vehicle-models/:id',
+        component: VehicleModelFormComponent,
+        canActivate: [authAdminGuard],
+      },
 
-      { path: 'comunication', component: ComunicationByEmailComponent },
+      // Users
+      {
+        path: 'users',
+        component: UsersComponent,
+        canActivate: [authAdminGuard],
+      },
+      {
+        path: 'users/create',
+        component: UserFormComponent,
+        canActivate: [authAdminGuard],
+      },
+      {
+        path: 'users/:id',
+        component: UserFormComponent,
+        canActivate: [authAdminGuard],
+      },
+
+      // Communication
+      {
+        path: 'comunication',
+        component: ComunicationByEmailComponent,
+      },
     ],
   },
 
+  // Test
+  { path: 'testMati', component: TestMatiComponent },
+
+  // Default
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home', pathMatch: 'full' }
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];

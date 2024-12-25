@@ -1,0 +1,192 @@
+<div class="tables-div">
+  <mat-card
+    *ngIf="errorMessage"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>
+      {{ errorMessage }}
+    </mat-card-content>
+  </mat-card>
+  <mat-card
+    *ngIf="!errorMessage && reservations.length === 0"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>No hay reservas registradas</mat-card-content>
+  </mat-card>
+  <div *ngIf="!errorMessage && reservations.length > 0">
+    <div class="d-flex justify-content-between gap-3 filter">
+      <mat-form-field class="input-box flex-grow-1" hideRequiredMarker="true">
+        <mat-label>Búsqueda por Nro. Documento...</mat-label>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="filterRows"
+          name="filterPost"
+          placeholder=""
+        />
+      </mat-form-field>
+      <mat-form-field
+        class="input-box date-input-box"
+        hideRequiredMarker="true"
+      >
+        <mat-label>Fecha (entre Inicio y Fin de Reserva)...</mat-label>
+        <input
+          matInput
+          [(ngModel)]="filterDate"
+          name="filterDate"
+          type="date"
+        />
+      </mat-form-field>
+      <button
+        class="btn btn-dark border border-white text-center btn-filter"
+        (click)="filterReservations()"
+      >
+        Filtrar por Fecha
+      </button>
+    </div>
+    <mat-card
+      *ngIf="
+        filteredReservations.length === 0 ||
+        filteredReservationsByDocumentID.length === 0
+      "
+      class="bg-dark border border-white text-white text-center fs-4 mt-2"
+    >
+      <mat-card-content
+        >🔍 No se encontraron resultados para la búsqueda</mat-card-content
+      >
+    </mat-card>
+    <table
+      *ngIf="
+        filteredReservations.length > 0 &&
+        filteredReservationsByDocumentID.length > 0
+      "
+      class="table table-dark table-hover table-bordered table-sm border border-white text-center"
+    >
+      <thead>
+        <tr>
+          <th>Fecha de Reserva</th>
+          <th>Vehículo</th>
+          <th>Estado</th>
+          <th>Fecha Inicio Reserva</th>
+          <th>Fecha Fin Reserva</th>
+          <th>Devolucion del Vehículo</th>
+          <th>Tipo Doc.</th>
+          <th>Nro. Doc.</th>
+          <th>Precio Final</th>
+          <th>Check-in / Check-out</th>
+          <th>Cancelar</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let reservation of filteredReservations
+              | filter : filterRows : 'user.documentID'
+          "
+        >
+          <td>{{ formatDate(reservation.reservationDate) }}</td>
+          <td>{{ reservation.vehicle.licensePlate }}</td>
+          <td>
+            {{
+              reservation.realEndDate
+                ? "Finalizada"
+                : reservation.cancellationDate
+                ? "Cancelada"
+                : reservation.initialKms
+                ? "Check-in realizado"
+                : "Sin iniciar"
+            }}
+          </td>
+          <td>{{ formatDate(reservation.startDate) }}</td>
+          <td>{{ formatDate(reservation.plannedEndDate) }}</td>
+          <td>
+            {{
+              reservation.realEndDate
+                ? formatDate(reservation.realEndDate)
+                : reservation.cancellationDate
+                ? "Reserva cancelada"
+                : "No devuelto"
+            }}
+          </td>
+          <td>{{ reservation.user.documentType }}</td>
+          <td>{{ reservation.user.documentID }}</td>
+          <td>
+            {{
+              reservation.realEndDate
+                ? "$" + reservation.calculatedPrice
+                : reservation.cancellationDate
+                ? "Reserva cancelada"
+                : "Reserva no finalizada"
+            }}
+          </td>
+          <td>
+            <div class="d-flex justify-content-around">
+              <button
+                class="btn btn-dark fs-5"
+                (click)="checkInReservation(reservation)"
+                [disabled]="
+                  reservation.initialKms ||
+                  reservation.cancellationDate ||
+                  disableCheckIn(reservation)
+                "
+              >
+                <img
+                  src="../../../assets/check-in-img.png"
+                  alt="Check-in"
+                  class="check"
+                />
+              </button>
+              <button
+                class="btn btn-dark fs-5"
+                (click)="checkOutReservation(reservation)"
+                [disabled]="
+                  !reservation.initialKms ||
+                  reservation.finalKms ||
+                  reservation.cancellationDate
+                "
+              >
+                <img
+                  src="../../../assets/check-out-img.png"
+                  alt="Check-out"
+                  class="check"
+                />
+              </button>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex justify-content-around">
+              <button
+                class="btn btn-dark fs-5"
+                (click)="cancelReservation(reservation)"
+                [disabled]="
+                  reservation.realEndDate ||
+                  reservation.cancellationDate ||
+                  reservation.initialKms ||
+                  disableCancellation(reservation)
+                "
+              >
+                🚫
+              </button>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex justify-content-around">
+              <button
+                class="btn btn-dark fs-5"
+                (click)="deleteReservation(reservation)"
+                [disabled]="
+                  reservation.realEndDate ||
+                  reservation.cancellationDate ||
+                  reservation.initialKms
+                "
+              >
+                ❌
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

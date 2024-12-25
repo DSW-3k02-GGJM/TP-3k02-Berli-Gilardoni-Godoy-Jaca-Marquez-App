@@ -1,0 +1,13 @@
+<div class="text-white">
+  <div class="d-flex justify-content-between pt-3 me-5">
+    <h2 class="title">Nuestras sucursales</h2>
+    <button class="btn btn-primary" (click)="newLocation()">+ Nuevo</button>
+  </div>
+  <section class="locations-list mt-3 mx-5">
+    <app-locations-table
+      [locations]="locations"
+      [errorMessage]="errorMessage"
+      (locationDeleted)="onLocationDeleted($event)"
+    ></app-locations-table>
+  </section>
+</div>

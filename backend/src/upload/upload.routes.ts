@@ -1,43 +1,63 @@
-import { Router } from 'express';
+// Express
+import { Router, Request } from 'express';
+
+// External Libraries
+import fs from 'fs';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 
-const router = Router();
+export const uploadRouter = Router();
 
-// Configuración de multer
 const storage = multer.diskStorage({
-  // Configuración de la carpeta de destino
   destination: (req, file, cb) => {
     cb(null, path.resolve('public'));
   },
   filename: (req, file, cb) => {
-    // Configuracion del nombre del archivo
     cb(null, `${Date.now()}-${file.originalname}`);
-  }
+  },
 });
 
-const upload = multer({ storage });
-
-// Ruta para subir imágenes
-router.post('/', upload.single('image'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file received' });
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback
+) => {
+  if (
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/gif'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
   }
-  const filePath = `${req.file.filename}`; // Ruta guardada en la BD
-  res.json({ message: 'Image uploaded successfully', path: filePath });
+};
+
+const upload = multer({ storage, fileFilter });
+
+uploadRouter.post('/', (req, res) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error uploading file' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ message: 'Only image files are allowed!' });
+    }
+    const filePath = req.file.filename;
+    res.status(200).json({
+      message: 'Image uploaded successfully',
+      path: filePath,
+    });
+  });
 });
 
-// Ruta para eliminar imágenes
-router.delete('/:filename', (req, res) => {
+uploadRouter.delete('/:filename', (req, res) => {
   const filename = req.params.filename;
   const filePath = path.resolve('public', filename);
   fs.unlink(filePath, (err) => {
     if (err) {
       return res.status(500).json({ message: 'Error deleting the image' });
     }
-    res.json({ message: 'Image deleted successfully' });
+    res.status(200).json({ message: 'Image deleted successfully' });
   });
 });
-
-export { router as uploadRouter };
