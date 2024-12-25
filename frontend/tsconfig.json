@@ -5,7 +5,6 @@
     "module": "ES2022",
     "moduleResolution": "bundler",
     "sourceMap": true,
-    "outDir": "./dist/out-tsc",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -14,14 +13,20 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "types": ["jasmine"]
+    "types": ["jasmine"],
+    "baseUrl": "./",
+    "paths": {
+      "@core/*": ["src/app/core/*"],
+      "@pages/*": ["src/app/pages/*"],
+      "@security/*": ["src/app/security/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@test/*": ["src/app/test/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  },
-  "files": ["src/main.ts"],
-  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
+  }
 }

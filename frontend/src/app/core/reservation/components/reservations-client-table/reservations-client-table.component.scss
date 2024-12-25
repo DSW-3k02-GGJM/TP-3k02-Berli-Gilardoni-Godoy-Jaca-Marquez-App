@@ -1,0 +1,33 @@
+.filter {
+  align-items: stretch;
+}
+
+.date-input-box {
+  flex: 0 0 250px;
+}
+
+.btn-filter {
+  height: 56px;
+  flex: 0 0 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-reservations {
+  width: fit-content;
+  margin: auto;
+  padding: 10px;
+}
+
+.btn-find {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+  background-color: #1e2d3b;
+  border: 1px solid #fff;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-find:hover {
+  background-color: #1a4d6b;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+}
