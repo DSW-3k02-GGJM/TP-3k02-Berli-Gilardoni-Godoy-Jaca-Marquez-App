@@ -1,0 +1,94 @@
+<div class="tables-div">
+  <mat-card
+    *ngIf="errorMessage"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>
+      {{ errorMessage }}
+    </mat-card-content>
+  </mat-card>
+  <mat-card
+    *ngIf="!errorMessage && users.length === 0"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>No hay usuarios registrados</mat-card-content>
+  </mat-card>
+  <div *ngIf="!errorMessage && users.length > 0">
+    <mat-form-field class="input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Email...</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="filterRows"
+        name="filterPost"
+        placeholder=""
+      />
+    </mat-form-field>
+    <mat-card
+      *ngIf="filteredUsers.length === 0"
+      class="bg-dark border border-white text-white text-center fs-4 mt-2"
+    >
+      <mat-card-content
+        >🔍 No se encontraron resultados para la búsqueda</mat-card-content
+      >
+    </mat-card>
+    <table
+      *ngIf="filteredUsers.length > 0"
+      class="table table-dark table-hover table-bordered table-sm border border-white text-center"
+    >
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Tipo Doc.</th>
+          <th>Nro. Doc.</th>
+          <th>Apellido y Nombre</th>
+          <th>Fecha de Nacimiento</th>
+          <th>Domicilio</th>
+          <th>Telefono</th>
+          <th>Nacionalidad</th>
+          <th>Mas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users | filter : filterRows : 'email'">
+          <td>{{ user.email }}</td>
+          <td>
+            {{
+              user.role === "admin"
+                ? "Admin"
+                : user.role === "employee"
+                ? "Empleado"
+                : "Cliente"
+            }}
+          </td>
+          <td>{{ user.documentType }}</td>
+          <td>{{ user.documentID }}</td>
+          <td>{{ user.userSurname + ", " + user.userName }}</td>
+          <td>{{ formatBirthDate(user.birthDate) }}</td>
+          <td>{{ user.address }}</td>
+          <td>{{ user.phoneNumber }}</td>
+          <td>{{ user.nationality }}</td>
+          <td class="actions-column">
+            <div class="d-flex justify-content-around">
+              <button
+                class="btn btn-dark fs-5"
+                (click)="editUser(user)"
+                [disabled]="user.email === 'admin@admin.com'"
+              >
+                ✏️
+              </button>
+              <button
+                class="btn btn-dark fs-5"
+                (click)="deleteUser(user)"
+                [disabled]="user.email === 'admin@admin.com'"
+              >
+                ❌
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

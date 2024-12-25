@@ -1,0 +1,62 @@
+<div class="tables-div">
+  <mat-card
+    *ngIf="errorMessage"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>
+      {{ errorMessage }}
+    </mat-card-content>
+  </mat-card>
+  <mat-card
+    *ngIf="!errorMessage && brands.length === 0"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>No hay marcas registradas</mat-card-content>
+  </mat-card>
+  <div *ngIf="!errorMessage && brands.length > 0">
+    <mat-form-field class="input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Nombre...</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="filterRows"
+        name="filterPost"
+        placeholder=""
+      />
+    </mat-form-field>
+    <mat-card
+      *ngIf="filteredBrands.length === 0"
+      class="bg-dark border border-white text-white text-center fs-4 mt-2"
+    >
+      <mat-card-content
+        >🔍 No se encontraron resultados para la búsqueda</mat-card-content
+      >
+    </mat-card>
+    <table
+      *ngIf="filteredBrands.length > 0"
+      class="table table-dark table-hover table-bordered table-sm border border-white text-center"
+    >
+      <thead>
+        <tr>
+          <th>Marca</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let brand of brands | filter : filterRows : 'brandName'">
+          <td>{{ brand.brandName }}</td>
+          <td class="actions-column">
+            <div class="d-flex justify-content-around">
+              <button class="btn btn-dark fs-5" (click)="editBrand(brand)">
+                ✏️
+              </button>
+              <button class="btn btn-dark fs-5" (click)="deleteBrand(brand)">
+                ❌
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

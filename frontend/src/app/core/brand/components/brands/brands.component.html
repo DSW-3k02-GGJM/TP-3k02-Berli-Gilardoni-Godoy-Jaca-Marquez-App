@@ -1,0 +1,13 @@
+<div class="text-white">
+  <div class="d-flex justify-content-between pt-3 me-5">
+    <h2 class="title">Nuestras marcas</h2>
+    <button class="btn btn-primary" (click)="newBrand()">+ Nueva</button>
+  </div>
+  <section class="brands-list mt-3 mx-5">
+    <app-brands-table
+      [brands]="brands"
+      [errorMessage]="errorMessage"
+      (brandDeleted)="onBrandDeleted($event)"
+    ></app-brands-table>
+  </section>
+</div>

@@ -1,0 +1,62 @@
+<div class="tables-div">
+  <mat-card
+    *ngIf="errorMessage"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>
+      {{ errorMessage }}
+    </mat-card-content>
+  </mat-card>
+  <mat-card
+    *ngIf="!errorMessage && colors.length === 0"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>No hay colores registrados</mat-card-content>
+  </mat-card>
+  <div *ngIf="!errorMessage && colors.length > 0">
+    <mat-form-field class="input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Nombre...</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="filterRows"
+        name="filterPost"
+        placeholder=""
+      />
+    </mat-form-field>
+    <mat-card
+      *ngIf="filteredColors.length === 0"
+      class="bg-dark border border-white text-white text-center fs-4 mt-2"
+    >
+      <mat-card-content
+        >🔍 No se encontraron resultados para la búsqueda</mat-card-content
+      >
+    </mat-card>
+    <table
+      *ngIf="filteredColors.length > 0"
+      class="table table-dark table-hover table-bordered table-sm border border-white text-center"
+    >
+      <thead>
+        <tr>
+          <th>Color</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let color of colors | filter : filterRows : 'colorName'">
+          <td>{{ color.colorName }}</td>
+          <td class="actions-column">
+            <div class="d-flex justify-content-around">
+              <button class="btn btn-dark fs-5" (click)="editColor(color)">
+                ✏️
+              </button>
+              <button class="btn btn-dark fs-5" (click)="deleteColor(color)">
+                ❌
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

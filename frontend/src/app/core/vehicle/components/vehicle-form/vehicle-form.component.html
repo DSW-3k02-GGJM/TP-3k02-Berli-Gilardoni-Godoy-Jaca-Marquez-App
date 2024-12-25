@@ -1,0 +1,210 @@
+<mat-card
+  *ngIf="displayedMessage"
+  class="bg-dark border border-white text-white text-center fs-4 mt-4 w-100"
+>
+  <mat-card-content>
+    {{ displayedMessage }}
+  </mat-card-content>
+</mat-card>
+<div *ngIf="!displayedMessage">
+  <mat-card
+    *ngIf="!hasRelatedEntities"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>
+      <p>
+        Es obligatorio tener al menos un modelo, un color y una sucursal
+        registrados...
+      </p>
+      <p class="fs-6">
+        Estos datos son necesarios para poder agregar un nuevo vehículo
+        correctamente
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <div *ngIf="hasRelatedEntities" class="container unselectable">
+    <div class="d-flex justify-content-between">
+      <div class="title">{{ title }}</div>
+      <button mat-stroked-button (click)="navigateToVehicles()">Volver</button>
+    </div>
+    <hr />
+    <div *ngIf="action === 'Edit'" class="information">
+      <div class="information-title">ID</div>
+      <div class="information-content">
+        <span>{{ currentVehicleId }}</span>
+      </div>
+    </div>
+    <hr *ngIf="action === 'Edit'" />
+    <div class="content">
+      <form
+        [formGroup]="vehicleForm"
+        (ngSubmit)="onSubmit()"
+        autocomplete="off"
+      >
+        <div class="user-details">
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Patente</mat-label>
+            <input
+              matInput
+              id="licensePlate"
+              class="form-control"
+              type="text"
+              formControlName="licensePlate"
+              placeholder=""
+            />
+            <mat-error
+              *ngIf="vehicleForm.get('licensePlate')?.errors?.entityNameExists"
+            >
+              Esta patente ya está siendo usada.
+            </mat-error>
+            <mat-error
+              *ngIf="vehicleForm.get('licensePlate')?.errors?.required"
+            >
+              La patente es requerida.
+            </mat-error>
+            <mat-error
+              *ngIf="vehicleForm.get('licensePlate')?.errors?.ARpattern"
+            >
+              La patente debe tener formato argentino.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Año de Fabricación</mat-label>
+            <input
+              matInput
+              id="manufacturingYear"
+              class="form-control"
+              type="number"
+              formControlName="manufacturingYear"
+              placeholder="1900"
+              min="1900"
+            />
+            <mat-error
+              *ngIf="vehicleForm.get('manufacturingYear')?.errors?.required"
+            >
+              El año de fabricación es obligatorio.
+            </mat-error>
+            <mat-error
+              *ngIf="vehicleForm.get('manufacturingYear')?.errors?.min"
+            >
+              El año de fabricación debe ser 1900 o posterior.
+            </mat-error>
+            <mat-error
+              *ngIf="vehicleForm.get('manufacturingYear')?.errors?.max"
+            >
+              El año de fabricación no puede ser del futuro.
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Km Recorridos</mat-label>
+            <input
+              matInput
+              id="totalKms"
+              class="form-control"
+              type="number"
+              formControlName="totalKms"
+              placeholder="0"
+              min="0"
+            />
+            <mat-error *ngIf="vehicleForm.get('totalKms')?.errors?.required">
+              Los km recorridos son requeridos.
+            </mat-error>
+            <mat-error *ngIf="vehicleForm.get('totalKms')?.errors?.min">
+              No puede recorrer distancia negativa.
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Modelo</mat-label>
+            <mat-select id="vehicleModel" formControlName="vehicleModel">
+              <mat-option
+                *ngFor="let vehicleModel of vehicleModels"
+                [value]="vehicleModel.id"
+              >
+                {{
+                  vehicleModel.brand.brandName +
+                    " " +
+                    vehicleModel.vehicleModelName
+                }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error
+              *ngIf="vehicleForm.get('vehicleModel')?.errors?.required"
+            >
+              El modelo es requerido.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Color</mat-label>
+            <mat-select id="color" formControlName="color">
+              <mat-option *ngFor="let color of colors" [value]="color.id">
+                {{ color.colorName }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="vehicleForm.get('color')?.errors?.required">
+              El color es requerido.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>Sucursal</mat-label>
+            <mat-select id="location" formControlName="location">
+              <mat-option
+                *ngFor="let location of locations"
+                [value]="location.id"
+              >
+                {{ location.locationName }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="vehicleForm.get('location')?.errors?.required">
+              La sucursal es requerida.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <mat-error *ngIf="errorMessage">
+          {{ errorMessage }}
+        </mat-error>
+        <div class="button">
+          <button type="submit" [disabled]="vehicleForm.pending">
+            <ng-container
+              *ngIf="!vehicleForm.pending && !pending; else loading"
+            >
+              {{ buttonText }}
+            </ng-container>
+            <ng-template #loading>
+              <mat-spinner diameter="30"></mat-spinner>
+            </ng-template>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

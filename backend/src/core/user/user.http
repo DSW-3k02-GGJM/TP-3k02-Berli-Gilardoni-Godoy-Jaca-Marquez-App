@@ -1,0 +1,114 @@
+### REGISTER 1
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+    "documentType": "DNI",
+    "documentID": "36547689",
+    "userName": "Juan",
+    "userSurname": "Perez",
+    "birthDate": "1998-09-24",
+    "address": "Corrientes 1376",
+    "phoneNumber": "3414365769",
+    "nationality": "Argentina",
+
+    "email": "juanperez@gmail.com",
+    "password": "juan123",
+    "role": "employee",
+    "verified": "false",
+}
+
+### PUT (UPDATE)
+PUT http://localhost:3000/api/users/1
+Content-Type: application/json
+
+{
+    "documentType": "DNI",
+    "documentID": "36547689",
+    "userName": "Juan",
+    "userSurname": "Perez",
+    "birthDate": "1998-09-24",
+    "address": "Corrientes 1376",
+    "phoneNumber": "3414365769",
+    "nationality": "Argentina",
+
+    "email": "juanperez24@gmail.com",
+    "password": "juan1234",
+    "role": "employee",
+    "verified": "true",
+}
+
+### LOGIN
+POST http://localhost:3000/api/users/login
+
+{
+    "email": "juanperez24@gmail.com",
+    "password": "juan1234"
+}
+
+### LOGOUT
+POST http://localhost:3000/api/users/logout
+
+### SEND EMAIL
+POST http://localhost:3000/api/users/send-email/matiastmarquez@gmail.com
+Content-Type: application/json
+
+{
+    "subject": "Test Subject",
+    "message": "Test Message"
+}
+
+### SEND EMAIL VERIFICATION
+POST http://localhost:3000/api/users/send-email-verification/matiastmarquez@gmail.com
+
+### CHECK IF THE USER IS AUTHENTICATED
+POST http://localhost:3000/api/users/is-authenticated
+
+### GET ONE
+http://localhost:3000/api/users/1
+
+### REGISTER 2
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+    "documentType": "Pasaporte",
+    "documentID": "AAF523658",
+    "userName": "Lorena",
+    "userSurname": "Gomez",
+    "birthDate": "1991-08-03",
+    "address": "Pellegrini 1182",
+    "phoneNumber": "3416768349",
+    "nationality": "Argentina",
+
+    "email": "lorenagomez@gmail.com",
+    "password": "lorena321",
+    "role": "client",
+    "verified": "false",
+}
+
+### REGISTER 3 (to DELETE)
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+    "documentType": "DNI",
+    "documentID": "23132657",
+    "userName": "Rodrigo",
+    "userSurname": "Gutierrez",
+    "birthDate": "1973-03-23",
+    "address": "Italia 947",
+    "phoneNumber": "341326583",
+    "nationality": "Argentina",
+
+    "email": "rodrigo.gutierrez@gmail.com",
+    "password": "rodrigo987",
+    "role": "client",
+    "verified": "false",
+}
+
+### GET ALL
+http://localhost:3000/api/users
+
+### DELETE
+DELETE http://localhost:3000/api/users/3

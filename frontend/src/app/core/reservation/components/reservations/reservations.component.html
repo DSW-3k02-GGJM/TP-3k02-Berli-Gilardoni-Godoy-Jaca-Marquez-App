@@ -1,0 +1,13 @@
+<div class="text-white">
+  <div class="d-flex justify-content-between pt-3 me-5">
+    <h2 class="title">Nuestras reservas</h2>
+    <button class="btn btn-primary" (click)="newReservation()">+ Nueva</button>
+  </div>
+  <section class="reservations-list mt-3 mx-5">
+    <app-reservations-table
+      [reservations]="reservations"
+      [errorMessage]="errorMessage"
+      (reservationDeleted)="onReservationDeleted($event)"
+    ></app-reservations-table>
+  </section>
+</div>

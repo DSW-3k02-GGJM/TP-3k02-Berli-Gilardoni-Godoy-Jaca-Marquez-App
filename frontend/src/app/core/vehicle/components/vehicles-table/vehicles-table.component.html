@@ -1,0 +1,79 @@
+<div class="tables-div">
+  <mat-card
+    *ngIf="errorMessage"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>
+      {{ errorMessage }}
+    </mat-card-content>
+  </mat-card>
+  <mat-card
+    *ngIf="!errorMessage && vehicles.length === 0"
+    class="bg-dark border border-white text-white text-center fs-4 mt-4"
+  >
+    <mat-card-content>No hay vehículos registrados</mat-card-content>
+  </mat-card>
+  <div *ngIf="!errorMessage && vehicles.length > 0">
+    <mat-form-field class="input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Patente...</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="filterRows"
+        name="filterPost"
+        placeholder=""
+      />
+    </mat-form-field>
+    <mat-card
+      *ngIf="filteredVehicles.length === 0"
+      class="bg-dark border border-white text-white text-center fs-4 mt-2"
+    >
+      <mat-card-content
+        >🔍 No se encontraron resultados para la búsqueda</mat-card-content
+      >
+    </mat-card>
+    <table
+      *ngIf="filteredVehicles.length > 0"
+      class="table table-dark table-hover table-bordered table-sm border border-white text-center"
+    >
+      <thead>
+        <tr class="text-danger">
+          <th>Patente</th>
+          <th>Año de Fabricación</th>
+          <th>Km Recorridos</th>
+          <th>Modelo</th>
+          <th>Color</th>
+          <th>Sucursal</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let vehicle of vehicles | filter : filterRows : 'licensePlate'
+          "
+        >
+          <td>{{ vehicle.licensePlate }}</td>
+          <td>{{ vehicle.manufacturingYear }}</td>
+          <td>{{ vehicle.totalKms }}</td>
+          <td>{{ vehicle.vehicleModel.vehicleModelName }}</td>
+          <td>{{ vehicle.color.colorName }}</td>
+          <td>{{ vehicle.location.locationName }}</td>
+          <td class="actions-column">
+            <div class="d-flex justify-content-around">
+              <button class="btn btn-dark fs-5" (click)="editVehicle(vehicle)">
+                ✏️
+              </button>
+              <button
+                class="btn btn-dark fs-5"
+                (click)="deleteVehicle(vehicle)"
+              >
+                ❌
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+### POST 1
+POST http://localhost:3000/api/brands
+Content-Type: application/json
+
+{
+  "brandName": "Toyota"
+}
+
+### GET ONE
+GET http://localhost:3000/api/brands/1
+
+### PUT
+PUT http://localhost:3000/api/brands/1
+Content-Type: application/json
+
+{
+  "brandName": "Renault"
+}
+
+### POST 2
+POST http://localhost:3000/api/brands
+Content-Type: application/json
+
+{
+  "brandName": "Honda"
+}
+
+### POST 3 (to DELETE)
+POST http://localhost:3000/api/brands
+Content-Type: application/json
+
+{
+  "brandName": "Chevrolet"
+}
+
+### GET ALL
+GET http://localhost:3000/api/brands
+
+### DELETE
+DELETE http://localhost:3000/api/brands/3

@@ -1,0 +1,31 @@
+<div class="container unselectable">
+  <div class="content" *ngIf="status === 'success'" [@statusChange]="status">
+    <img src="assets/checkmark.png" alt="checkmark" />
+    <p class="title">Su cuenta ha sido verificada</p>
+    <div class="button">
+      <button (click)="router.navigate(['/login'])">Aceptar</button>
+    </div>
+  </div>
+  <div class="content" *ngIf="status === 'error'" [@statusChange]="status">
+    <img src="assets/wrongmark.png" alt="wrongmark" />
+    <p class="title">Verificación incorrecta o expirada</p>
+    <div class="button">
+      <button (click)="router.navigate(['/login'])">Aceptar</button>
+    </div>
+  </div>
+  <div
+    class="content"
+    *ngIf="status === 'commonError'"
+    [@statusChange]="status"
+  >
+    <img src="assets/wrongmark.png" alt="wrongmark" />
+    <p class="title">Error en el servidor</p>
+    <div class="button">
+      <button (click)="router.navigate(['/login'])">Aceptar</button>
+    </div>
+  </div>
+  <div class="content" *ngIf="status === 'loading'" [@statusChange]="status">
+    <mat-spinner diameter="150"></mat-spinner>
+    <p class="title">Verificando...</p>
+  </div>
+</div>
