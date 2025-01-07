@@ -45,21 +45,7 @@ const sanitizedBrandInput = async (
 
 const findAll = async (req: Request, res: Response) => {
   try {
-    const brands = await em.find(
-      Brand,
-      {},
-      {
-        populate: [
-          'vehicleModels',
-          'vehicleModels.category',
-          'vehicleModels.vehicles',
-          'vehicleModels.vehicles.color',
-          'vehicleModels.vehicles.location',
-          'vehicleModels.vehicles.reservations',
-          'vehicleModels.vehicles.reservations.user',
-        ],
-      }
-    );
+    const brands = await em.find(Brand, {});
     res
       .status(200)
       .json({ message: 'All brands have been found', data: brands });
@@ -71,21 +57,7 @@ const findAll = async (req: Request, res: Response) => {
 const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const brand = await em.findOne(
-      Brand,
-      { id },
-      {
-        populate: [
-          'vehicleModels',
-          'vehicleModels.category',
-          'vehicleModels.vehicles',
-          'vehicleModels.vehicles.color',
-          'vehicleModels.vehicles.location',
-          'vehicleModels.vehicles.reservations',
-          'vehicleModels.vehicles.reservations.user',
-        ],
-      }
-    );
+    const brand = await em.findOne(Brand, { id });
     if (!brand) {
       res.status(404).json({ message: 'The brand does not exist' });
     } else {

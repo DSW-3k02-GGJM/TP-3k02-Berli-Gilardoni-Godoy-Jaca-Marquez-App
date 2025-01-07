@@ -143,7 +143,7 @@ const findAll = async (req: Request, res: Response) => {
       Vehicle,
       {},
       {
-        populate: ['location', 'color', 'vehicleModel'],
+        populate: ['color', 'location', 'vehicleModel.brand'],
       }
     );
     res
@@ -161,15 +161,7 @@ const findOne = async (req: Request, res: Response) => {
       Vehicle,
       { id },
       {
-        populate: [
-          'location',
-          'color',
-          'vehicleModel',
-          'vehicleModel.category',
-          'vehicleModel.brand',
-          'reservations',
-          'reservations.user',
-        ],
+        populate: ['color', 'location', 'vehicleModel.brand'],
       }
     );
     if (!vehicle) {
@@ -251,20 +243,14 @@ const findAvailable = async (req: Request, res: Response) => {
 
     // Find active reservations that overlap with the
     // date range indicated in the request filter
-    const reservations = await em.find(
-      Reservation,
-      {
-        $and: [
-          { realEndDate: null },
-          { cancellationDate: null },
-          { startDate: { $lte: filter.endDate } },
-          { plannedEndDate: { $gte: filter.startDate } },
-        ],
-      },
-      {
-        populate: ['vehicle'],
-      }
-    );
+    const reservations = await em.find(Reservation, {
+      $and: [
+        { realEndDate: null },
+        { cancellationDate: null },
+        { startDate: { $lte: filter.endDate } },
+        { plannedEndDate: { $gte: filter.startDate } },
+      ],
+    });
 
     // Build a filter for vehicles, searching for those
     // that are from the location specified in the request filter,
@@ -282,12 +268,7 @@ const findAvailable = async (req: Request, res: Response) => {
 
     // Find the vehicles that meet the previous filter (vehicleFilters)
     const vehicles = await em.find(Vehicle, vehicleFilters, {
-      populate: [
-        'location',
-        'vehicleModel',
-        'vehicleModel.category',
-        'vehicleModel.brand',
-      ],
+      populate: ['location', 'vehicleModel.brand', 'vehicleModel.category'],
     });
 
     // Build a "Dictionary" where the key is the model name and the

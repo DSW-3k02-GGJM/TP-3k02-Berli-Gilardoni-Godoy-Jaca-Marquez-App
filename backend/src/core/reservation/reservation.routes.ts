@@ -4,7 +4,6 @@ import { Router } from 'express';
 // Controllers
 import {
   getReservationsByUser,
-  findOne,
   findAll,
   sanitizedAdminReservationInput,
   add,
@@ -24,12 +23,6 @@ reservationRouter.get(
   '/user-reservations',
   AuthService.isAuthenticated(['client']),
   getReservationsByUser
-);
-
-reservationRouter.get(
-  '/:id',
-  AuthService.isAuthenticated(['admin', 'employee']),
-  findOne
 );
 
 reservationRouter.get(

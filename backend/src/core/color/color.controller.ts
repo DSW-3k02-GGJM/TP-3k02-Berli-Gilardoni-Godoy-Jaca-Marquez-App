@@ -45,21 +45,7 @@ const sanitizedColorInput = async (
 
 const findAll = async (req: Request, res: Response) => {
   try {
-    const colors = await em.find(
-      Color,
-      {},
-      {
-        populate: [
-          'vehicles',
-          'vehicles.location',
-          'vehicles.vehicleModel',
-          'vehicles.vehicleModel.category',
-          'vehicles.vehicleModel.brand',
-          'vehicles.reservations',
-          'vehicles.reservations.user',
-        ],
-      }
-    );
+    const colors = await em.find(Color, {});
     res
       .status(200)
       .json({ message: 'All colors have been found', data: colors });
@@ -71,21 +57,7 @@ const findAll = async (req: Request, res: Response) => {
 const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const color = await em.findOne(
-      Color,
-      { id },
-      {
-        populate: [
-          'vehicles',
-          'vehicles.location',
-          'vehicles.vehicleModel',
-          'vehicles.vehicleModel.category',
-          'vehicles.vehicleModel.brand',
-          'vehicles.reservations',
-          'vehicles.reservations.user',
-        ],
-      }
-    );
+    const color = await em.findOne(Color, { id });
     if (!color) {
       return res.status(404).json({ message: 'The color does not exist' });
     } else {

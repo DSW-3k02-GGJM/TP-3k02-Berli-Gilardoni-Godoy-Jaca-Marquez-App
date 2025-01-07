@@ -130,51 +130,13 @@ const findAll = async (req: Request, res: Response) => {
       Reservation,
       {},
       {
-        populate: [
-          'user',
-          'vehicle',
-          'vehicle.location',
-          'vehicle.color',
-          'vehicle.vehicleModel',
-          'vehicle.vehicleModel.category',
-          'vehicle.vehicleModel.brand',
-        ],
+        populate: ['user', 'vehicle.vehicleModel.category'],
       }
     );
     res.status(200).json({
       message: 'All reservations have been found',
       data: reservations,
     });
-  } catch (error: any) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-const findOne = async (req: Request, res: Response) => {
-  try {
-    const id = Number.parseInt(req.params.id);
-    const reservation = await em.findOne(
-      Reservation,
-      { id },
-      {
-        populate: [
-          'user',
-          'vehicle',
-          'vehicle.location',
-          'vehicle.color',
-          'vehicle.vehicleModel',
-          'vehicle.vehicleModel.category',
-          'vehicle.vehicleModel.brand',
-        ],
-      }
-    );
-    if (!reservation) {
-      res.status(404).json({ message: 'The reservation does not exist' });
-    } else {
-      res
-        .status(200)
-        .json({ message: 'The reservation has been found', data: reservation });
-    }
   } catch (error: any) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -252,6 +214,7 @@ const userReservation = async (req: Request, res: Response) => {
       sent: false,
       reservation,
     });
+
     await em.flush();
     res.status(201).end();
   } catch (error: any) {
@@ -266,10 +229,8 @@ const getReservationsByUser = async (req: Request, res: Response) => {
       { user: req.session.user.id },
       {
         populate: [
-          'vehicle',
-          'vehicle.vehicleModel',
-          'vehicle.vehicleModel.category',
           'vehicle.vehicleModel.brand',
+          'vehicle.vehicleModel.category',
         ],
       }
     );
@@ -287,7 +248,6 @@ export {
   sanitizedUserReservationInput,
   sanitizedUpdateReservationInput,
   findAll,
-  findOne,
   add,
   update,
   remove,

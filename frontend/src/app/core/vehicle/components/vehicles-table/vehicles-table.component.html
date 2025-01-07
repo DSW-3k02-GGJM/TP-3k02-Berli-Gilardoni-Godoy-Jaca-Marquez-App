@@ -56,7 +56,13 @@
           <td>{{ vehicle.licensePlate }}</td>
           <td>{{ vehicle.manufacturingYear }}</td>
           <td>{{ vehicle.totalKms }}</td>
-          <td>{{ vehicle.vehicleModel.vehicleModelName }}</td>
+          <td>
+            {{
+              vehicle.vehicleModel.brand.brandName +
+                " " +
+                vehicle.vehicleModel.vehicleModelName
+            }}
+          </td>
           <td>{{ vehicle.color.colorName }}</td>
           <td>{{ vehicle.location.locationName }}</td>
           <td class="actions-column">

@@ -129,8 +129,6 @@ const sanitizedUserInput = async (
 
   const email = req.body.sanitizedInput.email;
   const password = req.body.sanitizedInput.password;
-  const role = req.body.sanitizedInput.role;
-  const verified = req.body.sanitizedInput.verified;
 
   if (
     !documentType ||
@@ -197,6 +195,29 @@ const sanitizedPartialUpdateInput = async (
   next();
 };
 
+const findAll = async (req: Request, res: Response) => {
+  try {
+    const users = await em.find(User, {});
+    res.status(200).json({ message: 'All users have been found', data: users });
+  } catch (error: any) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const findOne = async (req: Request, res: Response) => {
+  try {
+    const id = Number.parseInt(req.params.id);
+    const user = await em.findOne(User, { id });
+    if (!user) {
+      res.status(404).json({ message: 'The user does not exist' });
+    } else {
+      res.status(200).json({ message: 'The user has been found', data: user });
+    }
+  } catch (error: any) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 const add = async (req: Request, res: Response) => {
   const password = req.body.sanitizedInput.password;
   const role = req.body.sanitizedInput.role;
@@ -219,29 +240,6 @@ const add = async (req: Request, res: Response) => {
     });
     await em.flush();
     res.status(201).end();
-  } catch (error: any) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-const findAll = async (req: Request, res: Response) => {
-  try {
-    const users = await em.find(User, {});
-    res.status(200).json({ message: 'All users have been found', data: users });
-  } catch (error: any) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-const findOne = async (req: Request, res: Response) => {
-  try {
-    const id = Number.parseInt(req.params.id);
-    const user = await em.findOne(User, { id });
-    if (!user) {
-      res.status(404).json({ message: 'The user does not exist' });
-    } else {
-      res.status(200).json({ message: 'The user has been found', data: user });
-    }
   } catch (error: any) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -338,7 +336,7 @@ const login = async (req: Request, res: Response) => {
       return res.status(403).json({ message: 'Email not verified' });
     }
 
-    const token = AuthService.generateToken(user, SECRET_KEY, '1h'); // Crea un token y lo asocia al usuario
+    const token = AuthService.generateToken(user, SECRET_KEY, '1h'); // Creates a token and associates it with the user
     res
       .cookie('access_token', token, {
         httpOnly: true, // Only accessible from the server

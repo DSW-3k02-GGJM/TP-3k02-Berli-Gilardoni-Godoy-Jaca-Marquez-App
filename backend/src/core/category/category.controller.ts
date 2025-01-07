@@ -57,21 +57,7 @@ const sanitizedCategoryInput = async (
 
 const findAll = async (req: Request, res: Response) => {
   try {
-    const categories = await em.find(
-      Category,
-      {},
-      {
-        populate: [
-          'vehicleModels',
-          'vehicleModels.brand',
-          'vehicleModels.vehicles',
-          'vehicleModels.vehicles.color',
-          'vehicleModels.vehicles.location',
-          'vehicleModels.vehicles.reservations',
-          'vehicleModels.vehicles.reservations.user',
-        ],
-      }
-    );
+    const categories = await em.find(Category, {});
     res
       .status(200)
       .json({ message: 'All categories have been found', data: categories });
@@ -83,21 +69,7 @@ const findAll = async (req: Request, res: Response) => {
 const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const category = await em.findOne(
-      Category,
-      { id },
-      {
-        populate: [
-          'vehicleModels',
-          'vehicleModels.brand',
-          'vehicleModels.vehicles',
-          'vehicleModels.vehicles.color',
-          'vehicleModels.vehicles.location',
-          'vehicleModels.vehicles.reservations',
-          'vehicleModels.vehicles.reservations.user',
-        ],
-      }
-    );
+    const category = await em.findOne(Category, { id });
     if (!category) {
       res.status(404).json({ message: 'The category does not exist' });
     } else {

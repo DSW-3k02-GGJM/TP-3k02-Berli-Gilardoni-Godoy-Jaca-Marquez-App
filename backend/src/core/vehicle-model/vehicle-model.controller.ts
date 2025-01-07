@@ -72,15 +72,7 @@ const findAll = async (req: Request, res: Response) => {
       VehicleModel,
       {},
       {
-        populate: [
-          'category',
-          'brand',
-          'vehicles',
-          'vehicles.location',
-          'vehicles.color',
-          'vehicles.reservations',
-          'vehicles.reservations.user',
-        ],
+        populate: ['brand', 'category'],
       }
     );
     res.status(200).json({
@@ -99,15 +91,7 @@ const findOne = async (req: Request, res: Response) => {
       VehicleModel,
       { id },
       {
-        populate: [
-          'category',
-          'brand',
-          'vehicles',
-          'vehicles.location',
-          'vehicles.color',
-          'vehicles.reservations',
-          'vehicles.reservations.user',
-        ],
+        populate: ['brand', 'category'],
       }
     );
     if (!vehicleModel) {

@@ -25,7 +25,6 @@ export class ScheduleService {
       {
         populate: [
           'reservation.user',
-          'reservation.vehicle.vehicleModel',
           'reservation.vehicle.vehicleModel.brand',
         ],
       }

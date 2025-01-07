@@ -49,21 +49,7 @@ const sanitizedLocationInput = async (
 
 const findAll = async (req: Request, res: Response) => {
   try {
-    const locations = await em.find(
-      Location,
-      {},
-      {
-        populate: [
-          'vehicles',
-          'vehicles.color',
-          'vehicles.vehicleModel',
-          'vehicles.vehicleModel.category',
-          'vehicles.vehicleModel.brand',
-          'vehicles.reservations',
-          'vehicles.reservations.user',
-        ],
-      }
-    );
+    const locations = await em.find(Location, {});
     res
       .status(200)
       .json({ message: 'All locations have been found', data: locations });
@@ -75,21 +61,7 @@ const findAll = async (req: Request, res: Response) => {
 const findOne = async (req: Request, res: Response) => {
   try {
     const id = Number.parseInt(req.params.id);
-    const location = await em.findOne(
-      Location,
-      { id },
-      {
-        populate: [
-          'vehicles',
-          'vehicles.color',
-          'vehicles.vehicleModel',
-          'vehicles.vehicleModel.category',
-          'vehicles.vehicleModel.brand',
-          'vehicles.reservations',
-          'vehicles.reservations.user',
-        ],
-      }
-    );
+    const location = await em.findOne(Location, { id });
     if (!location) {
       res.status(404).json({ message: 'The location does not exist' });
     } else {

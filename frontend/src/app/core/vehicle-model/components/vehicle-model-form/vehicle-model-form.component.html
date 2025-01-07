@@ -122,6 +122,22 @@
             appearance="outline"
             hideRequiredMarker="true"
           >
+            <mat-label>Marca</mat-label>
+            <mat-select id="brand" formControlName="brand">
+              <mat-option *ngFor="let brand of brands" [value]="brand.id">
+                {{ brand.brandName }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="vehicleModelForm.get('brand')?.errors?.required">
+              La marca es requerida.
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
             <mat-label>Categoría</mat-label>
             <mat-select id="category" formControlName="category">
               <mat-option
@@ -136,22 +152,6 @@
               *ngIf="vehicleModelForm.get('category')?.errors?.required"
             >
               La categoría es requerida.
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field
-            class="input-box"
-            appearance="outline"
-            hideRequiredMarker="true"
-          >
-            <mat-label>Marca</mat-label>
-            <mat-select id="brand" formControlName="brand">
-              <mat-option *ngFor="let brand of brands" [value]="brand.id">
-                {{ brand.brandName }}
-              </mat-option>
-            </mat-select>
-
-            <mat-error *ngIf="vehicleModelForm.get('brand')?.errors?.required">
-              La marca es requerida.
             </mat-error>
           </mat-form-field>
         </div>
