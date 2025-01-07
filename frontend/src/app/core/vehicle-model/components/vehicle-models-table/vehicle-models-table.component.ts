@@ -2,6 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 // Angular Material
@@ -45,8 +46,9 @@ export class VehicleModelsTableComponent {
 
   constructor(
     private apiService: ApiService,
-    private dialog: MatDialog,
     private snackBarService: SnackBarService,
+    private httpClient: HttpClient,
+    private dialog: MatDialog,
     private router: Router
   ) {}
 
@@ -68,11 +70,16 @@ export class VehicleModelsTableComponent {
       next: (result) => {
         if (result) {
           this.apiService.delete('vehicle-models', Number(id)).subscribe({
-            next: () => {
-              this.vehicleModelDeleted.emit(id);
-              this.snackBarService.show(
-                'El modelo ha sido eliminado exitosamente'
-              );
+            next: (response) => {
+              const imagePath = response.data;
+              this.httpClient.delete(`/api/upload/${imagePath}`).subscribe({
+                next: () => {
+                  this.vehicleModelDeleted.emit(id);
+                  this.snackBarService.show(
+                    'El modelo ha sido eliminado exitosamente'
+                  );
+                },
+              });
             },
             error: (error) => {
               if (error.status === 400) {

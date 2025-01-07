@@ -42,7 +42,10 @@
         {{ errorMessage }}
       </mat-error>
       <div class="button">
-        <button type="submit" [disabled]="colorForm.pending">
+        <button
+          type="submit"
+          [disabled]="colorForm.invalid || colorForm.pending"
+        >
           <ng-container *ngIf="!colorForm.pending && !pending; else loading">
             {{ buttonText }}
           </ng-container>

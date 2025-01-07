@@ -74,7 +74,7 @@ export class VehicleFormComponent implements OnInit {
       color: new FormControl('', [Validators.required]),
       location: new FormControl('', [Validators.required]),
     },
-    { updateOn: 'submit' }
+    { updateOn: 'blur' }
   );
 
   constructor(

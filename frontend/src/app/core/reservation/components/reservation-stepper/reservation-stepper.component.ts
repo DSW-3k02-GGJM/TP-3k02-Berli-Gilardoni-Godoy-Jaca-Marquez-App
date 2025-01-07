@@ -110,7 +110,7 @@ export class ReservationStepperComponent implements OnInit {
     },
     {
       validators:
-        this.reservationDatesValidationService.validateReservationDates(
+        this.reservationDatesValidationService.reservationDatesValidation(
           'startDate',
           'plannedEndDate'
         ),

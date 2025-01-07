@@ -24,6 +24,7 @@ import { AuthService } from '@shared/services/auth/auth.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 import { FormatDateService } from '@shared/services/utils/format-date.service';
 import { UserAgeValidationService } from '@shared/services/validations/user-age-validation.service';
+import { EmailValidationService } from '@shared/services/validations/email-validation.service.js';
 
 @Component({
   selector: 'app-user-form',
@@ -81,7 +82,7 @@ export class UserFormComponent implements OnInit {
       ]),
       birthDate: new FormControl('', [
         Validators.required,
-        this.userAgeValidationService.validateUserAge('birthDate'),
+        this.userAgeValidationService.userAgeValidation('birthDate'),
       ]),
       address: new FormControl('', [Validators.required]),
       phoneNumber: new FormControl('', [
@@ -93,7 +94,7 @@ export class UserFormComponent implements OnInit {
       verified: new FormControl(false, [Validators.required]),
     },
     {
-      validators: this.userAgeValidationService.validateUserAge('birthDate'),
+      validators: this.userAgeValidationService.userAgeValidation('birthDate'),
       updateOn: 'blur',
     }
   );
@@ -103,6 +104,7 @@ export class UserFormComponent implements OnInit {
     private snackBarService: SnackBarService,
     private formatDateService: FormatDateService,
     private userAgeValidationService: UserAgeValidationService,
+    private emailValidationService: EmailValidationService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
@@ -144,7 +146,10 @@ export class UserFormComponent implements OnInit {
             'email',
             new FormControl(
               '',
-              [Validators.required, Validators.email],
+              [
+                Validators.required,
+                this.emailValidationService.emailValidation(),
+              ],
               [this.authService.uniqueEmailValidator()]
             )
           );

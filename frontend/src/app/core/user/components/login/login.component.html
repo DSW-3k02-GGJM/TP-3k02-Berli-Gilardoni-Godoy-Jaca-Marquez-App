@@ -26,11 +26,10 @@
           <mat-error *ngIf="loginForm.get('email')?.errors?.required">
             El email es requerido.
           </mat-error>
-          <mat-error *ngIf="loginForm.get('email')?.errors?.email">
-            El email no es un email válido.
+          <mat-error *ngIf="loginForm.get('email')?.errors?.invalidEmail">
+            El email no tiene un formato válido.
           </mat-error>
         </mat-form-field>
-
         <mat-form-field
           class="input-box"
           appearance="outline"
@@ -69,7 +68,10 @@
       </mat-error>
 
       <div class="button">
-        <button type="submit" [disabled]="loginForm.pending">
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid || loginForm.pending"
+        >
           <ng-container *ngIf="!loginForm.pending && !pending; else loading">
             Ingresar
           </ng-container>

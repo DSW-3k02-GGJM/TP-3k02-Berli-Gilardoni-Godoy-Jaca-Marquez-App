@@ -62,7 +62,7 @@ export class LocationFormComponent implements OnInit {
         Validators.minLength(7),
       ]),
     },
-    { updateOn: 'submit' }
+    { updateOn: 'blur' }
   );
 
   ngOnInit(): void {

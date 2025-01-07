@@ -83,7 +83,7 @@ const sanitizedLoginInput = (
     res.status(400).json({ message: 'Email and password are required' });
   }
 
-  if (!email.includes('@') || !email.includes('.')) {
+  if (!isValidEmailFormat(email)) {
     return res.status(400).json({ message: 'Email is not valid' });
   }
 
@@ -145,13 +145,13 @@ const sanitizedUserInput = async (
     return res.status(400).json({ message: 'All information is required' });
   }
 
+  if (!isValidEmailFormat(email)) {
+    return res.status(400).json({ message: 'Email is not valid' });
+  }
+
   const userEmail = await em.findOne(User, { email });
   if (userEmail) {
     return res.status(400).json({ message: 'This email is already used' });
-  }
-
-  if (!email.includes('@') || !email.includes('.')) {
-    return res.status(400).json({ message: 'Email is not valid' });
   }
 
   const userDocID = await em.findOne(User, { documentID });
@@ -193,6 +193,11 @@ const sanitizedPartialUpdateInput = async (
   });
 
   next();
+};
+
+const isValidEmailFormat = (email: string): boolean => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
 };
 
 const findAll = async (req: Request, res: Response) => {

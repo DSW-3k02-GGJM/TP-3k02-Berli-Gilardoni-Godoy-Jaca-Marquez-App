@@ -91,7 +91,10 @@
         {{ errorMessage }}
       </mat-error>
       <div class="button">
-        <button type="submit" [disabled]="locationForm.pending">
+        <button
+          type="submit"
+          [disabled]="locationForm.invalid || locationForm.pending"
+        >
           <ng-container *ngIf="!locationForm.pending && !pending; else loading">
             {{ buttonText }}
           </ng-container>

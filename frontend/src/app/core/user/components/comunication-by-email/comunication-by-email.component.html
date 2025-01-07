@@ -166,7 +166,10 @@
         </mat-error>
         <button mat-button matStepperPrevious class="mb-3">Volver</button>
         <div class="button">
-          <button type="submit" [disabled]="emailForm.pending">
+          <button
+            type="submit"
+            [disabled]="emailForm.invalid || emailForm.pending"
+          >
             <ng-container *ngIf="!emailForm.pending && !pending; else loading">
               Enviar email
             </ng-container>

@@ -47,9 +47,13 @@ export class NavbarComponent implements OnInit {
           },
         });
 
-        this.authService.checkEmployee().subscribe({
-          next: () => {
-            this.isAdminOrEmployee = true;
+        this.authService.getAuthenticatedRole().subscribe({
+          next: (response) => {
+            this.isAdminOrEmployee =
+              response.role === 'employee' || response.role === 'admin';
+          },
+          error: () => {
+            this.isAdminOrEmployee = false;
           },
         });
       },

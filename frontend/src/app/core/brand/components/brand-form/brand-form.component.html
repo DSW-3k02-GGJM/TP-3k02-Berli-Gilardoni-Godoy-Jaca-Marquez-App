@@ -45,7 +45,10 @@
         {{ errorMessage }}
       </mat-error>
       <div class="button">
-        <button type="submit" [disabled]="brandForm.pending">
+        <button
+          type="submit"
+          [disabled]="brandForm.invalid || brandForm.pending"
+        >
           <ng-container *ngIf="!brandForm.pending && !pending; else loading">
             {{ buttonText }}
           </ng-container>

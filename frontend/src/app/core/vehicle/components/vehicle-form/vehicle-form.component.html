@@ -193,7 +193,10 @@
           {{ errorMessage }}
         </mat-error>
         <div class="button">
-          <button type="submit" [disabled]="vehicleForm.pending">
+          <button
+            type="submit"
+            [disabled]="vehicleForm.invalid || vehicleForm.pending"
+          >
             <ng-container
               *ngIf="!vehicleForm.pending && !pending; else loading"
             >

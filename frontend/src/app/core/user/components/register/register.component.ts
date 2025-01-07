@@ -21,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 // Services
 import { AuthService } from '@shared/services/auth/auth.service';
 import { UserAgeValidationService } from '@shared/services/validations/user-age-validation.service';
+import { EmailValidationService } from '@shared/services/validations/email-validation.service.js';
 
 // Components
 import { GenericSuccessDialogComponent } from '@shared/components/generic-success-dialog/generic-success-dialog.component';
@@ -46,12 +47,13 @@ export class RegisterComponent {
   hide: WritableSignal<boolean> = signal(true);
 
   errorMessage: string = '';
+  pending: boolean = false;
 
   registerForm = new FormGroup(
     {
       email: new FormControl(
         '',
-        [Validators.required, Validators.email],
+        [Validators.required, this.emailValidationService.emailValidation()],
         [this.authService.uniqueEmailValidator()]
       ),
       password: new FormControl('', [Validators.required]),
@@ -65,7 +67,7 @@ export class RegisterComponent {
       userSurname: new FormControl('', [Validators.required]),
       birthDate: new FormControl('', [
         Validators.required,
-        this.userAgeValidationService.validateUserAge('birthDate'),
+        this.userAgeValidationService.userAgeValidation('birthDate'),
       ]),
       address: new FormControl('', [Validators.required]),
       phoneNumber: new FormControl('', [
@@ -76,15 +78,16 @@ export class RegisterComponent {
       nationality: new FormControl('', [Validators.required]),
     },
     {
-      validators: this.userAgeValidationService.validateUserAge('birthDate'),
+      validators: this.userAgeValidationService.userAgeValidation('birthDate'),
       updateOn: 'blur',
     }
   );
 
   constructor(
     private authService: AuthService,
-    private dialog: MatDialog,
-    private userAgeValidationService: UserAgeValidationService
+    private userAgeValidationService: UserAgeValidationService,
+    private emailValidationService: EmailValidationService,
+    private dialog: MatDialog
   ) {}
 
   clickEvent(event: MouseEvent) {
@@ -109,11 +112,14 @@ export class RegisterComponent {
 
   onSubmit() {
     if (!this.registerForm.invalid) {
+      this.pending = true;
       this.authService.register(this.registerForm.value).subscribe({
         next: () => {
+          this.pending = false;
           this.openDialog();
         },
         error: (error) => {
+          this.pending = false;
           if (error.status !== 400) {
             this.errorMessage = 'Error en el servidor. Intente de nuevo.';
           }

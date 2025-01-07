@@ -121,7 +121,7 @@ export class ReservationFormComponent implements OnInit {
     },
     {
       validators:
-        this.reservationDatesValidationService.validateReservationDates(
+        this.reservationDatesValidationService.reservationDatesValidation(
           'startDate',
           'plannedEndDate'
         ),
@@ -267,8 +267,7 @@ export class ReservationFormComponent implements OnInit {
     this.filteredUsers = this.users
       .filter(
         (user) =>
-          user.documentType === selectedDocumentType &&
-          user.documentID !== 'XXXXXXXX'
+          user.documentType === selectedDocumentType && user.role === 'client'
       )
       .sort((a: FullUser, b: FullUser) =>
         a.documentID.localeCompare(b.documentID, undefined, {

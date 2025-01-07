@@ -57,7 +57,7 @@ export class ColorFormComponent implements OnInit {
     {
       colorName: new FormControl('', [Validators.required]),
     },
-    { updateOn: 'submit' }
+    { updateOn: 'blur' }
   );
 
   ngOnInit(): void {

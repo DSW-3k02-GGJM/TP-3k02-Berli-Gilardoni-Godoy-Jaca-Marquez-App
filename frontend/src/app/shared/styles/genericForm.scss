@@ -86,11 +86,6 @@ form .button {
   margin-bottom: 10px;
 }
 
-form .button button:disabled {
-  background: #21303a;
-  cursor: default;
-}
-
 form .button button {
   display: flex;
   align-items: center;
@@ -110,6 +105,11 @@ form .button button {
 
 form .button button:hover {
   background: #21303a;
+}
+
+form .button button:disabled {
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 @media (max-width: 584px) {

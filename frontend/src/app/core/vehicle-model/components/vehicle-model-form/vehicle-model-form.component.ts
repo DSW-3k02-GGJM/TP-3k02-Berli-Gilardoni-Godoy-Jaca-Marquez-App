@@ -55,6 +55,7 @@ export class VehicleModelFormComponent implements OnInit {
   displayedMessage: string = '';
   pending: boolean = false;
 
+  oldPath: string = '';
   selectedFile: File | null = null;
 
   categories: any[] = [];
@@ -70,9 +71,9 @@ export class VehicleModelFormComponent implements OnInit {
       ]),
       category: new FormControl('', [Validators.required]),
       brand: new FormControl('', [Validators.required]),
-      imagePath: new FormControl(''),
+      imagePath: new FormControl('', [Validators.required]),
     },
-    { updateOn: 'submit' }
+    { updateOn: 'blur' }
   );
 
   constructor(
@@ -148,11 +149,12 @@ export class VehicleModelFormComponent implements OnInit {
     return this.categories.length > 0 && this.brands.length > 0;
   }
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-    }
+  onFileSelected(event: Event): void {
+    const imagePathControl = this.vehicleModelForm.get('imagePath');
+    this.oldPath = imagePathControl?.value || '';
+    const file = (event.target as HTMLInputElement)?.files?.[0] || null;
+    imagePathControl?.setValue(file?.name || '');
+    this.selectedFile = file;
   }
 
   uploadImage(file: File): Observable<string> {
@@ -171,9 +173,8 @@ export class VehicleModelFormComponent implements OnInit {
       if (this.selectedFile) {
         this.uploadImage(this.selectedFile).subscribe({
           next: (imagePath) => {
-            const oldPath = this.vehicleModelForm.get('imagePath')?.value;
             this.vehicleModelForm.patchValue({ imagePath });
-            this.submitForm(oldPath);
+            this.submitForm(this.oldPath);
           },
           error: () => {
             this.pending = false;

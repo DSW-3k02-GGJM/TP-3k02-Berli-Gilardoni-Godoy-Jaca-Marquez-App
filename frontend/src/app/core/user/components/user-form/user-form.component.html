@@ -34,14 +34,14 @@
             formControlName="email"
             placeholder="Email"
           />
-          <mat-error *ngIf="userForm.get('email')?.errors?.emailExists">
-            Este email ya está siendo usado.
-          </mat-error>
           <mat-error *ngIf="userForm.get('email')?.errors?.required">
             El email es requerido.
           </mat-error>
-          <mat-error *ngIf="userForm.get('email')?.errors?.email">
-            El email no es un email válido.
+          <mat-error *ngIf="userForm.get('email')?.errors?.invalidEmail">
+            El email no tiene un formato válido.
+          </mat-error>
+          <mat-error *ngIf="userForm.get('email')?.errors?.emailExists">
+            Este email ya está siendo usado.
           </mat-error>
         </mat-form-field>
         <mat-form-field
@@ -275,7 +275,7 @@
         {{ errorMessage }}
       </mat-error>
       <div class="button">
-        <button type="submit" [disabled]="userForm.pending">
+        <button type="submit" [disabled]="userForm.invalid || userForm.pending">
           <ng-container *ngIf="!userForm.pending && !pending; else loading">
             {{ buttonText }}
           </ng-container>

@@ -19,14 +19,14 @@
             formControlName="email"
             placeholder="Email"
           />
-          <mat-error *ngIf="registerForm.get('email')?.errors?.emailExists">
-            Este email ya está siendo usado.
-          </mat-error>
           <mat-error *ngIf="registerForm.get('email')?.errors?.required">
             El email es requerido.
           </mat-error>
-          <mat-error *ngIf="registerForm.get('email')?.errors?.email">
-            El email no es un email válido.
+          <mat-error *ngIf="registerForm.get('email')?.errors?.invalidEmail">
+            El email no tiene un formato válido.
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('email')?.errors?.emailExists">
+            Este email ya está siendo usado.
           </mat-error>
         </mat-form-field>
 
@@ -92,7 +92,7 @@
           <mat-error
             *ngIf="registerForm.get('documentID')?.errors?.documentIDExists"
           >
-            Este numero ya está siendo usado.
+            Este número ya está siendo usado.
           </mat-error>
           <mat-error *ngIf="registerForm.get('documentID')?.errors?.required">
             El número de documento es requerido.
@@ -223,8 +223,11 @@
         {{ errorMessage }}
       </mat-error>
       <div class="button">
-        <button type="submit" [disabled]="registerForm.pending">
-          <ng-container *ngIf="!registerForm.pending; else loading">
+        <button
+          type="submit"
+          [disabled]="registerForm.invalid || registerForm.pending"
+        >
+          <ng-container *ngIf="!registerForm.pending && !pending; else loading">
             Registrar
           </ng-container>
           <ng-template #loading>

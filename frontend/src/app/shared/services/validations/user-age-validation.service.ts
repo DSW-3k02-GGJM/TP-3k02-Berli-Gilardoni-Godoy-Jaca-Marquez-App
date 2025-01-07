@@ -6,7 +6,7 @@ import { AbstractControl } from '@angular/forms';
   providedIn: 'root',
 })
 export class UserAgeValidationService {
-  validateUserAge(birthDateField: string) {
+  userAgeValidation(birthDateField: string) {
     return (formGroup: AbstractControl) => {
       const birthDate = formGroup.get(birthDateField)?.value;
       const today = new Date();

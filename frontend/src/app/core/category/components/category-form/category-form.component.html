@@ -106,7 +106,10 @@
         {{ errorMessage }}
       </mat-error>
       <div class="button">
-        <button type="submit" [disabled]="categoryForm.pending">
+        <button
+          type="submit"
+          [disabled]="categoryForm.invalid || categoryForm.pending"
+        >
           <ng-container *ngIf="!categoryForm.pending && !pending; else loading">
             {{ buttonText }}
           </ng-container>

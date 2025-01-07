@@ -53,26 +53,29 @@ export class ProfileComponent implements OnInit {
   idUsuario: number = -1;
   email: string = '';
 
-  profileForm = new FormGroup({
-    documentType: new FormControl('', [Validators.required]),
-    documentID: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[0-9]*$'),
-    ]),
-    userName: new FormControl('', [Validators.required]),
-    userSurname: new FormControl('', [Validators.required]),
-    birthDate: new FormControl('', [
-      Validators.required,
-      this.userAgeValidationService.validateUserAge('birthDate'),
-    ]),
-    address: new FormControl('', [Validators.required]),
-    phoneNumber: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[0-9]*$'),
-      Validators.minLength(7),
-    ]),
-    nationality: new FormControl('', [Validators.required]),
-  });
+  profileForm = new FormGroup(
+    {
+      documentType: new FormControl('', [Validators.required]),
+      documentID: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[0-9]*$'),
+      ]),
+      userName: new FormControl('', [Validators.required]),
+      userSurname: new FormControl('', [Validators.required]),
+      birthDate: new FormControl('', [
+        Validators.required,
+        this.userAgeValidationService.userAgeValidation('birthDate'),
+      ]),
+      address: new FormControl('', [Validators.required]),
+      phoneNumber: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[0-9]*$'),
+        Validators.minLength(7),
+      ]),
+      nationality: new FormControl('', [Validators.required]),
+    },
+    { updateOn: 'blur' }
+  );
 
   constructor(
     private authService: AuthService,

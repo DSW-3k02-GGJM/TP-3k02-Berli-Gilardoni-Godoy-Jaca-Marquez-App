@@ -22,6 +22,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 // Services
 import { AuthService } from '@shared/services/auth/auth.service';
+import { MatchPasswordsValidationService } from '@shared/services/validations/match-passwords-validation.service.js';
 
 // Components
 import { GenericSuccessDialogComponent } from '@shared/components/generic-success-dialog/generic-success-dialog.component';
@@ -52,14 +53,26 @@ export class ResetPasswordComponent {
 
   resetPasswordForm = new FormGroup(
     {
-      newPassword: new FormControl('', [Validators.required]),
-      confirmPassword: new FormControl('', [Validators.required]),
+      newPassword: new FormControl('', {
+        validators: [Validators.required],
+        updateOn: 'blur',
+      }),
+      confirmPassword: new FormControl('', {
+        validators: [Validators.required],
+        updateOn: 'blur',
+      }),
     },
-    { validators: this.matchPasswordValidator(), updateOn: 'submit' }
+    {
+      validators: this.matchPasswordsValidationService.matchPasswordsValidation(
+        'newPassword',
+        'confirmPassword'
+      ),
+    }
   );
 
   constructor(
     private authService: AuthService,
+    private matchPasswordsValidationService: MatchPasswordsValidationService,
     private dialog: MatDialog,
     public router: Router,
     private route: ActivatedRoute
@@ -77,7 +90,7 @@ export class ResetPasswordComponent {
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
-        title: 'Contraseña modificada correctamente',
+        title: 'Contraseña restablecida correctamente',
         haveRouterLink: true,
         goTo: '/home',
       },
@@ -90,28 +103,13 @@ export class ResetPasswordComponent {
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
-        title: 'Error al modificar la contraseña',
-        message: 'La modificación de la contraseña ha expirado o es inválida',
+        title: 'Error al restablecer la contraseña',
+        message:
+          'El periodo de restablecimiento de la contraseña ha expirado o es inválido',
         haveRouterLink: true,
         goTo: '/home',
       },
     });
-  }
-
-  matchPasswordValidator() {
-    return (formGroup: AbstractControl) => {
-      const newPassword = formGroup.get('newPassword')?.value;
-      const confirmPassword = formGroup.get('confirmPassword')?.value;
-
-      if (newPassword && confirmPassword && newPassword !== confirmPassword) {
-        formGroup.get('confirmPassword')?.setErrors({
-          mismatch: true,
-        });
-      } else {
-        formGroup.get('confirmPassword')?.setErrors(null);
-      }
-      return null;
-    };
   }
 
   onSubmit() {

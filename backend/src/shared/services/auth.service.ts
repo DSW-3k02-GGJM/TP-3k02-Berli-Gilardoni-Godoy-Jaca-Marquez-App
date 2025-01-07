@@ -84,14 +84,14 @@ export class AuthService {
         password: hashedPassword,
         role: 'admin',
         documentType: 'DNI',
-        documentID: 'XXXXXXXX',
+        documentID: '12345678',
         userName: 'Admin',
         userSurname: 'Admin',
         birthDate: new Date(today.setFullYear(today.getFullYear() - 30))
           .toISOString()
           .split('T')[0],
-        address: 'Admin',
-        phoneNumber: 'XXXX-XXXX',
+        address: 'Admin 123',
+        phoneNumber: '3419876543',
         nationality: 'Argentina',
         verified: true,
       });

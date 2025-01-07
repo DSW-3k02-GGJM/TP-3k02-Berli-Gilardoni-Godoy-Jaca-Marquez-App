@@ -59,7 +59,7 @@ export class BrandFormComponent implements OnInit {
         Validators.pattern('^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s-]+$'),
       ]),
     },
-    { updateOn: 'submit' }
+    { updateOn: 'blur' }
   );
 
   ngOnInit(): void {

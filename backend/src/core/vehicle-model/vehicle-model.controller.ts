@@ -144,7 +144,12 @@ const remove = async (req: Request, res: Response) => {
       res.status(400).json({ message: 'The vehicle model is in use' });
     } else {
       await em.removeAndFlush(vehicleModel);
-      res.status(200).send({ message: 'The vehicle model has been deleted' });
+      res
+        .status(200)
+        .send({
+          message: 'The vehicle model has been deleted',
+          data: vehicleModel.imagePath,
+        });
     }
   } catch (error: any) {
     res.status(500).json({ message: 'Server error' });

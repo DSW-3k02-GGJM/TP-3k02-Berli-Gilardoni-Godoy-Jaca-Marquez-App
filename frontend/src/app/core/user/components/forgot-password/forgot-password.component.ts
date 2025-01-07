@@ -20,6 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 // Services
 import { AuthService } from '@shared/services/auth/auth.service';
+import { EmailValidationService } from '@shared/services/validations/email-validation.service.js';
 
 // Components
 import { GenericSuccessDialogComponent } from '@shared/components/generic-success-dialog/generic-success-dialog.component';
@@ -50,12 +51,19 @@ export class ForgotPasswordComponent {
 
   forgotPassword = new FormGroup(
     {
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [
+        Validators.required,
+        this.emailValidationService.emailValidation(),
+      ]),
     },
-    { updateOn: 'submit' }
+    { updateOn: 'blur' }
   );
 
-  constructor(private authService: AuthService, private dialog: MatDialog) {}
+  constructor(
+    private authService: AuthService,
+    private emailValidationService: EmailValidationService,
+    private dialog: MatDialog
+  ) {}
 
   openDialog(): void {
     this.dialog.open(GenericSuccessDialogComponent, {

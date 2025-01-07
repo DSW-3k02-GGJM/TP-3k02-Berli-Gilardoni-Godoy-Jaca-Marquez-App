@@ -1,3 +1,4 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
@@ -5,7 +6,7 @@ import { AbstractControl } from '@angular/forms';
   providedIn: 'root',
 })
 export class ReservationDatesValidationService {
-  validateReservationDates(startDateField: string, endDateField: string) {
+  reservationDatesValidation(startDateField: string, endDateField: string) {
     return (formGroup: AbstractControl) => {
       let startDate = formGroup.get(startDateField)?.value;
       let endDate = formGroup.get(endDateField)?.value;

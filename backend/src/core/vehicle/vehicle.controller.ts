@@ -56,6 +56,8 @@ const sanitizedVehicleInput = async (
     return res.status(400).json({ message: 'All information is required' });
   }
 
+  req.body.sanitizedInput.licensePlate = licensePlate.toUpperCase();
+
   if (totalKms < 0) {
     return res
       .status(400)
@@ -121,7 +123,7 @@ const sanitizedFilterInput = async (
   next();
 };
 
-function isValidDateFormat(dateString: string): boolean {
+const isValidDateFormat = (dateString: string): boolean => {
   const regex = /^\d{4}-\d{2}-\d{2}$/;
   if (!regex.test(dateString)) {
     return false;
@@ -135,7 +137,7 @@ function isValidDateFormat(dateString: string): boolean {
     date.getMonth() === month - 1 &&
     date.getDate() === day
   );
-}
+};
 
 const findAll = async (req: Request, res: Response) => {
   try {

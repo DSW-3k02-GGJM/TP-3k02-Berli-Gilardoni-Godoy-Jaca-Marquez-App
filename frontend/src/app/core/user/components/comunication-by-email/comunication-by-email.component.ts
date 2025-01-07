@@ -83,10 +83,13 @@ export class ComunicationByEmailComponent implements AfterViewInit {
     email: new FormControl('', [Validators.required]),
   });
 
-  emailForm: FormGroup = new FormGroup({
-    subject: new FormControl('', [Validators.required]),
-    message: new FormControl('', [Validators.required]),
-  });
+  emailForm: FormGroup = new FormGroup(
+    {
+      subject: new FormControl('', [Validators.required]),
+      message: new FormControl('', [Validators.required]),
+    },
+    { updateOn: 'blur' }
+  );
 
   constructor(
     private apiService: ApiService,

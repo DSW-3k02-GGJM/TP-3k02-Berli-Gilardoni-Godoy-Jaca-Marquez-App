@@ -66,7 +66,7 @@ export class CategoryFormComponent implements OnInit {
         Validators.min(1),
       ]),
     },
-    { updateOn: 'submit' }
+    { updateOn: 'blur' }
   );
 
   ngOnInit(): void {

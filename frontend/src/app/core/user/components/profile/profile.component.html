@@ -182,7 +182,10 @@
         {{ errorMessage }}
       </mat-error>
       <div class="button">
-        <button type="submit" [disabled]="profileForm.pending">
+        <button
+          type="submit"
+          [disabled]="profileForm.invalid || profileForm.pending"
+        >
           <ng-container *ngIf="!profileForm.pending; else loading">
             Guardar cambios
           </ng-container>

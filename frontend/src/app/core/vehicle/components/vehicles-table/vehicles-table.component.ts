@@ -74,6 +74,9 @@ export class VehiclesTableComponent {
           this.apiService.delete('vehicles', Number(id)).subscribe({
             next: () => {
               this.vehicleDeleted.emit(id);
+              this.snackBarService.show(
+                'El vehículo ha sido eliminado exitosamente'
+              );
             },
             error: (error) => {
               if (error.status === 400) {
