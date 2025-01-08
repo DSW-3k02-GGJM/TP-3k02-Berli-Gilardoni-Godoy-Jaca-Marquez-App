@@ -64,7 +64,7 @@ export class ProfileComponent implements OnInit {
       userSurname: new FormControl('', [Validators.required]),
       birthDate: new FormControl('', [
         Validators.required,
-        this.userAgeValidationService.userAgeValidation('birthDate'),
+        this.userAgeValidationService.userAgeValidation(),
       ]),
       address: new FormControl('', [Validators.required]),
       phoneNumber: new FormControl('', [

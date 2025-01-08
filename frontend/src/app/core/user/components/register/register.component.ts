@@ -67,7 +67,7 @@ export class RegisterComponent {
       userSurname: new FormControl('', [Validators.required]),
       birthDate: new FormControl('', [
         Validators.required,
-        this.userAgeValidationService.userAgeValidation('birthDate'),
+        this.userAgeValidationService.userAgeValidation(),
       ]),
       address: new FormControl('', [Validators.required]),
       phoneNumber: new FormControl('', [
@@ -77,10 +77,7 @@ export class RegisterComponent {
       ]),
       nationality: new FormControl('', [Validators.required]),
     },
-    {
-      validators: this.userAgeValidationService.userAgeValidation('birthDate'),
-      updateOn: 'blur',
-    }
+    { updateOn: 'blur' }
   );
 
   constructor(

@@ -82,7 +82,7 @@ export class UserFormComponent implements OnInit {
       ]),
       birthDate: new FormControl('', [
         Validators.required,
-        this.userAgeValidationService.userAgeValidation('birthDate'),
+        this.userAgeValidationService.userAgeValidation(),
       ]),
       address: new FormControl('', [Validators.required]),
       phoneNumber: new FormControl('', [
@@ -93,10 +93,7 @@ export class UserFormComponent implements OnInit {
       nationality: new FormControl('', [Validators.required]),
       verified: new FormControl(false, [Validators.required]),
     },
-    {
-      validators: this.userAgeValidationService.userAgeValidation('birthDate'),
-      updateOn: 'blur',
-    }
+    { updateOn: 'blur' }
   );
 
   constructor(

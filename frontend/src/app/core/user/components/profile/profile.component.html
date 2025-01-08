@@ -113,8 +113,8 @@
           <mat-error *ngIf="profileForm.get('birthDate')?.errors?.required">
             La fecha de nacimiento es requerida.
           </mat-error>
-          <mat-error *ngIf="profileForm.get('birthDate')?.errors?.maxDate">
-            La fecha de nacimiento es incorrecta.
+          <mat-error *ngIf="profileForm.get('birthDate')?.errors?.dateInvalid">
+            {{ profileForm.get("birthDate")?.errors?.dateInvalid }}
           </mat-error>
         </mat-form-field>
 

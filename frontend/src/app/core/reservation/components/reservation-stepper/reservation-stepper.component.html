@@ -66,11 +66,9 @@
               <mat-error
                 *ngIf="vehicleFilterForm.get('startDate')?.errors?.dateInvalid"
               >
-                {{
-                  vehicleFilterForm.get("startDate")?.errors?.dateInvalid
-                    .message
-                }}
+                {{ vehicleFilterForm.get("startDate")?.errors?.dateInvalid }}
               </mat-error>
+
               <mat-error
                 *ngIf="
                   vehicleFilterForm.get('plannedEndDate')?.errors?.dateInvalid
@@ -78,7 +76,6 @@
               >
                 {{
                   vehicleFilterForm.get("plannedEndDate")?.errors?.dateInvalid
-                    .message
                 }}
               </mat-error>
               <mat-datepicker-toggle

@@ -158,7 +158,7 @@
             La fecha de nacimiento es requerida.
           </mat-error>
           <mat-error *ngIf="registerForm.get('birthDate')?.errors?.dateInvalid">
-            Debes ser mayor de edad.
+            {{ registerForm.get("birthDate")?.errors?.dateInvalid }}
           </mat-error>
         </mat-form-field>
 
