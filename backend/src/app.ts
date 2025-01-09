@@ -47,6 +47,10 @@ app.use((_, res, next) => {
   RequestContext.create(orm.em, next);
 });
 
+app.get('/api/config', (_, res) => {
+  res.json({ imageServerUrl: `${BACKEND_DOMAIN}${BACKEND_PORT}` });
+});
+
 Object.entries(routes).forEach(([path, router]) => {
   app.use(`/api/${path}`, router);
 });

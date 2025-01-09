@@ -70,11 +70,53 @@ form .button button:disabled {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 20px 0 0 0;
+  margin-top: 20px;
 }
 
 .user-details .input-box input {
   width: 100%;
+}
+
+.unselectable {
+  user-select: none;
+}
+
+.form {
+  padding: 0.5em 2em 2em 2em;
+}
+
+.form-style {
+  background-color: #000;
+  color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #6c757d;
+}
+
+.form-style input {
+  background-color: #212529;
+  color: #fff;
+  border: 1px solid #6c757d;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.form-control:focus {
+  border-color: rgb(0, 0, 0, 0);
+  box-shadow: none;
+}
+
+.form-control:hover {
+  background-color: rgb(0, 0, 0, 0);
+}
+
+.form-control .is-invalid:focus {
+  border-color: rgb(0, 0, 0, 0);
+  box-shadow: none;
+}
+
+.form-style input::placeholder {
+  color: #ffffff;
 }
 
 @media (max-width: 584px) {

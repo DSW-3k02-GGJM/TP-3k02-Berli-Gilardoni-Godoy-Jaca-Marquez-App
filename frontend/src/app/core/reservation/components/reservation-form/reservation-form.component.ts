@@ -72,6 +72,8 @@ export class ReservationFormComponent implements OnInit {
 
   userRole: string = '';
 
+  imageServerUrl: string = '';
+
   locations: any[] = [];
   users: any[] = [];
   filteredUsers: any[] = [];
@@ -134,6 +136,7 @@ export class ReservationFormComponent implements OnInit {
 
   ngOnInit() {
     this.getUserRole();
+    this.getImageServerUrl();
     this.loadUsers();
     this.loadLocations();
   }
@@ -225,6 +228,17 @@ export class ReservationFormComponent implements OnInit {
     this.authService.getAuthenticatedRole().subscribe({
       next: (response) => {
         this.userRole = response.role;
+      },
+      error: () => {
+        this.displayedMessage = '⚠️ Error de conexión';
+      },
+    });
+  }
+
+  getImageServerUrl(): void {
+    this.apiService.getImageServerUrl().subscribe({
+      next: (response) => {
+        this.imageServerUrl = `${response.imageServerUrl}/`;
       },
       error: () => {
         this.displayedMessage = '⚠️ Error de conexión';

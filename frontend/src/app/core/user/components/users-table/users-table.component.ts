@@ -31,10 +31,7 @@ import { FilterPipe } from '@shared/pipes/filter/filter.pipe';
     MatCardModule,
   ],
   templateUrl: './users-table.component.html',
-  styleUrls: [
-    '../../../../shared/styles/genericSearchInput.scss',
-    '../../../../shared/styles/genericTable.scss',
-  ],
+  styleUrl: '../../../../shared/styles/genericTable.scss',
 })
 export class UsersTableComponent {
   @Input() users!: any[];

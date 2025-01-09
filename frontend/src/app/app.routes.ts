@@ -52,9 +52,6 @@ import { authClientGuard } from '@security/guards/auth-client.guard';
 import { authEmployeeGuard } from '@security/guards/auth-employee.guard';
 import { authGuard } from '@security/guards/auth.guard';
 
-// Test
-import { TestMatiComponent } from '@test/components/test-mati/test-mati.component';
-
 export const routes: Routes = [
   // Home-Page
   { path: 'home', component: HomePageComponent },
@@ -221,9 +218,6 @@ export const routes: Routes = [
       },
     ],
   },
-
-  // Test
-  { path: 'testMati', component: TestMatiComponent },
 
   // Default
   { path: '', redirectTo: 'home', pathMatch: 'full' },

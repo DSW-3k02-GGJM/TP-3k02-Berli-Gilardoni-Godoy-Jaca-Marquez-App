@@ -1,9 +1,9 @@
 <div class="text-white">
-  <div class="d-flex justify-content-between pt-3 me-5">
-    <h2 class="title">Nuestras sucursales</h2>
+  <div class="d-flex justify-content-between mt-4 me-4">
+    <h2 class="my-0 ms-4">Nuestras sucursales</h2>
     <button class="btn btn-primary" (click)="newLocation()">+ Nuevo</button>
   </div>
-  <section class="locations-list mt-3 mx-5">
+  <section class="locations-list mt-4 mx-4">
     <app-locations-table
       [locations]="locations"
       [errorMessage]="errorMessage"

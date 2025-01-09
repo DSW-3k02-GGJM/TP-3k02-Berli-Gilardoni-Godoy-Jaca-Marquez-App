@@ -19,6 +19,7 @@ import { AvailableVehicles } from '@shared/interfaces/available-vehicles.model';
 })
 export class ApiService {
   private apiUrl = '/api';
+
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Credentials': 'true',
@@ -128,6 +129,13 @@ export class ApiService {
 
   sendEmail(resData: any, email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/users/send-email/${email}`, resData, {
+      headers: this.headers,
+      withCredentials: true,
+    });
+  }
+
+  getImageServerUrl(): Observable<{ imageServerUrl: string }> {
+    return this.http.get<{ imageServerUrl: string }>(`${this.apiUrl}/config`, {
       headers: this.headers,
       withCredentials: true,
     });

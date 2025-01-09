@@ -19,7 +19,7 @@ img {
   height: auto;
   background-color: whitesmoke;
   margin: 0 20px;
-  margin-bottom: 1.5em;
+  margin-bottom: 1.5rem;
   padding: 30px 30px;
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
@@ -69,4 +69,8 @@ img {
 .button button:disabled {
   background: #21303a;
   cursor: default;
+}
+
+.unselectable {
+  user-select: none;
 }

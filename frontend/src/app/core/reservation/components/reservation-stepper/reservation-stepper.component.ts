@@ -71,6 +71,8 @@ export class ReservationStepperComponent implements OnInit {
 
   userRole: string = '';
 
+  imageServerUrl: string = '';
+
   locations: any[] = [];
   response: VehicleCard[] = [];
 
@@ -123,6 +125,7 @@ export class ReservationStepperComponent implements OnInit {
 
   ngOnInit() {
     this.getUserRole();
+    this.getImageServerUrl();
     this.loadLocations();
     this.vehicleFilterForm.get('startDate')?.valueChanges.subscribe({
       next: (value) =>
@@ -211,6 +214,17 @@ export class ReservationStepperComponent implements OnInit {
 
   get fontSizeClass(): string {
     return this.userRole === 'client' ? 'fs-3' : 'fs-4';
+  }
+
+  getImageServerUrl(): void {
+    this.apiService.getImageServerUrl().subscribe({
+      next: (response) => {
+        this.imageServerUrl = `${response.imageServerUrl}/`;
+      },
+      error: () => {
+        this.displayedMessage = '⚠️ Error de conexión';
+      },
+    });
   }
 
   fetchVehicles(filter: Filter) {

@@ -13,7 +13,7 @@ import { BrandsTableComponent } from '../brands-table/brands-table.component';
   selector: 'app-brands',
   standalone: true,
   templateUrl: './brands.component.html',
-  styleUrls: ['./brands.component.scss'],
+  styleUrl: './brands.component.scss',
   imports: [CommonModule, BrandsTableComponent],
 })
 export class BrandsComponent implements OnInit {

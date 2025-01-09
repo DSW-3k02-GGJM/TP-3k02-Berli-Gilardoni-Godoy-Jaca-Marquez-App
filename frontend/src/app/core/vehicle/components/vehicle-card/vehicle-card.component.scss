@@ -39,7 +39,7 @@ p {
 
 .card:hover::after {
   opacity: 1;
-  inset: 20px;
+  inset: 14px;
 }
 
 .card:hover img {
@@ -113,6 +113,11 @@ p {
 .btn-reservation:active {
   transform: translateY(-1px);
   background-color: rgba(255, 255, 255, 0.6);
+}
+
+.prices {
+  font-weight: bold;
+  font-size: 1.05rem;
 }
 
 @media (max-width: 768px) {

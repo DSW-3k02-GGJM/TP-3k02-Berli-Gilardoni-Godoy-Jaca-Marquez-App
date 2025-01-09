@@ -1,9 +1,8 @@
 main {
-  font-family: Roboto, "Helvetica Neue", sans-serif;
   position: relative;
   height: auto;
   overflow: hidden;
-  padding-bottom: 1.5em;
+  padding-bottom: 1.5rem;
 }
 
 img {
@@ -30,9 +29,10 @@ footer {
   color: #fff5d0;
   position: fixed;
   bottom: 0;
-  text-align: center;
+  display: flex;
   justify-content: center;
-  height: 1.5em;
+  align-items: center;
+  height: 1.8rem;
   width: 100vw;
   z-index: 2;
 }

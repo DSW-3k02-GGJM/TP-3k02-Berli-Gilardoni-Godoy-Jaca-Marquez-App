@@ -1,3 +1,8 @@
+.tables-div {
+  overflow: auto;
+  margin-bottom: 2vh;
+}
+
 .table {
   position: relative;
 }
@@ -12,10 +17,11 @@
 }
 
 .check {
+  height: 50px;
   width: 50px;
 }
 
 .input-box {
-  margin-bottom: 10px;
   width: 100%;
+  margin-bottom: 10px;
 }

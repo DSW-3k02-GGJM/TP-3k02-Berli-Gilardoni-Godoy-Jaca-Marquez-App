@@ -1,9 +1,9 @@
 <div class="text-white">
-  <div class="d-flex justify-content-between pt-3 me-5">
-    <h2 class="title">Nuestras categorias</h2>
+  <div class="d-flex justify-content-between mt-4 me-4">
+    <h2 class="my-0 ms-4">Nuestras categorias</h2>
     <button class="btn btn-primary" (click)="newCategory()">+ Nuevo</button>
   </div>
-  <section class="categories-list mt-3 mx-5">
+  <section class="categories-list mt-4 mx-4">
     <app-categories-table
       [categories]="categories"
       [errorMessage]="errorMessage"

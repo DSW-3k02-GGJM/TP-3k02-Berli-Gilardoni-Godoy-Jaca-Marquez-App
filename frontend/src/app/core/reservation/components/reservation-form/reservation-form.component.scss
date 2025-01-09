@@ -65,8 +65,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 10px;
-  margin: 1em 0;
-  padding-bottom: 1.5em;
+  margin: 1rem 0;
+  padding-bottom: 1.5rem;
 }
 
 .container {
@@ -75,7 +75,7 @@
   height: 100%;
   background-color: white;
   margin: 0 20px;
-  margin-bottom: 1.5em;
+  margin-bottom: 1.5rem;
   padding: 15px 30px;
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
@@ -93,10 +93,12 @@
   margin-bottom: 10px;
   width: calc(100% / 2 - 20px);
 }
+
 .input-box span.details {
   display: block;
   margin-bottom: 5px;
 }
+
 .user-details .input-box input {
   width: 100%;
 }
@@ -113,16 +115,46 @@
   margin-right: 10px;
 }
 
-@media (max-width: 560px) {
-  .information-title2 {
-    margin-left: 0px;
-  }
+.unselectable {
+  user-select: none;
+}
 
-  .information {
-    justify-content: flex-start;
-    flex-direction: row;
-    align-items: flex-start;
-  }
+.form {
+  padding: 0.5em 2em 2em 2em;
+}
+
+.form-style {
+  background-color: #000;
+  color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #6c757d;
+}
+
+.form-style input {
+  background-color: #212529;
+  color: #fff;
+  border: 1px solid #6c757d;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.form-control:focus {
+  border-color: rgb(0, 0, 0, 0);
+  box-shadow: none;
+}
+
+.form-control:hover {
+  background-color: rgb(0, 0, 0, 0);
+}
+
+.form-control .is-invalid:focus {
+  border-color: rgb(0, 0, 0, 0);
+  box-shadow: none;
+}
+
+.form-style input::placeholder {
+  color: #ffffff;
 }
 
 @media (max-width: 610px) {
@@ -130,18 +162,21 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 0 0px;
+    padding: 0;
     justify-content: left;
     align-items: center;
   }
+
   .mat-vertical-content {
-    padding: 0px 0px 0px 0px;
+    padding: 0;
   }
+
   .container {
-    margin: 0 0px;
+    margin: 0;
+    padding: 0;
     max-width: 100%;
-    padding: 0px 0px;
   }
+
   .user-details .input-box {
     margin-bottom: 15px;
     width: 100%;
@@ -152,7 +187,20 @@
     max-height: 450px;
     overflow-y: scroll;
   }
+
   .user-details::-webkit-scrollbar {
     width: 5px;
+  }
+}
+
+@media (max-width: 560px) {
+  .information-title2 {
+    margin-left: 0;
+  }
+
+  .information {
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: flex-start;
   }
 }

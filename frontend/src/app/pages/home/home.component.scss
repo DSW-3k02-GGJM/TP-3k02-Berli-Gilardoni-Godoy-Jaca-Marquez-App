@@ -1,3 +1,17 @@
+h1 {
+  font-size: 3rem;
+  color: #181c14;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+p {
+  font-size: 1.5rem;
+  color: #181c14;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
 .main-container {
   width: 100%;
   height: auto;
@@ -28,20 +42,6 @@
   z-index: 0;
 }
 
-h1 {
-  font-size: 3rem;
-  color: #181c14;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-p {
-  font-size: 1.5rem;
-  color: #181c14;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
 .home-page-subtitle {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   color: whitesmoke;
@@ -49,14 +49,14 @@ p {
 
 .hero {
   color: #ffffff;
-  height: 5em;
+  height: 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .hero h1 {
-  font-size: 2.5em;
+  font-size: 2.5rem;
   color: whitesmoke;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -93,7 +93,11 @@ p {
 }
 
 .testimonial p {
-  font-size: 1.3em;
+  font-size: 1.3rem;
+}
+
+.unselectable {
+  user-select: none;
 }
 
 @media (max-width: 1200px) {
@@ -126,11 +130,11 @@ p {
 
 @media (max-width: 700px) {
   .hero .home-page-title {
-    font-size: 1.5em;
+    font-size: 1.5rem;
   }
 
   .home-page-subtitle {
-    font-size: 1em;
+    font-size: 1rem;
   }
 
   .cta-button {
@@ -139,7 +143,7 @@ p {
   }
 
   .testimonial p {
-    font-size: 0.8em;
+    font-size: 0.8rem;
     font-weight: 500;
   }
 }

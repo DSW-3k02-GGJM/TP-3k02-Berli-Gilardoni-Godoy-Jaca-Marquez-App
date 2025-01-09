@@ -41,7 +41,7 @@ form .button button:disabled {
   height: auto;
   background-color: whitesmoke;
   margin: 0 20px;
-  margin-bottom: 1.5em;
+  margin-bottom: 1.5rem;
   padding: 15px 30px;
   border-radius: 5px;
 }
@@ -137,11 +137,53 @@ form .button button:disabled {
   margin-top: 5px;
 }
 
+.unselectable {
+  user-select: none;
+}
+
+.form {
+  padding: 0.5em 2em 2em 2em;
+}
+
+.form-style {
+  background-color: #000;
+  color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #6c757d;
+}
+
+.form-style input {
+  background-color: #212529;
+  color: #fff;
+  border: 1px solid #6c757d;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.form-control:focus {
+  border-color: rgb(0, 0, 0, 0);
+  box-shadow: none;
+}
+
+.form-control:hover {
+  background-color: rgb(0, 0, 0, 0);
+}
+
+.form-control .is-invalid:focus {
+  border-color: rgb(0, 0, 0, 0);
+  box-shadow: none;
+}
+
+.form-style input::placeholder {
+  color: #ffffff;
+}
+
 @media (max-width: 610px) {
   .container {
-    margin: 0 0px;
+    margin: 0;
+    padding: 0;
     max-width: 100%;
-    padding: 0px 0px;
   }
 
   .title {
@@ -151,6 +193,6 @@ form .button button:disabled {
   }
 
   .mat-vertical-content {
-    padding: 0px 0px 0px 0px;
+    padding: 0;
   }
 }

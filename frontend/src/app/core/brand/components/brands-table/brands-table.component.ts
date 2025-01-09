@@ -24,10 +24,7 @@ import { FilterPipe } from '@shared/pipes/filter/filter.pipe';
   selector: 'app-brands-table',
   standalone: true,
   templateUrl: './brands-table.component.html',
-  styleUrls: [
-    '../../../../shared/styles/genericSearchInput.scss',
-    '../../../../shared/styles/genericTable.scss',
-  ],
+  styleUrl: '../../../../shared/styles/genericTable.scss',
   imports: [
     CommonModule,
     FilterPipe,

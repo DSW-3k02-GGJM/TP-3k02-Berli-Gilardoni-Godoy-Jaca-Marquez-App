@@ -27,10 +27,7 @@ import { Vehicle } from '@core/vehicle/interfaces/vehicle.model';
   selector: 'app-vehicles-table',
   standalone: true,
   templateUrl: './vehicles-table.component.html',
-  styleUrls: [
-    '../../../../shared/styles/genericSearchInput.scss',
-    '../../../../shared/styles/genericTable.scss',
-  ],
+  styleUrl: '../../../../shared/styles/genericTable.scss',
   imports: [
     CommonModule,
     FilterPipe,

@@ -25,10 +25,7 @@ import { FilterPipe } from '@shared/pipes/filter/filter.pipe';
   selector: 'app-vehicle-models-table',
   standalone: true,
   templateUrl: './vehicle-models-table.component.html',
-  styleUrls: [
-    '../../../../shared/styles/genericSearchInput.scss',
-    '../../../../shared/styles/genericTable.scss',
-  ],
+  styleUrl: '../../../../shared/styles/genericTable.scss',
   imports: [
     CommonModule,
     FilterPipe,

@@ -14,5 +14,9 @@
 .message {
   font-size: 15px;
   font-weight: 500;
-  margin-bottom: 0px;
+  margin-bottom: 0;
+}
+
+.unselectable {
+  user-select: none;
 }

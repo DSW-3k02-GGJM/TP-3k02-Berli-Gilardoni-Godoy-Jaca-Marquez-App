@@ -1,9 +1,6 @@
 // Angular
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
-// Services
-import { SharedService } from '@shared/services/utils/shared.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 // Interfaces
 import { VehicleCard } from '../../../../shared/interfaces/vehicle-card.model';
@@ -15,25 +12,16 @@ import { VehicleCard } from '../../../../shared/interfaces/vehicle-card.model';
   standalone: true,
   imports: [CommonModule],
 })
-export class VehicleCardComponent implements OnInit {
+export class VehicleCardComponent {
   @Input() vehicle!: VehicleCard;
-  @Output() modelSelected = new EventEmitter<any>();
+  @Input() imageServerUrl!: string;
+  @Output() modelSelected = new EventEmitter<VehicleCard>();
 
-  startDate: string = '';
-  endDate: string = '';
-
-  constructor(private sharedService: SharedService) {}
-
-  ngOnInit() {
-    this.sharedService.startDate$.subscribe({
-      next: (date) => (this.startDate = date),
-    });
-    this.sharedService.endDate$.subscribe({
-      next: (date) => (this.endDate = date),
-    });
+  get completeImageUrl(): string {
+    return `${this.imageServerUrl}${this.vehicle.image}`;
   }
 
-  placeReservation() {
+  placeReservation(): void {
     this.modelSelected.emit(this.vehicle);
   }
 }

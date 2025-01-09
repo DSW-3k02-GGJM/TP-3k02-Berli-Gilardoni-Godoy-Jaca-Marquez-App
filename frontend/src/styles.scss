@@ -10,6 +10,7 @@ $alquiler-vehiculos-theme: custom.$light-theme;
 }
 
 @include mat.color-variants-backwards-compatibility($alquiler-vehiculos-theme);
+
 $primary: #21303a;
 $secondary: #fff5d0;
 $success: #28a745;
@@ -21,62 +22,10 @@ $dark: #343a40;
 
 html,
 body {
-  background-color: #21303a;
+  background-color: $primary;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-.form {
-  padding: 0.5em 2em 2em 2em;
-}
-
-.form-style {
-  background-color: #000;
-  color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  border: 1px solid #6c757d;
-}
-
-.form-style input {
-  background-color: #212529;
-  color: #fff;
-  border: 1px solid #6c757d;
-  border-radius: 6px;
-  padding: 10px;
-}
-
-.form-control:focus {
-  border-color: rgb(0, 0, 0, 0);
-  box-shadow: none;
-}
-
-.form-control:hover {
-  background-color: rgb(0, 0, 0, 0);
-}
-
-.form-control .is-invalid:focus {
-  border-color: rgb(0, 0, 0, 0);
-  box-shadow: none;
-}
-
-.form-style input::placeholder {
-  color: #ffffff;
-}
-
-/* Controla el overflow de las tablas*/
-.tables-div {
-  overflow: auto;
-  margin-bottom: 2vh;
-}
-
-.unselectable {
-  user-select: none;
-}
-
-.modal-header {
-  justify-content: center;
 }
