@@ -20,7 +20,7 @@ export const brandRouter = Router();
 brandRouter.get('/', AuthService.isAuthenticated(['admin']), findAll);
 
 brandRouter.get(
-  '/entityName-exists/:brandName/:id',
+  '/brand-name-exists/:brandName/:id',
   AuthService.isAuthenticated(['admin']),
   verifyBrandNameExists
 );

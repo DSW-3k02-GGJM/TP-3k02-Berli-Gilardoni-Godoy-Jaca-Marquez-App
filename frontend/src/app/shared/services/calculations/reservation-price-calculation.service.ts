@@ -18,16 +18,19 @@ export class ReservationPriceCalculationService {
     plannedEndDateAsString: string,
     pricePerDay: number
   ): number {
-    const formattedStartDate = new Date(
+    const formattedStartDate: Date = new Date(
       this.formatDateService.fromSlashToDash(startDateAsString)
     );
 
-    const formattedPlannedEndDate = new Date(
+    const formattedPlannedEndDate: Date = new Date(
       this.formatDateService.fromSlashToDash(plannedEndDateAsString)
     );
 
-    const days = differenceInDays(formattedPlannedEndDate, formattedStartDate);
+    const days: number = differenceInDays(
+      formattedPlannedEndDate,
+      formattedStartDate
+    );
 
-    return days * pricePerDay;
+    return (days * pricePerDay) as number;
   }
 }

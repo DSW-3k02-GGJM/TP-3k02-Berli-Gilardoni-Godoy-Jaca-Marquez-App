@@ -30,22 +30,30 @@
         class="input-box date-input-box"
         hideRequiredMarker="true"
       >
-        <mat-label>Fecha (entre Inicio y Fin de Reserva)...</mat-label>
+        <mat-label
+          >Búsqueda por Fecha (entre Inicio y Fin de Reserva, desde
+          1900)</mat-label
+        >
         <input
           matInput
           [(ngModel)]="filterDate"
           name="filterDate"
           type="date"
+          (ngModelChange)="filterReservations()"
         />
       </mat-form-field>
-      <button
-        class="btn btn-dark border border-white text-center btn-filter"
-        (click)="filterReservations()"
-      >
-        Filtrar
-      </button>
     </div>
+
+    <mat-card
+      *ngIf="filteredReservations.length === 0"
+      class="bg-dark border border-white text-white text-center fs-4 mt-2"
+    >
+      <mat-card-content
+        >🔍 No se encontraron resultados para la búsqueda</mat-card-content
+      >
+    </mat-card>
     <table
+      *ngIf="filteredReservations.length > 0"
       class="table table-dark table-hover table-bordered table-sm border border-white text-center"
     >
       <thead>
@@ -65,9 +73,9 @@
           <td>{{ formatDate(reservation.reservationDate) }}</td>
           <td>
             {{
-              reservation.vehicle.vehicleModel.brand.brandName +
+              getBrandName(reservation.vehicle) +
                 " " +
-                reservation.vehicle.vehicleModel.vehicleModelName
+                getVehicleModelName(reservation.vehicle)
             }}
           </td>
           <td>

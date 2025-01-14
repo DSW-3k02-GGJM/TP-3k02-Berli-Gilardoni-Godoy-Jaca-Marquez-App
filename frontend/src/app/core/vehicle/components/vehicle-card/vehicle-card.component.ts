@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 // Interfaces
-import { VehicleCard } from '../../../../shared/interfaces/vehicle-card.model';
+import { VehicleCard } from '@core/vehicle/interfaces/vehicle-card.interface';
 
 @Component({
   selector: 'app-vehicle-card',
-  templateUrl: './vehicle-card.component.html',
-  styleUrls: ['./vehicle-card.component.scss'],
   standalone: true,
+  templateUrl: './vehicle-card.component.html',
+  styleUrl: './vehicle-card.component.scss',
   imports: [CommonModule],
 })
 export class VehicleCardComponent {

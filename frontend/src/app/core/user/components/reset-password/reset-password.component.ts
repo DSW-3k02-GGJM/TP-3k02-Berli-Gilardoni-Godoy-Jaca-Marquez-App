@@ -1,15 +1,15 @@
 // Angular
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, WritableSignal, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
-  AbstractControl,
 } from '@angular/forms';
-import { Component, WritableSignal, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 // Angular Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -21,16 +21,24 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 
 // Services
-import { AuthService } from '@shared/services/auth/auth.service';
-import { MatchPasswordsValidationService } from '@shared/services/validations/match-passwords-validation.service.js';
+import { AuthService } from '@security/services/auth.service';
+import { MatchPasswordsValidationService } from '@shared/services/validations/match-passwords-validation.service';
 
 // Components
-import { GenericSuccessDialogComponent } from '@shared/components/generic-success-dialog/generic-success-dialog.component';
-import { GenericErrorDialogComponent } from '@shared/components/generic-error-dialog/generic-error-dialog.component';
+import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
+
+// Interfaces
+import { PasswordResetData } from '@core/user/interfaces/password-reset-data.interface';
+import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Directives
+import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
+  templateUrl: './reset-password.component.html',
+  styleUrl: '../../../../shared/styles/genericForm.scss',
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -41,17 +49,16 @@ import { GenericErrorDialogComponent } from '@shared/components/generic-error-di
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
+    PreventEnterDirective,
   ],
-  templateUrl: './reset-password.component.html',
-  styleUrl: '../../../../shared/styles/genericForm.scss',
 })
 export class ResetPasswordComponent {
   hide: WritableSignal<boolean> = signal(true);
 
-  errorMessage: string | null = null;
+  errorMessage: string = '';
   pending: boolean = false;
 
-  resetPasswordForm = new FormGroup(
+  resetPasswordForm: FormGroup = new FormGroup(
     {
       newPassword: new FormControl('', {
         validators: [Validators.required],
@@ -71,62 +78,71 @@ export class ResetPasswordComponent {
   );
 
   constructor(
-    private authService: AuthService,
-    private matchPasswordsValidationService: MatchPasswordsValidationService,
-    private dialog: MatDialog,
-    public router: Router,
-    private route: ActivatedRoute
+    private readonly authService: AuthService,
+    private readonly matchPasswordsValidationService: MatchPasswordsValidationService,
+    private readonly dialog: MatDialog,
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
-  clickEvent(event: MouseEvent) {
+  clickEvent(event: MouseEvent): void {
     event.preventDefault();
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
 
   openDialog(): void {
-    this.dialog.open(GenericSuccessDialogComponent, {
+    this.dialog.open(GenericDialogComponent, {
       width: '250px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
         title: 'Contraseña restablecida correctamente',
+        titleColor: 'dark',
+        image: 'assets/checkmark.png',
+        showBackButton: false,
+        mainButtonTitle: 'Aceptar',
         haveRouterLink: true,
         goTo: '/home',
       },
-    });
+    } as GenericDialog);
   }
 
   openErrorDialog(): void {
-    this.dialog.open(GenericErrorDialogComponent, {
+    this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
         title: 'Error al restablecer la contraseña',
+        titleColor: 'dark',
+        image: 'assets/wrongmark.png',
         message:
           'El periodo de restablecimiento de la contraseña ha expirado o es inválido',
+        showBackButton: false,
+        mainButtonTitle: 'Aceptar',
         haveRouterLink: true,
         goTo: '/home',
       },
-    });
+    } as GenericDialog);
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (!this.resetPasswordForm.invalid) {
       this.pending = true;
-      this.route.params.subscribe({
+      this.activatedRoute.params.subscribe({
         next: (params) => {
-          const token = params['token'];
+          const token: string = params['token'];
           this.authService
-            .verifyPasswordResetToken(token, this.resetPasswordForm.value)
+            .verifyPasswordResetToken(
+              token,
+              this.resetPasswordForm.value as PasswordResetData
+            )
             .subscribe({
               next: () => {
                 this.pending = false;
-                this.errorMessage = null;
                 this.openDialog();
               },
-              error: (error) => {
+              error: (error: HttpErrorResponse) => {
                 this.pending = false;
                 if (error.status === 401) {
                   this.openErrorDialog();

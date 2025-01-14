@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.scss',
 })
 export class HomePageComponent {
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   navigateToReservation(): void {
     this.router.navigate(['/reservation']);

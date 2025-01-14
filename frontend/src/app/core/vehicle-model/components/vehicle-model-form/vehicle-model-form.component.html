@@ -38,6 +38,7 @@
     <hr *ngIf="action === 'Edit'" />
     <div class="content">
       <form
+        app-prevent-enter
         [formGroup]="vehicleModelForm"
         (ngSubmit)="onSubmit()"
         enctype="multipart/form-data"
@@ -60,8 +61,7 @@
             />
             <mat-error
               *ngIf="
-                vehicleModelForm.get('vehicleModelName')?.errors
-                  ?.entityNameExists
+                vehicleModelForm.get('vehicleModelName')?.errors?.nameExists
               "
             >
               Este nombre ya está siendo usado.
@@ -160,7 +160,7 @@
           id="imagePath"
           type="file"
           (change)="onFileSelected($event)"
-          accept="image/*"
+          accept="image/jpeg, image/png"
           class="form-control border border-secondary rounded w-100 mt-2 img-input"
         />
         <mat-error *ngIf="errorMessage">

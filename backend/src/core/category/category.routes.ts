@@ -20,7 +20,7 @@ export const categoryRouter = Router();
 categoryRouter.get('/', AuthService.isAuthenticated(['admin']), findAll);
 
 categoryRouter.get(
-  '/entityName-exists/:categoryName/:id',
+  '/category-name-exists/:categoryName/:id',
   AuthService.isAuthenticated(['admin']),
   verifyCategoryNameExists
 );

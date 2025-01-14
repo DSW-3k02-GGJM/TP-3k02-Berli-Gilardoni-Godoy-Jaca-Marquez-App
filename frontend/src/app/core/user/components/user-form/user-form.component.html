@@ -16,7 +16,12 @@
   </div>
   <hr *ngIf="action === 'Edit'" />
   <div class="content">
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <form
+      app-prevent-enter
+      [formGroup]="userForm"
+      (ngSubmit)="onSubmit()"
+      autocomplete="off"
+    >
       <div class="user-details">
         <mat-form-field
           *ngIf="action === 'Create'"

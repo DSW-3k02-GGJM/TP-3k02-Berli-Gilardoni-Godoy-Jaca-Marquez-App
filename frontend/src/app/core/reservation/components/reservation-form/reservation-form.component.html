@@ -36,7 +36,7 @@
       (selectionChange)="onStepChange($event)"
     >
       <mat-step [stepControl]="userForm">
-        <form [formGroup]="userForm">
+        <form app-prevent-enter [formGroup]="userForm">
           <hr />
           <ng-template matStepLabel>Seleccionar usuario</ng-template>
           <div class="user-details">
@@ -91,7 +91,7 @@
         </form>
       </mat-step>
       <mat-step [stepControl]="vehicleFilterForm">
-        <form [formGroup]="vehicleFilterForm">
+        <form app-prevent-enter [formGroup]="vehicleFilterForm">
           <hr />
           <ng-template matStepLabel>Seleccionar filtro</ng-template>
           <div class="user-details">
@@ -112,9 +112,9 @@
                 <input
                   matEndDate
                   placeholder="Fecha Fin"
-                  id="plannedEndDate"
+                  id="endDate"
                   class="form-control"
-                  formControlName="plannedEndDate"
+                  formControlName="endDate"
                 />
               </mat-date-range-input>
               <mat-error
@@ -124,13 +124,9 @@
               </mat-error>
 
               <mat-error
-                *ngIf="
-                  vehicleFilterForm.get('plannedEndDate')?.errors?.dateInvalid
-                "
+                *ngIf="vehicleFilterForm.get('endDate')?.errors?.dateInvalid"
               >
-                {{
-                  vehicleFilterForm.get("plannedEndDate")?.errors?.dateInvalid
-                }}
+                {{ vehicleFilterForm.get("endDate")?.errors?.dateInvalid }}
               </mat-error>
               <mat-datepicker-toggle
                 matIconSuffix
@@ -222,7 +218,7 @@
           <div class="information-section">
             <div class="information-title2">Fecha de Fin</div>
             <div class="information-content">
-              <span>{{ plannedEndDate }}</span>
+              <span>{{ endDate }}</span>
             </div>
           </div>
           <div class="information-section">

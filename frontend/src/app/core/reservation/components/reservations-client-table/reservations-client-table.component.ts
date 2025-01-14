@@ -1,4 +1,5 @@
 // Angular
+import { CommonModule } from '@angular/common';
 import {
   Component,
   Input,
@@ -6,24 +7,28 @@ import {
   EventEmitter,
   SimpleChanges,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // Angular Material
 import { MatInputModule } from '@angular/material/input';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { ReservationApiService } from '@core/reservation/services/reservation.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 import { ReservationFilterService } from '@shared/services/filters/reservation-filter.service';
 import { ReservationFinalPriceCalculationService } from '@shared/services/calculations/reservation-final-price-calculation.service';
 import { FormatDateService } from '@shared/services/utils/format-date.service';
 
 // Components
-import { ConfirmDeletionDialogComponent } from '@shared/components/confirm-deletion-dialog/confirm-deletion-dialog.component';
+import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
+
+// Interfaces
+import { Reservation } from '@core/reservation/interfaces/reservation.interface';
+import { ReservationInput } from '@core/reservation/interfaces/reservation-input.interface';
+import { Vehicle } from '@core/vehicle/interfaces/vehicle.interface';
 
 @Component({
   selector: 'app-reservations-client-table',
@@ -36,53 +41,57 @@ import { ConfirmDeletionDialogComponent } from '@shared/components/confirm-delet
   imports: [CommonModule, FormsModule, MatInputModule, MatCardModule],
 })
 export class ReservationsClientTableComponent {
-  @Input() reservations!: any[];
+  @Input() reservations: Reservation[] = [];
   @Input() errorMessage: string = '';
-  @Output() reservationCancelled = new EventEmitter<number>();
+  @Output() reservationCancelled = new EventEmitter<void>();
 
   filterDate: string = '';
 
-  filteredReservations: any[] = [];
+  filteredReservations: Reservation[] = [];
 
   constructor(
-    private apiService: ApiService,
-    private dialog: MatDialog,
-    private snackBarService: SnackBarService,
-    private reservationFilterService: ReservationFilterService,
-    private reservationFinalPriceCalculationService: ReservationFinalPriceCalculationService,
-    private formatDateService: FormatDateService,
-    private router: Router
+    private readonly reservationApiService: ReservationApiService,
+    private readonly snackBarService: SnackBarService,
+    private readonly reservationFilterService: ReservationFilterService,
+    private readonly reservationFinalPriceCalculationService: ReservationFinalPriceCalculationService,
+    private readonly formatDateService: FormatDateService,
+    private readonly dialog: MatDialog,
+    private readonly router: Router
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Comprueba si el valor de 'reservations' ha cambiado
     if (changes['reservations'] && !changes['reservations'].firstChange) {
       this.filterReservations();
     }
   }
 
-  openCancelDialog(res: any): void {
-    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Cancelar reserva',
-        titleColor: 'danger',
-        image: 'assets/wrongmark.png',
-        message: '¿Está seguro de que desea cancelar la reserva?',
-        buttonColor: 'danger',
-      },
-    });
+  openCancelDialog(id: number): void {
+    const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
+      this.dialog.open(GenericDialogComponent, {
+        width: '350px',
+        enterAnimationDuration: '0ms',
+        exitAnimationDuration: '0ms',
+        data: {
+          title: 'Cancelar reserva',
+          titleColor: 'danger',
+          image: 'assets/wrongmark.png',
+          message: '¿Está seguro de que desea cancelar la reserva?',
+          showBackButton: true,
+          backButtonTitle: 'Volver',
+          mainButtonTitle: 'Cancelar',
+          mainButtonColor: 'bg-danger',
+          haveRouterLink: false,
+        },
+      });
     dialogRef.afterClosed().subscribe({
-      next: (result) => {
+      next: (result: boolean | undefined) => {
         if (result) {
-          this.apiService
-            .update('reservations', Number(res.id), {
+          this.reservationApiService
+            .update(id, {
               cancellationDate: this.formatDateService.removeTimeZoneFromDate(
                 new Date()
               ),
-            })
+            } as ReservationInput)
             .subscribe({
               next: () => {
                 this.reservationCancelled.emit();
@@ -99,19 +108,27 @@ export class ReservationsClientTableComponent {
     });
   }
 
-  formatDate(DateDB: string): string {
-    let DateTable: string = '${day}/${month}/${year}';
-    DateTable = DateTable.replace('${month}', DateDB.substring(5, 7));
-    DateTable = DateTable.replace('${day}', DateDB.substring(8, 10));
-    DateTable = DateTable.replace('${year}', DateDB.substring(0, 4));
-    return DateTable;
+  formatDate(date: string): string {
+    return this.formatDateService.fromDashToSlash(date);
   }
 
-  disableCancellation(reservation: any) {
-    const today = new Date();
+  getBrandName(vehicle: Vehicle | number): string {
+    return typeof vehicle === 'object'
+      ? vehicle.vehicleModel?.brand?.brandName ?? ''
+      : '';
+  }
+
+  getVehicleModelName(vehicle: Vehicle | number): string {
+    return typeof vehicle === 'object'
+      ? vehicle.vehicleModel?.vehicleModelName ?? ''
+      : '';
+  }
+
+  disableCancellation(reservation: Reservation): boolean {
+    const today: Date = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const startDate = new Date(reservation.startDate);
+    const startDate: Date = new Date(reservation.startDate);
     startDate.setHours(startDate.getHours() + 3);
 
     if (today >= startDate) {
@@ -120,24 +137,34 @@ export class ReservationsClientTableComponent {
     return false;
   }
 
-  cancelReservation(reservation: any): void {
-    this.openCancelDialog(reservation);
+  cancelReservation(reservation: Reservation): void {
+    this.openCancelDialog(reservation.id);
   }
 
-  filterReservations(): void {
-    const filteredReservations =
-      this.reservationFilterService.filterReservations(
-        this.filterDate,
-        this.reservations
-      );
-
-    this.filteredReservations = filteredReservations.map((reservation) => ({
+  calculateFinalPrices(reservations: Reservation[]): Reservation[] {
+    return reservations.map((reservation: Reservation) => ({
       ...reservation,
       calculatedPrice:
         this.reservationFinalPriceCalculationService.calculatePrice(
-          reservation
+          reservation as Reservation
         ),
     }));
+  }
+
+  filterReservations(): void {
+    let filteredReservations: Reservation[] = this.reservations;
+    if (this.filterDate) {
+      if (Number.parseInt(this.filterDate.substring(0, 4)) < 1900) {
+        this.filteredReservations =
+          this.calculateFinalPrices(filteredReservations);
+        return;
+      }
+      filteredReservations = this.reservationFilterService.filterReservations(
+        this.filterDate,
+        filteredReservations
+      );
+    }
+    this.filteredReservations = this.calculateFinalPrices(filteredReservations);
   }
 
   navigateToReservation(): void {

@@ -1,5 +1,6 @@
 // Angular
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -8,43 +9,45 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Services
-import { AuthService } from '@shared/services/auth/auth.service';
+import { AuthService } from '@security/services/auth.service';
 
 @Component({
   selector: 'app-email-verification',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './email-verification.component.html',
   styleUrl: './email-verification.component.scss',
+  imports: [CommonModule, MatButtonModule, MatProgressSpinnerModule],
 })
 export class EmailVerificationComponent implements OnInit {
-  status = 'loading';
+  status: string = 'loading';
 
   constructor(
-    private authService: AuthService,
-    private route: ActivatedRoute,
-    public router: Router
+    private readonly authService: AuthService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe({
+    this.activatedRoute.params.subscribe({
       next: (params) => {
-        const token = params['token'];
-        setTimeout(() => {
-          this.authService.verifyEmailToken(token).subscribe({
-            next: () => {
-              this.status = 'success';
-            },
-            error: (error) => {
-              if (error.status === 401) {
-                this.status = 'error';
-              } else {
-                this.status = 'commonError';
-              }
-            },
-          });
-        }, 2000);
+        const token: string = params['token'];
+        this.authService.verifyEmailToken(token).subscribe({
+          next: () => {
+            this.status = 'success';
+          },
+          error: (error: HttpErrorResponse) => {
+            if (error.status === 401) {
+              this.status = 'error';
+            } else {
+              this.status = 'common-error';
+            }
+          },
+        });
       },
     });
+  }
+
+  navigateToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }

@@ -3,25 +3,25 @@
     <img src="assets/checkmark.png" alt="checkmark" />
     <p class="title">Su cuenta ha sido verificada</p>
     <div class="button">
-      <button (click)="router.navigate(['/login'])">Aceptar</button>
+      <button (click)="navigateToLogin()">Aceptar</button>
     </div>
   </div>
   <div class="content" *ngIf="status === 'error'" [@statusChange]="status">
     <img src="assets/wrongmark.png" alt="wrongmark" />
     <p class="title">Verificación incorrecta o expirada</p>
     <div class="button">
-      <button (click)="router.navigate(['/login'])">Aceptar</button>
+      <button (click)="navigateToLogin()">Aceptar</button>
     </div>
   </div>
   <div
     class="content"
-    *ngIf="status === 'commonError'"
+    *ngIf="status === 'common-error'"
     [@statusChange]="status"
   >
     <img src="assets/wrongmark.png" alt="wrongmark" />
     <p class="title">Error en el servidor</p>
     <div class="button">
-      <button (click)="router.navigate(['/login'])">Aceptar</button>
+      <button (click)="navigateToLogin()">Aceptar</button>
     </div>
   </div>
   <div class="content" *ngIf="status === 'loading'" [@statusChange]="status">

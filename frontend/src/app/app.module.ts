@@ -10,16 +10,16 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 
 // Services
-import { AuthService } from './shared/services/auth/auth.service';
+import { AuthService } from '@security/services/auth.service';
 
 // Components
 import { AppComponent } from './app.component';
 
 // Layouts
-import { NavbarComponent } from './shared/layouts/navbar/navbar.component';
+import { NavbarComponent } from '@shared/layouts/navbar/navbar.component';
 
 // Config
-import { MY_DATE_FORMATS } from './shared/config/date-formats.config';
+import { MY_DATE_FORMATS } from '@shared/config/date-formats.config';
 
 // Routing
 import { routes } from './app.routes';
@@ -32,8 +32,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [
     CommonModule,
     NgbModule,
-    RouterOutlet,
     BrowserModule,
+    RouterOutlet,
     NavbarComponent,
   ],
   providers: [

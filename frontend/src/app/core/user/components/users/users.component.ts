@@ -1,43 +1,50 @@
 // Angular
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Services
-import { AuthService } from '@shared/services/auth/auth.service';
+import { UserApiService } from '@core/user/services/user.api.service';
 
 // Components
-import { UsersTableComponent } from '../users-table/users-table.component';
+import { UsersTableComponent } from '@core/user/components/users-table/users-table.component';
+
+// Interfaces
+import { User } from '@core/user/interfaces/user.interface';
+import { UsersResponse } from '@core/user/interfaces/users-response.interface';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, UsersTableComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
+  imports: [CommonModule, UsersTableComponent],
 })
 export class UsersComponent implements OnInit {
-  users: any[] = [];
+  users: User[] = [];
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private readonly userApiService: UserApiService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.fillData();
+    this.loadData();
   }
 
-  onUserDeleted(userId: number): void {
-    this.users = this.users.filter((user) => user.id !== userId);
+  onUserDeleted(): void {
+    this.loadData();
   }
 
-  fillData() {
-    this.authService.getAllUsers().subscribe({
-      next: (response) => (this.users = response.data),
+  loadData(): void {
+    this.userApiService.getAll().subscribe({
+      next: (response: UsersResponse) => (this.users = response.data),
       error: () => (this.errorMessage = '⚠️ Error de conexión'),
     });
   }
 
-  newUser() {
+  newUser(): void {
     this.router.navigate(['/staff/users/create']);
   }
 }

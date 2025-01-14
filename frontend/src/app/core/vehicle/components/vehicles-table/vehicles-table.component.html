@@ -15,13 +15,13 @@
   </mat-card>
   <div *ngIf="!errorMessage && vehicles.length > 0">
     <mat-form-field class="input-box" hideRequiredMarker="true">
-      <mat-label>Búsqueda por Patente...</mat-label>
+      <mat-label>Búsqueda por Patente</mat-label>
       <input
         matInput
         type="text"
         [(ngModel)]="filterRows"
         name="filterPost"
-        placeholder=""
+        placeholder="Escribe al menos 3 caracteres..."
       />
     </mat-form-field>
     <mat-card
@@ -57,14 +57,10 @@
           <td>{{ vehicle.manufacturingYear }}</td>
           <td>{{ vehicle.totalKms }}</td>
           <td>
-            {{
-              vehicle.vehicleModel.brand.brandName +
-                " " +
-                vehicle.vehicleModel.vehicleModelName
-            }}
+            {{ getBrandName(vehicle) + " " + getVehicleModelName(vehicle) }}
           </td>
-          <td>{{ vehicle.color.colorName }}</td>
-          <td>{{ vehicle.location.locationName }}</td>
+          <td>{{ getColorName(vehicle) }}</td>
+          <td>{{ getLocationName(vehicle) }}</td>
           <td class="actions-column">
             <div class="d-flex justify-content-around">
               <button class="btn btn-dark fs-5" (click)="editVehicle(vehicle)">

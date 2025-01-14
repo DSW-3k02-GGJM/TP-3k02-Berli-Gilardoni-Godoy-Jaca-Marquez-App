@@ -44,6 +44,8 @@ userRouter.post('/verify-email-token/:token', verifyEmailToken);
 
 userRouter.post('/send-password-reset/:email', sendPasswordReset);
 
+userRouter.post('/is-authenticated', verifyAuthentication);
+
 userRouter.post(
   '/verify-password-reset-token/:token',
   sanitizedPasswordResetInput,
@@ -63,30 +65,6 @@ userRouter.post(
 );
 
 userRouter.post(
-  '/is-authenticated',
-  AuthService.isAuthenticated(['admin', 'employee', 'client']),
-  verifyAuthentication
-);
-
-userRouter.post(
-  '/admin',
-  AuthService.isAuthenticated(['admin']),
-  verifyAuthentication
-);
-
-userRouter.post(
-  '/employee',
-  AuthService.isAuthenticated(['admin', 'employee']),
-  verifyAuthentication
-);
-
-userRouter.post(
-  '/client',
-  AuthService.isAuthenticated(['admin', 'employee', 'client']),
-  verifyAuthentication
-);
-
-userRouter.post(
   '/send-email/:email',
   AuthService.isAuthenticated(['admin', 'employee']),
   sendEmail
@@ -94,7 +72,7 @@ userRouter.post(
 
 userRouter.get('/email-exists/:email', verifyEmailExists);
 
-userRouter.get('/documentID-exists/:documentID/:id', verifyDocumentIDExists);
+userRouter.get('/document-id-exists/:documentID/:id', verifyDocumentIDExists);
 
 userRouter.get(
   '/',

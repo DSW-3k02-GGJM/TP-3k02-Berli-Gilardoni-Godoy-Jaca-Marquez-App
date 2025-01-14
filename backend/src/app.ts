@@ -56,7 +56,7 @@ Object.entries(routes).forEach(([path, router]) => {
 });
 
 app.use((_, res) => {
-  res.status(404).send({ message: 'Resource not found' });
+  res.status(404).json({ message: 'Resource not found' });
 });
 
 await syncSchema();

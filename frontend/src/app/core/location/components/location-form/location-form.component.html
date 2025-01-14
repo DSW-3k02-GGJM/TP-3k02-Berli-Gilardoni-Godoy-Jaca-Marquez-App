@@ -12,7 +12,12 @@
   </div>
   <hr *ngIf="action === 'Edit'" />
   <div class="content">
-    <form [formGroup]="locationForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <form
+      app-prevent-enter
+      [formGroup]="locationForm"
+      (ngSubmit)="onSubmit()"
+      autocomplete="off"
+    >
       <div class="user-details">
         <mat-form-field
           class="input-box"
@@ -29,7 +34,7 @@
             placeholder=""
           />
           <mat-error
-            *ngIf="locationForm.get('locationName')?.errors?.entityNameExists"
+            *ngIf="locationForm.get('locationName')?.errors?.nameExists"
           >
             Este nombre ya está siendo usado.
           </mat-error>

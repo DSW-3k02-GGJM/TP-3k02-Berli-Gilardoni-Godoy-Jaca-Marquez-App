@@ -20,8 +20,8 @@ export class MailService {
         html,
       });
       console.log(`Message sent to ${to}`);
-    } catch (error: any) {
-      console.error(error.message);
+    } catch (error) {
+      console.error('Server error');
     }
   };
 }

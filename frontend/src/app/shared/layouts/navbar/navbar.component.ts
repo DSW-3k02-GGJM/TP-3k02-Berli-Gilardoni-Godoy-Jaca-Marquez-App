@@ -10,59 +10,59 @@ import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 
 // Services
-import { AuthService } from '../../services/auth/auth.service';
+import { AuthService } from '@security/services/auth.service';
 
 // Components
-import { GenericSuccessDialogComponent } from '../../../shared/components/generic-success-dialog/generic-success-dialog.component';
+import { GenericDialogComponent } from '../../components/generic-dialog/generic-dialog.component';
+
+// Interfaces
+import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
+  imports: [CommonModule, RouterLink, RouterLinkActive],
 })
 export class NavbarComponent implements OnInit {
-  isLogged = false;
-  isAdminOrEmployee = false;
-  profileLink = '/home';
+  isLogged: boolean = false;
+  isAdminOrEmployee: boolean = false;
+  profileLink: string = '/home';
   private subscription?: Subscription;
 
-  constructor(private authService: AuthService, private dialog: MatDialog) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly dialog: MatDialog
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscription = this.authService.loginOrLogout.subscribe({
       next: () => {
         this.isLogged = this.authService.isLogged;
-        if (!this.isLogged) {
-          this.isAdminOrEmployee = false;
+
+        if (this.isLogged) {
+          this.authService.getAuthenticatedId().subscribe({
+            next: (response: { id: number }) => {
+              this.profileLink = `/user/${response.id}`;
+            },
+            error: () => {
+              this.profileLink = '/home';
+            },
+          });
+
+          this.authService.getAuthenticatedRole().subscribe({
+            next: (response: { role: string }) => {
+              this.isAdminOrEmployee =
+                response.role === 'admin' || response.role === 'employee';
+            },
+            error: () => {
+              this.isAdminOrEmployee = false;
+            },
+          });
         }
-
-        this.authService.getAuthenticatedId().subscribe({
-          next: (response) => {
-            this.profileLink = '/user/' + response.id;
-          },
-          error: () => {
-            this.profileLink = '/home';
-          },
-        });
-
-        this.authService.getAuthenticatedRole().subscribe({
-          next: (response) => {
-            this.isAdminOrEmployee =
-              response.role === 'employee' || response.role === 'admin';
-          },
-          error: () => {
-            this.isAdminOrEmployee = false;
-          },
-        });
       },
     });
-
-    if (!this.authService.isLogged) {
-      this.isAdminOrEmployee = false;
-      this.isLogged = false;
-    }
   }
 
   ngOnDestroy(): void {
@@ -72,19 +72,27 @@ export class NavbarComponent implements OnInit {
   }
 
   openDialog(): void {
-    this.dialog.open(GenericSuccessDialogComponent, {
+    this.dialog.open(GenericDialogComponent, {
       width: '250px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
         title: 'Cierre de sesión exitoso',
+        titleColor: 'dark',
+        image: 'assets/checkmark.png',
+        showBackButton: false,
+        mainButtonTitle: 'Aceptar',
         haveRouterLink: true,
         goTo: '/home',
       },
-    });
+    } as GenericDialog);
   }
 
-  logout() {
+  showReservationButton(): boolean {
+    return this.isLogged && !this.isAdminOrEmployee;
+  }
+
+  logout(): void {
     this.authService.logout().subscribe({
       next: () => this.openDialog(),
     });

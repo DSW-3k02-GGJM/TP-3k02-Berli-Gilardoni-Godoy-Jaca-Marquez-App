@@ -15,13 +15,13 @@
   </mat-card>
   <div *ngIf="!errorMessage && users.length > 0">
     <mat-form-field class="input-box" hideRequiredMarker="true">
-      <mat-label>Búsqueda por Email...</mat-label>
+      <mat-label>Búsqueda por Email</mat-label>
       <input
         matInput
         type="text"
         [(ngModel)]="filterRows"
         name="filterPost"
-        placeholder=""
+        placeholder="Escribe al menos 3 caracteres..."
       />
     </mat-form-field>
     <mat-card

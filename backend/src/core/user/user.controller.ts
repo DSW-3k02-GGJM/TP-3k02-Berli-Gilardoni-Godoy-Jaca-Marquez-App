@@ -23,6 +23,7 @@ import {
 
 // External Libraries
 import bcrypt from 'bcrypt';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const frontendURL = `${FRONTEND_DOMAIN}${FRONTEND_PORT}`;
 
@@ -204,7 +205,7 @@ const findAll = async (req: Request, res: Response) => {
   try {
     const users = await em.find(User, {});
     res.status(200).json({ message: 'All users have been found', data: users });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -218,7 +219,7 @@ const findOne = async (req: Request, res: Response) => {
     } else {
       res.status(200).json({ message: 'The user has been found', data: user });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -245,7 +246,7 @@ const add = async (req: Request, res: Response) => {
     });
     await em.flush();
     res.status(201).end();
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -261,7 +262,7 @@ const update = async (req: Request, res: Response) => {
       await em.flush();
       res.status(200).json({ message: 'The user has been updated' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -277,9 +278,9 @@ const remove = async (req: Request, res: Response) => {
       res.status(400).json({ message: 'The user is in use' });
     } else {
       await em.removeAndFlush(user);
-      res.status(200).send({ message: 'The user has been deleted' });
+      res.status(200).json({ message: 'The user has been deleted' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -316,7 +317,7 @@ const register = async (req: Request, res: Response) => {
     res
       .status(200)
       .json({ message: 'Sign-up completed and verification email sent' });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -342,6 +343,7 @@ const login = async (req: Request, res: Response) => {
     }
 
     const token = AuthService.generateToken(user, SECRET_KEY, '1h'); // Creates a token and associates it with the user
+
     res
       .cookie('access_token', token, {
         httpOnly: true, // Only accessible from the server
@@ -351,7 +353,7 @@ const login = async (req: Request, res: Response) => {
       })
       .status(200)
       .json({ message: 'Login completed' });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -364,38 +366,22 @@ const logout = async (req: Request, res: Response) => {
 };
 
 const verifyAuthentication = async (req: Request, res: Response) => {
-  res.status(200).send({ message: 'Authenticated' });
-};
-
-const verifyEmailExists = async (req: Request, res: Response) => {
-  try {
-    const email = req.params.email;
-    await em.findOneOrFail(User, { email });
-    res.status(200).json({ exists: true });
-  } catch (error: any) {
-    res.status(200).json({ exists: false });
+  const token = req.cookies.access_token;
+  if (!token) {
+    return res.status(200).json({ authenticated: false });
   }
-};
-
-const verifyDocumentIDExists = async (req: Request, res: Response) => {
   try {
-    const documentID = req.params.documentID;
-    const id = Number.parseInt(req.params.id);
-    const user = await em.findOneOrFail(User, { documentID: documentID });
-    if (user.id === id) {
-      res.status(200).json({ exists: false });
-    } else {
-      res.status(200).json({ exists: true });
-    }
-  } catch (error: any) {
-    res.status(200).json({ exists: false });
+    jwt.verify(token, SECRET_KEY);
+    res.status(200).json({ authenticated: true });
+  } catch (error) {
+    res.status(200).json({ authenticated: false });
   }
 };
 
 const getAuthenticatedId = async (req: Request, res: Response) => {
   try {
     res.status(200).json({ id: req.session.user.id });
-  } catch (error: any) {
+  } catch (error) {
     res.status(200).json({ id: null });
   }
 };
@@ -403,8 +389,65 @@ const getAuthenticatedId = async (req: Request, res: Response) => {
 const getAuthenticatedRole = async (req: Request, res: Response) => {
   try {
     res.status(200).json({ role: req.session.user.role });
-  } catch (error: any) {
+  } catch (error) {
     res.status(200).json({ role: null });
+  }
+};
+
+const sendEmailVerification = async (req: Request, res: Response) => {
+  try {
+    const email = req.params.email;
+    if (!email) {
+      return res.status(401).json({ message: 'Email is required' });
+    }
+    const user = await em.findOne(User, { email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    } else {
+      const token = AuthService.generateToken(user, SECRET_EMAIL_KEY, '10m');
+      const verificationLink = `${frontendURL}/verify-email/${token}`;
+
+      await MailService.sendMail(
+        [email],
+        'Verificación de correo',
+        '',
+        'Para verificar su correo, haga click <a href="' +
+          verificationLink +
+          '">aquí</a>.'
+      );
+      res.status(200).json({ message: 'Verification email sent' });
+    }
+  } catch (error) {
+    res.status(401).json({ message: 'Unauthorized access (invalid token)' });
+  }
+};
+
+const getEmail = (user: JwtPayload | string): string => {
+  return typeof user !== 'string' ? user.email : '';
+};
+
+const verifyEmailToken = async (req: Request, res: Response) => {
+  try {
+    const token = req.params.token;
+    if (!token) {
+      res.status(401).json({ message: 'Token is required' });
+    } else {
+      const user = AuthService.verifyToken(token, SECRET_EMAIL_KEY);
+      const userToUpdate = await em.findOne(User, {
+        email: getEmail(user),
+      });
+      if (!userToUpdate) {
+        res.status(404).json({ message: 'User not found' });
+      } else if (userToUpdate.verified) {
+        res.status(401).json({ message: 'The user is already verified' });
+      } else {
+        userToUpdate.verified = true;
+        await em.flush();
+        res.status(200).json({ message: 'User verified' });
+      }
+    }
+  } catch (error) {
+    res.status(401).json({ message: 'Unauthorized access (invalid token)' });
   }
 };
 
@@ -432,7 +475,7 @@ const sendPasswordReset = async (req: Request, res: Response) => {
 
       res.status(200).json({ message: 'Password reset email sent' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -445,7 +488,7 @@ const verifyPasswordResetToken = async (req: Request, res: Response) => {
       res.status(401).json({ message: 'Token is required' });
     } else {
       const user = AuthService.verifyToken(token, SECRET_PASSWORD_KEY);
-      const userToUpdate = await em.findOne(User, { email: user.email });
+      const userToUpdate = await em.findOne(User, { email: getEmail(user) });
       if (!userToUpdate) {
         res.status(404).json({ message: 'User not found' });
       } else {
@@ -455,59 +498,33 @@ const verifyPasswordResetToken = async (req: Request, res: Response) => {
         res.status(200).json({ message: 'Password updated' });
       }
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(401).json({ message: 'Unauthorized access (invalid token)' });
   }
 };
 
-const sendEmailVerification = async (req: Request, res: Response) => {
+const verifyEmailExists = async (req: Request, res: Response) => {
   try {
     const email = req.params.email;
-    if (!email) {
-      return res.status(401).json({ message: 'Email is required' });
-    }
-    const user = await em.findOne(User, { email });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    } else {
-      const token = AuthService.generateToken(user, SECRET_EMAIL_KEY, '10m');
-      const verificationLink = `${frontendURL}/verify-email/${token}`;
-
-      await MailService.sendMail(
-        [email],
-        'Verificación de correo',
-        '',
-        'Para verificar su correo, haga click <a href="' +
-          verificationLink +
-          '">aquí</a>.'
-      );
-      res.status(200).json({ message: 'Verification email sent' });
-    }
-  } catch (error: any) {
-    res.status(401).json({ message: 'Unauthorized access (invalid token)' });
+    await em.findOneOrFail(User, { email });
+    res.status(200).json({ exists: true });
+  } catch (error) {
+    res.status(200).json({ exists: false });
   }
 };
 
-const verifyEmailToken = async (req: Request, res: Response) => {
+const verifyDocumentIDExists = async (req: Request, res: Response) => {
   try {
-    const token = req.params.token;
-    if (!token) {
-      res.status(401).json({ message: 'Token is required' });
+    const documentID = req.params.documentID;
+    const id = Number.parseInt(req.params.id);
+    const user = await em.findOneOrFail(User, { documentID });
+    if (user.id === id) {
+      res.status(200).json({ exists: false });
     } else {
-      const user = AuthService.verifyToken(token, SECRET_EMAIL_KEY);
-      const userToUpdate = await em.findOne(User, { email: user.email });
-      if (!userToUpdate) {
-        res.status(404).json({ message: 'User not found' });
-      } else if (userToUpdate.verified) {
-        res.status(401).json({ message: 'The user is already verified' });
-      } else {
-        userToUpdate.verified = true;
-        await em.flush();
-        res.status(200).json({ message: 'User verified' });
-      }
+      res.status(200).json({ exists: true });
     }
-  } catch (error: any) {
-    res.status(401).json({ message: 'Unauthorized access (invalid token)' });
+  } catch (error) {
+    res.status(200).json({ exists: false });
   }
 };
 
@@ -531,7 +548,7 @@ const sendEmail = async (req: Request, res: Response) => {
       await MailService.sendMail([email], subject, message, '');
       res.status(200).json({ message: 'Email sent' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -550,13 +567,13 @@ export {
   login,
   logout,
   verifyAuthentication,
-  verifyEmailExists,
-  verifyDocumentIDExists,
   getAuthenticatedId,
   getAuthenticatedRole,
-  sendPasswordReset,
-  verifyPasswordResetToken,
   sendEmailVerification,
   verifyEmailToken,
+  sendPasswordReset,
+  verifyPasswordResetToken,
+  verifyEmailExists,
+  verifyDocumentIDExists,
   sendEmail,
 };

@@ -4,7 +4,7 @@
   <div class="information">
     <div class="information-title">ID de usuario</div>
     <div class="information-content id-div">
-      <span>{{ id }}</span>
+      <span>{{ currentUserId }}</span>
     </div>
     <div class="information-title">Email</div>
     <div class="information-content">
@@ -13,7 +13,12 @@
   </div>
   <hr />
   <div class="content">
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <form
+      app-prevent-enter
+      [formGroup]="profileForm"
+      (ngSubmit)="onSubmit()"
+      autocomplete="off"
+    >
       <div class="user-details">
         <mat-form-field
           class="input-box"

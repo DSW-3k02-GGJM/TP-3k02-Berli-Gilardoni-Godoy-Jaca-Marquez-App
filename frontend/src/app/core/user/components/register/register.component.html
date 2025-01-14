@@ -2,7 +2,12 @@
   <div class="title">Registrarse</div>
   <hr />
   <div class="content">
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <form
+      app-prevent-enter
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+      autocomplete="off"
+    >
       <div class="user-details">
         <mat-form-field
           disabled

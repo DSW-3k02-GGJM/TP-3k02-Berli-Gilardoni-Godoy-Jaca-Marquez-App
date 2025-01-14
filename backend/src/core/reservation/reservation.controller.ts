@@ -137,7 +137,7 @@ const findAll = async (req: Request, res: Response) => {
       message: 'All reservations have been found',
       data: reservations,
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -157,7 +157,7 @@ const add = async (req: Request, res: Response) => {
     });
     await em.flush();
     res.status(201).end();
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -175,7 +175,7 @@ const update = async (req: Request, res: Response) => {
       await em.flush();
       res.status(200).json({ message: 'The reservation has been updated' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -191,9 +191,9 @@ const remove = async (req: Request, res: Response) => {
       res.status(400).json({ message: 'The reservation is in use' });
     } else {
       await em.removeAndFlush(reservation);
-      res.status(200).send({ message: 'The reservation has been deleted' });
+      res.status(200).json({ message: 'The reservation has been deleted' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -217,7 +217,7 @@ const userReservation = async (req: Request, res: Response) => {
 
     await em.flush();
     res.status(201).end();
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -238,7 +238,7 @@ const getReservationsByUser = async (req: Request, res: Response) => {
       message: 'All reservations have been found',
       data: reservationsByUser,
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };

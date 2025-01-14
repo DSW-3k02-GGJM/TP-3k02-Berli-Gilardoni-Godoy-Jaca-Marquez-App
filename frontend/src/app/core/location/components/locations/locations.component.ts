@@ -1,13 +1,17 @@
 // Angular
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { LocationApiService } from '@core/location/services/location.api.service';
 
 // Components
-import { LocationsTableComponent } from '../locations-table/locations-table.component';
+import { LocationsTableComponent } from '@core/location/components/locations-table/locations-table.component';
+
+// Interfaces
+import { Location } from '@core/location/interfaces/location.interface';
+import { LocationsResponse } from '@core/location/interfaces/locations-response.interface';
 
 @Component({
   selector: 'app-locations',
@@ -16,30 +20,31 @@ import { LocationsTableComponent } from '../locations-table/locations-table.comp
   styleUrl: './locations.component.scss',
   imports: [CommonModule, LocationsTableComponent],
 })
-export class LocationsComponent {
-  locations: any[] = [];
+export class LocationsComponent implements OnInit {
+  locations: Location[] = [];
   errorMessage: string = '';
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private readonly locationApiService: LocationApiService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.fillData();
+    this.loadData();
   }
 
-  onLocationDeleted(locationId: number): void {
-    this.locations = this.locations.filter(
-      (location) => location.id !== locationId
-    );
+  onLocationDeleted(): void {
+    this.loadData();
   }
 
-  fillData() {
-    this.apiService.getAll('locations').subscribe({
-      next: (response) => (this.locations = response.data),
+  loadData(): void {
+    this.locationApiService.getAll().subscribe({
+      next: (response: LocationsResponse) => (this.locations = response.data),
       error: () => (this.errorMessage = '⚠️ Error de conexión'),
     });
   }
 
-  newLocation() {
+  newLocation(): void {
     this.router.navigate(['/staff/locations/create']);
   }
 }

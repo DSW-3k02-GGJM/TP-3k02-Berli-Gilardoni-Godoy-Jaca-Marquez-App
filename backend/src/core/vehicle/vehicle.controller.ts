@@ -151,7 +151,7 @@ const findAll = async (req: Request, res: Response) => {
     res
       .status(200)
       .json({ message: 'All vehicles have been found', data: vehicles });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -173,7 +173,7 @@ const findOne = async (req: Request, res: Response) => {
         .status(200)
         .json({ message: 'The vehicle has been found', data: vehicle });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -183,7 +183,7 @@ const add = async (req: Request, res: Response) => {
     em.create(Vehicle, req.body.sanitizedInput);
     await em.flush();
     res.status(201).end();
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -199,7 +199,7 @@ const update = async (req: Request, res: Response) => {
       await em.flush();
       res.status(200).json({ message: 'The vehicle has been updated' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -217,7 +217,7 @@ const remove = async (req: Request, res: Response) => {
       await em.removeAndFlush(vehicle);
       res.status(200).json({ message: 'The vehicle has been deleted' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -232,7 +232,7 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
     } else {
       res.status(200).json({ exists: true });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(200).json({ exists: false });
   }
 };
@@ -240,8 +240,12 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
 const findAvailable = async (req: Request, res: Response) => {
   try {
     // Get the filter from the request, which includes:
-    // StartDate, EndDate  and Location
-    const filter: any = req.query.sanitizedInput;
+    // StartDate, EndDate and Location
+    const filter = req.query.sanitizedInput as {
+      startDate: string;
+      endDate: string;
+      location: string;
+    };
 
     // Find active reservations that overlap with the
     // date range indicated in the request filter
@@ -259,17 +263,15 @@ const findAvailable = async (req: Request, res: Response) => {
     // and whose ids do not match any id of the vehicles associated
     // with the active reservations that overlap the dates
     // (reservations obtained in the previous query)
-    const vehicleFilters: any[] = [
-      {
-        $and: [
-          { 'l1.id': filter.location },
-          { id: { $nin: reservations.map((res) => res.vehicle.id) } },
-        ],
-      },
-    ];
+    const vehicleFilter: {} = {
+      $and: [
+        { 'l1.id': filter.location },
+        { id: { $nin: reservations.map((res) => res.vehicle.id) } },
+      ],
+    };
 
     // Find the vehicles that meet the previous filter (vehicleFilters)
-    const vehicles = await em.find(Vehicle, vehicleFilters, {
+    const vehicles = await em.find(Vehicle, vehicleFilter, {
       populate: ['location', 'vehicleModel.brand', 'vehicleModel.category'],
     });
 
@@ -297,10 +299,10 @@ const findAvailable = async (req: Request, res: Response) => {
       message: 'All vehicles have been found',
       data: responseData,
     });
-  } catch (error: any) {
+  } catch (error) {
     // If something fails, return a response code indicating an error,
     // along with a descriptive error message
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 

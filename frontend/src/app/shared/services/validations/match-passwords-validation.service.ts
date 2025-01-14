@@ -9,10 +9,10 @@ export class MatchPasswordsValidationService {
   matchPasswordsValidation(
     newPasswordField: string,
     confirmPasswordField: string
-  ) {
+  ): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {
-      let newPassword = formGroup.get(newPasswordField)?.value;
-      let confirmPassword = formGroup.get(confirmPasswordField)?.value;
+      let newPassword: string = formGroup.get(newPasswordField)?.value;
+      let confirmPassword: string = formGroup.get(confirmPasswordField)?.value;
 
       if (newPassword && newPassword !== confirmPassword) {
         formGroup.get('confirmPassword')?.setErrors({

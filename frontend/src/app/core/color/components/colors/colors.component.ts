@@ -1,13 +1,17 @@
 // Angular
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { ColorApiService } from '@core/color/services/color.api.service';
 
 // Components
-import { ColorsTableComponent } from '../colors-table/colors-table.component';
+import { ColorsTableComponent } from '@core/color/components/colors-table/colors-table.component';
+
+// Interfaces
+import { Color } from '@core/color/interfaces/color.interface';
+import { ColorsResponse } from '@core/color/interfaces/colors-response.interface';
 
 @Component({
   selector: 'app-colors',
@@ -15,30 +19,32 @@ import { ColorsTableComponent } from '../colors-table/colors-table.component';
   templateUrl: './colors.component.html',
   styleUrl: './colors.component.scss',
   imports: [CommonModule, ColorsTableComponent],
-  providers: [ApiService],
 })
 export class ColorsComponent implements OnInit {
-  colors: any[] = [];
+  colors: Color[] = [];
   errorMessage: string = '';
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private readonly colorApiService: ColorApiService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.fillData();
+    this.loadData();
   }
 
-  onColorDeleted(id: number): void {
-    this.colors = this.colors.filter((color) => color.id !== id);
+  onColorDeleted(): void {
+    this.loadData();
   }
 
-  fillData() {
-    this.apiService.getAll('colors').subscribe({
-      next: (response) => (this.colors = response.data),
+  loadData(): void {
+    this.colorApiService.getAll().subscribe({
+      next: (response: ColorsResponse) => (this.colors = response.data),
       error: () => (this.errorMessage = '⚠️ Error de conexión'),
     });
   }
 
-  newColor() {
+  newColor(): void {
     this.router.navigate(['/staff/colors/create']);
   }
 }

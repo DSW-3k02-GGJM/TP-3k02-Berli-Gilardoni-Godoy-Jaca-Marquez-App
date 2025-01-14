@@ -20,7 +20,7 @@ export const colorRouter = Router();
 colorRouter.get('/', AuthService.isAuthenticated(['admin']), findAll);
 
 colorRouter.get(
-  '/entityName-exists/:colorName/:id',
+  '/color-name-exists/:colorName/:id',
   AuthService.isAuthenticated(['admin']),
   verifyColorNameExists
 );

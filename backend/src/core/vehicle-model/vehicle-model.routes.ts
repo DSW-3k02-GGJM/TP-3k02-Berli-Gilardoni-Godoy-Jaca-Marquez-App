@@ -22,7 +22,7 @@ vehicleModelRouter.get('/', AuthService.isAuthenticated(['admin']), findAll);
 vehicleModelRouter.get('/:id', AuthService.isAuthenticated(['admin']), findOne);
 
 vehicleModelRouter.get(
-  '/entityName-exists/:vehicleModelName/:id',
+  '/vehicle-model-name-exists/:vehicleModelName/:id',
   AuthService.isAuthenticated(['admin']),
   verifyVehicleModelNameExists
 );

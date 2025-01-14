@@ -7,7 +7,7 @@ import { EntityManager } from '@mikro-orm/core';
 declare global {
   namespace Express {
     interface Request {
-      session?: Record<string, any, null>;
+      session?: Record<string, number, null>;
       em: EntityManager;
     }
   }

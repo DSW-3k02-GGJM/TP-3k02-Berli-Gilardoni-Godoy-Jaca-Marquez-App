@@ -20,7 +20,7 @@ export const locationRouter = Router();
 locationRouter.get('/', findAll);
 
 locationRouter.get(
-  '/entityName-exists/:locationName/:id',
+  '/location-name-exists/:locationName/:id',
   AuthService.isAuthenticated(['admin']),
   verifyLocationNameExists
 );

@@ -1,13 +1,17 @@
 // Angular
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { BrandApiService } from '@core/brand/services/brand.api.service';
 
 // Components
-import { BrandsTableComponent } from '../brands-table/brands-table.component';
+import { BrandsTableComponent } from '@core/brand/components/brands-table/brands-table.component';
+
+// Interfaces
+import { Brand } from '@core/brand/interfaces/brand.interface';
+import { BrandsResponse } from '@core/brand/interfaces/brands-response.interface';
 
 @Component({
   selector: 'app-brands',
@@ -17,27 +21,30 @@ import { BrandsTableComponent } from '../brands-table/brands-table.component';
   imports: [CommonModule, BrandsTableComponent],
 })
 export class BrandsComponent implements OnInit {
-  brands: any[] = [];
+  brands: Brand[] = [];
   errorMessage: string = '';
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private readonly brandApiService: BrandApiService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.fillData();
+    this.loadData();
   }
 
-  onBrandDeleted(brandId: number): void {
-    this.brands = this.brands.filter((brand) => brand.id !== brandId);
+  onBrandDeleted(): void {
+    this.loadData();
   }
 
-  fillData() {
-    this.apiService.getAll('brands').subscribe({
-      next: (response) => (this.brands = response.data),
+  loadData(): void {
+    this.brandApiService.getAll().subscribe({
+      next: (response: BrandsResponse) => (this.brands = response.data),
       error: () => (this.errorMessage = '⚠️ Error de conexión'),
     });
   }
 
-  newBrand() {
+  newBrand(): void {
     this.router.navigate(['/staff/brands/create']);
   }
 }

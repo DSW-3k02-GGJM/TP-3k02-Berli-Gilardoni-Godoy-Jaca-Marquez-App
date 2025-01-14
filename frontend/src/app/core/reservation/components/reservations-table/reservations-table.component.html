@@ -16,33 +16,32 @@
   <div *ngIf="!errorMessage && reservations.length > 0">
     <div class="d-flex justify-content-between gap-3 filter">
       <mat-form-field class="input-box flex-grow-1" hideRequiredMarker="true">
-        <mat-label>Búsqueda por Nro. Documento...</mat-label>
+        <mat-label>Búsqueda por Nro. Documento</mat-label>
         <input
           matInput
           type="text"
           [(ngModel)]="filterRows"
           name="filterPost"
-          placeholder=""
+          placeholder="Escribe al menos 3 caracteres..."
+          (ngModelChange)="filterReservations()"
         />
       </mat-form-field>
       <mat-form-field
         class="input-box date-input-box"
         hideRequiredMarker="true"
       >
-        <mat-label>Fecha (entre Inicio y Fin de Reserva)...</mat-label>
+        <mat-label
+          >Búsqueda por Fecha (entre Inicio y Fin de Reserva, desde
+          1900)</mat-label
+        >
         <input
           matInput
           [(ngModel)]="filterDate"
           name="filterDate"
           type="date"
+          (ngModelChange)="filterReservations()"
         />
       </mat-form-field>
-      <button
-        class="btn btn-dark border border-white text-center btn-filter"
-        (click)="filterReservations()"
-      >
-        Filtrar por Fecha
-      </button>
     </div>
     <mat-card
       *ngIf="
@@ -86,7 +85,7 @@
           "
         >
           <td>{{ formatDate(reservation.reservationDate) }}</td>
-          <td>{{ reservation.vehicle.licensePlate }}</td>
+          <td>{{ getLicensePlate(reservation.vehicle) }}</td>
           <td>
             {{
               reservation.realEndDate
@@ -109,8 +108,8 @@
                 : "No devuelto"
             }}
           </td>
-          <td>{{ reservation.user.documentType }}</td>
-          <td>{{ reservation.user.documentID }}</td>
+          <td>{{ getDocumentType(reservation.user) }}</td>
+          <td>{{ getDocumentID(reservation.user) }}</td>
           <td>
             {{
               reservation.realEndDate

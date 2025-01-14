@@ -1,13 +1,17 @@
 // Angular
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { CategoryApiService } from '@core/category/services/category.api.service';
 
 // Components
-import { CategoriesTableComponent } from '../categories-table/categories-table.component';
+import { CategoriesTableComponent } from '@core/category/components/categories-table/categories-table.component';
+
+// Interfaces
+import { Category } from '@core/category/interfaces/category.interface';
+import { CategoriesResponse } from '@core/category/interfaces/categories-response.interface';
 
 @Component({
   selector: 'app-categories',
@@ -15,32 +19,32 @@ import { CategoriesTableComponent } from '../categories-table/categories-table.c
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss',
   imports: [CommonModule, CategoriesTableComponent],
-  providers: [ApiService],
 })
 export class CategoriesComponent implements OnInit {
-  categories: any[] = [];
+  categories: Category[] = [];
   errorMessage: string = '';
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private readonly categoryApiService: CategoryApiService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.fillData();
+    this.loadData();
   }
 
-  onCategoryDeleted(categoryId: number): void {
-    this.categories = this.categories.filter(
-      (category) => category.id !== categoryId
-    );
+  onCategoryDeleted(): void {
+    this.loadData();
   }
 
-  fillData() {
-    this.apiService.getAll('categories').subscribe({
-      next: (response) => (this.categories = response.data),
+  loadData(): void {
+    this.categoryApiService.getAll().subscribe({
+      next: (response: CategoriesResponse) => (this.categories = response.data),
       error: () => (this.errorMessage = '⚠️ Error de conexión'),
     });
   }
 
-  newCategory() {
+  newCategory(): void {
     this.router.navigate(['/staff/categories/create']);
   }
 }

@@ -1,10 +1,6 @@
 // Angular
 import { Routes } from '@angular/router';
 
-// Pages
-import { HomePageComponent } from '@pages/home/home.component';
-import { StaffMenuComponent } from '@pages/staff/components/staff-menu/staff-menu.component';
-
 // Brand
 import { BrandsComponent } from '@core/brand/components/brands/brands.component';
 import { BrandFormComponent } from '@core/brand/components/brand-form/brand-form.component';
@@ -21,14 +17,6 @@ import { ColorFormComponent } from '@core/color/components/color-form/color-form
 import { LocationsComponent } from '@core/location/components/locations/locations.component';
 import { LocationFormComponent } from '@core/location/components/location-form/location-form.component';
 
-// Vehicle
-import { VehiclesComponent } from '@core/vehicle/components/vehicles/vehicles.component';
-import { VehicleFormComponent } from '@core/vehicle/components/vehicle-form/vehicle-form.component';
-
-// Vehicle Model
-import { VehicleModelsComponent } from '@core/vehicle-model/components/vehicle-models/vehicle-models.component';
-import { VehicleModelFormComponent } from '@core/vehicle-model/components/vehicle-model-form/vehicle-model-form.component';
-
 // Reservation
 import { ReservationsComponent } from '@core/reservation/components/reservations/reservations.component';
 import { ReservationsClientComponent } from '@core/reservation/components/reservations-client/reservations-client.component';
@@ -36,7 +24,7 @@ import { ReservationFormComponent } from '@core/reservation/components/reservati
 import { ReservationStepperComponent } from '@core/reservation/components/reservation-stepper/reservation-stepper.component';
 
 // User
-import { ComunicationByEmailComponent } from '@core/user/components/comunication-by-email/comunication-by-email.component';
+import { CommunicationByEmailComponent } from '@core/user/components/communication-by-email/communication-by-email.component';
 import { EmailVerificationComponent } from '@core/user/components/email-verification/email-verification.component';
 import { ForgotPasswordComponent } from '@core/user/components/forgot-password/forgot-password.component';
 import { LoginComponent } from '@core/user/components/login/login.component';
@@ -46,177 +34,248 @@ import { ResetPasswordComponent } from '@core/user/components/reset-password/res
 import { UsersComponent } from '@core/user/components/users/users.component';
 import { UserFormComponent } from '@core/user/components/user-form/user-form.component';
 
+// Vehicle
+import { VehiclesComponent } from '@core/vehicle/components/vehicles/vehicles.component';
+import { VehicleFormComponent } from '@core/vehicle/components/vehicle-form/vehicle-form.component';
+
+// Vehicle Model
+import { VehicleModelsComponent } from '@core/vehicle-model/components/vehicle-models/vehicle-models.component';
+import { VehicleModelFormComponent } from '@core/vehicle-model/components/vehicle-model-form/vehicle-model-form.component';
+
+// Pages
+import { HomePageComponent } from '@pages/home/home.component';
+import { StaffMenuComponent } from '@pages/staff/components/staff-menu/staff-menu.component';
+
 // Guards
-import { authAdminGuard } from '@security/guards/auth-admin.guard';
-import { authClientGuard } from '@security/guards/auth-client.guard';
-import { authEmployeeGuard } from '@security/guards/auth-employee.guard';
-import { authGuard } from '@security/guards/auth.guard';
+import { roleGuard } from '@security/guards/role.guard';
 
 export const routes: Routes = [
   // Home-Page
   { path: 'home', component: HomePageComponent },
 
   // Authentication
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'verify-email/:token', component: EmailVerificationComponent },
-  { path: 'reset-password/:token', component: ResetPasswordComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'user/:id', component: ProfileComponent, canActivate: [authGuard] },
-
-  // Reservations
   {
-    path: 'reservation',
-    component: ReservationStepperComponent,
-    canActivate: [authClientGuard],
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [roleGuard],
+    data: { allowedRoles: null },
   },
   {
-    path: 'user-reservations',
-    component: ReservationsClientComponent,
-    canActivate: [authClientGuard],
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [roleGuard],
+    data: { allowedRoles: null },
+  },
+  {
+    path: 'verify-email/:token',
+    component: EmailVerificationComponent,
+    canActivate: [roleGuard],
+    data: { allowedRoles: null },
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+    canActivate: [roleGuard],
+    data: { allowedRoles: null },
+  },
+  {
+    path: 'reset-password/:token',
+    component: ResetPasswordComponent,
+    canActivate: [roleGuard],
+    data: { allowedRoles: null },
   },
 
   // Staff and Administration
   {
     path: 'staff',
     component: StaffMenuComponent,
-    canActivate: [authEmployeeGuard],
+    canActivate: [roleGuard],
+    data: { allowedRoles: ['admin', 'employee'] },
     children: [
-      // Locations
-      {
-        path: 'locations',
-        component: LocationsComponent,
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'locations/create',
-        component: LocationFormComponent,
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'locations/:id',
-        component: LocationFormComponent,
-        canActivate: [authAdminGuard],
-      },
-
       // Brands
       {
         path: 'brands',
         component: BrandsComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
       {
         path: 'brands/create',
         component: BrandFormComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
       {
         path: 'brands/:id',
         component: BrandFormComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
 
       // Colors
       {
         path: 'colors',
         component: ColorsComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
       {
         path: 'colors/create',
         component: ColorFormComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
       {
         path: 'colors/:id',
         component: ColorFormComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
 
       // Categories
       {
         path: 'categories',
         component: CategoriesComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
       {
         path: 'categories/create',
         component: CategoryFormComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
       {
         path: 'categories/:id',
         component: CategoryFormComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
+      },
+
+      // Locations
+      {
+        path: 'locations',
+        component: LocationsComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
+      },
+      {
+        path: 'locations/create',
+        component: LocationFormComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
+      },
+      {
+        path: 'locations/:id',
+        component: LocationFormComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
 
       // Reservations
       {
         path: 'reservations',
         component: ReservationsComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin', 'employee'] },
       },
       {
         path: 'reservations/create',
         component: ReservationFormComponent,
-      },
-
-      // Vehicles
-      {
-        path: 'vehicles',
-        component: VehiclesComponent,
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'vehicles/create',
-        component: VehicleFormComponent,
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'vehicles/:id',
-        component: VehicleFormComponent,
-        canActivate: [authAdminGuard],
-      },
-
-      // Vehicle Models
-      {
-        path: 'vehicle-models',
-        component: VehicleModelsComponent,
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'vehicle-models/create',
-        component: VehicleModelFormComponent,
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'vehicle-models/:id',
-        component: VehicleModelFormComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin', 'employee'] },
       },
 
       // Users
       {
         path: 'users',
         component: UsersComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
       {
         path: 'users/create',
         component: UserFormComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
       {
         path: 'users/:id',
         component: UserFormComponent,
-        canActivate: [authAdminGuard],
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
+      },
+
+      // Vehicles
+      {
+        path: 'vehicles',
+        component: VehiclesComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
+      },
+      {
+        path: 'vehicles/create',
+        component: VehicleFormComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
+      },
+      {
+        path: 'vehicles/:id',
+        component: VehicleFormComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
+      },
+
+      // Vehicle Models
+      {
+        path: 'vehicle-models',
+        component: VehicleModelsComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
+      },
+      {
+        path: 'vehicle-models/create',
+        component: VehicleModelFormComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
+      },
+      {
+        path: 'vehicle-models/:id',
+        component: VehicleModelFormComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin'] },
       },
 
       // Communication
       {
-        path: 'comunication',
-        component: ComunicationByEmailComponent,
+        path: 'communication',
+        component: CommunicationByEmailComponent,
+        canActivate: [roleGuard],
+        data: { allowedRoles: ['admin', 'employee'] },
       },
     ],
+  },
+
+  // Client
+  {
+    path: 'reservation',
+    component: ReservationStepperComponent,
+    canActivate: [roleGuard],
+    data: { allowedRoles: ['client'] },
+  },
+  {
+    path: 'user-reservations',
+    component: ReservationsClientComponent,
+    canActivate: [roleGuard],
+    data: { allowedRoles: ['client'] },
+  },
+
+  // Profile
+  {
+    path: 'user/:id',
+    component: ProfileComponent,
+    canActivate: [roleGuard],
+    data: { allowedRoles: ['admin', 'employee', 'client'] },
   },
 
   // Default

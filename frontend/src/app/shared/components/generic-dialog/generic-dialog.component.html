@@ -1,0 +1,27 @@
+<h2 mat-dialog-title class="title text-{{ data.titleColor }} unselectable">
+  {{ data.title }}
+</h2>
+<mat-dialog-content class="content unselectable">
+  <img src="{{ data.image }}" alt="{{ getAltText(data.image) }}" />
+  <div *ngIf="data.message">
+    <hr />
+    <p class="message">{{ data.message }}</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    *ngIf="data.showBackButton"
+    mat-button
+    mat-dialog-close
+    cdkFocusInitial
+  >
+    {{ data.backButtonTitle }}
+  </button>
+  <button
+    mat-button
+    [mat-dialog-close]="true"
+    [ngClass]="data.mainButtonColor ? 'text-white ' + data.mainButtonColor : ''"
+  >
+    {{ data.mainButtonTitle }}
+  </button>
+</mat-dialog-actions>

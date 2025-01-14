@@ -1,16 +1,17 @@
 // Angular
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { VehicleApiService } from '@core/vehicle/services/vehicle.api.service';
 
 // Components
-import { VehiclesTableComponent } from '../vehicles-table/vehicles-table.component';
+import { VehiclesTableComponent } from '@core/vehicle/components/vehicles-table/vehicles-table.component';
 
 // Interfaces
-import { Vehicle } from '@core/vehicle/interfaces/vehicle.model';
+import { Vehicle } from '@core/vehicle/interfaces/vehicle.interface';
+import { VehiclesResponse } from '@core/vehicle/interfaces/vehicles-response.interface';
 
 @Component({
   selector: 'app-vehicles',
@@ -19,30 +20,31 @@ import { Vehicle } from '@core/vehicle/interfaces/vehicle.model';
   styleUrl: './vehicles.component.scss',
   imports: [CommonModule, VehiclesTableComponent],
 })
-export class VehiclesComponent {
+export class VehiclesComponent implements OnInit {
   vehicles: Vehicle[] = [];
   errorMessage: string = '';
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private readonly vehicleApiService: VehicleApiService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.fillData();
+    this.loadData();
   }
 
-  onVehicleDeleted(vehicleId: number): void {
-    this.vehicles = this.vehicles.filter(
-      (vehicle) => Number(vehicle.id) !== vehicleId
-    );
+  onVehicleDeleted(): void {
+    this.loadData();
   }
 
-  fillData() {
-    this.apiService.getAll('vehicles').subscribe({
-      next: (response) => (this.vehicles = response.data),
+  loadData(): void {
+    this.vehicleApiService.getAll().subscribe({
+      next: (response: VehiclesResponse) => (this.vehicles = response.data),
       error: () => (this.errorMessage = '⚠️ Error de conexión'),
     });
   }
 
-  newVehicle() {
+  newVehicle(): void {
     this.router.navigate(['/staff/vehicles/create']);
   }
 }

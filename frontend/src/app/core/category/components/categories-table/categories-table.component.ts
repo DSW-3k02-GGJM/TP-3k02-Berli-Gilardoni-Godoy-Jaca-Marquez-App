@@ -1,24 +1,28 @@
 // Angular
-import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // Angular Material
 import { MatInputModule } from '@angular/material/input';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { CategoryApiService } from '@core/category/services/category.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Components
-import { ConfirmDeletionDialogComponent } from '@shared/components/confirm-deletion-dialog/confirm-deletion-dialog.component';
-import { GenericErrorDialogComponent } from '@shared/components/generic-error-dialog/generic-error-dialog.component';
+import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
+
+// Interfaces
+import { Category } from '@core/category/interfaces/category.interface';
+import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
 
 // Pipes
-import { FilterPipe } from '@shared/pipes/filter/filter.pipe';
+import { CategoryFilterPipe } from '@core/category/pipes/category-filter.pipe';
 
 @Component({
   selector: 'app-categories-table',
@@ -27,51 +31,55 @@ import { FilterPipe } from '@shared/pipes/filter/filter.pipe';
   styleUrl: '../../../../shared/styles/genericTable.scss',
   imports: [
     CommonModule,
-    FilterPipe,
     FormsModule,
     MatInputModule,
     MatCardModule,
+    CategoryFilterPipe,
   ],
 })
 export class CategoriesTableComponent {
-  @Input() categories!: any[];
+  @Input() categories: Category[] = [];
   @Input() errorMessage: string = '';
-  @Output() categoryDeleted = new EventEmitter<number>();
+  @Output() categoryDeleted = new EventEmitter<void>();
 
   filterRows: string = '';
 
   constructor(
-    private apiService: ApiService,
-    private dialog: MatDialog,
-    private snackBarService: SnackBarService,
-    private router: Router
+    private readonly categoryApiService: CategoryApiService,
+    private readonly snackBarService: SnackBarService,
+    private readonly dialog: MatDialog,
+    private readonly router: Router
   ) {}
 
   openDeleteDialog(name: string, id: number): void {
-    const dialogRef = this.dialog.open(ConfirmDeletionDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Eliminar categoría',
-        titleColor: 'danger',
-        image: 'assets/delete.png',
-        message: `¿Está seguro de que desea eliminar la categoría ${name}?`,
-        buttonTitle: 'Eliminar',
-        buttonColor: 'danger',
-      },
-    });
+    const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
+      this.dialog.open(GenericDialogComponent, {
+        width: '350px',
+        enterAnimationDuration: '0ms',
+        exitAnimationDuration: '0ms',
+        data: {
+          title: 'Eliminar categoría',
+          titleColor: 'danger',
+          image: 'assets/delete.png',
+          message: `¿Está seguro de que desea eliminar la categoría ${name}?`,
+          showBackButton: true,
+          backButtonTitle: 'Volver',
+          mainButtonTitle: 'Eliminar',
+          mainButtonColor: 'bg-danger',
+          haveRouterLink: false,
+        },
+      } as GenericDialog);
     dialogRef.afterClosed().subscribe({
-      next: (result) => {
+      next: (result: boolean | undefined) => {
         if (result) {
-          this.apiService.delete('categories', Number(id)).subscribe({
+          this.categoryApiService.delete(id).subscribe({
             next: () => {
-              this.categoryDeleted.emit(id);
+              this.categoryDeleted.emit();
               this.snackBarService.show(
                 'La categoría ha sido eliminada exitosamente'
               );
             },
-            error: (error) => {
+            error: (error: HttpErrorResponse) => {
               if (error.status === 400) {
                 this.openErrorDialog();
               } else {
@@ -85,32 +93,36 @@ export class CategoriesTableComponent {
   }
 
   openErrorDialog(): void {
-    this.dialog.open(GenericErrorDialogComponent, {
+    this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
         title: 'Error al eliminar la categoría',
+        titleColor: 'dark',
+        image: 'assets/wrongmark.png',
         message:
           'La categoría no se puede eliminar porque tiene modelos asociados.',
+        showBackButton: false,
+        mainButtonTitle: 'Aceptar',
         haveRouterLink: false,
       },
-    });
+    } as GenericDialog);
   }
 
-  get filteredCategories() {
-    return this.categories.filter((category) =>
+  get filteredCategories(): Category[] {
+    return this.categories.filter((category: Category) =>
       category.categoryName
         .toLowerCase()
         .includes(this.filterRows.toLowerCase())
     );
   }
 
-  editCategory(category: any): void {
-    this.router.navigate(['/staff/categories/' + category.id]);
+  editCategory(category: Category): void {
+    this.router.navigate([`/staff/categories/${category.id}`]);
   }
 
-  deleteCategory(category: any): void {
+  deleteCategory(category: Category): void {
     this.openDeleteDialog(category.categoryName, category.id);
   }
 }

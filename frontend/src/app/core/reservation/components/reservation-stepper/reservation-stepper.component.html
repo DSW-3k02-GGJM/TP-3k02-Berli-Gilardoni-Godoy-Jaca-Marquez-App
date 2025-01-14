@@ -38,7 +38,7 @@
       (selectionChange)="onStepChange($event)"
     >
       <mat-step [stepControl]="vehicleFilterForm">
-        <form [formGroup]="vehicleFilterForm">
+        <form app-prevent-enter [formGroup]="vehicleFilterForm">
           <ng-template matStepLabel>Seleccionar fechas y sucursal</ng-template>
           <div class="user-details">
             <mat-form-field
@@ -58,9 +58,9 @@
                 <input
                   matEndDate
                   placeholder="Fecha Fin"
-                  id="plannedEndDate"
+                  id="endDate"
                   class="form-control"
-                  formControlName="plannedEndDate"
+                  formControlName="endDate"
                 />
               </mat-date-range-input>
               <mat-error
@@ -70,13 +70,9 @@
               </mat-error>
 
               <mat-error
-                *ngIf="
-                  vehicleFilterForm.get('plannedEndDate')?.errors?.dateInvalid
-                "
+                *ngIf="vehicleFilterForm.get('endDate')?.errors?.dateInvalid"
               >
-                {{
-                  vehicleFilterForm.get("plannedEndDate")?.errors?.dateInvalid
-                }}
+                {{ vehicleFilterForm.get("endDate")?.errors?.dateInvalid }}
               </mat-error>
               <mat-datepicker-toggle
                 matIconSuffix
@@ -150,7 +146,7 @@
           <div class="information-section">
             <div class="information-title2">Fecha de Fin</div>
             <div class="information-content">
-              <span>{{ plannedEndDate }}</span>
+              <span>{{ endDate }}</span>
             </div>
           </div>
           <div class="information-section">

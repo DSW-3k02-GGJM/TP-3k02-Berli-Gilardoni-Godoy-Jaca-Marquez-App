@@ -1,12 +1,13 @@
 // Angular
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Angular Material
@@ -18,8 +19,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { LocationApiService } from '@core/location/services/location.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
+
+// Interfaces
+import { LocationResponse } from '@core/location/interfaces/location-response.interface';
+import { LocationInput } from '@core/location/interfaces/location-input.interface';
+
+// Directives
+import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
 
 @Component({
   selector: 'app-location-form',
@@ -35,6 +43,7 @@ import { SnackBarService } from '@shared/services/notifications/snack-bar.servic
     MatInputModule,
     MatIconModule,
     MatSelectModule,
+    PreventEnterDirective,
   ],
 })
 export class LocationFormComponent implements OnInit {
@@ -45,14 +54,7 @@ export class LocationFormComponent implements OnInit {
   errorMessage: string = '';
   pending: boolean = false;
 
-  constructor(
-    private apiService: ApiService,
-    private snackBarService: SnackBarService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) {}
-
-  locationForm = new FormGroup(
+  locationForm: FormGroup = new FormGroup(
     {
       locationName: new FormControl('', [Validators.required]),
       address: new FormControl('', [Validators.required]),
@@ -65,6 +67,13 @@ export class LocationFormComponent implements OnInit {
     { updateOn: 'blur' }
   );
 
+  constructor(
+    private readonly locationApiService: LocationApiService,
+    private readonly snackBarService: SnackBarService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
+  ) {}
+
   ngOnInit(): void {
     this.activatedRoute.params.subscribe({
       next: (params) => {
@@ -73,58 +82,59 @@ export class LocationFormComponent implements OnInit {
           this.action = 'Edit';
           this.title = 'Editar sucursal';
           this.buttonText = 'Guardar cambios';
-          this.apiService
-            .getOne('locations', Number(this.currentLocationId))
-            .subscribe({
-              next: (response) => this.locationForm.patchValue(response.data),
-              error: () =>
-                this.snackBarService.show(
-                  'Error al obtener la información de la sucursal'
-                ),
-            });
+          this.locationApiService.getOne(this.currentLocationId).subscribe({
+            next: (response: LocationResponse) =>
+              this.locationForm.patchValue(response.data),
+            error: () =>
+              this.snackBarService.show(
+                'Error al obtener la información de la sucursal'
+              ),
+          });
           this.locationForm.controls['locationName'].setAsyncValidators([
-            this.apiService.uniqueEntityNameValidator(
-              'locations',
-              this.currentLocationId
-            ),
+            this.locationApiService.uniqueNameValidator(this.currentLocationId),
           ]);
         } else {
           this.action = 'Create';
           this.title = 'Nueva sucursal';
           this.buttonText = 'Registrar';
           this.locationForm.controls['locationName'].setAsyncValidators([
-            this.apiService.uniqueEntityNameValidator('locations', -1),
+            this.locationApiService.uniqueNameValidator(-1),
           ]);
         }
       },
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (!this.locationForm.invalid) {
       this.pending = true;
       if (this.action == 'Create') {
-        this.apiService.create('locations', this.locationForm.value).subscribe({
-          next: () => {
-            this.pending = false;
-            this.navigateToLocations();
-          },
-          error: (error) => {
-            this.pending = false;
-            if (error.status !== 400) {
-              this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-            }
-          },
-        });
-      } else if (this.action == 'Edit') {
-        this.apiService
-          .update('locations', this.currentLocationId, this.locationForm.value)
+        this.locationApiService
+          .create(this.locationForm.value as LocationInput)
           .subscribe({
             next: () => {
               this.pending = false;
               this.navigateToLocations();
             },
-            error: (error) => {
+            error: (error: HttpErrorResponse) => {
+              this.pending = false;
+              if (error.status !== 400) {
+                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
+              }
+            },
+          });
+      } else if (this.action == 'Edit') {
+        this.locationApiService
+          .update(
+            this.currentLocationId,
+            this.locationForm.value as LocationInput
+          )
+          .subscribe({
+            next: () => {
+              this.pending = false;
+              this.navigateToLocations();
+            },
+            error: (error: HttpErrorResponse) => {
               this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = 'Error en el servidor. Intente de nuevo.';
@@ -135,7 +145,7 @@ export class LocationFormComponent implements OnInit {
     }
   }
 
-  navigateToLocations() {
+  navigateToLocations(): void {
     this.router.navigate(['/staff/locations']);
   }
 }

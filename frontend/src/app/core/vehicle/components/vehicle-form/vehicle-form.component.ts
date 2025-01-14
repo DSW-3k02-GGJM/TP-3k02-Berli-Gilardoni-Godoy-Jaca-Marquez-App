@@ -1,20 +1,21 @@
 // Angular
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Angular Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 
@@ -22,9 +23,23 @@ import { MatCardModule } from '@angular/material/card';
 import { forkJoin } from 'rxjs';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
-import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
+import { VehicleApiService } from '@core/vehicle/services/vehicle.api.service';
+import { ColorApiService } from '@core/color/services/color.api.service';
+import { LocationApiService } from '@core/location/services/location.api.service';
+import { VehicleModelApiService } from '@core/vehicle-model/services/vehicle-model.api.service';
 import { LicensePlateValidationService } from '@shared/services/validations/license-plate-validation.service';
+
+// Interfaces
+import { VehicleResponse } from '@core/vehicle/interfaces/vehicle-response.interface';
+import { VehicleInput } from '@core/vehicle/interfaces/vehicle-input.interface';
+import { Brand } from '@core/brand/interfaces/brand.interface';
+import { Color } from '@core/color/interfaces/color.interface';
+import { Location } from '@core/location/interfaces/location.interface';
+import { VehicleModel } from '@core/vehicle-model/interfaces/vehicle-model.interface';
+import { ForkJoinResponse } from '@core/vehicle/interfaces/fork-join-response.interface';
+
+// Directives
+import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -41,6 +56,7 @@ import { LicensePlateValidationService } from '@shared/services/validations/lice
     MatInputModule,
     MatSelectModule,
     MatCardModule,
+    PreventEnterDirective,
   ],
 })
 export class VehicleFormComponent implements OnInit {
@@ -54,11 +70,11 @@ export class VehicleFormComponent implements OnInit {
 
   dataLoadError: boolean = false;
 
-  vehicleModels: any[] = [];
-  colors: any[] = [];
-  locations: any[] = [];
+  colors: Color[] = [];
+  locations: Location[] = [];
+  vehicleModels: VehicleModel[] = [];
 
-  vehicleForm = new FormGroup(
+  vehicleForm: FormGroup = new FormGroup(
     {
       licensePlate: new FormControl('', [
         Validators.required,
@@ -78,8 +94,10 @@ export class VehicleFormComponent implements OnInit {
   );
 
   constructor(
-    private apiService: ApiService,
-    private snackBarService: SnackBarService,
+    private vehicleApiService: VehicleApiService,
+    private colorApiService: ColorApiService,
+    private locationApiService: LocationApiService,
+    private vehicleModelApiService: VehicleModelApiService,
     private licensePlateValidationService: LicensePlateValidationService,
     private activatedRoute: ActivatedRoute,
     private router: Router
@@ -87,7 +105,6 @@ export class VehicleFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentVehicleId = params['id'];
@@ -95,24 +112,23 @@ export class VehicleFormComponent implements OnInit {
           this.action = 'Edit';
           this.title = 'Editar vehículo';
           this.buttonText = 'Guardar cambios';
-          this.apiService
-            .getOne('vehicles', Number(this.currentVehicleId))
-            .subscribe({
-              next: (response) => {
-                this.vehicleForm.patchValue({
-                  ...response.data,
-                  vehicleModel: response.data.vehicleModel.id,
-                  color: response.data.color.id,
-                  location: response.data.location.id,
-                });
-              },
-              error: () => {
-                this.displayedMessage = '⚠️ Error de conexión';
-              },
-            });
+          this.vehicleApiService.getOne(this.currentVehicleId).subscribe({
+            next: (response: VehicleResponse) => {
+              this.vehicleForm.patchValue({
+                ...response.data,
+                color: this.getColorId(response.data.color),
+                location: this.getLocationId(response.data.location),
+                vehicleModel: this.getVehicleModelId(
+                  response.data.vehicleModel
+                ),
+              });
+            },
+            error: () => {
+              this.displayedMessage = '⚠️ Error de conexión';
+            },
+          });
           this.vehicleForm.controls['licensePlate'].setAsyncValidators([
-            this.apiService.uniqueEntityNameValidator(
-              'vehicles',
+            this.vehicleApiService.uniqueLicensePlateValidator(
               this.currentVehicleId
             ),
           ]);
@@ -121,7 +137,7 @@ export class VehicleFormComponent implements OnInit {
           this.title = 'Nuevo vehículo';
           this.buttonText = 'Registrar';
           this.vehicleForm.controls['licensePlate'].setAsyncValidators([
-            this.apiService.uniqueEntityNameValidator('vehicles', -1),
+            this.vehicleApiService.uniqueLicensePlateValidator(-1),
           ]);
         }
       },
@@ -130,14 +146,14 @@ export class VehicleFormComponent implements OnInit {
 
   loadData(): void {
     forkJoin({
-      vehicleModels: this.apiService.getAll('vehicle-models'),
-      colors: this.apiService.getAll('colors'),
-      locations: this.apiService.getAll('locations'),
+      colors: this.colorApiService.getAll(),
+      locations: this.locationApiService.getAll(),
+      vehicleModels: this.vehicleModelApiService.getAll(),
     }).subscribe({
-      next: (response) => {
-        this.vehicleModels = response.vehicleModels.data;
+      next: (response: ForkJoinResponse) => {
         this.colors = response.colors.data;
         this.locations = response.locations.data;
+        this.vehicleModels = response.vehicleModels.data;
       },
       error: () => {
         this.displayedMessage = '⚠️ Error de conexión';
@@ -146,36 +162,54 @@ export class VehicleFormComponent implements OnInit {
   }
 
   get hasRelatedEntities(): boolean {
-    return [this.vehicleModels, this.colors, this.locations].every(
+    return [this.colors, this.locations, this.vehicleModels].every(
       (array) => array.length > 0
     );
   }
 
-  onSubmit() {
+  getBrandName(brand: Brand | undefined): string {
+    return typeof brand === 'object' ? brand.brandName : '';
+  }
+
+  getColorId(color: Color | number | undefined): string {
+    return typeof color === 'object' ? color.id.toString() : '';
+  }
+
+  getLocationId(location: Location | number | undefined): string {
+    return typeof location === 'object' ? location.id.toString() : '';
+  }
+
+  getVehicleModelId(vehicleModel: VehicleModel | undefined): string {
+    return typeof vehicleModel === 'object' ? vehicleModel.id.toString() : '';
+  }
+
+  onSubmit(): void {
     if (!this.vehicleForm.invalid) {
       this.pending = true;
       if (this.action === 'Create') {
-        this.apiService.create('vehicles', this.vehicleForm.value).subscribe({
-          next: () => {
-            this.pending = false;
-            this.navigateToVehicles();
-          },
-          error: (error) => {
-            this.pending = false;
-            if (error.status !== 400) {
-              this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-            }
-          },
-        });
-      } else if (this.action === 'Edit') {
-        this.apiService
-          .update('vehicles', this.currentVehicleId, this.vehicleForm.value)
+        this.vehicleApiService
+          .create(this.vehicleForm.value as VehicleInput)
           .subscribe({
             next: () => {
               this.pending = false;
               this.navigateToVehicles();
             },
-            error: (error) => {
+            error: (error: HttpErrorResponse) => {
+              this.pending = false;
+              if (error.status !== 400) {
+                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
+              }
+            },
+          });
+      } else if (this.action === 'Edit') {
+        this.vehicleApiService
+          .update(this.currentVehicleId, this.vehicleForm.value as VehicleInput)
+          .subscribe({
+            next: () => {
+              this.pending = false;
+              this.navigateToVehicles();
+            },
+            error: (error: HttpErrorResponse) => {
               this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = 'Error en el servidor. Intente de nuevo.';
@@ -186,7 +220,7 @@ export class VehicleFormComponent implements OnInit {
     }
   }
 
-  navigateToVehicles() {
+  navigateToVehicles(): void {
     this.router.navigate(['/staff/vehicles']);
   }
 }

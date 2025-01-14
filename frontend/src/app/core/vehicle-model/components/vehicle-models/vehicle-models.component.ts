@@ -1,13 +1,17 @@
 // Angular
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { VehicleModelApiService } from '@core/vehicle-model/services/vehicle-model.api.service';
 
 // Components
-import { VehicleModelsTableComponent } from '../vehicle-models-table/vehicle-models-table.component';
+import { VehicleModelsTableComponent } from '@core/vehicle-model/components/vehicle-models-table/vehicle-models-table.component';
+
+// Interfaces
+import { VehicleModel } from '@core/vehicle-model/interfaces/vehicle-model.interface';
+import { VehicleModelsResponse } from '@core/vehicle-model/interfaces/vehicle-models-response.interface';
 
 @Component({
   selector: 'app-vehicle-models',
@@ -16,30 +20,32 @@ import { VehicleModelsTableComponent } from '../vehicle-models-table/vehicle-mod
   styleUrl: './vehicle-models.component.scss',
   imports: [CommonModule, VehicleModelsTableComponent],
 })
-export class VehicleModelsComponent {
-  vehicleModels: any[] = [];
+export class VehicleModelsComponent implements OnInit {
+  vehicleModels: VehicleModel[] = [];
   errorMessage: string = '';
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private readonly vehicleModelApiService: VehicleModelApiService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.fillData();
+    this.loadData();
   }
 
-  onVehicleModelDeleted(vehicleModelId: number): void {
-    this.vehicleModels = this.vehicleModels.filter(
-      (vehicleModel) => vehicleModel.id !== vehicleModelId
-    );
+  onVehicleModelDeleted(): void {
+    this.loadData();
   }
 
-  fillData() {
-    this.apiService.getAll('vehicle-models').subscribe({
-      next: (response) => (this.vehicleModels = response.data),
+  loadData(): void {
+    this.vehicleModelApiService.getAll().subscribe({
+      next: (response: VehicleModelsResponse) =>
+        (this.vehicleModels = response.data),
       error: () => (this.errorMessage = '⚠️ Error de conexión'),
     });
   }
 
-  newVehicleModel() {
+  newVehicleModel(): void {
     this.router.navigate(['staff/vehicle-models/create']);
   }
 }

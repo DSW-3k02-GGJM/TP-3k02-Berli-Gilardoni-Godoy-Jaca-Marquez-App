@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 
 // Services
-import { AuthService } from './shared/services/auth/auth.service';
+import { AuthService } from '@security/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +12,10 @@ import { AuthService } from './shared/services/auth/auth.service';
 export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.authService.isAuthenticated().subscribe({
-      next: () => this.authService.notifyLoginOrLogout(true),
+      next: (isAuthenticated: boolean) =>
+        this.authService.notifyLoginOrLogout(isAuthenticated),
     });
   }
 }

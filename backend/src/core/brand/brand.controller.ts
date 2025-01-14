@@ -49,7 +49,7 @@ const findAll = async (req: Request, res: Response) => {
     res
       .status(200)
       .json({ message: 'All brands have been found', data: brands });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -65,7 +65,7 @@ const findOne = async (req: Request, res: Response) => {
         .status(200)
         .json({ message: 'The brand has been found', data: brand });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -75,7 +75,7 @@ const add = async (req: Request, res: Response) => {
     em.create(Brand, req.body.sanitizedInput);
     await em.flush();
     res.status(201).end();
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -91,7 +91,7 @@ const update = async (req: Request, res: Response) => {
       await em.flush();
       res.status(200).json({ message: 'The brand has been updated' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -107,9 +107,9 @@ const remove = async (req: Request, res: Response) => {
       res.status(400).json({ message: 'The brand is in use' });
     } else {
       await em.removeAndFlush(brand);
-      res.status(200).send({ message: 'The brand has been deleted' });
+      res.status(200).json({ message: 'The brand has been deleted' });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -124,7 +124,7 @@ const verifyBrandNameExists = async (req: Request, res: Response) => {
     } else {
       res.status(200).json({ exists: true });
     }
-  } catch (error: any) {
+  } catch (error) {
     res.status(200).json({ exists: false });
   }
 };

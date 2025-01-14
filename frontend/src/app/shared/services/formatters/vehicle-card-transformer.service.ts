@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 
 // Interfaces
-import { Vehicle } from '@shared/interfaces/available-vehicles.model';
-import { VehicleCard } from '@shared/interfaces/vehicle-card.model';
+import { Vehicle } from '@core/vehicle/interfaces/vehicle.interface';
+import { VehicleCard } from '@core/vehicle/interfaces/vehicle-card.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -12,13 +12,13 @@ export class VehicleCardTransformerService {
   transformToVehicleCardFormat(v: Vehicle): VehicleCard {
     return {
       id: v.id,
-      vehicleModel: v.vehicleModel.vehicleModelName,
-      category: v.vehicleModel.category.categoryName,
-      image: v.vehicleModel.imagePath,
-      passengerCount: v.vehicleModel.passengerCount,
-      pricePerDay: v.vehicleModel.category.pricePerDay,
-      deposit: v.vehicleModel.category.depositValue,
-      brand: v.vehicleModel.brand.brandName,
+      vehicleModel: v.vehicleModel?.vehicleModelName ?? '',
+      category: v.vehicleModel?.category?.categoryName ?? '',
+      image: v.vehicleModel?.imagePath ?? '',
+      passengerCount: v.vehicleModel?.passengerCount ?? 0,
+      pricePerDay: v.vehicleModel?.category?.pricePerDay ?? 0,
+      deposit: v.vehicleModel?.category?.depositValue ?? 0,
+      brand: v.vehicleModel?.brand?.brandName ?? '',
     };
   }
 }

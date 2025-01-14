@@ -12,7 +12,12 @@
   </div>
   <hr *ngIf="action === 'Edit'" />
   <div class="content">
-    <form [formGroup]="brandForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <form
+      app-prevent-enter
+      [formGroup]="brandForm"
+      (ngSubmit)="onSubmit()"
+      autocomplete="off"
+    >
       <div class="user-details">
         <mat-form-field
           class="input-box"
@@ -28,9 +33,7 @@
             formControlName="brandName"
             placeholder=""
           />
-          <mat-error
-            *ngIf="brandForm.get('brandName')?.errors?.entityNameExists"
-          >
+          <mat-error *ngIf="brandForm.get('brandName')?.errors?.nameExists">
             Este nombre ya está siendo usado.
           </mat-error>
           <mat-error *ngIf="brandForm.get('brandName')?.errors?.required">

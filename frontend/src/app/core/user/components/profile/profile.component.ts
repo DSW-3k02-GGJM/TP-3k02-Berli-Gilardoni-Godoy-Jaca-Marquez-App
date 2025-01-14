@@ -1,4 +1,7 @@
 // Angular
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,8 +9,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 // Angular Material
@@ -20,16 +21,26 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 
 // Services
-import { AuthService } from '@shared/services/auth/auth.service';
+import { UserApiService } from '@core/user/services/user.api.service';
+import { UserResponse } from '@core/user/interfaces/user-response.interface';
+import { UserInput } from '@core/user/interfaces/user-input.interface';
 import { FormatDateService } from '@shared/services/utils/format-date.service';
 import { UserAgeValidationService } from '@shared/services/validations/user-age-validation.service';
 
 // Components
-import { GenericSuccessDialogComponent } from '@shared/components/generic-success-dialog/generic-success-dialog.component';
+import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
+
+// Interfaces
+import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Directives
+import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss',
   imports: [
     CommonModule,
     FormsModule,
@@ -40,20 +51,18 @@ import { GenericSuccessDialogComponent } from '@shared/components/generic-succes
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
+    PreventEnterDirective,
   ],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
   hide: WritableSignal<boolean> = signal(true);
 
   errorMessage: string = '';
 
-  id: number = -1;
-  idUsuario: number = -1;
+  currentUserId: number = -1;
   email: string = '';
 
-  profileForm = new FormGroup(
+  profileForm: FormGroup = new FormGroup(
     {
       documentType: new FormControl('', [Validators.required]),
       documentID: new FormControl('', [
@@ -78,27 +87,26 @@ export class ProfileComponent implements OnInit {
   );
 
   constructor(
-    private authService: AuthService,
-    private dialog: MatDialog,
-    private formatDateService: FormatDateService,
-    private userAgeValidationService: UserAgeValidationService,
-    private route: ActivatedRoute
+    private readonly userApiService: UserApiService,
+    private readonly formatDateService: FormatDateService,
+    private readonly userAgeValidationService: UserAgeValidationService,
+    private readonly dialog: MatDialog,
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe({
+    this.activatedRoute.params.subscribe({
       next: (params) => {
-        this.idUsuario = params['id'];
-        this.authService.findUser(this.idUsuario).subscribe({
-          next: (response) => {
-            let birthDateFormat =
+        this.currentUserId = params['id'];
+        this.userApiService.getOne(this.currentUserId).subscribe({
+          next: (response: UserResponse) => {
+            const birthDateFormat: string =
               this.formatDateService.removeTimeZoneFromString(
                 response.data.birthDate
               );
-            this.id = response.data.id;
             this.email = response.data.email;
             this.profileForm.controls['documentID'].setAsyncValidators([
-              this.authService.uniqueDocumentIDValidator(this.id),
+              this.userApiService.uniqueDocumentIDValidator(this.currentUserId),
             ]);
             this.profileForm.patchValue({
               ...response.data,
@@ -110,34 +118,38 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  clickEvent(event: MouseEvent) {
+  clickEvent(event: MouseEvent): void {
     event.preventDefault();
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
 
   openDialog(): void {
-    this.dialog.open(GenericSuccessDialogComponent, {
+    this.dialog.open(GenericDialogComponent, {
       width: '300px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
         title: 'Cambios registrados',
+        titleColor: 'dark',
+        image: 'assets/checkmark.png',
+        showBackButton: false,
+        mainButtonTitle: 'Aceptar',
         haveRouterLink: true,
         goTo: '/home',
       },
-    });
+    } as GenericDialog);
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (!this.profileForm.invalid) {
-      this.authService
-        .updateUser(this.idUsuario, this.profileForm.value)
+      this.userApiService
+        .update(this.currentUserId, this.profileForm.value as UserInput)
         .subscribe({
           next: () => {
             this.openDialog();
           },
-          error: (error) => {
+          error: (error: HttpErrorResponse) => {
             if (error.status !== 400) {
               this.errorMessage =
                 'Error al actualizar el usuario. Intente de nuevo.';

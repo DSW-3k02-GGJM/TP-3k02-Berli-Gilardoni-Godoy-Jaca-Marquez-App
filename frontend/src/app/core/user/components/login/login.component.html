@@ -2,7 +2,12 @@
   <div class="title">Iniciar sesión</div>
   <hr />
   <div class="content">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <form
+      app-prevent-enter
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      autocomplete="off"
+    >
       <div class="user-details">
         <mat-form-field
           class="input-box"

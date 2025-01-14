@@ -1,18 +1,26 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import {
+  AbstractControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReservationDatesValidationService {
-  reservationDatesValidation(startDateField: string, endDateField: string) {
+  reservationDatesValidation(
+    startDateField: string,
+    endDateField: string
+  ): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {
-      const group = formGroup as FormGroup;
-      const startDate = group.get(startDateField)?.value;
-      const endDate = group.get(endDateField)?.value;
+      const group: FormGroup = formGroup as FormGroup;
+      const startDate: Date = group.get(startDateField)?.value;
+      const endDate: Date = group.get(endDateField)?.value;
 
-      const today = new Date();
+      const today: Date = new Date();
       today.setHours(0, 0, 0, 0);
 
       group.get(startDateField)?.setErrors(null);

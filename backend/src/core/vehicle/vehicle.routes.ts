@@ -24,7 +24,7 @@ vehicleRouter.get('/available', sanitizedFilterInput, findAvailable);
 vehicleRouter.get('/', AuthService.isAuthenticated(['admin']), findAll);
 
 vehicleRouter.get(
-  '/entityName-exists/:licensePlate/:id',
+  '/license-plate-exists/:licensePlate/:id',
   AuthService.isAuthenticated(['admin']),
   verifyLicensePlateExists
 );

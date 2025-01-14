@@ -1,25 +1,33 @@
 // Angular
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Angular Material
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 
 // Services
-import { ApiService } from '@shared/services/api/api.service';
+import { CategoryApiService } from '@core/category/services/category.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
+
+// Interfaces
+import { CategoryResponse } from '@core/category/interfaces/category-response.interface';
+import { CategoryInput } from '@core/category/interfaces/category-input.interface';
+
+// Directives
+import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
 
 @Component({
   selector: 'app-category-form',
@@ -29,14 +37,14 @@ import { SnackBarService } from '@shared/services/notifications/snack-bar.servic
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatButtonModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
     MatIconModule,
     MatSelectModule,
+    PreventEnterDirective,
   ],
-  providers: [ApiService],
 })
 export class CategoryFormComponent implements OnInit {
   title: string = '';
@@ -46,14 +54,7 @@ export class CategoryFormComponent implements OnInit {
   errorMessage: string = '';
   pending: boolean = false;
 
-  constructor(
-    private apiService: ApiService,
-    private snackBarService: SnackBarService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) {}
-
-  categoryForm = new FormGroup(
+  categoryForm: FormGroup = new FormGroup(
     {
       categoryName: new FormControl('', [Validators.required]),
       categoryDescription: new FormControl('', [Validators.required]),
@@ -69,54 +70,56 @@ export class CategoryFormComponent implements OnInit {
     { updateOn: 'blur' }
   );
 
+  constructor(
+    private readonly categoryApiService: CategoryApiService,
+    private readonly snackBarService: SnackBarService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
+  ) {}
+
   ngOnInit(): void {
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentCategoryId = params['id'];
-
         if (this.currentCategoryId) {
           this.action = 'Edit';
           this.title = 'Editar categoría';
           this.buttonText = 'Guardar cambios';
-          this.apiService
-            .getOne('categories', Number(this.currentCategoryId))
-            .subscribe({
-              next: (response) => this.categoryForm.patchValue(response.data),
-              error: () =>
-                this.snackBarService.show(
-                  'Error al obtener la información de la categoría'
-                ),
-            });
+          this.categoryApiService.getOne(this.currentCategoryId).subscribe({
+            next: (response: CategoryResponse) =>
+              this.categoryForm.patchValue(response.data),
+            error: () =>
+              this.snackBarService.show(
+                'Error al obtener la información de la categoría'
+              ),
+          });
           this.categoryForm.controls['categoryName'].setAsyncValidators([
-            this.apiService.uniqueEntityNameValidator(
-              'categories',
-              this.currentCategoryId
-            ),
+            this.categoryApiService.uniqueNameValidator(this.currentCategoryId),
           ]);
         } else {
           this.action = 'Create';
           this.title = 'Nueva categoría';
           this.buttonText = 'Registrar';
           this.categoryForm.controls['categoryName'].setAsyncValidators([
-            this.apiService.uniqueEntityNameValidator('categories', -1),
+            this.categoryApiService.uniqueNameValidator(-1),
           ]);
         }
       },
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (!this.categoryForm.invalid) {
       this.pending = true;
       if (this.action == 'Create') {
-        this.apiService
-          .create('categories', this.categoryForm.value)
+        this.categoryApiService
+          .create(this.categoryForm.value as CategoryInput)
           .subscribe({
             next: () => {
               this.pending = false;
-              this.navigatesToCategories();
+              this.navigateToCategories();
             },
-            error: (error) => {
+            error: (error: HttpErrorResponse) => {
               this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = 'Error en el servidor. Intente de nuevo.';
@@ -124,14 +127,17 @@ export class CategoryFormComponent implements OnInit {
             },
           });
       } else if (this.action == 'Edit') {
-        this.apiService
-          .update('categories', this.currentCategoryId, this.categoryForm.value)
+        this.categoryApiService
+          .update(
+            this.currentCategoryId,
+            this.categoryForm.value as CategoryInput
+          )
           .subscribe({
             next: () => {
               this.pending = false;
-              this.navigatesToCategories();
+              this.navigateToCategories();
             },
-            error: (error) => {
+            error: (error: HttpErrorResponse) => {
               this.pending = false;
               if (error.status !== 400) {
                 this.errorMessage = 'Error en el servidor. Intente de nuevo.';
@@ -142,7 +148,7 @@ export class CategoryFormComponent implements OnInit {
     }
   }
 
-  navigatesToCategories() {
+  navigateToCategories(): void {
     this.router.navigate(['/staff/categories']);
   }
 }

@@ -12,7 +12,7 @@ import { SECRET_KEY, ADMIN_EMAIL, ADMIN_PASSWORD } from '../../config.js';
 
 // External Libraries
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const em = orm.em.fork();
 
@@ -26,12 +26,16 @@ export class AuthService {
     return jwt.sign(payload, SECRET_KEY, { expiresIn });
   }
 
-  static verifyToken(token: string, SECRET_KEY: string): any {
+  static verifyToken(token: string, SECRET_KEY: string): JwtPayload | string {
     try {
       return jwt.verify(token, SECRET_KEY);
     } catch (error) {
       throw new Error('Invalid token');
     }
+  }
+
+  static getRole(data: JwtPayload | string): string {
+    return typeof data !== 'string' ? data.role : '';
   }
 
   static isAuthenticated(roles: string[]) {
@@ -49,15 +53,15 @@ export class AuthService {
       try {
         data = this.verifyToken(token, SECRET_KEY);
 
-        if (!roles.includes(data.role)) {
+        if (!roles.includes(this.getRole(data))) {
           return res
             .status(401)
             .json({ message: 'Unauthorized access (role)' });
         }
 
         req.session.user = data;
-      } catch (error: any) {
-        return res.status(401).json({ message: error.message });
+      } catch (error) {
+        return res.status(500).json({ message: 'Server error' });
       }
       next();
     };

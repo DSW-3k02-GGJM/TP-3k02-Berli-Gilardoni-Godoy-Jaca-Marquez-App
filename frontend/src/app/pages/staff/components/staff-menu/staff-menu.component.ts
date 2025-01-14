@@ -5,18 +5,18 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 
 // Services
-import { AuthService } from '@shared/services/auth/auth.service';
+import { AuthService } from '@security/services/auth.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Interfaces
-import { MenuLink } from '@pages/staff/interfaces/menu-link.model';
+import { MenuLink } from '@pages/staff/interfaces/menu-link.interface';
 
 @Component({
   selector: 'app-staff-menu',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './staff-menu.component.html',
   styleUrl: './staff-menu.component.scss',
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
 })
 export class StaffMenuComponent implements OnInit {
   role: string = 'Staff';
@@ -24,7 +24,7 @@ export class StaffMenuComponent implements OnInit {
 
   menuLinks: MenuLink[] = [
     { label: 'Usuarios', path: 'users', adminOnly: true },
-    { label: 'Comunicación', path: 'comunication', adminOnly: false },
+    { label: 'Comunicación', path: 'communication', adminOnly: false },
     { label: 'Categorías', path: 'categories', adminOnly: true },
     { label: 'Marcas', path: 'brands', adminOnly: true },
     { label: 'Colores', path: 'colors', adminOnly: true },
@@ -35,13 +35,13 @@ export class StaffMenuComponent implements OnInit {
   ];
 
   constructor(
-    private authService: AuthService,
-    private snackBarService: SnackBarService
+    private readonly authService: AuthService,
+    private readonly snackBarService: SnackBarService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.authService.getAuthenticatedRole().subscribe({
-      next: (response) =>
+      next: (response: { role: string }) =>
         (this.role = response.role === 'admin' ? 'Admin' : 'Empleado'),
       error: () => {
         this.snackBarService.show(

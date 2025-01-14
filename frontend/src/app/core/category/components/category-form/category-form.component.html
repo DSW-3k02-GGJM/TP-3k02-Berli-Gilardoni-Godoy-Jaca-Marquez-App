@@ -1,7 +1,7 @@
 <div class="container unselectable">
   <div class="d-flex justify-content-between">
     <div class="title">{{ title }}</div>
-    <button mat-stroked-button (click)="navigatesToCategories()">Volver</button>
+    <button mat-stroked-button (click)="navigateToCategories()">Volver</button>
   </div>
   <hr />
   <div *ngIf="action === 'Edit'" class="information">
@@ -12,7 +12,12 @@
   </div>
   <hr *ngIf="action === 'Edit'" />
   <div class="content">
-    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <form
+      app-prevent-enter
+      [formGroup]="categoryForm"
+      (ngSubmit)="onSubmit()"
+      autocomplete="off"
+    >
       <div class="user-details">
         <mat-form-field
           class="input-box"
@@ -29,7 +34,7 @@
             placeholder=""
           />
           <mat-error
-            *ngIf="categoryForm.get('categoryName')?.errors?.entityNameExists"
+            *ngIf="categoryForm.get('categoryName')?.errors?.nameExists"
           >
             Este nombre ya está siendo usado.
           </mat-error>

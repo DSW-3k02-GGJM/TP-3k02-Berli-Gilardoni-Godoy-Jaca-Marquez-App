@@ -1,4 +1,7 @@
 // Angular
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,8 +9,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 // Angular Material
 import { MatButtonModule } from '@angular/material/button';
@@ -19,15 +20,26 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 
 // Services
-import { AuthService } from '@shared/services/auth/auth.service';
-import { EmailValidationService } from '@shared/services/validations/email-validation.service.js';
+import { AuthService } from '@security/services/auth.service';
+import { EmailValidationService } from '@shared/services/validations/email-validation.service';
 
 // Components
-import { GenericSuccessDialogComponent } from '@shared/components/generic-success-dialog/generic-success-dialog.component';
+import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
+
+// Interfaces
+import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Directives
+import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
+  templateUrl: './forgot-password.component.html',
+  styleUrls: [
+    './forgot-password.component.scss',
+    '../../../../shared/styles/genericForm.scss',
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -38,18 +50,14 @@ import { GenericSuccessDialogComponent } from '@shared/components/generic-succes
     MatInputModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-  ],
-  templateUrl: './forgot-password.component.html',
-  styleUrls: [
-    './forgot-password.component.scss',
-    '../../../../shared/styles/genericForm.scss',
+    PreventEnterDirective,
   ],
 })
 export class ForgotPasswordComponent {
-  errorMessage: string | null = null;
+  errorMessage: string = '';
   pending: boolean = false;
 
-  forgotPassword = new FormGroup(
+  forgotPassword: FormGroup = new FormGroup(
     {
       email: new FormControl('', [
         Validators.required,
@@ -60,37 +68,40 @@ export class ForgotPasswordComponent {
   );
 
   constructor(
-    private authService: AuthService,
-    private emailValidationService: EmailValidationService,
-    private dialog: MatDialog
+    private readonly authService: AuthService,
+    private readonly emailValidationService: EmailValidationService,
+    private readonly dialog: MatDialog
   ) {}
 
   openDialog(): void {
-    this.dialog.open(GenericSuccessDialogComponent, {
+    this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
       exitAnimationDuration: '0ms',
       data: {
         title: 'Solicitud exitosa',
+        titleColor: 'dark',
+        image: 'assets/checkmark.png',
         message: 'Por favor, revise su correo para recuperar su contraseña.',
+        showBackButton: false,
+        mainButtonTitle: 'Aceptar',
         haveRouterLink: true,
         goTo: '/home',
       },
-    });
+    } as GenericDialog);
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (!this.forgotPassword.invalid) {
       this.pending = true;
-      const email = this.forgotPassword.value.email;
+      const email: string = this.forgotPassword.value.email;
       if (email) {
         this.authService.sendPasswordReset(email).subscribe({
           next: () => {
             this.pending = false;
-            this.errorMessage = null;
             this.openDialog();
           },
-          error: (error) => {
+          error: (error: HttpErrorResponse) => {
             this.pending = false;
             if (error.status === 404) {
               this.errorMessage =

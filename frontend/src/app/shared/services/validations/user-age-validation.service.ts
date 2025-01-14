@@ -1,21 +1,21 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserAgeValidationService {
-  userAgeValidation() {
+  userAgeValidation(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const birthDate = control.value;
+      const birthDate: string = control.value;
 
       if (!birthDate) {
         return null;
       }
 
-      const today = new Date();
-      const minAgeDate = new Date(
+      const today: Date = new Date();
+      const minAgeDate: string = new Date(
         today.getFullYear() - 18,
         today.getMonth(),
         today.getDate()
