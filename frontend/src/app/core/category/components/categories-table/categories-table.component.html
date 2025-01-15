@@ -56,20 +56,12 @@
           <td>{{ category.pricePerDay }}</td>
           <td>{{ category.depositValue }}</td>
           <td class="actions-column">
-            <div class="d-flex justify-content-around">
-              <button
-                class="btn btn-dark fs-5"
-                (click)="editCategory(category)"
-              >
-                ✏️
-              </button>
-              <button
-                class="btn btn-dark fs-5"
-                (click)="deleteCategory(category)"
-              >
-                ❌
-              </button>
-            </div>
+            <app-action-buttons
+              [entity]="category"
+              [disableDeletion]="false"
+              (editEntity)="editCategory($event)"
+              (deleteEntity)="deleteCategory($event)"
+            ></app-action-buttons>
           </td>
         </tr>
       </tbody>

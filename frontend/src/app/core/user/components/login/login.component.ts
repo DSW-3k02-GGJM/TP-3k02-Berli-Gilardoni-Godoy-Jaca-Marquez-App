@@ -90,7 +90,7 @@ export class LoginComponent {
       data: {
         title: 'Inicio de sesión exitoso',
         titleColor: 'dark',
-        image: 'assets/checkmark.png',
+        image: 'assets/generic/checkmark.png',
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: true,
@@ -110,7 +110,7 @@ export class LoginComponent {
         data: {
           title: 'Cuenta no verificada',
           titleColor: 'dark',
-          image: 'assets/wrongmark.png',
+          image: 'assets/generic/wrongmark.png',
           message: `Por favor, revise su email y verifique su cuenta para poder ingresar.`,
           showBackButton: true,
           backButtonTitle: 'Aceptar',

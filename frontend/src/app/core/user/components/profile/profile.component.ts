@@ -132,7 +132,7 @@ export class ProfileComponent implements OnInit {
       data: {
         title: 'Cambios registrados',
         titleColor: 'dark',
-        image: 'assets/checkmark.png',
+        image: 'assets/generic/checkmark.png',
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: true,

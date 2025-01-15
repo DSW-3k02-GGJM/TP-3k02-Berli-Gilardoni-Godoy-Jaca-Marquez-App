@@ -64,7 +64,7 @@ import { ReservationFilterPipe } from '@core/reservation/pipes/reservation-filte
 export class ReservationsTableComponent {
   @Input() reservations: Reservation[] = [];
   @Input() errorMessage: string = '';
-  @Output() reservationDeleted = new EventEmitter<void>();
+  @Output() reservationDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
 
@@ -132,7 +132,7 @@ export class ReservationsTableComponent {
       id,
       title: 'Eliminar reserva',
       titleColor: 'danger',
-      image: 'assets/delete.png',
+      image: 'assets/generic/delete.png',
       message: '¿Está seguro de que desea eliminar la reserva?',
       showBackButton: true,
       backButtonTitle: 'Volver',
@@ -160,7 +160,7 @@ export class ReservationsTableComponent {
       id,
       title: 'Cancelar reserva',
       titleColor: 'danger',
-      image: 'assets/wrongmark.png',
+      image: 'assets/generic/wrongmark.png',
       message: '¿Está seguro de que desea cancelar la reserva?',
       showBackButton: true,
       backButtonTitle: 'Volver',
@@ -191,7 +191,7 @@ export class ReservationsTableComponent {
     const dialogData: DialogData = {
       title: 'Check-in Reserva',
       titleColor: 'dark',
-      image: 'assets/check-in-img.png',
+      image: 'assets/check-in-out/check-in.png',
       message: '¿Está seguro de que desea realizar el check-in de la reserva?',
       showBackButton: true,
       backButtonTitle: 'Volver',
@@ -221,7 +221,7 @@ export class ReservationsTableComponent {
     const dialogData: DialogData = {
       title: 'Check-out Reserva',
       titleColor: 'dark',
-      image: 'assets/check-out-img.png',
+      image: 'assets/check-in-out/check-out.png',
       message: '¿Está seguro de que desea realizar el check-out de la reserva?',
       showBackButton: true,
       backButtonTitle: 'Volver',
@@ -257,13 +257,17 @@ export class ReservationsTableComponent {
       data: {
         title: 'Error al eliminar la reserva',
         titleColor: 'dark',
-        image: 'assets/wrongmark.png',
+        image: 'assets/generic/wrongmark.png',
         message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: false,
       },
     } as GenericDialog);
+  }
+
+  formatDate(date: string): string {
+    return this.formatDateService.fromDashToSlash(date);
   }
 
   get filteredReservationsByDocumentID(): Reservation[] {
@@ -291,8 +295,33 @@ export class ReservationsTableComponent {
     return typeof user === 'object' ? user.documentID : '';
   }
 
-  formatDate(date: string): string {
-    return this.formatDateService.fromDashToSlash(date);
+  calculateFinalPrices(reservations: Reservation[]): Reservation[] {
+    return reservations.map((reservation: Reservation) => ({
+      ...reservation,
+      calculatedPrice:
+        this.reservationFinalPriceCalculationService.calculatePrice(
+          reservation as Reservation
+        ),
+    }));
+  }
+
+  filterReservations(): void {
+    let filteredReservations: Reservation[] = this.reservations;
+    if (this.filterDate) {
+      if (Number.parseInt(this.filterDate.substring(0, 4)) < 1900) {
+        this.filteredReservations =
+          this.calculateFinalPrices(filteredReservations);
+        return;
+      }
+      if (this.filterRows.length >= 3) {
+        filteredReservations = this.filteredReservationsByDocumentID;
+      }
+      filteredReservations = this.reservationFilterService.filterReservations(
+        this.filterDate,
+        filteredReservations
+      );
+    }
+    this.filteredReservations = this.calculateFinalPrices(filteredReservations);
   }
 
   disableCheckIn(reservation: Reservation): boolean {
@@ -338,34 +367,5 @@ export class ReservationsTableComponent {
 
   deleteReservation(reservation: Reservation): void {
     this.openDeleteDialog(reservation.id);
-  }
-
-  calculateFinalPrices(reservations: Reservation[]): Reservation[] {
-    return reservations.map((reservation: Reservation) => ({
-      ...reservation,
-      calculatedPrice:
-        this.reservationFinalPriceCalculationService.calculatePrice(
-          reservation as Reservation
-        ),
-    }));
-  }
-
-  filterReservations(): void {
-    let filteredReservations: Reservation[] = this.reservations;
-    if (this.filterDate) {
-      if (Number.parseInt(this.filterDate.substring(0, 4)) < 1900) {
-        this.filteredReservations =
-          this.calculateFinalPrices(filteredReservations);
-        return;
-      }
-      if (this.filterRows.length >= 3) {
-        filteredReservations = this.filteredReservationsByDocumentID;
-      }
-      filteredReservations = this.reservationFilterService.filterReservations(
-        this.filterDate,
-        filteredReservations
-      );
-    }
-    this.filteredReservations = this.calculateFinalPrices(filteredReservations);
   }
 }

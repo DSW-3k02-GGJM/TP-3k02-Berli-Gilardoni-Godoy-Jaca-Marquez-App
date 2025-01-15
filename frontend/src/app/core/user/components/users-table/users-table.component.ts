@@ -16,11 +16,15 @@ import { SnackBarService } from '@shared/services/notifications/snack-bar.servic
 import { FormatDateService } from '@shared/services/utils/format-date.service';
 
 // Components
+import { ActionButtonsComponent } from '@shared/components/action-buttons/action-buttons.component';
 import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
 
 // Interfaces
 import { User } from '@core/user/interfaces/user.interface';
 import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Types
+import { ActionButtons } from '@shared/types/action-buttons.type';
 
 // Pipes
 import { UserFilterPipe } from '@core/user/pipes/user-filter.pipe';
@@ -36,12 +40,13 @@ import { UserFilterPipe } from '@core/user/pipes/user-filter.pipe';
     MatInputModule,
     MatCardModule,
     UserFilterPipe,
+    ActionButtonsComponent,
   ],
 })
 export class UsersTableComponent {
   @Input() users: User[] = [];
   @Input() errorMessage: string = '';
-  @Output() userDeleted = new EventEmitter<void>();
+  @Output() userDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
 
@@ -53,7 +58,7 @@ export class UsersTableComponent {
     private readonly router: Router
   ) {}
 
-  openDeleteDialog(surname: string, name: string, id: number): void {
+  openDeleteDialog(name: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
       this.dialog.open(GenericDialogComponent, {
         width: '350px',
@@ -62,8 +67,8 @@ export class UsersTableComponent {
         data: {
           title: 'Eliminar usuario',
           titleColor: 'danger',
-          image: 'assets/delete.png',
-          message: `¿Está seguro de que desea eliminar al usuario ${surname}, ${name}?`,
+          image: 'assets/generic/delete.png',
+          message: `¿Está seguro de que desea eliminar al usuario ${name}?`,
           showBackButton: true,
           backButtonTitle: 'Volver',
           mainButtonTitle: 'Eliminar',
@@ -102,7 +107,7 @@ export class UsersTableComponent {
       data: {
         title: 'Error al eliminar al usuario',
         titleColor: 'dark',
-        image: 'assets/wrongmark.png',
+        image: 'assets/generic/wrongmark.png',
         message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
@@ -111,21 +116,27 @@ export class UsersTableComponent {
     } as GenericDialog);
   }
 
+  formatBirthDate(date: string): string {
+    return this.formatDateService.fromDashToSlash(date);
+  }
+
   get filteredUsers(): User[] {
     return this.users.filter((user: User) =>
       user.email.toLowerCase().includes(this.filterRows.toLowerCase())
     );
   }
 
-  formatBirthDate(date: string): string {
-    return this.formatDateService.fromDashToSlash(date);
+  getUserFullName(user: ActionButtons): string {
+    return 'userSurname' in user && 'userName' in user
+      ? `${user.userSurname}, ${user.userName}`
+      : '';
   }
 
-  editUser(user: User): void {
+  editUser(user: ActionButtons): void {
     this.router.navigate([`/staff/users/${user.id}`]);
   }
 
-  deleteUser(user: User): void {
-    this.openDeleteDialog(user.userSurname, user.userName, user.id);
+  deleteUser(user: ActionButtons): void {
+    this.openDeleteDialog(this.getUserFullName(user), user.id);
   }
 }

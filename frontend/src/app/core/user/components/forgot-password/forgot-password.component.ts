@@ -81,7 +81,7 @@ export class ForgotPasswordComponent {
       data: {
         title: 'Solicitud exitosa',
         titleColor: 'dark',
-        image: 'assets/checkmark.png',
+        image: 'assets/generic/checkmark.png',
         message: 'Por favor, revise su correo para recuperar su contraseña.',
         showBackButton: false,
         mainButtonTitle: 'Aceptar',

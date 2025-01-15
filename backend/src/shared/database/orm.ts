@@ -9,7 +9,6 @@ import { MYSQL_CONNECTION } from '../../config.js';
 export const orm = await MikroORM.init({
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
-  dbName: 'alquilervehiculos',
   driver: MySqlDriver,
   clientUrl: MYSQL_CONNECTION,
   highlighter: new SqlHighlighter(),

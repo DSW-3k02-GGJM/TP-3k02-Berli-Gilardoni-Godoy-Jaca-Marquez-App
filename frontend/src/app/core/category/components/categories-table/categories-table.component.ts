@@ -15,11 +15,15 @@ import { CategoryApiService } from '@core/category/services/category.api.service
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Components
+import { ActionButtonsComponent } from '@shared/components/action-buttons/action-buttons.component';
 import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
 
 // Interfaces
 import { Category } from '@core/category/interfaces/category.interface';
 import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Types
+import { ActionButtons } from '@shared/types/action-buttons.type';
 
 // Pipes
 import { CategoryFilterPipe } from '@core/category/pipes/category-filter.pipe';
@@ -35,12 +39,13 @@ import { CategoryFilterPipe } from '@core/category/pipes/category-filter.pipe';
     MatInputModule,
     MatCardModule,
     CategoryFilterPipe,
+    ActionButtonsComponent,
   ],
 })
 export class CategoriesTableComponent {
   @Input() categories: Category[] = [];
   @Input() errorMessage: string = '';
-  @Output() categoryDeleted = new EventEmitter<void>();
+  @Output() categoryDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
 
@@ -60,7 +65,7 @@ export class CategoriesTableComponent {
         data: {
           title: 'Eliminar categoría',
           titleColor: 'danger',
-          image: 'assets/delete.png',
+          image: 'assets/generic/delete.png',
           message: `¿Está seguro de que desea eliminar la categoría ${name}?`,
           showBackButton: true,
           backButtonTitle: 'Volver',
@@ -100,7 +105,7 @@ export class CategoriesTableComponent {
       data: {
         title: 'Error al eliminar la categoría',
         titleColor: 'dark',
-        image: 'assets/wrongmark.png',
+        image: 'assets/generic/wrongmark.png',
         message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
@@ -117,11 +122,15 @@ export class CategoriesTableComponent {
     );
   }
 
-  editCategory(category: Category): void {
+  getCategoryName(category: ActionButtons): string {
+    return 'categoryName' in category ? category.categoryName : '';
+  }
+
+  editCategory(category: ActionButtons): void {
     this.router.navigate([`/staff/categories/${category.id}`]);
   }
 
-  deleteCategory(category: Category): void {
-    this.openDeleteDialog(category.categoryName, category.id);
+  deleteCategory(category: ActionButtons): void {
+    this.openDeleteDialog(this.getCategoryName(category), category.id);
   }
 }

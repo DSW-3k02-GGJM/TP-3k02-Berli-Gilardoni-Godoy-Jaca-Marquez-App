@@ -2,7 +2,7 @@
 
 ## Instalación de dependencias
 
-Dentro de la carpeta 'frontend', ejecutar el siguiente comando en consola:
+1. Ejecutá el siguiente comando en consola:
 
 ```bash
    npm install
@@ -12,9 +12,7 @@ Dentro de la carpeta 'frontend', ejecutar el siguiente comando en consola:
 
 ### Compilación
 
-1. Desde la carpeta 'frontend', abrir una consola.
-
-2. Ejecutar el siguiente comando:
+1. Ejecutá el siguiente comando en consola:
 
 ```bash
    ng build
@@ -22,11 +20,9 @@ Dentro de la carpeta 'frontend', ejecutar el siguiente comando en consola:
 
 ### Ejecución
 
-Antes de ejecutar el frontend, tener en ejecución el backend para obtener y guardar la información deseada. Luego:
+Antes de ejecutar el frontend, asegurate de que se encuentre en ejecución el backend, para poder obtener y guardar la información deseada. Luego:
 
-1. Desde la carpeta 'frontend', abrir una consola.
-
-2. Ejecutar el siguiente comando:
+1. Ejecutá el siguiente comando en consola:
 
 ```bash
    ng serve -o

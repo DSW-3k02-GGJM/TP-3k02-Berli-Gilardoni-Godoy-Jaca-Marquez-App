@@ -59,20 +59,12 @@
           <td>{{ getBrandName(vehicleModel) }}</td>
           <td>{{ getCategoryName(vehicleModel) }}</td>
           <td class="actions-column">
-            <div class="d-flex justify-content-around">
-              <button
-                class="btn btn-dark fs-5"
-                (click)="editVehicleModel(vehicleModel)"
-              >
-                ✏️
-              </button>
-              <button
-                class="btn btn-dark fs-5"
-                (click)="deleteVehicleModel(vehicleModel)"
-              >
-                ❌
-              </button>
-            </div>
+            <app-action-buttons
+              [entity]="vehicleModel"
+              [disableDeletion]="false"
+              (editEntity)="editVehicleModel($event)"
+              (deleteEntity)="deleteVehicleModel($event)"
+            ></app-action-buttons>
           </td>
         </tr>
       </tbody>

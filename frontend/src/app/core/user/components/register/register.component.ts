@@ -112,7 +112,7 @@ export class RegisterComponent {
       data: {
         title: 'Registro exitoso',
         titleColor: 'dark',
-        image: 'assets/checkmark.png',
+        image: 'assets/generic/checkmark.png',
         message: 'Por favor, revise su correo para verificar su cuenta.',
         showBackButton: false,
         mainButtonTitle: 'Aceptar',

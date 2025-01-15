@@ -1,7 +1,5 @@
 # TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App
 
-# Propuesta TP DSW
-
 ## Grupo
 
 ### Integrantes
@@ -12,23 +10,19 @@
 - 50311 - Jaca, Juan Pablo
 - 51419 - Márquez, Matías
 
-### Repositorio
-
-- [frontend|backend app](https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App)
-
-## Video de las principales funcionalidades de la aplicación 
+## Video de las principales funcionalidades de la aplicación
 
 - [Video de demostración](https://drive.google.com/file/d/1scrp8AMluKXIfDH-DRuDaw3F2Sh5x_VA/view)
 
 ## Pull Request Pedido
 
 - [Pull request](https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App/pull/10)
-  
+
 ## Tema
 
 ### Descripción
 
-La aplicación a desarrollar pertenece a una empresa que se dedica a el alquiler de vehiculos. La empresa en cuestión es propietaria de una serie de vehiculos con distintas características que pone a disposición de clientes externos.
+Esta aplicación pertenece a una empresa que se dedica al alquiler de vehículos. La empresa en cuestión es propietaria de una serie de vehículos con distintas características que pone a disposición de clientes externos.
 
 ### Modelo de Datos
 
@@ -38,72 +32,37 @@ La aplicación a desarrollar pertenece a una empresa que se dedica a el alquiler
 
 Para iniciar la aplicación, sigue estos pasos:
 
-1. **Clona el repositorio:**
+1. **Cloná el repositorio:**
+
 ```bash
 git clone https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App.git
 ```
 
-2. **Navega hacia el backend (Desde la raíz del proyecto):**
+2. **Navegá hacia el backend (Desde la raíz del proyecto):**
+
 ```bash
 cd backend
 ```
 
-3. **Instala las dependencias:**
-```bash
-npm install
-```
+3. **Llevá a cabo cada uno de los pasos que se enumeran en 'backend/README.md'.**
 
-4. **Modifica el clientUrl del archivo orm.ts (en la ruta backend/src/shared/db/orm.ts) por un string de conexión propio a MySQL, de la forma:**
-```bash
-mysql://username:password@host:port/alquilerVehiculos
-```
+4. **Navegá hacia el frontend (Desde la raíz del proyecto):**
 
-5. **Ejecuta el backend:**
-```bash
-pnpm run start:dev
-```
-
-6. **Navega hacia el frontend (Desde la raíz del proyecto):**
 ```bash
 cd frontend
 ```
 
-7. **Instala las dependencias:**
-```bash
-npm install
-```
-
-8. **Ejecuta el frontend:**
-```bash
-ng serve
-```
+5. **Completá cada uno de los pasos que se indican en 'frontend/README.md'.**
 
 ---
 
 ### Opcional
 
-9. **Importa datos pre-cargados desde el siguiente archivo .mysql, para facilitar la prueba de la aplicación:**
-- [Base de Datos](https://drive.google.com/file/d/18Ke_5dfucvCnFviTAPYEoa0z0qCKn2Lp/view?usp=sharing)
+**Importá datos pre-cargados desde el siguiente archivo .mysql, para facilitar la prueba de la aplicación:**
 
----
-> ⚠️ **Nota:** Los datos cargados en este script son aquellos mostrados en el video de demostración de las principales funcionalidades de la aplicación, en el que se buscó alcanzar una alta claridad en lo que se estaba haciendo, por lo que pueden no ser los más representativos a situaciones reales, y no atenerse a validaciones agregadas posteriormente para ciertos casos!
----
+- [Base de Datos](https://drive.google.com/file/d/1yTwhIJxGQsc-7Be9Q_Hmqmft0WOD2jTH/view?usp=sharing)
 
-10. **Vuelve a navegar hacia el backend (Desde la raíz del proyecto):**
-```bash
-cd backend
-```
-
-11. **Vuelve a ejecutar el backend:**
-```bash
-pnpm run start:dev
-```
-
----
-
-## Mecanismo actual para subir imagenes a la hora de dar de alta un nuevo modelo de vehículo
-
-**Seleccionar una imagen ya pre-cargada en el proyecto en la carpeta frontend/src/assets/img, ya que la aplicación guarda la ruta de la imagen y la busca en dicha ubicación al momento de mostrarla**
+> ⚠️ **Nota:** Deberás modificar las imágenes de los modelos de los vehículos para que las mismas puedan visualizarse correctamente al momento de realizar una reserva, dado que las rutas almacenadas en estos datos de prueba corresponden a imagenes que no se encontrarán disponibles si no fueron agregadas a través del uso de nuestra aplicación.
 
 ---
 
@@ -114,13 +73,13 @@ pnpm run start:dev
 Regularidad:
 |Req|Detalle|
 |:-|:-|
-|CRUD simple|1. CRUD Cliente<br>2. CRUD Categoria<br>3. CRUD Marca<br>4. CRUD Color<br>5. CRUD Sucursal|
-|CRUD dependiente|1. CRUD Vehiculo {depende de} CRUD Sucursal, Color y Modelo<br>2. CRUD Alquiler {depende de} CRUD Vehiculo y Cliente<br>3. CRUD Modelo {depende de} CRUD Categoria y Marca|
-|Listado<br>+<br>detalle| 1. Listado de alquileres filtrado por fecha <br> 2. Listado de vehiculos disponibles filtrado por rango de fechas solicitado para un alquiler <br> 3. Listado de clientes|
-|CUU/Epic|1. Reservar un vehiculo <br>2. Realizar el check-in de un alquiler <br>3. Realizar el check-out de un alquiler|
+|CRUD simple|1. CRUD Categoría<br>2. CRUD Color<br>3. CRUD Marca<br>4. CRUD Sucursal<br>5. CRUD Usuario|
+|CRUD dependiente|1. CRUD Modelo {depende de} CRUD Categoría y Marca<br>2. CRUD Reserva {depende de} CRUD Vehículo y Usuario<br>3.CRUD Vehículo {depende de} CRUD Color, Modelo y Sucursal|
+|Listado<br>+<br>detalle|1. Listado de reservas filtrado por fecha<br>2. Listado de vehículos disponibles filtrado por rango de fechas solicitado para una reserva<br>3. Listado de clientes|
+|CUU/Epic|1. Reservar un vehículo<br>2. Realizar el check-in de una reserva<br>3. Realizar el check-out de una reserva|
 
 Adicionales para Aprobación
 |Req|Detalle|
 |:-|:-|
 |CRUD |Todos los del MD|
-|CUU/Epic|1. Reservar un vehiculo <br>2. Realizar el check-in de un alquiler <br>3. Realizar el check-out de un alquiler <br>4. Cancelar alquiler <br>5. Envio de recordatorio de alquiler<br>6. Comunicacion con clientes via mail.|
+|CUU/Epic|1. Reservar un vehículo<br>2. Realizar el check-in de una reserva<br>3. Realizar el check-out de una reserva<br>4. Cancelar reserva<br>5. Enviar recordatorios de reserva a los clientes<br>6. Comunicarse con clientes mediante correo electrónico.|

@@ -62,17 +62,12 @@
           <td>{{ getColorName(vehicle) }}</td>
           <td>{{ getLocationName(vehicle) }}</td>
           <td class="actions-column">
-            <div class="d-flex justify-content-around">
-              <button class="btn btn-dark fs-5" (click)="editVehicle(vehicle)">
-                ✏️
-              </button>
-              <button
-                class="btn btn-dark fs-5"
-                (click)="deleteVehicle(vehicle)"
-              >
-                ❌
-              </button>
-            </div>
+            <app-action-buttons
+              [entity]="vehicle"
+              [disableDeletion]="false"
+              (editEntity)="editVehicle($event)"
+              (deleteEntity)="deleteVehicle($event)"
+            ></app-action-buttons>
           </td>
         </tr>
       </tbody>

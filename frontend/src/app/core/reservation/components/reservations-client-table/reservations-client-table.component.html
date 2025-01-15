@@ -110,20 +110,18 @@
             }}
           </td>
           <td>
-            <div class="d-flex justify-content-around">
-              <button
-                class="btn btn-dark fs-5"
-                (click)="cancelReservation(reservation)"
-                [disabled]="
-                  reservation.realEndDate ||
-                  reservation.cancellationDate ||
-                  reservation.initialKms ||
-                  disableCancellation(reservation)
-                "
-              >
-                🚫
-              </button>
-            </div>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="cancelReservation(reservation)"
+              [disabled]="
+                reservation.realEndDate ||
+                reservation.cancellationDate ||
+                reservation.initialKms ||
+                disableCancellation(reservation)
+              "
+            >
+              🚫
+            </button>
           </td>
         </tr>
       </tbody>

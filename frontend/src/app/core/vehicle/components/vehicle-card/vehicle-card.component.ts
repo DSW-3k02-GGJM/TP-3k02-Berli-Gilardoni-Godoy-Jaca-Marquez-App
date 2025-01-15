@@ -15,7 +15,8 @@ import { VehicleCard } from '@core/vehicle/interfaces/vehicle-card.interface';
 export class VehicleCardComponent {
   @Input() vehicle!: VehicleCard;
   @Input() imageServerUrl!: string;
-  @Output() modelSelected = new EventEmitter<VehicleCard>();
+  @Output() modelSelected: EventEmitter<VehicleCard> =
+    new EventEmitter<VehicleCard>();
 
   get completeImageUrl(): string {
     return `${this.imageServerUrl}${this.vehicle.image}`;

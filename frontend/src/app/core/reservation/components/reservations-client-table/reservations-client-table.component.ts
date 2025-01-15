@@ -43,7 +43,7 @@ import { Vehicle } from '@core/vehicle/interfaces/vehicle.interface';
 export class ReservationsClientTableComponent {
   @Input() reservations: Reservation[] = [];
   @Input() errorMessage: string = '';
-  @Output() reservationCancelled = new EventEmitter<void>();
+  @Output() reservationCancelled: EventEmitter<void> = new EventEmitter<void>();
 
   filterDate: string = '';
 
@@ -74,7 +74,7 @@ export class ReservationsClientTableComponent {
         data: {
           title: 'Cancelar reserva',
           titleColor: 'danger',
-          image: 'assets/wrongmark.png',
+          image: 'assets/generic/wrongmark.png',
           message: '¿Está seguro de que desea cancelar la reserva?',
           showBackButton: true,
           backButtonTitle: 'Volver',
@@ -124,23 +124,6 @@ export class ReservationsClientTableComponent {
       : '';
   }
 
-  disableCancellation(reservation: Reservation): boolean {
-    const today: Date = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const startDate: Date = new Date(reservation.startDate);
-    startDate.setHours(startDate.getHours() + 3);
-
-    if (today >= startDate) {
-      return true;
-    }
-    return false;
-  }
-
-  cancelReservation(reservation: Reservation): void {
-    this.openCancelDialog(reservation.id);
-  }
-
   calculateFinalPrices(reservations: Reservation[]): Reservation[] {
     return reservations.map((reservation: Reservation) => ({
       ...reservation,
@@ -165,6 +148,23 @@ export class ReservationsClientTableComponent {
       );
     }
     this.filteredReservations = this.calculateFinalPrices(filteredReservations);
+  }
+
+  disableCancellation(reservation: Reservation): boolean {
+    const today: Date = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const startDate: Date = new Date(reservation.startDate);
+    startDate.setHours(startDate.getHours() + 3);
+
+    if (today >= startDate) {
+      return true;
+    }
+    return false;
+  }
+
+  cancelReservation(reservation: Reservation): void {
+    this.openCancelDialog(reservation.id);
   }
 
   navigateToReservation(): void {

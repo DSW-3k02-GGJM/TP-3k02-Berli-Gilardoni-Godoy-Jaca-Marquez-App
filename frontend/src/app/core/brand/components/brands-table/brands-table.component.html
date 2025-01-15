@@ -46,14 +46,12 @@
         <tr *ngFor="let brand of brands | filter : filterRows : 'brandName'">
           <td>{{ brand.brandName }}</td>
           <td class="actions-column">
-            <div class="d-flex justify-content-around">
-              <button class="btn btn-dark fs-5" (click)="editBrand(brand)">
-                ✏️
-              </button>
-              <button class="btn btn-dark fs-5" (click)="deleteBrand(brand)">
-                ❌
-              </button>
-            </div>
+            <app-action-buttons
+              [entity]="brand"
+              [disableDeletion]="false"
+              (editEntity)="editBrand($event)"
+              (deleteEntity)="deleteBrand($event)"
+            ></app-action-buttons>
           </td>
         </tr>
       </tbody>

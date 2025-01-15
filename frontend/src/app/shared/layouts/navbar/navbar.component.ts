@@ -79,7 +79,7 @@ export class NavbarComponent implements OnInit {
       data: {
         title: 'Cierre de sesión exitoso',
         titleColor: 'dark',
-        image: 'assets/checkmark.png',
+        image: 'assets/generic/checkmark.png',
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: true,

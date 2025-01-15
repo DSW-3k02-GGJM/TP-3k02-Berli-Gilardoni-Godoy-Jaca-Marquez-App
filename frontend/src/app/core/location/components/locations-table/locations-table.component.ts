@@ -15,11 +15,15 @@ import { LocationApiService } from '@core/location/services/location.api.service
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Components
+import { ActionButtonsComponent } from '@shared/components/action-buttons/action-buttons.component';
 import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
 
 // Interfaces
 import { Location } from '@core/location/interfaces/location.interface';
 import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Types
+import { ActionButtons } from '@shared/types/action-buttons.type';
 
 // Pipes
 import { LocationFilterPipe } from '@core/location/pipes/location-filter.pipe';
@@ -35,12 +39,13 @@ import { LocationFilterPipe } from '@core/location/pipes/location-filter.pipe';
     MatInputModule,
     MatCardModule,
     LocationFilterPipe,
+    ActionButtonsComponent,
   ],
 })
 export class LocationsTableComponent {
   @Input() locations: Location[] = [];
   @Input() errorMessage: string = '';
-  @Output() locationDeleted = new EventEmitter<void>();
+  @Output() locationDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
 
@@ -60,7 +65,7 @@ export class LocationsTableComponent {
         data: {
           title: 'Eliminar sucursal',
           titleColor: 'danger',
-          image: 'assets/delete.png',
+          image: 'assets/generic/delete.png',
           message: `¿Está seguro de que desea eliminar la sucursal ${name}?`,
           showBackButton: true,
           backButtonTitle: 'Volver',
@@ -100,7 +105,7 @@ export class LocationsTableComponent {
       data: {
         title: 'Error al eliminar la sucursal',
         titleColor: 'dark',
-        image: 'assets/wrongmark.png',
+        image: 'assets/generic/wrongmark.png',
         message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
@@ -117,11 +122,15 @@ export class LocationsTableComponent {
     );
   }
 
-  editLocation(location: Location): void {
+  getLocationName(location: ActionButtons): string {
+    return 'locationName' in location ? location.locationName : '';
+  }
+
+  editLocation(location: ActionButtons): void {
     this.router.navigate([`/staff/locations/${location.id}`]);
   }
 
-  deleteLocation(location: Location): void {
-    this.openDeleteDialog(location.locationName, location.id);
+  deleteLocation(location: ActionButtons): void {
+    this.openDeleteDialog(this.getLocationName(location), location.id);
   }
 }

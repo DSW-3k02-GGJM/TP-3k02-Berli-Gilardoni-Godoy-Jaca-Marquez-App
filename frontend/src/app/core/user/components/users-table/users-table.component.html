@@ -70,22 +70,12 @@
           <td>{{ user.phoneNumber }}</td>
           <td>{{ user.nationality }}</td>
           <td class="actions-column">
-            <div class="d-flex justify-content-around">
-              <button
-                class="btn btn-dark fs-5"
-                (click)="editUser(user)"
-                [disabled]="user.email === 'admin@admin.com'"
-              >
-                ✏️
-              </button>
-              <button
-                class="btn btn-dark fs-5"
-                (click)="deleteUser(user)"
-                [disabled]="user.email === 'admin@admin.com'"
-              >
-                ❌
-              </button>
-            </div>
+            <app-action-buttons
+              [entity]="user"
+              [disableDeletion]="true"
+              (editEntity)="editUser($event)"
+              (deleteEntity)="deleteUser($event)"
+            ></app-action-buttons>
           </td>
         </tr>
       </tbody>

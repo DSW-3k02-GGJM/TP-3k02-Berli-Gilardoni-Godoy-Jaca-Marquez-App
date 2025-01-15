@@ -15,11 +15,15 @@ import { BrandApiService } from '@core/brand/services/brand.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Components
+import { ActionButtonsComponent } from '@shared/components/action-buttons/action-buttons.component';
 import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
 
 // Interfaces
 import { Brand } from '@core/brand/interfaces/brand.interface';
 import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Types
+import { ActionButtons } from '@shared/types/action-buttons.type';
 
 // Pipes
 import { BrandFilterPipe } from '@core/brand/pipes/brand-filter.pipe';
@@ -35,12 +39,13 @@ import { BrandFilterPipe } from '@core/brand/pipes/brand-filter.pipe';
     MatInputModule,
     MatCardModule,
     BrandFilterPipe,
+    ActionButtonsComponent,
   ],
 })
 export class BrandsTableComponent {
   @Input() brands: Brand[] = [];
   @Input() errorMessage: string = '';
-  @Output() brandDeleted = new EventEmitter<void>();
+  @Output() brandDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
 
@@ -60,7 +65,7 @@ export class BrandsTableComponent {
         data: {
           title: 'Eliminar marca',
           titleColor: 'danger',
-          image: 'assets/delete.png',
+          image: 'assets/generic/delete.png',
           message: `¿Está seguro de que desea eliminar la marca ${name}?`,
           showBackButton: true,
           backButtonTitle: 'Volver',
@@ -100,7 +105,7 @@ export class BrandsTableComponent {
       data: {
         title: 'Error al eliminar la marca',
         titleColor: 'dark',
-        image: 'assets/wrongmark.png',
+        image: 'assets/generic/wrongmark.png',
         message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
@@ -115,11 +120,15 @@ export class BrandsTableComponent {
     );
   }
 
-  editBrand(brand: Brand): void {
+  getBrandName(brand: ActionButtons): string {
+    return 'brandName' in brand ? brand.brandName : '';
+  }
+
+  editBrand(brand: ActionButtons): void {
     this.router.navigate([`/staff/brands/${brand.id}`]);
   }
 
-  deleteBrand(brand: Brand): void {
-    this.openDeleteDialog(brand.brandName, brand.id);
+  deleteBrand(brand: ActionButtons): void {
+    this.openDeleteDialog(this.getBrandName(brand), brand.id);
   }
 }

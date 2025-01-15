@@ -16,12 +16,16 @@ import { ImageApiService } from '@shared/services/api/image.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Components
+import { ActionButtonsComponent } from '@shared/components/action-buttons/action-buttons.component';
 import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
 
 // Interfaces
 import { VehicleModel } from '@core/vehicle-model/interfaces/vehicle-model.interface';
 import { UploadImageResponse } from '@shared/interfaces/upload-image-response.interface';
 import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Types
+import { ActionButtons } from '@shared/types/action-buttons.type';
 
 // Pipes
 import { VehicleModelFilterPipe } from '@core/vehicle-model/pipes/vehicle-model-filter.pipe';
@@ -37,12 +41,13 @@ import { VehicleModelFilterPipe } from '@core/vehicle-model/pipes/vehicle-model-
     MatInputModule,
     MatCardModule,
     VehicleModelFilterPipe,
+    ActionButtonsComponent,
   ],
 })
 export class VehicleModelsTableComponent {
   @Input() vehicleModels: VehicleModel[] = [];
   @Input() errorMessage: string = '';
-  @Output() vehicleModelDeleted = new EventEmitter<void>();
+  @Output() vehicleModelDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
 
@@ -68,18 +73,6 @@ export class VehicleModelsTableComponent {
     });
   }
 
-  getBrandName(vehicleModel: VehicleModel): string {
-    return typeof vehicleModel.brand === 'object'
-      ? vehicleModel.brand.brandName
-      : '';
-  }
-
-  getCategoryName(vehicleModel: VehicleModel): string {
-    return typeof vehicleModel.category === 'object'
-      ? vehicleModel.category.categoryName
-      : '';
-  }
-
   openDeleteDialog(name: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
       this.dialog.open(GenericDialogComponent, {
@@ -89,7 +82,7 @@ export class VehicleModelsTableComponent {
         data: {
           title: 'Eliminar modelo',
           titleColor: 'danger',
-          image: 'assets/delete.png',
+          image: 'assets/generic/delete.png',
           message: `¿Está seguro de que desea eliminar el modelo ${name}?`,
           showBackButton: true,
           backButtonTitle: 'Volver',
@@ -126,7 +119,7 @@ export class VehicleModelsTableComponent {
       data: {
         title: 'Error al eliminar el modelo',
         titleColor: 'dark',
-        image: 'assets/wrongmark.png',
+        image: 'assets/generic/wrongmark.png',
         message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
@@ -143,11 +136,32 @@ export class VehicleModelsTableComponent {
     );
   }
 
-  editVehicleModel(vehicleModel: VehicleModel): void {
+  getBrandName(vehicleModel: VehicleModel): string {
+    return typeof vehicleModel.brand === 'object'
+      ? vehicleModel.brand.brandName
+      : '';
+  }
+
+  getCategoryName(vehicleModel: VehicleModel): string {
+    return typeof vehicleModel.category === 'object'
+      ? vehicleModel.category.categoryName
+      : '';
+  }
+
+  getVehicleModelName(vehicleModel: ActionButtons): string {
+    return 'vehicleModelName' in vehicleModel
+      ? vehicleModel.vehicleModelName
+      : '';
+  }
+
+  editVehicleModel(vehicleModel: ActionButtons): void {
     this.router.navigate([`/staff/vehicle-models/${vehicleModel.id}`]);
   }
 
-  deleteVehicleModel(vehicleModel: VehicleModel): void {
-    this.openDeleteDialog(vehicleModel.vehicleModelName, vehicleModel.id);
+  deleteVehicleModel(vehicleModel: ActionButtons): void {
+    this.openDeleteDialog(
+      this.getVehicleModelName(vehicleModel),
+      vehicleModel.id
+    );
   }
 }

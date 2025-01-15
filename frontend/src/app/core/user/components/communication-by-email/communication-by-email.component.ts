@@ -139,7 +139,7 @@ export class CommunicationByEmailComponent implements AfterViewInit {
       data: {
         title: 'Email enviado',
         titleColor: 'dark',
-        image: 'assets/checkmark.png',
+        image: 'assets/generic/checkmark.png',
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: true,

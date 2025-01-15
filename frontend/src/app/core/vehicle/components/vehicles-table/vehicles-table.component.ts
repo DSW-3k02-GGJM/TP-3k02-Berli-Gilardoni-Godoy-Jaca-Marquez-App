@@ -15,11 +15,15 @@ import { VehicleApiService } from '@core/vehicle/services/vehicle.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Components
+import { ActionButtonsComponent } from '@shared/components/action-buttons/action-buttons.component';
 import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
 
 // Interfaces
 import { Vehicle } from '@core/vehicle/interfaces/vehicle.interface';
 import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Types
+import { ActionButtons } from '@shared/types/action-buttons.type';
 
 // Pipes
 import { VehicleFilterPipe } from '@core/vehicle/pipes/vehicle-filter.pipe';
@@ -35,12 +39,13 @@ import { VehicleFilterPipe } from '@core/vehicle/pipes/vehicle-filter.pipe';
     MatInputModule,
     MatCardModule,
     VehicleFilterPipe,
+    ActionButtonsComponent,
   ],
 })
 export class VehiclesTableComponent {
   @Input() vehicles: Vehicle[] = [];
   @Input() errorMessage: string = '';
-  @Output() vehicleDeleted = new EventEmitter<void>();
+  @Output() vehicleDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
 
@@ -60,7 +65,7 @@ export class VehiclesTableComponent {
         data: {
           title: 'Eliminar vehículo',
           titleColor: 'danger',
-          image: 'assets/delete.png',
+          image: 'assets/generic/delete.png',
           message: `¿Está seguro de que desea eliminar el vehículo ${name}?`,
           showBackButton: true,
           backButtonTitle: 'Volver',
@@ -100,7 +105,7 @@ export class VehiclesTableComponent {
       data: {
         title: 'Error al eliminar el vehículo',
         titleColor: 'dark',
-        image: 'assets/wrongmark.png',
+        image: 'assets/generic/wrongmark.png',
         message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
@@ -121,12 +126,6 @@ export class VehiclesTableComponent {
       : '';
   }
 
-  getVehicleModelName(vehicle: Vehicle): string {
-    return typeof vehicle.vehicleModel === 'object'
-      ? vehicle.vehicleModel.vehicleModelName
-      : '';
-  }
-
   getColorName(vehicle: Vehicle): string {
     return typeof vehicle.color === 'object' ? vehicle.color.colorName : '';
   }
@@ -137,11 +136,21 @@ export class VehiclesTableComponent {
       : '';
   }
 
-  editVehicle(vehicle: Vehicle): void {
+  getVehicleModelName(vehicle: Vehicle): string {
+    return typeof vehicle.vehicleModel === 'object'
+      ? vehicle.vehicleModel.vehicleModelName
+      : '';
+  }
+
+  getLicensePlate(vehicle: ActionButtons): string {
+    return 'licensePlate' in vehicle ? vehicle.licensePlate : '';
+  }
+
+  editVehicle(vehicle: ActionButtons): void {
     this.router.navigate([`/staff/vehicles/${vehicle.id}`]);
   }
 
-  deleteVehicle(vehicle: Vehicle): void {
-    this.openDeleteDialog(vehicle.licensePlate, vehicle.id);
+  deleteVehicle(vehicle: ActionButtons): void {
+    this.openDeleteDialog(this.getLicensePlate(vehicle), vehicle.id);
   }
 }

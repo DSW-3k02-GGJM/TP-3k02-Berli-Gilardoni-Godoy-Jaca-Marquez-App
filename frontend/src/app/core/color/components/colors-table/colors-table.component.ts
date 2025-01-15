@@ -15,11 +15,15 @@ import { ColorApiService } from '@core/color/services/color.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Components
+import { ActionButtonsComponent } from '@shared/components/action-buttons/action-buttons.component';
 import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
 
 // Interfaces
 import { Color } from '@core/color/interfaces/color.interface';
 import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+
+// Types
+import { ActionButtons } from '@shared/types/action-buttons.type';
 
 // Pipes
 import { ColorFilterPipe } from '@core/color/pipes/color-filter.pipe';
@@ -35,12 +39,13 @@ import { ColorFilterPipe } from '@core/color/pipes/color-filter.pipe';
     MatInputModule,
     MatCardModule,
     ColorFilterPipe,
+    ActionButtonsComponent,
   ],
 })
 export class ColorsTableComponent {
   @Input() colors: Color[] = [];
   @Input() errorMessage: string = '';
-  @Output() colorDeleted = new EventEmitter<void>();
+  @Output() colorDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
 
@@ -60,7 +65,7 @@ export class ColorsTableComponent {
         data: {
           title: 'Eliminar color',
           titleColor: 'danger',
-          image: 'assets/delete.png',
+          image: 'assets/generic/delete.png',
           message: `¿Está seguro de que desea eliminar el color ${name}?`,
           showBackButton: true,
           backButtonTitle: 'Volver',
@@ -100,7 +105,7 @@ export class ColorsTableComponent {
       data: {
         title: 'Error al eliminar el color',
         titleColor: 'dark',
-        image: 'assets/wrongmark.png',
+        image: 'assets/generic/wrongmark.png',
         message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
@@ -115,11 +120,15 @@ export class ColorsTableComponent {
     );
   }
 
-  editColor(color: Color): void {
+  getColorName(color: ActionButtons): string {
+    return 'colorName' in color ? color.colorName : '';
+  }
+
+  editColor(color: ActionButtons): void {
     this.router.navigate([`/staff/colors/${color.id}`]);
   }
 
-  deleteColor(color: Color): void {
-    this.openDeleteDialog(color.colorName, color.id);
+  deleteColor(color: ActionButtons): void {
+    this.openDeleteDialog(this.getColorName(color), color.id);
   }
 }

@@ -46,14 +46,12 @@
         <tr *ngFor="let color of colors | filter : filterRows : 'colorName'">
           <td>{{ color.colorName }}</td>
           <td class="actions-column">
-            <div class="d-flex justify-content-around">
-              <button class="btn btn-dark fs-5" (click)="editColor(color)">
-                ✏️
-              </button>
-              <button class="btn btn-dark fs-5" (click)="deleteColor(color)">
-                ❌
-              </button>
-            </div>
+            <app-action-buttons
+              [entity]="color"
+              [disableDeletion]="false"
+              (editEntity)="editColor($event)"
+              (deleteEntity)="deleteColor($event)"
+            ></app-action-buttons>
           </td>
         </tr>
       </tbody>

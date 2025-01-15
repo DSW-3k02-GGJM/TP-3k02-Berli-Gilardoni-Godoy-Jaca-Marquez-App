@@ -15,9 +15,9 @@ const envSchema = z.object({
     .string()
     .transform((val) => parseInt(val, 10))
     .default('4200'),
-  SECRET_KEY: z.string().default('clave1'),
-  SECRET_EMAIL_KEY: z.string().default('clave2'),
-  SECRET_PASSWORD_KEY: z.string().default('clave3'),
+  SECRET_KEY: z.string().default('password1'),
+  SECRET_EMAIL_KEY: z.string().default('password2'),
+  SECRET_PASSWORD_KEY: z.string().default('password3'),
   EMAIL_USER: z.string().email().min(1),
   EMAIL_PASSWORD: z.string().min(1),
   ADMIN_EMAIL: z.string().email().default('admin@admin.com'),
@@ -28,7 +28,7 @@ const envSchema = z.object({
 const { success, error, data } = envSchema.safeParse(process.env);
 
 if (!success) {
-  console.error('❌ Error en las variables de entorno:');
+  console.error('❌ Error in environment variables:');
   error.errors.forEach((err) => {
     console.error(`- ${err.path}: ${err.message}`);
   });

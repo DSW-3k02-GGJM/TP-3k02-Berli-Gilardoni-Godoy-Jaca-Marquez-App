@@ -54,20 +54,12 @@
           <td>{{ location.address }}</td>
           <td>{{ location.phoneNumber }}</td>
           <td class="actions-column">
-            <div class="d-flex justify-content-around">
-              <button
-                class="btn btn-dark fs-5"
-                (click)="editLocation(location)"
-              >
-                ✏️
-              </button>
-              <button
-                class="btn btn-dark fs-5"
-                (click)="deleteLocation(location)"
-              >
-                ❌
-              </button>
-            </div>
+            <app-action-buttons
+              [entity]="location"
+              [disableDeletion]="false"
+              (editEntity)="editLocation($event)"
+              (deleteEntity)="deleteLocation($event)"
+            ></app-action-buttons>
           </td>
         </tr>
       </tbody>

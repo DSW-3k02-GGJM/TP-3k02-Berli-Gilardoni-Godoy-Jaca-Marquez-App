@@ -131,8 +131,8 @@
                 "
               >
                 <img
-                  src="../../../assets/check-in-img.png"
-                  alt="Check-in"
+                  src="../../../assets/check-in-out/check-in.png"
+                  alt="check-in"
                   class="check"
                 />
               </button>
@@ -146,43 +146,39 @@
                 "
               >
                 <img
-                  src="../../../assets/check-out-img.png"
-                  alt="Check-out"
+                  src="../../../assets/check-in-out/check-out.png"
+                  alt="check-out"
                   class="check"
                 />
               </button>
             </div>
           </td>
           <td>
-            <div class="d-flex justify-content-around">
-              <button
-                class="btn btn-dark fs-5"
-                (click)="cancelReservation(reservation)"
-                [disabled]="
-                  reservation.realEndDate ||
-                  reservation.cancellationDate ||
-                  reservation.initialKms ||
-                  disableCancellation(reservation)
-                "
-              >
-                🚫
-              </button>
-            </div>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="cancelReservation(reservation)"
+              [disabled]="
+                reservation.realEndDate ||
+                reservation.cancellationDate ||
+                reservation.initialKms ||
+                disableCancellation(reservation)
+              "
+            >
+              🚫
+            </button>
           </td>
           <td>
-            <div class="d-flex justify-content-around">
-              <button
-                class="btn btn-dark fs-5"
-                (click)="deleteReservation(reservation)"
-                [disabled]="
-                  reservation.realEndDate ||
-                  reservation.cancellationDate ||
-                  reservation.initialKms
-                "
-              >
-                ❌
-              </button>
-            </div>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="deleteReservation(reservation)"
+              [disabled]="
+                reservation.realEndDate ||
+                reservation.cancellationDate ||
+                reservation.initialKms
+              "
+            >
+              ❌
+            </button>
           </td>
         </tr>
       </tbody>

@@ -172,7 +172,7 @@ export class ReservationFormComponent implements OnInit {
       data: {
         title: 'Reserva exitosa',
         titleColor: 'dark',
-        image: 'assets/checkmark.png',
+        image: 'assets/generic/checkmark.png',
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: true,

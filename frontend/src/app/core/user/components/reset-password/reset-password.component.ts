@@ -98,7 +98,7 @@ export class ResetPasswordComponent {
       data: {
         title: 'Contraseña restablecida correctamente',
         titleColor: 'dark',
-        image: 'assets/checkmark.png',
+        image: 'assets/generic/checkmark.png',
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: true,
@@ -115,7 +115,7 @@ export class ResetPasswordComponent {
       data: {
         title: 'Error al restablecer la contraseña',
         titleColor: 'dark',
-        image: 'assets/wrongmark.png',
+        image: 'assets/generic/wrongmark.png',
         message:
           'El periodo de restablecimiento de la contraseña ha expirado o es inválido',
         showBackButton: false,
