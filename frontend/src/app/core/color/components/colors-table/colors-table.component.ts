@@ -81,7 +81,7 @@ export class ColorsTableComponent {
             },
             error: (error: HttpErrorResponse) => {
               if (error.status === 400) {
-                this.openErrorDialog();
+                this.openErrorDialog(error.error.message);
               } else {
                 this.snackBarService.show('Error al eliminar el color');
               }
@@ -92,7 +92,7 @@ export class ColorsTableComponent {
     });
   }
 
-  openErrorDialog(): void {
+  openErrorDialog(message: string): void {
     this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
@@ -101,8 +101,7 @@ export class ColorsTableComponent {
         title: 'Error al eliminar el color',
         titleColor: 'dark',
         image: 'assets/wrongmark.png',
-        message:
-          'El color no se puede eliminar porque tiene vehículos asociados.',
+        message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: false,

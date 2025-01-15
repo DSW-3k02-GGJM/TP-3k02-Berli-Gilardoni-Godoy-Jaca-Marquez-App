@@ -38,7 +38,7 @@ export class UserApiService {
   }
 
   update(id: number, data: UserInput): Observable<Message> {
-    return this.http.patch<Message>(`${this.apiUrl}/${id}`, data);
+    return this.http.put<Message>(`${this.apiUrl}/${id}`, data);
   }
 
   delete(id: number): Observable<Message> {

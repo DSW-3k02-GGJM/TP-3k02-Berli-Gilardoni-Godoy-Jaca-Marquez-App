@@ -23,7 +23,7 @@ import {
   add,
   findOne,
   update,
-  sanitizedPartialUpdateInput,
+  sanitizedUpdateInput,
   remove,
 } from './user.controller.js';
 
@@ -89,8 +89,6 @@ userRouter.post(
 
 userRouter.get('/:id', findOne);
 
-userRouter.put('/:id', sanitizedUserInput, update);
-
-userRouter.patch('/:id', sanitizedPartialUpdateInput, update);
+userRouter.put('/:id', sanitizedUpdateInput, update);
 
 userRouter.delete('/:id', AuthService.isAuthenticated(['admin']), remove);

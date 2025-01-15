@@ -80,12 +80,12 @@ export class ScheduleService {
         remindersSent++;
       } else {
         console.log(
-          `Reminder skipped: reservation ${reminder.reservation.id} has already started.`
+          `\nReminder skipped: reservation ${reminder.reservation.id} has already started.`
         );
       }
     }
 
-    console.log(`Reminders sent: ${remindersSent}`);
+    console.log(`\nReminders sent: ${remindersSent}`);
   }
 
   static async initializeScheduler() {

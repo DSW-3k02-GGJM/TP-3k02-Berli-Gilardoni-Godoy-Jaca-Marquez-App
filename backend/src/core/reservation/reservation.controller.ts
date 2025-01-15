@@ -188,7 +188,10 @@ const remove = async (req: Request, res: Response) => {
     if (!reservation) {
       res.status(404).json({ message: 'Reservation does not exist' });
     } else if (reservationInUse) {
-      res.status(400).json({ message: 'The reservation is in use' });
+      res.status(400).json({
+        message:
+          'La reserva no se puede eliminar porque tiene recordatorios asociados.',
+      });
     } else {
       await em.removeAndFlush(reservation);
       res.status(200).json({ message: 'The reservation has been deleted' });

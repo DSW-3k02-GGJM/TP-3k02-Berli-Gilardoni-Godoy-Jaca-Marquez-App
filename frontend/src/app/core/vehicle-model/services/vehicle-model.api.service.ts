@@ -15,6 +15,7 @@ import { VehicleModelsResponse } from '@core/vehicle-model/interfaces/vehicle-mo
 import { VehicleModelResponse } from '@core/vehicle-model/interfaces/vehicle-model-response.interface';
 import { VehicleModelInput } from '@core/vehicle-model/interfaces/vehicle-model-input.interface';
 import { Message } from '@shared/interfaces/message.interface';
+import { UploadImageResponse } from '@shared/interfaces/upload-image-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -37,11 +38,11 @@ export class VehicleModelApiService {
   }
 
   update(id: number, data: VehicleModelInput): Observable<Message> {
-    return this.http.patch<Message>(`${this.apiUrl}/${id}`, data);
+    return this.http.put<Message>(`${this.apiUrl}/${id}`, data);
   }
 
-  delete(id: number): Observable<Message> {
-    return this.http.delete<Message>(`${this.apiUrl}/${id}`);
+  delete(id: number): Observable<UploadImageResponse> {
+    return this.http.delete<UploadImageResponse>(`${this.apiUrl}/${id}`);
   }
 
   uniqueNameValidator(id: number): AsyncValidatorFn {

@@ -81,7 +81,7 @@ export class CategoriesTableComponent {
             },
             error: (error: HttpErrorResponse) => {
               if (error.status === 400) {
-                this.openErrorDialog();
+                this.openErrorDialog(error.error.message);
               } else {
                 this.snackBarService.show('Error al eliminar la categoría');
               }
@@ -92,7 +92,7 @@ export class CategoriesTableComponent {
     });
   }
 
-  openErrorDialog(): void {
+  openErrorDialog(message: string): void {
     this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
@@ -101,8 +101,7 @@ export class CategoriesTableComponent {
         title: 'Error al eliminar la categoría',
         titleColor: 'dark',
         image: 'assets/wrongmark.png',
-        message:
-          'La categoría no se puede eliminar porque tiene modelos asociados.',
+        message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: false,

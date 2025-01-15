@@ -22,7 +22,13 @@ export class ImageApiService {
   }
 
   uploadImage(file: File): Observable<UploadImageResponse> {
-    return this.http.post<UploadImageResponse>(`${this.apiUrl}/upload`, file);
+    const formData: FormData = new FormData();
+    formData.append('image', file);
+
+    return this.http.post<UploadImageResponse>(
+      `${this.apiUrl}/upload`,
+      formData
+    );
   }
 
   deleteImage(imagePath: string): Observable<Message> {

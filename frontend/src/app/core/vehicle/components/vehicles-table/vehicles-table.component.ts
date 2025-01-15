@@ -81,7 +81,7 @@ export class VehiclesTableComponent {
             },
             error: (error: HttpErrorResponse) => {
               if (error.status === 400) {
-                this.openErrorDialog();
+                this.openErrorDialog(error.error.message);
               } else {
                 this.snackBarService.show('Error al eliminar el vehículo');
               }
@@ -92,7 +92,7 @@ export class VehiclesTableComponent {
     });
   }
 
-  openErrorDialog(): void {
+  openErrorDialog(message: string): void {
     this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
@@ -101,8 +101,7 @@ export class VehiclesTableComponent {
         title: 'Error al eliminar el vehículo',
         titleColor: 'dark',
         image: 'assets/wrongmark.png',
-        message:
-          'El vehículo no se puede eliminar porque tiene reservas asociadas.',
+        message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: false,

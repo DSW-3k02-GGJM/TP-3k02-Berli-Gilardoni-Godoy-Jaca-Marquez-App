@@ -39,7 +39,7 @@ import { UserFilterPipe } from '@core/user/pipes/user-filter.pipe';
   ],
 })
 export class UsersTableComponent {
-  @Input() users!: User[];
+  @Input() users: User[] = [];
   @Input() errorMessage: string = '';
   @Output() userDeleted = new EventEmitter<void>();
 
@@ -83,7 +83,7 @@ export class UsersTableComponent {
             },
             error: (error: HttpErrorResponse) => {
               if (error.status === 400) {
-                this.openErrorDialog();
+                this.openErrorDialog(error.error.message);
               } else {
                 this.snackBarService.show('Error al eliminar el usuario');
               }
@@ -94,7 +94,7 @@ export class UsersTableComponent {
     });
   }
 
-  openErrorDialog(): void {
+  openErrorDialog(message: string): void {
     this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
@@ -103,8 +103,7 @@ export class UsersTableComponent {
         title: 'Error al eliminar al usuario',
         titleColor: 'dark',
         image: 'assets/wrongmark.png',
-        message:
-          'El usuario no se puede eliminar porque tiene reservas asociadas.',
+        message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: false,

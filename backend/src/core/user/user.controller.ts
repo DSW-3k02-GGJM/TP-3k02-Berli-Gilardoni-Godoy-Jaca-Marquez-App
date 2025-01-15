@@ -165,7 +165,7 @@ const sanitizedUserInput = async (
   next();
 };
 
-const sanitizedPartialUpdateInput = async (
+const sanitizedUpdateInput = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -192,6 +192,28 @@ const sanitizedPartialUpdateInput = async (
       delete req.body.sanitizedInput[key];
     }
   });
+
+  const documentType = req.body.sanitizedInput.documentType;
+  const documentID = req.body.sanitizedInput.documentID;
+  const userName = req.body.sanitizedInput.userName;
+  const userSurname = req.body.sanitizedInput.userSurname;
+  const birthDate = req.body.sanitizedInput.birthDate;
+  const address = req.body.sanitizedInput.address;
+  const phoneNumber = req.body.sanitizedInput.phoneNumber;
+  const nationality = req.body.sanitizedInput.nationality;
+
+  if (
+    !documentType ||
+    !documentID ||
+    !userName ||
+    !userSurname ||
+    !birthDate ||
+    !address ||
+    !phoneNumber ||
+    !nationality
+  ) {
+    return res.status(400).json({ message: 'All information is required' });
+  }
 
   next();
 };
@@ -275,7 +297,10 @@ const remove = async (req: Request, res: Response) => {
     if (!user) {
       res.status(404).json({ message: 'The user does not exist' });
     } else if (userInUse) {
-      res.status(400).json({ message: 'The user is in use' });
+      res.status(400).json({
+        message:
+          'El usuario no se puede eliminar porque tiene reservas asociadas.',
+      });
     } else {
       await em.removeAndFlush(user);
       res.status(200).json({ message: 'The user has been deleted' });
@@ -557,7 +582,7 @@ export {
   sanitizedPasswordResetInput,
   sanitizedLoginInput,
   sanitizedUserInput,
-  sanitizedPartialUpdateInput,
+  sanitizedUpdateInput,
   add,
   findAll,
   findOne,

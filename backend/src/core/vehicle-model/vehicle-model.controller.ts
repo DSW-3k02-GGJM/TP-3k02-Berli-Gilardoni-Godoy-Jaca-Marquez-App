@@ -141,7 +141,10 @@ const remove = async (req: Request, res: Response) => {
     if (!vehicleModel) {
       res.status(404).json({ message: 'The vehicle model does not exist' });
     } else if (vehicleModelInUse) {
-      res.status(400).json({ message: 'The vehicle model is in use' });
+      res.status(400).json({
+        message:
+          'El modelo no se puede eliminar porque tiene vehiculos asociados.',
+      });
     } else {
       await em.removeAndFlush(vehicleModel);
       res.status(200).json({

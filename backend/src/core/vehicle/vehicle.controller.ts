@@ -212,7 +212,10 @@ const remove = async (req: Request, res: Response) => {
     if (!vehicle) {
       res.status(404).json({ message: 'The vehicle does not exist' });
     } else if (vehicleInUse) {
-      res.status(400).json({ message: 'The vehicle is in use' });
+      res.status(400).json({
+        message:
+          'El vehículo no se puede eliminar porque tiene reservas asociadas.',
+      });
     } else {
       await em.removeAndFlush(vehicle);
       res.status(200).json({ message: 'The vehicle has been deleted' });

@@ -116,7 +116,10 @@ const remove = async (req: Request, res: Response) => {
     if (!category) {
       res.status(404).json({ message: 'The category does not exist' });
     } else if (categoryInUse) {
-      res.status(400).json({ message: 'The category is in use' });
+      res.status(400).json({
+        message:
+          'La categoría no se puede eliminar porque tiene modelos asociados.',
+      });
     } else {
       await em.removeAndFlush(category);
       res.status(200).json({ message: 'The category has been deleted' });

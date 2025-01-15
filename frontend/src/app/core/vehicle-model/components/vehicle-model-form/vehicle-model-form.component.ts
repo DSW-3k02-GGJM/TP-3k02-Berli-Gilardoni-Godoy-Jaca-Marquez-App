@@ -157,10 +157,6 @@ export class VehicleModelFormComponent implements OnInit {
     });
   }
 
-  get hasRelatedEntities(): boolean {
-    return [this.brands, this.categories].every((array) => array.length > 0);
-  }
-
   onFileSelected(event: Event): void {
     const file: File | null =
       (event.target as HTMLInputElement)?.files?.[0] || null;
@@ -176,16 +172,16 @@ export class VehicleModelFormComponent implements OnInit {
     this.selectedFile = file;
   }
 
-  getBrandId(brand: Brand | undefined): string {
-    return typeof brand === 'object' ? brand.id.toString() : '';
+  get hasRelatedEntities(): boolean {
+    return [this.brands, this.categories].every((array) => array.length > 0);
   }
 
-  getCategoryId(category: Category | number | undefined): string {
-    return typeof category === 'object' ? category.id.toString() : '';
+  getBrandId(brand: Brand | undefined): number {
+    return typeof brand === 'object' ? brand.id : -1;
   }
 
-  getImagePath(imagePath: string | undefined): string {
-    return imagePath === 'string' ? imagePath : '';
+  getCategoryId(category: Category | number | undefined): number {
+    return typeof category === 'object' ? category.id : -1;
   }
 
   onSubmit(): void {
@@ -195,7 +191,7 @@ export class VehicleModelFormComponent implements OnInit {
         this.imageApiService.uploadImage(this.selectedFile as File).subscribe({
           next: (response: UploadImageResponse) => {
             this.vehicleModelForm.patchValue({
-              imagePath: this.getImagePath(response.imagePath),
+              imagePath: response.imagePath ?? '',
             });
             this.submitForm(this.oldPath);
           },

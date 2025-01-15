@@ -171,16 +171,16 @@ export class VehicleFormComponent implements OnInit {
     return typeof brand === 'object' ? brand.brandName : '';
   }
 
-  getColorId(color: Color | number | undefined): string {
-    return typeof color === 'object' ? color.id.toString() : '';
+  getColorId(color: Color | number | undefined): number {
+    return typeof color === 'object' ? color.id : -1;
   }
 
-  getLocationId(location: Location | number | undefined): string {
-    return typeof location === 'object' ? location.id.toString() : '';
+  getLocationId(location: Location | number | undefined): number {
+    return typeof location === 'object' ? location.id : -1;
   }
 
-  getVehicleModelId(vehicleModel: VehicleModel | undefined): string {
-    return typeof vehicleModel === 'object' ? vehicleModel.id.toString() : '';
+  getVehicleModelId(vehicleModel: VehicleModel | undefined): number {
+    return typeof vehicleModel === 'object' ? vehicleModel.id : -1;
   }
 
   onSubmit(): void {

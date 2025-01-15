@@ -40,10 +40,9 @@ const add = async (req: Request, res: Response) => {
           .status(400)
           .json({ message: 'Only image files are allowed!' });
       }
-      const imagePath = req.file.filename;
       res.status(200).json({
         message: 'Image uploaded successfully',
-        path: imagePath,
+        imagePath: req.file.filename,
       });
     });
   } catch (error) {

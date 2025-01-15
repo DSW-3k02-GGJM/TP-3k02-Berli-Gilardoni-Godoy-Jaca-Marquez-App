@@ -81,7 +81,7 @@ export class BrandsTableComponent {
             },
             error: (error: HttpErrorResponse) => {
               if (error.status === 400) {
-                this.openErrorDialog();
+                this.openErrorDialog(error.error.message);
               } else {
                 this.snackBarService.show('Error al eliminar la marca');
               }
@@ -92,7 +92,7 @@ export class BrandsTableComponent {
     });
   }
 
-  openErrorDialog(): void {
+  openErrorDialog(message: string): void {
     this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
@@ -101,8 +101,7 @@ export class BrandsTableComponent {
         title: 'Error al eliminar la marca',
         titleColor: 'dark',
         image: 'assets/wrongmark.png',
-        message:
-          'La marca no se puede eliminar porque tiene modelos asociados.',
+        message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: false,

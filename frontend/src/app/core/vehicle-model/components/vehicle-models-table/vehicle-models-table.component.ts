@@ -68,10 +68,6 @@ export class VehicleModelsTableComponent {
     });
   }
 
-  getImagePath(imagePath: string | undefined): string {
-    return imagePath === 'string' ? imagePath : '';
-  }
-
   getBrandName(vehicleModel: VehicleModel): string {
     return typeof vehicleModel.brand === 'object'
       ? vehicleModel.brand.brandName
@@ -107,11 +103,11 @@ export class VehicleModelsTableComponent {
         if (result) {
           this.vehicleModelApiService.delete(id).subscribe({
             next: (response: UploadImageResponse) => {
-              this.deleteImage(this.getImagePath(response.imagePath));
+              this.deleteImage(response.imagePath ?? '');
             },
             error: (error: HttpErrorResponse) => {
               if (error.status === 400) {
-                this.openErrorDialog();
+                this.openErrorDialog(error.error.message);
               } else {
                 this.snackBarService.show('Error al eliminar el modelo');
               }
@@ -122,7 +118,7 @@ export class VehicleModelsTableComponent {
     });
   }
 
-  openErrorDialog(): void {
+  openErrorDialog(message: string): void {
     this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
@@ -131,12 +127,10 @@ export class VehicleModelsTableComponent {
         title: 'Error al eliminar el modelo',
         titleColor: 'dark',
         image: 'assets/wrongmark.png',
-        message:
-          'El modelo no se puede eliminar porque tiene vehiculos asociados.',
+        message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/home',
+        haveRouterLink: false,
       },
     } as GenericDialog);
   }

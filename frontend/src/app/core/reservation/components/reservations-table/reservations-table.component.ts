@@ -1,5 +1,6 @@
 // Angular
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   Input,
@@ -113,9 +114,9 @@ export class ReservationsTableComponent {
               }
               this.snackBarService.show(successMessage);
             },
-            error: () => {
-              if (actionType === 'delete') {
-                this.openErrorDialog();
+            error: (error: HttpErrorResponse) => {
+              if (actionType === 'delete' && error.status === 400) {
+                this.openErrorDialog(error.error.message);
               } else {
                 this.snackBarService.show(errorMessage);
               }
@@ -248,7 +249,7 @@ export class ReservationsTableComponent {
     );
   }
 
-  openErrorDialog(): void {
+  openErrorDialog(message: string): void {
     this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
@@ -257,8 +258,7 @@ export class ReservationsTableComponent {
         title: 'Error al eliminar la reserva',
         titleColor: 'dark',
         image: 'assets/wrongmark.png',
-        message:
-          'La reserva no se puede eliminar porque tiene recordatorios asociados.',
+        message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: false,

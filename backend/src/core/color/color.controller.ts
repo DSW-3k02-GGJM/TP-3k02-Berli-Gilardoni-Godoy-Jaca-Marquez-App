@@ -104,7 +104,10 @@ const remove = async (req: Request, res: Response) => {
     if (!color) {
       return res.status(404).json({ message: 'The color does not exist' });
     } else if (colorInUse) {
-      return res.status(400).json({ message: 'The color is in use' });
+      return res.status(400).json({
+        message:
+          'El color no se puede eliminar porque tiene vehículos asociados.',
+      });
     } else {
       await em.removeAndFlush(color);
       res.status(200).json({ message: 'The color has been deleted' });

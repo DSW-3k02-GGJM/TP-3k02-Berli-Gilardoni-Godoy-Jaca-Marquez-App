@@ -104,7 +104,12 @@ const remove = async (req: Request, res: Response) => {
     if (!brand) {
       res.status(404).json({ message: 'The brand does not exist' });
     } else if (brandInUse) {
-      res.status(400).json({ message: 'The brand is in use' });
+      res
+        .status(400)
+        .json({
+          message:
+            'La marca no se puede eliminar porque tiene modelos asociados.',
+        });
     } else {
       await em.removeAndFlush(brand);
       res.status(200).json({ message: 'The brand has been deleted' });

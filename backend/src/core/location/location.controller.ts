@@ -108,7 +108,10 @@ const remove = async (req: Request, res: Response) => {
     if (!location) {
       return res.status(404).json({ message: 'The location does not exist' });
     } else if (locationInUse) {
-      return res.status(400).json({ message: 'The location is in use' });
+      return res.status(400).json({
+        message:
+          'La sucursal no se puede eliminar porque tiene vehiculos asociados.',
+      });
     } else {
       await em.removeAndFlush(location);
       res.status(200).json({ message: 'The location has been deleted' });

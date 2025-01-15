@@ -81,7 +81,7 @@ export class LocationsTableComponent {
             },
             error: (error: HttpErrorResponse) => {
               if (error.status === 400) {
-                this.openErrorDialog();
+                this.openErrorDialog(error.error.message);
               } else {
                 this.snackBarService.show('Error al eliminar la sucursal');
               }
@@ -92,7 +92,7 @@ export class LocationsTableComponent {
     });
   }
 
-  openErrorDialog(): void {
+  openErrorDialog(message: string): void {
     this.dialog.open(GenericDialogComponent, {
       width: '350px',
       enterAnimationDuration: '0ms',
@@ -101,8 +101,7 @@ export class LocationsTableComponent {
         title: 'Error al eliminar la sucursal',
         titleColor: 'dark',
         image: 'assets/wrongmark.png',
-        message:
-          'La sucursal no se puede eliminar porque tiene vehiculos asociados.',
+        message,
         showBackButton: false,
         mainButtonTitle: 'Aceptar',
         haveRouterLink: false,
