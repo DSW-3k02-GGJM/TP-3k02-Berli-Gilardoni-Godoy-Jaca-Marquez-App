@@ -1,8 +1,10 @@
+@use "../../styles/colors" as colors;
+
 img {
   width: 100px;
   height: 100px;
 }
 
 .custom-blue {
-  background-color: #2a4151;
+  background-color: colors.$main;
 }

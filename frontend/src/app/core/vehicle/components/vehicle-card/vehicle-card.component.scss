@@ -1,3 +1,5 @@
+@use "../../../../shared/styles/colors" as colors;
+
 p {
   margin-bottom: 6px;
 }
@@ -8,7 +10,7 @@ p {
   border-radius: 8px;
   position: relative;
   cursor: pointer;
-  margin: auto;
+  margin: 0.8rem auto;
   overflow: hidden;
 }
 
@@ -31,7 +33,7 @@ p {
   content: "";
   position: absolute;
   inset: 0;
-  border: 2px solid white;
+  border: 2px solid colors.$white;
   border-radius: inherit;
   opacity: 0;
   transition: 0.4s ease-in-out;
@@ -59,16 +61,21 @@ p {
 .content p {
   opacity: 0;
   transition: 0.4s 0.2s ease;
-  color: #d1d1d1;
 }
 
 .content h2 {
+  color: colors.$white;
+  font-size: 1.7rem;
   margin-bottom: 12px;
   scale: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .content p {
-  font-size: 14px;
+  color: colors.$gray;
+  font-size: 0.9rem;
   line-height: 1.5;
   transform: translateY(50%);
 }
@@ -84,11 +91,11 @@ p {
 }
 
 .btn-reservation {
-  margin-top: 16px;
-  padding: 10px 20px;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  border: 2px solid white;
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: colors.$btn-reservation;
+  color: colors.$white;
+  border: 2px solid colors.$white;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
@@ -104,17 +111,6 @@ p {
   transform: translateY(0);
 }
 
-.btn-reservation:hover {
-  background-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-3px);
-  border-color: #ffffff;
-}
-
-.btn-reservation:active {
-  transform: translateY(-1px);
-  background-color: rgba(255, 255, 255, 0.6);
-}
-
 .prices {
   font-weight: bold;
   font-size: 1.05rem;
@@ -123,66 +119,67 @@ p {
 @media (max-width: 768px) {
   .card {
     width: 300px;
-    height: auto;
+    margin: 0.6rem auto;
+  }
+
+  .card:hover::after {
+    inset: 10px;
   }
 
   .content {
-    top: 10%;
+    top: 9%;
     transform: translate(-50%, 0);
-  }
-
-  .content h2,
-  .content p {
-    opacity: 1;
-    transform: translateY(0);
   }
 
   .content h2 {
     font-size: 1.2rem;
-    scale: 1;
+    margin-bottom: 8px;
   }
 
   .content p {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
+  }
+
+  .prices {
+    font-size: 0.85rem;
   }
 
   .btn-reservation {
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    opacity: 1;
-    transform: translateY(0);
+    margin-top: 8px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
   .card {
     width: 200px;
-    height: auto;
+    margin: 0.4rem auto;
+  }
+
+  .card:hover::after {
+    inset: 8px;
   }
 
   .content {
-    top: 10%;
+    top: 12%;
     transform: translate(-50%, 0);
   }
 
-  .content h2,
-  .content p {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
   .content h2 {
-    font-size: 0.8rem;
+    font-size: 1rem;
+    margin-bottom: 5px;
   }
 
   .content p {
+    font-size: 0.6rem;
+  }
+
+  .prices {
     font-size: 0.7rem;
   }
 
   .btn-reservation {
-    padding: 4px 8px;
-    font-size: 0.7rem;
-    opacity: 1;
-    transform: translateY(0);
+    display: none;
   }
 }

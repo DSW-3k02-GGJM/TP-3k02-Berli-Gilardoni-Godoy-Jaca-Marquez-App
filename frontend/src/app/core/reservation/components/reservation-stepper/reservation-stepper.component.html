@@ -39,6 +39,7 @@
     >
       <mat-step [stepControl]="vehicleFilterForm">
         <form app-prevent-enter [formGroup]="vehicleFilterForm">
+          <hr />
           <ng-template matStepLabel>Seleccionar fechas y sucursal</ng-template>
           <div class="user-details">
             <mat-form-field
@@ -103,22 +104,24 @@
               </mat-error>
             </mat-form-field>
           </div>
+          <hr />
           <div>
             <button mat-button matStepperNext>Siguiente</button>
           </div>
         </form>
       </mat-step>
       <mat-step [stepControl]="vehicleModelForm">
+        <hr />
         <ng-template matStepLabel>Seleccionar modelo de vehículo</ng-template>
         <div *ngIf="response.length === 0" class="container2">
           <p class="title">
             No hay autos disponibles para esa fecha en esa sucursal ;\
           </p>
-          <button style="margin-top: 10px" mat-button matStepperPrevious>
+          <button class="btn-change-filter" mat-button matStepperPrevious>
             Cambiar Filtro
           </button>
         </div>
-        <section class="vehicle-list mt-4 mx-4">
+        <section class="vehicle-list my-4 mx-4">
           <ng-container *ngIf="response.length > 0">
             <app-vehicle-card
               *ngFor="let vehicle of response"
@@ -128,6 +131,7 @@
             ></app-vehicle-card>
           </ng-container>
         </section>
+        <hr />
         <div>
           <button mat-button matStepperPrevious>Volver</button>
         </div>
@@ -210,10 +214,8 @@
         <mat-error *ngIf="errorMessage">
           {{ errorMessage }}
         </mat-error>
-        <div style="margin-top: 20px">
-          <button mat-button matStepperPrevious style="margin-right: 10px">
-            Volver
-          </button>
+        <div class="div-back">
+          <button class="btn-back" mat-button matStepperPrevious>Volver</button>
           <button mat-flat-button (click)="submitReservation()">
             Finalizar Reserva
           </button>

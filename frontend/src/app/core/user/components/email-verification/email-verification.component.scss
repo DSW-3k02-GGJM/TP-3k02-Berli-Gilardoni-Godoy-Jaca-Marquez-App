@@ -1,3 +1,5 @@
+@use "../../../../shared/styles/colors" as colors;
+
 :host {
   height: auto;
   display: flex;
@@ -17,12 +19,12 @@ img {
   max-width: 500px;
   width: 100%;
   height: auto;
-  background-color: whitesmoke;
+  background-color: colors.$white;
   margin: 0 20px;
   margin-bottom: 1.5rem;
   padding: 30px 30px;
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 10px colors.$black;
 }
 
 .content {
@@ -53,21 +55,21 @@ img {
   width: 100%;
   border-radius: 5px;
   border: none;
-  color: #fff;
+  color: colors.$white;
   font-size: 18px;
   font-weight: 500;
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: #0f222d;
+  background: colors.$main;
 }
 
 .button button:hover {
-  background: #21303a;
+  background: colors.$secondary;
 }
 
 .button button:disabled {
-  background: #21303a;
+  background: colors.$secondary;
   cursor: default;
 }
 

@@ -1,19 +1,21 @@
+@use "../../../../shared/styles/colors" as colors;
+
 .navbar {
-  background-color: #28282beb;
+  background-color: colors.$staff-navbar;
   padding: 0;
 }
 
 .navbar-nav {
-  --bs-nav-link-active: white;
-  --bs-nav-link-active-bg: white;
+  --bs-nav-link-active: colors.$white;
+  --bs-nav-link-active-bg: colors.$white;
 }
 
 .active {
-  background-color: #21303a;
+  background-color: colors.$secondary;
 }
 
 .navbar-toggler {
-  border-color: rgba(255, 255, 255, 0.637);
+  border-color: colors.$gray;
   margin: 5px 0 5px -8px;
 }
 
@@ -37,7 +39,7 @@
 .container .title p {
   font-size: 30px;
   font-weight: 500;
-  color: whitesmoke;
+  color: colors.$white;
 }
 
 .unselectable {

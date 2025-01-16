@@ -1,3 +1,5 @@
+@use "../../../../shared/styles/colors" as colors;
+
 :host {
   height: auto;
   display: flex;
@@ -9,76 +11,22 @@
   padding-right: 20px;
 }
 
-.title {
-  text-align: left;
-  font-size: 25px;
-  font-weight: 500;
-}
-
-.information-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.information-title {
-  font-size: 20px;
-  font-weight: 500;
-  margin-right: 10px;
-}
-
-.information-title2 {
-  font-size: 20px;
-  font-weight: 500;
-  margin-right: 10px;
-  margin-left: 10px;
-}
-
-.information {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  margin: 10px 0;
-}
-
-.information-content {
-  display: flex;
-  user-select: text;
-}
-
-.container2 {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: whitesmoke;
-  margin-top: 20px;
-  padding: 20px;
-  max-width: 100%;
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-}
-
-.vehicle-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 10px;
-  margin: 1rem 0;
-  padding-bottom: 1.5rem;
+.sub-text {
+  font-size: 1.1rem;
 }
 
 .container {
   max-width: 100%;
   width: 100%;
   height: 100%;
-  background-color: white;
-  margin: 0 20px;
+  background-color: colors.$white;
   margin-bottom: 1.5rem;
-  padding: 15px 30px;
+  padding: 15px 20px 10px 20px;
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 10px colors.$black;
+}
+.unselectable {
+  user-select: none;
 }
 
 .user-details {
@@ -103,75 +51,80 @@
   width: 100%;
 }
 
-.sub-text {
-  font-size: 1.1rem;
+.form-control {
+  box-shadow: none;
 }
 
-.unselectable {
-  user-select: none;
+.vehicle-list {
+  margin: 1rem 0;
 }
 
-.form {
-  padding: 0.5em 2em 2em 2em;
-}
-
-.form-style {
-  background-color: #000;
-  color: #fff;
+.container2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: colors.$white;
+  margin-top: 20px;
   padding: 20px;
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
   border-radius: 5px;
-  border: 1px solid #6c757d;
 }
 
-.form-style input {
-  background-color: #212529;
-  color: #fff;
-  border: 1px solid #6c757d;
-  border-radius: 6px;
-  padding: 10px;
+.title {
+  text-align: left;
+  font-size: 25px;
+  font-weight: 500;
 }
 
-.form-control:focus {
-  border-color: rgb(0, 0, 0, 0);
-  box-shadow: none;
+.btn-change-filter {
+  margin-top: 10px;
 }
 
-.form-control:hover {
-  background-color: rgb(0, 0, 0, 0);
+.div-back {
+  margin-top: 20px;
 }
 
-.form-control .is-invalid:focus {
-  border-color: rgb(0, 0, 0, 0);
-  box-shadow: none;
+.btn-back {
+  margin-right: 10px;
 }
 
-.form-style input::placeholder {
-  color: #ffffff;
+.information {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px 0;
 }
 
-@media (max-width: 610px) {
-  .vehicle-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 0;
-    justify-content: left;
-    align-items: center;
-  }
+.information-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .mat-vertical-content {
-    padding: 0;
-  }
+.information-title {
+  font-size: 20px;
+  font-weight: 500;
+  margin-right: 10px;
+}
 
+.information-title2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.information-content {
+  display: flex;
+  user-select: text;
+}
+
+@media (max-width: 768px) {
   .container {
-    margin: 0;
-    padding: 0;
-    max-width: 100%;
-  }
-
-  .user-details .input-box {
-    margin-bottom: 15px;
-    width: 100%;
+    padding: 10px 15px 5px 15px;
   }
 
   .user-details {
@@ -180,19 +133,28 @@
     overflow-y: scroll;
   }
 
+  .user-details .input-box {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+
   .user-details::-webkit-scrollbar {
     width: 5px;
   }
 }
 
-@media (max-width: 560px) {
-  .information-title2 {
-    margin-left: 0;
+@media (max-width: 480px) {
+  .container {
+    padding: 4px 0;
   }
 
   .information {
     justify-content: flex-start;
     flex-direction: row;
     align-items: flex-start;
+  }
+
+  .information-title2 {
+    margin-left: 0;
   }
 }

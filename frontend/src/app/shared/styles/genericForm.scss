@@ -1,3 +1,5 @@
+@use "../styles/colors" as colors;
+
 :host {
   height: auto;
   display: flex;
@@ -12,12 +14,17 @@
   max-width: 700px;
   width: 100%;
   height: auto;
-  background-color: whitesmoke;
-  margin: 0 20px;
+  background-color: colors.$white;
   margin-bottom: 1.5rem;
   padding: 15px 30px;
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 10px colors.$black;
+}
+
+.container .title {
+  font-size: 25px;
+  font-weight: 500;
+  position: relative;
 }
 
 .container .information-title {
@@ -39,12 +46,6 @@
   user-select: text;
 }
 
-.container .title {
-  font-size: 25px;
-  font-weight: 500;
-  position: relative;
-}
-
 .content form .user-details {
   display: flex;
   flex-wrap: wrap;
@@ -59,6 +60,10 @@ form .textarea {
 form .user-details .input-box {
   margin-bottom: 10px;
   width: calc(100% / 2 - 20px);
+}
+
+form .user-details .input-box input {
+  width: 100%;
 }
 
 form .user-details .input-toggle-box {
@@ -77,10 +82,6 @@ form .input-box span.details {
   margin-bottom: 5px;
 }
 
-.user-details .input-box input {
-  width: 100%;
-}
-
 form .button {
   height: 45px;
   margin-bottom: 10px;
@@ -94,17 +95,17 @@ form .button button {
   width: 100%;
   border-radius: 5px;
   border: none;
-  color: #fff;
+  color: colors.$white;
   font-size: 18px;
   font-weight: 500;
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: #0f222d;
+  background: colors.$main;
 }
 
 form .button button:hover {
-  background: #21303a;
+  background: colors.$secondary;
 }
 
 form .button button:disabled {
@@ -112,65 +113,27 @@ form .button button:disabled {
   opacity: 0.7;
 }
 
-.form {
-  padding: 0.5em 2em 2em 2em;
-}
-
-.form-style {
-  background-color: #000;
-  color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  border: 1px solid #6c757d;
-}
-
-.form-style input {
-  background-color: #212529;
-  color: #fff;
-  border: 1px solid #6c757d;
-  border-radius: 6px;
-  padding: 10px;
-}
-
-.form-control:focus {
-  border-color: rgb(0, 0, 0, 0);
+.form-control {
   box-shadow: none;
 }
 
-.form-control:hover {
-  background-color: rgb(0, 0, 0, 0);
-}
-
-.form-control .is-invalid:focus {
-  border-color: rgb(0, 0, 0, 0);
-  box-shadow: none;
-}
-
-.form-style input::placeholder {
-  color: #ffffff;
-}
-
-@media (max-width: 584px) {
+@media (max-width: 768px) {
   .container {
     max-width: 100%;
   }
 
-  form .user-details .input-box {
-    margin-bottom: 15px;
-    width: 100%;
-  }
-
-  form .category {
-    width: 100%;
-  }
-
-  .content form .user-details {
+  form .user-details {
     padding-top: 5px;
     max-height: 450px;
     overflow-y: scroll;
   }
 
-  .user-details::-webkit-scrollbar {
+  form .user-details::-webkit-scrollbar {
     width: 5px;
+  }
+
+  form .user-details .input-box {
+    margin-bottom: 15px;
+    width: 100%;
   }
 }

@@ -62,6 +62,8 @@ cd frontend
 
 - [Base de Datos](https://drive.google.com/file/d/1yTwhIJxGQsc-7Be9Q_Hmqmft0WOD2jTH/view?usp=sharing)
 
+---
+
 > ⚠️ **Nota:** Deberás modificar las imágenes de los modelos de los vehículos para que las mismas puedan visualizarse correctamente al momento de realizar una reserva, dado que las rutas almacenadas en estos datos de prueba corresponden a imagenes que no se encontrarán disponibles si no fueron agregadas a través del uso de nuestra aplicación.
 
 ---
@@ -82,4 +84,4 @@ Adicionales para Aprobación
 |Req|Detalle|
 |:-|:-|
 |CRUD |Todos los del MD|
-|CUU/Epic|1. Reservar un vehículo<br>2. Realizar el check-in de una reserva<br>3. Realizar el check-out de una reserva<br>4. Cancelar reserva<br>5. Enviar recordatorios de reserva a los clientes<br>6. Comunicarse con clientes mediante correo electrónico.|
+|CUU/Epic|1. Reservar un vehículo<br>2. Realizar el check-in de una reserva<br>3. Realizar el check-out de una reserva<br>4. Cancelar reserva<br>5. Enviar recordatorios de reserva a los clientes<br>6. Comunicarse con clientes mediante correo electrónico|

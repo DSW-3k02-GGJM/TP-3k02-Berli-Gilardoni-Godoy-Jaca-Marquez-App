@@ -1,5 +1,6 @@
 @use "@angular/material" as mat;
 @use "./app/shared/styles/m3-theme.scss" as custom;
+@use "./app/shared/styles/colors" as colors;
 
 @include mat.core();
 
@@ -11,18 +12,9 @@ $alquiler-vehiculos-theme: custom.$light-theme;
 
 @include mat.color-variants-backwards-compatibility($alquiler-vehiculos-theme);
 
-$primary: #21303a;
-$secondary: #fff5d0;
-$success: #28a745;
-$info: #17a2b8;
-$warning: #ffc107;
-$danger: #dc3545;
-$light: #f8f9fa;
-$dark: #343a40;
-
 html,
 body {
-  background-color: $primary;
+  background-color: colors.$secondary;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   min-height: 100vh;
   display: flex;
