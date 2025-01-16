@@ -25,6 +25,7 @@ import { SnackBarService } from '@shared/services/notifications/snack-bar.servic
 // Interfaces
 import { ColorResponse } from '@core/color/interfaces/color-response.interface';
 import { ColorInput } from '@core/color/interfaces/color-input.interface';
+import { FormData } from '@shared/interfaces/form-data.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -47,10 +48,12 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   ],
 })
 export class ColorFormComponent implements OnInit {
-  title: string = '';
-  buttonText: string = '';
+  formData: FormData = {
+    action: '',
+    title: '',
+    buttonText: '',
+  };
   currentColorId: number = -1;
-  action: string = '';
   errorMessage: string = '';
   pending: boolean = false;
 
@@ -71,9 +74,7 @@ export class ColorFormComponent implements OnInit {
       next: (params) => {
         this.currentColorId = params['id'];
         if (this.currentColorId) {
-          this.action = 'Edit';
-          this.title = 'Editar color';
-          this.buttonText = 'Guardar cambios';
+          this.assignFormData('Edit');
           this.colorApiService.getOne(this.currentColorId).subscribe({
             next: (response: ColorResponse) =>
               this.colorForm.patchValue(response.data),
@@ -86,9 +87,7 @@ export class ColorFormComponent implements OnInit {
             this.colorApiService.uniqueNameValidator(this.currentColorId),
           ]);
         } else {
-          this.action = 'Create';
-          this.title = 'Nuevo color';
-          this.buttonText = 'Registrar';
+          this.assignFormData('Create');
           this.colorForm.controls['colorName'].setAsyncValidators([
             this.colorApiService.uniqueNameValidator(-1),
           ]);
@@ -97,10 +96,18 @@ export class ColorFormComponent implements OnInit {
     });
   }
 
+  assignFormData(action: string): void {
+    this.formData = {
+      action,
+      title: action === 'Create' ? 'Nuevo color' : 'Editar color',
+      buttonText: action === 'Create' ? 'Registrar' : 'Guardar cambios',
+    } as FormData;
+  }
+
   onSubmit(): void {
     if (!this.colorForm.invalid) {
       this.pending = true;
-      if (this.action === 'Create') {
+      if (this.formData.action === 'Create') {
         this.colorApiService
           .create(this.colorForm.value as ColorInput)
           .subscribe({
@@ -115,7 +122,7 @@ export class ColorFormComponent implements OnInit {
               }
             },
           });
-      } else if (this.action === 'Edit') {
+      } else if (this.formData.action === 'Edit') {
         this.colorApiService
           .update(this.currentColorId, this.colorForm.value as ColorInput)
           .subscribe({

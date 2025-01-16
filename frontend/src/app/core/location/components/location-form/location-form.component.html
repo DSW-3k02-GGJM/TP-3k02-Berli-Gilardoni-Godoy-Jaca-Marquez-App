@@ -1,16 +1,16 @@
 <div class="container unselectable">
   <div class="d-flex justify-content-between">
-    <div class="title">{{ title }}</div>
+    <div class="title">{{ formData.title }}</div>
     <button mat-stroked-button (click)="navigateToLocations()">Volver</button>
   </div>
   <hr />
-  <div *ngIf="action === 'Edit'" class="information">
+  <div *ngIf="formData.action === 'Edit'" class="information">
     <div class="information-title">ID</div>
     <div class="information-content">
       <span>{{ currentLocationId }}</span>
     </div>
   </div>
-  <hr *ngIf="action === 'Edit'" />
+  <hr *ngIf="formData.action === 'Edit'" />
   <div class="content">
     <form
       app-prevent-enter
@@ -101,7 +101,7 @@
           [disabled]="locationForm.invalid || locationForm.pending"
         >
           <ng-container *ngIf="!locationForm.pending && !pending; else loading">
-            {{ buttonText }}
+            {{ formData.buttonText }}
           </ng-container>
           <ng-template #loading>
             <mat-spinner diameter="30"></mat-spinner>

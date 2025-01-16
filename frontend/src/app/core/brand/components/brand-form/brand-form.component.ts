@@ -25,6 +25,7 @@ import { SnackBarService } from '@shared/services/notifications/snack-bar.servic
 // Interfaces
 import { BrandResponse } from '@core/brand/interfaces/brand-response.interface';
 import { BrandInput } from '@core/brand/interfaces/brand-input.interface';
+import { FormData } from '@shared/interfaces/form-data.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -47,10 +48,12 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   ],
 })
 export class BrandFormComponent implements OnInit {
-  title: string = '';
-  buttonText: string = '';
+  formData: FormData = {
+    action: '',
+    title: '',
+    buttonText: '',
+  };
   currentBrandId: number = -1;
-  action: string = '';
   errorMessage: string = '';
   pending: boolean = false;
 
@@ -76,9 +79,7 @@ export class BrandFormComponent implements OnInit {
       next: (params) => {
         this.currentBrandId = params['id'];
         if (this.currentBrandId) {
-          this.action = 'Edit';
-          this.title = 'Editar marca';
-          this.buttonText = 'Guardar cambios';
+          this.assignFormData('Edit');
           this.brandApiService.getOne(this.currentBrandId).subscribe({
             next: (response: BrandResponse) =>
               this.brandForm.patchValue(response.data),
@@ -91,9 +92,7 @@ export class BrandFormComponent implements OnInit {
             this.brandApiService.uniqueNameValidator(this.currentBrandId),
           ]);
         } else {
-          this.action = 'Create';
-          this.title = 'Nueva marca';
-          this.buttonText = 'Registrar';
+          this.assignFormData('Create');
           this.brandForm.controls['brandName'].setAsyncValidators([
             this.brandApiService.uniqueNameValidator(-1),
           ]);
@@ -102,10 +101,18 @@ export class BrandFormComponent implements OnInit {
     });
   }
 
+  assignFormData(action: string): void {
+    this.formData = {
+      action,
+      title: action === 'Create' ? 'Nueva marca' : 'Editar marca',
+      buttonText: action === 'Create' ? 'Registrar' : 'Guardar cambios',
+    } as FormData;
+  }
+
   onSubmit(): void {
     if (!this.brandForm.invalid) {
       this.pending = true;
-      if (this.action === 'Create') {
+      if (this.formData.action === 'Create') {
         this.brandApiService
           .create(this.brandForm.value as BrandInput)
           .subscribe({
@@ -120,7 +127,7 @@ export class BrandFormComponent implements OnInit {
               }
             },
           });
-      } else if (this.action === 'Edit') {
+      } else if (this.formData.action === 'Edit') {
         this.brandApiService
           .update(this.currentBrandId, this.brandForm.value as BrandInput)
           .subscribe({

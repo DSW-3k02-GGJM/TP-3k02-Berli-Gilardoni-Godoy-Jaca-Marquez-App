@@ -25,6 +25,7 @@ import { SnackBarService } from '@shared/services/notifications/snack-bar.servic
 // Interfaces
 import { LocationResponse } from '@core/location/interfaces/location-response.interface';
 import { LocationInput } from '@core/location/interfaces/location-input.interface';
+import { FormData } from '@shared/interfaces/form-data.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -47,10 +48,12 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   ],
 })
 export class LocationFormComponent implements OnInit {
-  title: string = '';
-  buttonText: string = '';
+  formData: FormData = {
+    action: '',
+    title: '',
+    buttonText: '',
+  };
   currentLocationId: number = -1;
-  action: string = '';
   errorMessage: string = '';
   pending: boolean = false;
 
@@ -79,9 +82,7 @@ export class LocationFormComponent implements OnInit {
       next: (params) => {
         this.currentLocationId = params['id'];
         if (this.currentLocationId) {
-          this.action = 'Edit';
-          this.title = 'Editar sucursal';
-          this.buttonText = 'Guardar cambios';
+          this.assignFormData('Edit');
           this.locationApiService.getOne(this.currentLocationId).subscribe({
             next: (response: LocationResponse) =>
               this.locationForm.patchValue(response.data),
@@ -94,9 +95,7 @@ export class LocationFormComponent implements OnInit {
             this.locationApiService.uniqueNameValidator(this.currentLocationId),
           ]);
         } else {
-          this.action = 'Create';
-          this.title = 'Nueva sucursal';
-          this.buttonText = 'Registrar';
+          this.assignFormData('Create');
           this.locationForm.controls['locationName'].setAsyncValidators([
             this.locationApiService.uniqueNameValidator(-1),
           ]);
@@ -105,10 +104,18 @@ export class LocationFormComponent implements OnInit {
     });
   }
 
+  assignFormData(action: string): void {
+    this.formData = {
+      action,
+      title: action === 'Create' ? 'Nueva sucursal' : 'Editar sucursal',
+      buttonText: action === 'Create' ? 'Registrar' : 'Guardar cambios',
+    } as FormData;
+  }
+
   onSubmit(): void {
     if (!this.locationForm.invalid) {
       this.pending = true;
-      if (this.action == 'Create') {
+      if (this.formData.action == 'Create') {
         this.locationApiService
           .create(this.locationForm.value as LocationInput)
           .subscribe({
@@ -123,7 +130,7 @@ export class LocationFormComponent implements OnInit {
               }
             },
           });
-      } else if (this.action == 'Edit') {
+      } else if (this.formData.action == 'Edit') {
         this.locationApiService
           .update(
             this.currentLocationId,

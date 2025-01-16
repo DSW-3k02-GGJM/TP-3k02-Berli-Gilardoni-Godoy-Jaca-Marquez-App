@@ -35,6 +35,7 @@ import { VehicleModelInput } from '@core/vehicle-model/interfaces/vehicle-model-
 import { Brand } from '@core/brand/interfaces/brand.interface';
 import { Category } from '@core/category/interfaces/category.interface';
 import { ForkJoinResponse } from '@core/vehicle-model/interfaces/fork-join-response.interface';
+import { FormData } from '@shared/interfaces/form-data.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -62,10 +63,12 @@ import { UploadImageResponse } from '@shared/interfaces/upload-image-response.in
   ],
 })
 export class VehicleModelFormComponent implements OnInit {
-  title: string = '';
-  buttonText: string = '';
+  formData: FormData = {
+    action: '',
+    title: '',
+    buttonText: '',
+  };
   currentVehicleModelId: number = -1;
-  action: string = '';
   displayedMessage: string = '';
   errorMessage: string = '';
   pending: boolean = false;
@@ -106,9 +109,7 @@ export class VehicleModelFormComponent implements OnInit {
       next: (params) => {
         this.currentVehicleModelId = params['id'];
         if (this.currentVehicleModelId) {
-          this.action = 'Edit';
-          this.title = 'Editar modelo';
-          this.buttonText = 'Guardar cambios';
+          this.assignFormData('Edit');
           this.vehicleModelApiService
             .getOne(this.currentVehicleModelId)
             .subscribe({
@@ -131,15 +132,21 @@ export class VehicleModelFormComponent implements OnInit {
             ]
           );
         } else {
-          this.action = 'Create';
-          this.title = 'Nuevo modelo';
-          this.buttonText = 'Registrar';
+          this.assignFormData('Create');
           this.vehicleModelForm.controls['vehicleModelName'].setAsyncValidators(
             [this.vehicleModelApiService.uniqueNameValidator(-1)]
           );
         }
       },
     });
+  }
+
+  assignFormData(action: string): void {
+    this.formData = {
+      action,
+      title: action === 'Create' ? 'Nuevo modelo' : 'Editar modelo',
+      buttonText: action === 'Create' ? 'Registrar' : 'Guardar cambios',
+    } as FormData;
   }
 
   loadData(): void {
@@ -220,7 +227,7 @@ export class VehicleModelFormComponent implements OnInit {
 
   submitForm(oldPath: string | null): void {
     this.deleteImageIfNeeded(oldPath);
-    if (this.action === 'Create') {
+    if (this.formData.action === 'Create') {
       this.vehicleModelApiService
         .create(this.vehicleModelForm.value as VehicleModelInput)
         .subscribe({
@@ -235,7 +242,7 @@ export class VehicleModelFormComponent implements OnInit {
             }
           },
         });
-    } else if (this.action === 'Edit') {
+    } else if (this.formData.action === 'Edit') {
       this.vehicleModelApiService
         .update(
           this.currentVehicleModelId,

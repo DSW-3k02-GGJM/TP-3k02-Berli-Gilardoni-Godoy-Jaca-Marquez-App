@@ -25,6 +25,7 @@ import { SnackBarService } from '@shared/services/notifications/snack-bar.servic
 // Interfaces
 import { CategoryResponse } from '@core/category/interfaces/category-response.interface';
 import { CategoryInput } from '@core/category/interfaces/category-input.interface';
+import { FormData } from '@shared/interfaces/form-data.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -47,10 +48,12 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   ],
 })
 export class CategoryFormComponent implements OnInit {
-  title: string = '';
-  buttonText: string = '';
+  formData: FormData = {
+    action: '',
+    title: '',
+    buttonText: '',
+  };
   currentCategoryId: number = -1;
-  action: string = '';
   errorMessage: string = '';
   pending: boolean = false;
 
@@ -82,9 +85,7 @@ export class CategoryFormComponent implements OnInit {
       next: (params) => {
         this.currentCategoryId = params['id'];
         if (this.currentCategoryId) {
-          this.action = 'Edit';
-          this.title = 'Editar categoría';
-          this.buttonText = 'Guardar cambios';
+          this.assignFormData('Edit');
           this.categoryApiService.getOne(this.currentCategoryId).subscribe({
             next: (response: CategoryResponse) =>
               this.categoryForm.patchValue(response.data),
@@ -97,9 +98,7 @@ export class CategoryFormComponent implements OnInit {
             this.categoryApiService.uniqueNameValidator(this.currentCategoryId),
           ]);
         } else {
-          this.action = 'Create';
-          this.title = 'Nueva categoría';
-          this.buttonText = 'Registrar';
+          this.assignFormData('Create');
           this.categoryForm.controls['categoryName'].setAsyncValidators([
             this.categoryApiService.uniqueNameValidator(-1),
           ]);
@@ -108,10 +107,18 @@ export class CategoryFormComponent implements OnInit {
     });
   }
 
+  assignFormData(action: string): void {
+    this.formData = {
+      action,
+      title: action === 'Create' ? 'Nueva categoría' : 'Editar categoría',
+      buttonText: action === 'Create' ? 'Registrar' : 'Guardar cambios',
+    } as FormData;
+  }
+
   onSubmit(): void {
     if (!this.categoryForm.invalid) {
       this.pending = true;
-      if (this.action == 'Create') {
+      if (this.formData.action == 'Create') {
         this.categoryApiService
           .create(this.categoryForm.value as CategoryInput)
           .subscribe({
@@ -126,7 +133,7 @@ export class CategoryFormComponent implements OnInit {
               }
             },
           });
-      } else if (this.action == 'Edit') {
+      } else if (this.formData.action == 'Edit') {
         this.categoryApiService
           .update(
             this.currentCategoryId,

@@ -30,6 +30,7 @@ import { EmailValidationService } from '@shared/services/validations/email-valid
 // Interfaces
 import { UserResponse } from '@core/user/interfaces/user-response.interface';
 import { UserInput } from '@core/user/interfaces/user-input.interface';
+import { FormData } from '@shared/interfaces/form-data.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -59,11 +60,14 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
 export class UserFormComponent implements OnInit {
   hide: WritableSignal<boolean> = signal(true);
 
-  title: string = '';
-  buttonText: string = '';
+  formData: FormData = {
+    action: '',
+    title: '',
+    buttonText: '',
+  };
+
   currentUserId: number = -1;
   currentEmail: string = '';
-  action: string = '';
   errorMessage: string = '';
   pending: boolean = false;
 
@@ -117,9 +121,7 @@ export class UserFormComponent implements OnInit {
       next: (params) => {
         this.currentUserId = params['id'];
         if (this.currentUserId) {
-          this.action = 'Edit';
-          this.title = 'Editar usuario';
-          this.buttonText = 'Guardar cambios';
+          this.assignFormData('Edit');
           this.userApiService.getOne(this.currentUserId).subscribe({
             next: (response: UserResponse) => {
               const birthDateFormat: string =
@@ -143,9 +145,7 @@ export class UserFormComponent implements OnInit {
               ),
           });
         } else {
-          this.action = 'Create';
-          this.title = 'Nuevo usuario';
-          this.buttonText = 'Registrar';
+          this.assignFormData('Create');
           this.userForm.addControl(
             'email',
             new FormControl(
@@ -169,6 +169,14 @@ export class UserFormComponent implements OnInit {
     });
   }
 
+  assignFormData(action: string): void {
+    this.formData = {
+      action,
+      title: action === 'Create' ? 'Nuevo usuario' : 'Editar usuario',
+      buttonText: action === 'Create' ? 'Registrar' : 'Guardar cambios',
+    } as FormData;
+  }
+
   clickEvent(event: MouseEvent): void {
     event.preventDefault();
     this.hide.set(!this.hide());
@@ -178,7 +186,7 @@ export class UserFormComponent implements OnInit {
   onSubmit(): void {
     if (!this.userForm.invalid) {
       this.pending = true;
-      if (this.action === 'Create') {
+      if (this.formData.action === 'Create') {
         this.userApiService.create(this.userForm.value as UserInput).subscribe({
           next: () => {
             this.pending = false;
@@ -191,7 +199,7 @@ export class UserFormComponent implements OnInit {
             }
           },
         });
-      } else if (this.action === 'Edit') {
+      } else if (this.formData.action === 'Edit') {
         this.userApiService
           .update(this.currentUserId, this.userForm.value as UserInput)
           .subscribe({

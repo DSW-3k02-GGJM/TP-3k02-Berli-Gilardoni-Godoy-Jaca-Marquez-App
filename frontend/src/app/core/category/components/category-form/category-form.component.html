@@ -1,16 +1,16 @@
 <div class="container unselectable">
   <div class="d-flex justify-content-between">
-    <div class="title">{{ title }}</div>
+    <div class="title">{{ formData.title }}</div>
     <button mat-stroked-button (click)="navigateToCategories()">Volver</button>
   </div>
   <hr />
-  <div *ngIf="action === 'Edit'" class="information">
+  <div *ngIf="formData.action === 'Edit'" class="information">
     <div class="information-title">ID</div>
     <div class="information-content">
       <span>{{ currentCategoryId }}</span>
     </div>
   </div>
-  <hr *ngIf="action === 'Edit'" />
+  <hr *ngIf="formData.action === 'Edit'" />
   <div class="content">
     <form
       app-prevent-enter
@@ -82,7 +82,7 @@
             El precio por día es requerido.
           </mat-error>
           <mat-error *ngIf="categoryForm.get('pricePerDay')?.errors?.min">
-            No puede ser menor a 1.
+            El precio por día debe ser mayor o igual a 1.
           </mat-error>
         </mat-form-field>
         <mat-form-field
@@ -100,10 +100,10 @@
             placeholder=""
           />
           <mat-error *ngIf="categoryForm.get('depositValue')?.errors?.required">
-            El Valor de depósito es requerido.
+            El valor de depósito es requerido.
           </mat-error>
           <mat-error *ngIf="categoryForm.get('depositValue')?.errors?.min">
-            No puede ser menor a 1.
+            El valor de depósito debe ser mayor o igual a 1.
           </mat-error>
         </mat-form-field>
       </div>
@@ -116,7 +116,7 @@
           [disabled]="categoryForm.invalid || categoryForm.pending"
         >
           <ng-container *ngIf="!categoryForm.pending && !pending; else loading">
-            {{ buttonText }}
+            {{ formData.buttonText }}
           </ng-container>
           <ng-template #loading>
             <mat-spinner diameter="30"></mat-spinner>

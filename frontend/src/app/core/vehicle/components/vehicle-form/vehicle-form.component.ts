@@ -37,6 +37,7 @@ import { Color } from '@core/color/interfaces/color.interface';
 import { Location } from '@core/location/interfaces/location.interface';
 import { VehicleModel } from '@core/vehicle-model/interfaces/vehicle-model.interface';
 import { ForkJoinResponse } from '@core/vehicle/interfaces/fork-join-response.interface';
+import { FormData } from '@shared/interfaces/form-data.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -60,10 +61,12 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   ],
 })
 export class VehicleFormComponent implements OnInit {
-  title: string = '';
-  buttonText: string = '';
+  formData: FormData = {
+    action: '',
+    title: '',
+    buttonText: '',
+  };
   currentVehicleId: number = -1;
-  action: string = '';
   displayedMessage: string = '';
   errorMessage: string = '';
   pending: boolean = false;
@@ -109,9 +112,7 @@ export class VehicleFormComponent implements OnInit {
       next: (params) => {
         this.currentVehicleId = params['id'];
         if (this.currentVehicleId) {
-          this.action = 'Edit';
-          this.title = 'Editar vehículo';
-          this.buttonText = 'Guardar cambios';
+          this.assignFormData('Edit');
           this.vehicleApiService.getOne(this.currentVehicleId).subscribe({
             next: (response: VehicleResponse) => {
               this.vehicleForm.patchValue({
@@ -133,15 +134,21 @@ export class VehicleFormComponent implements OnInit {
             ),
           ]);
         } else {
-          this.action = 'Create';
-          this.title = 'Nuevo vehículo';
-          this.buttonText = 'Registrar';
+          this.assignFormData('Create');
           this.vehicleForm.controls['licensePlate'].setAsyncValidators([
             this.vehicleApiService.uniqueLicensePlateValidator(-1),
           ]);
         }
       },
     });
+  }
+
+  assignFormData(action: string): void {
+    this.formData = {
+      action,
+      title: action === 'Create' ? 'Nuevo vehículo' : 'Editar vehículo',
+      buttonText: action === 'Create' ? 'Registrar' : 'Guardar cambios',
+    } as FormData;
   }
 
   loadData(): void {
@@ -186,7 +193,7 @@ export class VehicleFormComponent implements OnInit {
   onSubmit(): void {
     if (!this.vehicleForm.invalid) {
       this.pending = true;
-      if (this.action === 'Create') {
+      if (this.formData.action === 'Create') {
         this.vehicleApiService
           .create(this.vehicleForm.value as VehicleInput)
           .subscribe({
@@ -201,7 +208,7 @@ export class VehicleFormComponent implements OnInit {
               }
             },
           });
-      } else if (this.action === 'Edit') {
+      } else if (this.formData.action === 'Edit') {
         this.vehicleApiService
           .update(this.currentVehicleId, this.vehicleForm.value as VehicleInput)
           .subscribe({

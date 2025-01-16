@@ -1,10 +1,10 @@
 <div class="container unselectable">
   <div class="d-flex justify-content-between">
-    <div class="title">{{ title }}</div>
+    <div class="title">{{ formData.title }}</div>
     <button mat-stroked-button (click)="navigateToUsers()">Volver</button>
   </div>
   <hr />
-  <div *ngIf="action === 'Edit'" class="information">
+  <div *ngIf="formData.action === 'Edit'" class="information">
     <div class="information-title">ID de usuario</div>
     <div class="information-content user-id-div">
       <span>{{ currentUserId }}</span>
@@ -14,7 +14,7 @@
       <span>{{ currentEmail }}</span>
     </div>
   </div>
-  <hr *ngIf="action === 'Edit'" />
+  <hr *ngIf="formData.action === 'Edit'" />
   <div class="content">
     <form
       app-prevent-enter
@@ -24,7 +24,7 @@
     >
       <div class="user-details">
         <mat-form-field
-          *ngIf="action === 'Create'"
+          *ngIf="formData.action === 'Create'"
           disabled
           class="input-box"
           appearance="outline"
@@ -50,7 +50,7 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field
-          *ngIf="action === 'Create'"
+          *ngIf="formData.action === 'Create'"
           class="input-box"
           appearance="outline"
           hideRequiredMarker="true"
@@ -282,7 +282,7 @@
       <div class="button">
         <button type="submit" [disabled]="userForm.invalid || userForm.pending">
           <ng-container *ngIf="!userForm.pending && !pending; else loading">
-            {{ buttonText }}
+            {{ formData.buttonText }}
           </ng-container>
           <ng-template #loading>
             <mat-spinner diameter="30"></mat-spinner>
