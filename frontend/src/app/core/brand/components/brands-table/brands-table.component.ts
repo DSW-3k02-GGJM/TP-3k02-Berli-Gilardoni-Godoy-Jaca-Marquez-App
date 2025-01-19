@@ -32,7 +32,7 @@ import { BrandFilterPipe } from '@core/brand/pipes/brand-filter.pipe';
   selector: 'app-brands-table',
   standalone: true,
   templateUrl: './brands-table.component.html',
-  styleUrl: '../../../../shared/styles/genericTable.scss',
+  styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
     FormsModule,

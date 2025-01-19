@@ -1,5 +1,5 @@
 <div class="container unselectable">
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between mt-1">
     <div class="title">{{ formData.title }}</div>
     <button mat-stroked-button (click)="navigateToColors()">Volver</button>
   </div>
@@ -33,11 +33,14 @@
             formControlName="colorName"
             placeholder=""
           />
-          <mat-error *ngIf="colorForm.get('colorName')?.errors?.nameExists">
-            Este nombre ya está siendo usado.
-          </mat-error>
           <mat-error *ngIf="colorForm.get('colorName')?.errors?.required">
             El nombre es requerido.
+          </mat-error>
+          <mat-error *ngIf="colorForm.get('colorName')?.errors?.pattern">
+            El nombre sólo puede contener letras.
+          </mat-error>
+          <mat-error *ngIf="colorForm.get('colorName')?.errors?.nameExists">
+            Este nombre ya está siendo usado.
           </mat-error>
         </mat-form-field>
       </div>

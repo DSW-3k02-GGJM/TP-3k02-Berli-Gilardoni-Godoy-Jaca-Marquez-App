@@ -15,7 +15,10 @@ import { AuthService } from '@security/services/auth.service';
   selector: 'app-email-verification',
   standalone: true,
   templateUrl: './email-verification.component.html',
-  styleUrl: './email-verification.component.scss',
+  styleUrls: [
+    '../../../../shared/styles/generic-form.scss',
+    './email-verification.component.scss',
+  ],
   imports: [CommonModule, MatButtonModule, MatProgressSpinnerModule],
 })
 export class EmailVerificationComponent implements OnInit {

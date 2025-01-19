@@ -17,7 +17,7 @@ import { ColorsResponse } from '@core/color/interfaces/colors-response.interface
   selector: 'app-colors',
   standalone: true,
   templateUrl: './colors.component.html',
-  styleUrl: './colors.component.scss',
+  styleUrl: '../../../../shared/styles/generic-new-button.scss',
   imports: [CommonModule, ColorsTableComponent],
 })
 export class ColorsComponent implements OnInit {

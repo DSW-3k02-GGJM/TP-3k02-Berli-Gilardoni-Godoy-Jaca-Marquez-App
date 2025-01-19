@@ -33,7 +33,7 @@ import { UserFilterPipe } from '@core/user/pipes/user-filter.pipe';
   selector: 'app-users-table',
   standalone: true,
   templateUrl: './users-table.component.html',
-  styleUrl: '../../../../shared/styles/genericTable.scss',
+  styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
     FormsModule,

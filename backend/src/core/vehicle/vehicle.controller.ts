@@ -1,5 +1,5 @@
 // Express
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 // MikroORM
 import { orm } from '../../shared/database/orm.js';
@@ -7,139 +7,10 @@ import { orm } from '../../shared/database/orm.js';
 // Entities
 import { Vehicle } from './vehicle.entity.js';
 import { Reservation } from '../reservation/reservation.entity.js';
-import { Location } from '../location/location.entity.js';
-
-// External Libraries
-import moment from 'moment';
 
 const em = orm.em;
 
-const sanitizedVehicleInput = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    licensePlate: req.body.licensePlate,
-    manufacturingYear: req.body.manufacturingYear,
-    totalKms: req.body.totalKms,
-    location: req.body.location,
-    color: req.body.color,
-    vehicleModel: req.body.vehicleModel,
-    reservations: req.body.reservations,
-  };
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-
-  const id = Number.parseInt(req.params.id);
-
-  const {
-    licensePlate,
-    manufacturingYear,
-    totalKms,
-    location,
-    color,
-    vehicleModel,
-  } = req.body.sanitizedInput;
-
-  if (
-    !licensePlate ||
-    !manufacturingYear ||
-    !location ||
-    !color ||
-    !vehicleModel
-  ) {
-    return res.status(400).json({ message: 'All information is required' });
-  }
-
-  req.body.sanitizedInput.licensePlate = licensePlate.toUpperCase();
-
-  if (totalKms < 0) {
-    return res
-      .status(400)
-      .json({ message: 'Total kms must be greater than 0' });
-  }
-
-  const vehicle = await em.findOne(Vehicle, { licensePlate });
-  if (vehicle && vehicle.id !== id) {
-    return res
-      .status(400)
-      .json({ message: 'This license plate is already used' });
-  }
-
-  next();
-};
-
-const sanitizedFilterInput = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.query.sanitizedInput = {
-    startDate: req.query.startDate,
-    endDate: req.query.endDate,
-    location: req.query.location,
-  };
-
-  const { startDate, endDate, location } = req.query.sanitizedInput;
-
-  if (!isValidDateFormat(startDate as string)) {
-    return res.status(400).json({ message: 'Invalid or missing startDate' });
-  } else if (moment(startDate as string).isBefore(moment().startOf('day'))) {
-    return res.status(400).json({
-      message: "Invalid startDate. You can't book a reservation for the past!",
-    });
-  }
-
-  if (!isValidDateFormat(endDate as string)) {
-    return res.status(400).json({ message: 'Invalid or missing endDate' });
-  } else if (moment(startDate as string).isAfter(moment(endDate as string))) {
-    return res.status(400).json({
-      message:
-        "Invalid endDate. Your reservation can't end if it never started!",
-    });
-  }
-
-  if (Number.isInteger(Number(location)) && !(Number(location) < 1)) {
-    try {
-      const storedLocation = await em.findOne(Location, {
-        id: Number(location),
-      });
-
-      if (!storedLocation) {
-        return res.status(400).json({ message: 'Invalid or missing location' });
-      }
-    } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
-  } else {
-    return res.status(400).json({ message: 'Invalid or missing location' });
-  }
-
-  next();
-};
-
-const isValidDateFormat = (dateString: string): boolean => {
-  const regex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!regex.test(dateString)) {
-    return false;
-  }
-
-  const [year, month, day] = dateString.split('-').map(Number);
-  const date = new Date(year, month - 1, day);
-
-  return (
-    date.getFullYear() === year &&
-    date.getMonth() === month - 1 &&
-    date.getDate() === day
-  );
-};
-
-const findAll = async (req: Request, res: Response) => {
+const findAll = async (_req: Request, res: Response) => {
   try {
     const vehicles = await em.find(
       Vehicle,
@@ -242,9 +113,8 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
 
 const findAvailable = async (req: Request, res: Response) => {
   try {
-    // Get the filter from the request, which includes:
-    // StartDate, EndDate and Location
-    const filter = req.query.sanitizedInput as {
+    // Get the filter, which includes: StartDate, EndDate and Location
+    const filter = req.body.sanitizedInput as {
       startDate: string;
       endDate: string;
       location: string;
@@ -310,8 +180,6 @@ const findAvailable = async (req: Request, res: Response) => {
 };
 
 export {
-  sanitizedVehicleInput,
-  sanitizedFilterInput,
   findAll,
   findOne,
   add,

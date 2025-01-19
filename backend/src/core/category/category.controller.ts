@@ -1,5 +1,5 @@
 // Express
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 // MikroORM
 import { orm } from '../../shared/database/orm.js';
@@ -10,52 +10,7 @@ import { VehicleModel } from '../vehicle-model/vehicle-model.entity.js';
 
 const em = orm.em;
 
-const sanitizedCategoryInput = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    categoryName: req.body.categoryName,
-    categoryDescription: req.body.categoryDescription,
-    pricePerDay: req.body.pricePerDay,
-    depositValue: req.body.depositValue,
-    vehicleModels: req.body.vehicleModels,
-  };
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-
-  const id = Number.parseInt(req.params.id);
-  const categoryName = req.body.sanitizedInput.categoryName;
-  const categoryDescription = req.body.sanitizedInput.categoryDescription;
-  const pricePerDay = req.body.sanitizedInput.pricePerDay;
-  const depositValue = req.body.sanitizedInput.depositValue;
-
-  if (!categoryName || !categoryDescription || !pricePerDay || !depositValue) {
-    return res.status(400).json({ message: 'All information is required' });
-  }
-
-  if (pricePerDay < 0 || depositValue < 0) {
-    return res.status(400).json({
-      message: 'Price per day and deposit value must be greater than 0',
-    });
-  }
-
-  const category = await em.findOne(Category, { categoryName });
-  if (category) {
-    if (category.id !== id) {
-      return res.status(400).json({ message: 'This name is already used' });
-    }
-  }
-
-  next();
-};
-
-const findAll = async (req: Request, res: Response) => {
+const findAll = async (_req: Request, res: Response) => {
   try {
     const categories = await em.find(Category, {});
     res
@@ -144,12 +99,4 @@ const verifyCategoryNameExists = async (req: Request, res: Response) => {
   }
 };
 
-export {
-  sanitizedCategoryInput,
-  findAll,
-  findOne,
-  add,
-  update,
-  remove,
-  verifyCategoryNameExists,
-};
+export { findAll, findOne, add, update, remove, verifyCategoryNameExists };

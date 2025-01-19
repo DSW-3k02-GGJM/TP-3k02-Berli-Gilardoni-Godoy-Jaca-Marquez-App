@@ -46,7 +46,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-vehicle-form',
   standalone: true,
   templateUrl: './vehicle-form.component.html',
-  styleUrl: '../../../../shared/styles/genericForm.scss',
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     CommonModule,
     ReactiveFormsModule,

@@ -45,10 +45,7 @@ import { UploadImageResponse } from '@shared/interfaces/upload-image-response.in
   selector: 'app-vehicle-model-form',
   standalone: true,
   templateUrl: './vehicle-model-form.component.html',
-  styleUrls: [
-    './vehicle-model-form.component.scss',
-    '../../../../shared/styles/genericForm.scss',
-  ],
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     CommonModule,
     ReactiveFormsModule,

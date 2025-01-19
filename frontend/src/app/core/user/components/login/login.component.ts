@@ -38,7 +38,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     CommonModule,
     RouterLink,
@@ -151,7 +151,7 @@ export class LoginComponent {
         error: (error: HttpErrorResponse) => {
           this.pending = false;
           if (error.status === 401) {
-            this.message = 'El email o la contraseña son incorrectos';
+            this.message = 'El email y/o la contraseña son incorrectos';
           } else if (error.status === 403) {
             this.openValidationDialog();
           } else {

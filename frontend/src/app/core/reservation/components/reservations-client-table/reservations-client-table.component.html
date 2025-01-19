@@ -70,7 +70,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let reservation of filteredReservations">
-          <td>{{ formatDate(reservation.reservationDate) }}</td>
+          <td>{{ formatDate(reservation.reservationDate ?? "") }}</td>
           <td>
             {{
               getBrandName(reservation.vehicle) +
@@ -89,8 +89,8 @@
                 : "Sin iniciar"
             }}
           </td>
-          <td>{{ formatDate(reservation.startDate) }}</td>
-          <td>{{ formatDate(reservation.plannedEndDate) }}</td>
+          <td>{{ formatDate(reservation.startDate ?? "") }}</td>
+          <td>{{ formatDate(reservation.plannedEndDate ?? "") }}</td>
           <td>
             {{
               reservation.realEndDate

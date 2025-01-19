@@ -39,10 +39,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-user-form',
   standalone: true,
   templateUrl: './user-form.component.html',
-  styleUrls: [
-    './user-form.component.scss',
-    '../../../../shared/styles/genericForm.scss',
-  ],
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     CommonModule,
     ReactiveFormsModule,

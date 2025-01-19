@@ -32,7 +32,7 @@ import { LocationFilterPipe } from '@core/location/pipes/location-filter.pipe';
   selector: 'app-locations-table',
   standalone: true,
   templateUrl: './locations-table.component.html',
-  styleUrl: '../../../../shared/styles/genericTable.scss',
+  styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
     FormsModule,

@@ -3,32 +3,38 @@ import { Router } from 'express';
 
 // Controllers
 import {
-  sanitizedLoginInput,
-  sanitizedUserInput,
+  add,
+  findAll,
+  findOne,
+  update,
+  remove,
+  register,
   login,
   logout,
-  register,
+  verifyAuthentication,
+  getAuthenticatedId,
+  getAuthenticatedRole,
   sendEmailVerification,
   verifyEmailToken,
   sendPasswordReset,
-  sanitizedPasswordResetInput,
   verifyPasswordResetToken,
-  getAuthenticatedId,
-  getAuthenticatedRole,
-  verifyAuthentication,
-  sendEmail,
   verifyEmailExists,
   verifyDocumentIDExists,
-  findAll,
-  add,
-  findOne,
-  update,
-  sanitizedUpdateInput,
-  remove,
+  sendEmail,
 } from './user.controller.js';
 
 // Services
 import { AuthService } from '../../shared/services/auth.service.js';
+
+// Middlewares
+import {
+  sanitizedRegisterInput,
+  sanitizedAdminInput,
+  sanitizedUpdateInput,
+  sanitizedLoginInput,
+  sanitizedEmailInput,
+  sanitizedPasswordResetInput,
+} from './user.middleware.js';
 
 export const userRouter = Router();
 
@@ -36,7 +42,7 @@ userRouter.post('/login', sanitizedLoginInput, login);
 
 userRouter.post('/logout', logout);
 
-userRouter.post('/register', sanitizedUserInput, register);
+userRouter.post('/register', sanitizedRegisterInput, register);
 
 userRouter.post('/send-email-verification/:email', sendEmailVerification);
 
@@ -67,6 +73,7 @@ userRouter.post(
 userRouter.post(
   '/send-email/:email',
   AuthService.isAuthenticated(['admin', 'employee']),
+  sanitizedEmailInput,
   sendEmail
 );
 
@@ -83,7 +90,7 @@ userRouter.get(
 userRouter.post(
   '/',
   AuthService.isAuthenticated(['admin']),
-  sanitizedUserInput,
+  sanitizedAdminInput,
   add
 );
 

@@ -1,5 +1,5 @@
 // Express
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 // MikroORM
 import { orm } from '../../shared/database/orm.js';
@@ -10,121 +10,7 @@ import { Reminder } from '../reminder/reminder.entity.js';
 
 const em = orm.em;
 
-const sanitizedAdminReservationInput = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    reservationDate: req.body.reservationDate,
-    startDate: req.body.startDate,
-    plannedEndDate: req.body.plannedEndDate,
-    user: req.body.user,
-    vehicle: req.body.vehicle,
-  };
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-
-  const reservationDate = req.body.sanitizedInput.reservationDate;
-  const startDate = req.body.sanitizedInput.startDate;
-  const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
-  const user = req.body.sanitizedInput.user;
-  const vehicle = req.body.sanitizedInput.vehicle;
-
-  if (!reservationDate || !startDate || !plannedEndDate || !user || !vehicle) {
-    res.status(400).json({ message: 'All information is required' });
-  }
-
-  next();
-};
-
-const sanitizedUserReservationInput = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    reservationDate: req.body.reservationDate,
-    startDate: req.body.startDate,
-    plannedEndDate: req.body.plannedEndDate,
-    vehicle: req.body.vehicle,
-  };
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-
-  const reservationDate = req.body.sanitizedInput.reservationDate;
-  const startDate = req.body.sanitizedInput.startDate;
-  const plannedEndDate = req.body.sanitizedInput.plannedEndDate;
-  const vehicle = req.body.sanitizedInput.vehicle;
-
-  if (!reservationDate || !startDate || !plannedEndDate || !vehicle) {
-    res.status(400).json({ message: 'All information is required' });
-  }
-
-  next();
-};
-
-const sanitizedUpdateReservationInput = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    realEndDate: req.body.realEndDate,
-    cancellationDate: req.body.cancellationDate,
-    initialKms: req.body.initialKms,
-    finalKms: req.body.finalKms,
-  };
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-
-  const { realEndDate, cancellationDate, initialKms, finalKms } =
-    req.body.sanitizedInput;
-
-  if (realEndDate && isNaN(new Date(realEndDate).getTime())) {
-    return res.status(400).json({ message: 'Invalid realEndDate format' });
-  }
-
-  if (cancellationDate && isNaN(new Date(cancellationDate).getTime())) {
-    return res.status(400).json({ message: 'Invalid cancellationDate format' });
-  }
-
-  if (
-    initialKms !== undefined &&
-    initialKms !== null &&
-    (isNaN(initialKms) || initialKms < 0)
-  ) {
-    return res
-      .status(400)
-      .json({ message: 'initialKms must be a positive number' });
-  }
-
-  if (
-    finalKms !== undefined &&
-    finalKms !== null &&
-    (isNaN(finalKms) || finalKms < 0)
-  ) {
-    return res
-      .status(400)
-      .json({ message: 'finalKms must be a positive number' });
-  }
-
-  next();
-};
-
-const findAll = async (req: Request, res: Response) => {
+const findAll = async (_req: Request, res: Response) => {
   try {
     const reservations = await em.find(
       Reservation,
@@ -201,6 +87,27 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
+const getReservationsByUser = async (req: Request, res: Response) => {
+  try {
+    const reservationsByUser = await em.find(
+      Reservation,
+      { user: req.session.user.id },
+      {
+        populate: [
+          'vehicle.vehicleModel.brand',
+          'vehicle.vehicleModel.category',
+        ],
+      }
+    );
+    res.status(200).json({
+      message: 'All reservations have been found',
+      data: reservationsByUser,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 const userReservation = async (req: Request, res: Response) => {
   try {
     const reservation = em.create(Reservation, {
@@ -225,35 +132,4 @@ const userReservation = async (req: Request, res: Response) => {
   }
 };
 
-const getReservationsByUser = async (req: Request, res: Response) => {
-  try {
-    const reservationsByUser = await em.find(
-      Reservation,
-      { user: req.session.user.id },
-      {
-        populate: [
-          'vehicle.vehicleModel.brand',
-          'vehicle.vehicleModel.category',
-        ],
-      }
-    );
-    res.status(200).json({
-      message: 'All reservations have been found',
-      data: reservationsByUser,
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-export {
-  sanitizedAdminReservationInput,
-  sanitizedUserReservationInput,
-  sanitizedUpdateReservationInput,
-  findAll,
-  add,
-  update,
-  remove,
-  userReservation,
-  getReservationsByUser,
-};
+export { findAll, add, update, remove, getReservationsByUser, userReservation };

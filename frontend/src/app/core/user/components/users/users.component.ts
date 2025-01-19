@@ -17,7 +17,7 @@ import { UsersResponse } from '@core/user/interfaces/users-response.interface';
   selector: 'app-users',
   standalone: true,
   templateUrl: './users.component.html',
-  styleUrl: './users.component.scss',
+  styleUrl: '../../../../shared/styles/generic-new-button.scss',
   imports: [CommonModule, UsersTableComponent],
 })
 export class UsersComponent implements OnInit {

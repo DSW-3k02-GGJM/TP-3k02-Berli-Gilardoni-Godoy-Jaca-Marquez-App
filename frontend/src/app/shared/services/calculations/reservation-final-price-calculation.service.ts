@@ -13,11 +13,9 @@ import { differenceInDays } from 'date-fns';
 })
 export class ReservationFinalPriceCalculationService {
   calculatePrice(reservation: Reservation): string {
-    const startDate: Date = new Date(reservation.startDate);
-    const plannedEndDate: Date = new Date(reservation.plannedEndDate);
-    const realEndDate: Date = new Date(
-      this.getRealEndDate(reservation.realEndDate)
-    );
+    const startDate: Date = new Date(reservation.startDate ?? '');
+    const plannedEndDate: Date = new Date(reservation.plannedEndDate ?? '');
+    const realEndDate: Date = new Date(reservation.realEndDate ?? '');
     const pricePerDay: number = this.getPricePerDay(reservation.vehicle);
 
     // Determine which date is later
@@ -30,11 +28,7 @@ export class ReservationFinalPriceCalculationService {
     return `${days * pricePerDay}`;
   }
 
-  private getRealEndDate(realEndDate: string | undefined): string {
-    return typeof realEndDate === 'string' ? realEndDate : '';
-  }
-
-  private getPricePerDay(vehicle: Vehicle | number): number {
+  private getPricePerDay(vehicle: Vehicle | number | undefined): number {
     return typeof vehicle === 'object'
       ? typeof vehicle.vehicleModel?.category === 'object'
         ? vehicle.vehicleModel?.category.pricePerDay

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg unselectable">
   <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/">
+    <a class="navbar-brand" routerLink="/" (click)="toggleNavbar()">
       <img
         src="assets/logos/alquilcar.png"
         alt="logo"
@@ -27,6 +27,7 @@
             class="nav-link text-white"
             routerLink="/reservation"
             routerLinkActive="active"
+            (click)="toggleNavbar()"
             >Reservar</a
           >
         </li>
@@ -38,6 +39,7 @@
               class="nav-link text-white"
               routerLink="/login"
               routerLinkActive="active"
+              (click)="toggleNavbar()"
               >Iniciar sesión</a
             >
           </li>
@@ -46,13 +48,16 @@
               class="nav-link text-white"
               routerLink="/register"
               routerLinkActive="active"
+              (click)="toggleNavbar()"
               >Registrarse</a
             >
           </li>
         </ng-container>
         <ng-template #loggedIn>
           <li class="nav-item">
-            <a class="nav-link text-white logout" (click)="logout()"
+            <a
+              class="nav-link text-white logout"
+              (click)="toggleNavbar(); logout()"
               >Cerrar Sesión</a
             >
           </li>
@@ -61,6 +66,7 @@
               class="nav-link text-white"
               [routerLink]="profileLink"
               routerLinkActive="active"
+              (click)="toggleNavbar()"
               >Mi perfil</a
             >
           </li>
@@ -69,6 +75,7 @@
               class="nav-link text-white"
               routerLink="/staff/reservations"
               routerLinkActive="active"
+              (click)="toggleNavbar()"
               >Menú Staff</a
             >
           </li>
@@ -77,6 +84,7 @@
               class="nav-link text-white"
               routerLink="/user-reservations"
               routerLinkActive="active"
+              (click)="toggleNavbar()"
               >Mis reservas</a
             >
           </li>

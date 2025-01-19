@@ -49,8 +49,8 @@ import { ReservationFilterPipe } from '@core/reservation/pipes/reservation-filte
   standalone: true,
   templateUrl: './reservations-table.component.html',
   styleUrls: [
+    '../../../../shared/styles/generic-table.scss',
     './reservations-table.component.scss',
-    '../../../../shared/styles/genericTable.scss',
   ],
   imports: [
     CommonModule,
@@ -279,11 +279,11 @@ export class ReservationsTableComponent {
     );
   }
 
-  getLicensePlate(vehicle: Vehicle | number): string {
+  getLicensePlate(vehicle: Vehicle | number | undefined): string {
     return typeof vehicle === 'object' ? vehicle.licensePlate : '';
   }
 
-  getTotalKms(vehicle: Vehicle | number): number {
+  getTotalKms(vehicle: Vehicle | number | undefined): number {
     return typeof vehicle === 'object' ? vehicle.totalKms : -1;
   }
 
@@ -328,10 +328,10 @@ export class ReservationsTableComponent {
     const today: Date = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const startDate: Date = new Date(reservation.startDate);
+    const startDate: Date = new Date(reservation.startDate ?? '');
     startDate.setHours(startDate.getHours() + 3);
 
-    const plannedEndDate: Date = new Date(reservation.plannedEndDate);
+    const plannedEndDate: Date = new Date(reservation.plannedEndDate ?? '');
     plannedEndDate.setHours(plannedEndDate.getHours() + 3);
 
     if (today < startDate || today > plannedEndDate) {
@@ -352,7 +352,7 @@ export class ReservationsTableComponent {
     const today: Date = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const startDate: Date = new Date(reservation.startDate);
+    const startDate: Date = new Date(reservation.startDate ?? '');
     startDate.setHours(startDate.getHours() + 3);
 
     if (today >= startDate) {

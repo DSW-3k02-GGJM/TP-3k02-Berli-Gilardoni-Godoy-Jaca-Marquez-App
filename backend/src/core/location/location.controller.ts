@@ -1,5 +1,5 @@
 // Express
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 // MikroORM
 import { orm } from '../../shared/database/orm.js';
@@ -10,44 +10,7 @@ import { Vehicle } from '../vehicle/vehicle.entity.js';
 
 const em = orm.em;
 
-const sanitizedLocationInput = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    locationName: req.body.locationName,
-    address: req.body.address,
-    phoneNumber: req.body.phoneNumber,
-    vehicles: req.body.vehicles,
-  };
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-
-  const id = Number.parseInt(req.params.id);
-  const locationName = req.body.sanitizedInput.locationName;
-  const address = req.body.sanitizedInput.address;
-  const phoneNumber = req.body.sanitizedInput.phoneNumber;
-
-  if (!locationName || !address || !phoneNumber) {
-    return res.status(400).json({ message: 'All information is required' });
-  }
-
-  const location = await em.findOne(Location, { locationName });
-  if (location) {
-    if (location.id !== id) {
-      return res.status(400).json({ message: 'This name is already used' });
-    }
-  }
-
-  next();
-};
-
-const findAll = async (req: Request, res: Response) => {
+const findAll = async (_req: Request, res: Response) => {
   try {
     const locations = await em.find(Location, {});
     res
@@ -136,12 +99,4 @@ const verifyLocationNameExists = async (req: Request, res: Response) => {
   }
 };
 
-export {
-  sanitizedLocationInput,
-  findAll,
-  findOne,
-  add,
-  update,
-  remove,
-  verifyLocationNameExists,
-};
+export { findAll, findOne, add, update, remove, verifyLocationNameExists };

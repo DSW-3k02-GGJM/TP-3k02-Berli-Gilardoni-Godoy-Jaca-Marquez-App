@@ -1,17 +1,21 @@
 <div class="container unselectable">
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between mt-1">
     <div class="title">{{ formData.title }}</div>
     <button mat-stroked-button (click)="navigateToUsers()">Volver</button>
   </div>
   <hr />
   <div *ngIf="formData.action === 'Edit'" class="information">
-    <div class="information-title">ID de usuario</div>
-    <div class="information-content user-id-div">
-      <span>{{ currentUserId }}</span>
+    <div class="d-flex id-div">
+      <div class="information-title">ID de usuario</div>
+      <div class="information-content">
+        <span>{{ currentUserId }}</span>
+      </div>
     </div>
-    <div class="information-title">Email</div>
-    <div class="information-content">
-      <span>{{ currentEmail }}</span>
+    <div class="d-flex">
+      <div class="information-title">Email</div>
+      <div class="information-content">
+        <span>{{ currentEmail }}</span>
+      </div>
     </div>
   </div>
   <hr *ngIf="formData.action === 'Edit'" />
@@ -94,11 +98,11 @@
           </mat-error>
         </mat-form-field>
         <div class="input-toggle-box">
-          <p class="text m-0 me-2 mb-3">Verificado:</p>
+          <p class="text m-0 me-2 mb-5">Verificado:</p>
           <mat-slide-toggle
             formControlName="verified"
             name="verified"
-            class="mb-3"
+            class="mb-5"
           ></mat-slide-toggle>
         </div>
       </div>
@@ -134,16 +138,16 @@
             formControlName="documentID"
             placeholder=""
           />
-          <mat-error
-            *ngIf="userForm.get('documentID')?.errors?.documentIDExists"
-          >
-            Este número ya está siendo usado.
-          </mat-error>
           <mat-error *ngIf="userForm.get('documentID')?.errors?.required">
             El número de documento es requerido.
           </mat-error>
           <mat-error *ngIf="userForm.get('documentID')?.errors?.pattern">
             El número de documento no es válido.
+          </mat-error>
+          <mat-error
+            *ngIf="userForm.get('documentID')?.errors?.documentIDExists"
+          >
+            Este número ya está siendo usado.
           </mat-error>
         </mat-form-field>
 
@@ -246,7 +250,7 @@
             El teléfono es requerido.
           </mat-error>
           <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.pattern">
-            El teléfono solo puede contener dígitos.
+            El teléfono solo puede contener números.
           </mat-error>
           <mat-error
             *ngIf="
@@ -254,7 +258,7 @@
               !userForm.get('phoneNumber')?.errors?.pattern
             "
           >
-            Debes ingresar al menos 7 dígitos.
+            El teléfono debe tener al menos 7 números.
           </mat-error>
         </mat-form-field>
         <mat-form-field

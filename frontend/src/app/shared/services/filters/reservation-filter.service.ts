@@ -17,8 +17,8 @@ export class ReservationFilterService {
       return reservations as Reservation[];
     }
     return reservations.filter((reservation: Reservation) => {
-      const startDate: Date = new Date(reservation.startDate);
-      const plannedEndDate: Date = new Date(reservation.plannedEndDate);
+      const startDate: Date = new Date(reservation.startDate ?? '');
+      const plannedEndDate: Date = new Date(reservation.plannedEndDate ?? '');
       return (date >= startDate && date <= plannedEndDate) as boolean;
     }) as Reservation[];
   }

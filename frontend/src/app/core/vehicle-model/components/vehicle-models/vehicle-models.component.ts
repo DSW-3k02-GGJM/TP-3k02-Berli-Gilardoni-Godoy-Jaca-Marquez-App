@@ -17,7 +17,7 @@ import { VehicleModelsResponse } from '@core/vehicle-model/interfaces/vehicle-mo
   selector: 'app-vehicle-models',
   standalone: true,
   templateUrl: './vehicle-models.component.html',
-  styleUrl: './vehicle-models.component.scss',
+  styleUrl: '../../../../shared/styles/generic-new-button.scss',
   imports: [CommonModule, VehicleModelsTableComponent],
 })
 export class VehicleModelsComponent implements OnInit {

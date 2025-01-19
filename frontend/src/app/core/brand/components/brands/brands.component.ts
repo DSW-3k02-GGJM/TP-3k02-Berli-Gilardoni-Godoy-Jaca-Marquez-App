@@ -17,7 +17,7 @@ import { BrandsResponse } from '@core/brand/interfaces/brands-response.interface
   selector: 'app-brands',
   standalone: true,
   templateUrl: './brands.component.html',
-  styleUrl: './brands.component.scss',
+  styleUrl: '../../../../shared/styles/generic-new-button.scss',
   imports: [CommonModule, BrandsTableComponent],
 })
 export class BrandsComponent implements OnInit {

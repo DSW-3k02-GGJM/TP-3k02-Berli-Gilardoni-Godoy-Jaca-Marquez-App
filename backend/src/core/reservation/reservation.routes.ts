@@ -3,19 +3,23 @@ import { Router } from 'express';
 
 // Controllers
 import {
-  getReservationsByUser,
   findAll,
-  sanitizedAdminReservationInput,
   add,
-  sanitizedUserReservationInput,
-  userReservation,
-  sanitizedUpdateReservationInput,
   update,
   remove,
+  getReservationsByUser,
+  userReservation,
 } from './reservation.controller.js';
 
 // Services
 import { AuthService } from '../../shared/services/auth.service.js';
+
+// Middlewares
+import {
+  sanitizedAdminInput,
+  sanitizedUserInput,
+  sanitizedUpdateInput,
+} from './reservation.middleware.js';
 
 export const reservationRouter = Router();
 
@@ -34,21 +38,21 @@ reservationRouter.get(
 reservationRouter.post(
   '/create-admin-reservation',
   AuthService.isAuthenticated(['admin', 'employee']),
-  sanitizedAdminReservationInput,
+  sanitizedAdminInput,
   add
 );
 
 reservationRouter.post(
   '/create-user-reservation',
   AuthService.isAuthenticated(['admin', 'employee', 'client']),
-  sanitizedUserReservationInput,
+  sanitizedUserInput,
   userReservation
 );
 
 reservationRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin', 'employee', 'client']),
-  sanitizedUpdateReservationInput,
+  sanitizedUpdateInput,
   update
 );
 

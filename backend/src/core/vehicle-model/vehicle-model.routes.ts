@@ -5,15 +5,17 @@ import { Router } from 'express';
 import {
   findAll,
   findOne,
-  verifyVehicleModelNameExists,
-  sanitizedVehicleModelInput,
   add,
   update,
   remove,
+  verifyVehicleModelNameExists,
 } from './vehicle-model.controller.js';
 
 // Services
 import { AuthService } from '../../shared/services/auth.service.js';
+
+// Middlewares
+import { sanitizedInput } from './vehicle-model.middleware.js';
 
 export const vehicleModelRouter = Router();
 
@@ -30,14 +32,14 @@ vehicleModelRouter.get(
 vehicleModelRouter.post(
   '/',
   AuthService.isAuthenticated(['admin']),
-  sanitizedVehicleModelInput,
+  sanitizedInput,
   add
 );
 
 vehicleModelRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin']),
-  sanitizedVehicleModelInput,
+  sanitizedInput,
   update
 );
 

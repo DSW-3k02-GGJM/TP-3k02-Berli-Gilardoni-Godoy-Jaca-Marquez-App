@@ -55,4 +55,11 @@ export class StaffMenuComponent implements OnInit {
   canViewLink(link: MenuLink): boolean {
     return !link.adminOnly || this.role === 'Admin';
   }
+
+  toggleNavbar(): void {
+    const navbar: HTMLElement = document.getElementById('navbarNavStaff')!;
+    if (navbar?.classList.contains('show')) {
+      navbar.classList.remove('show');
+    }
+  }
 }

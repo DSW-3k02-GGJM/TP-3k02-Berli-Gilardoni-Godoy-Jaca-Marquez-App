@@ -34,7 +34,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-location-form',
   standalone: true,
   templateUrl: './location-form.component.html',
-  styleUrl: '../../../../shared/styles/genericForm.scss',
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -59,7 +59,10 @@ export class LocationFormComponent implements OnInit {
 
   locationForm: FormGroup = new FormGroup(
     {
-      locationName: new FormControl('', [Validators.required]),
+      locationName: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+$'),
+      ]),
       address: new FormControl('', [Validators.required]),
       phoneNumber: new FormControl('', [
         Validators.required,

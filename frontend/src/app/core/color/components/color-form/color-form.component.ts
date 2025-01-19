@@ -34,7 +34,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-color-form',
   standalone: true,
   templateUrl: './color-form.component.html',
-  styleUrl: '../../../../shared/styles/genericForm.scss',
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -58,7 +58,12 @@ export class ColorFormComponent implements OnInit {
   pending: boolean = false;
 
   colorForm: FormGroup = new FormGroup(
-    { colorName: new FormControl('', [Validators.required]) },
+    {
+      colorName: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+$'),
+      ]),
+    },
     { updateOn: 'blur' }
   );
 

@@ -1,5 +1,5 @@
 <div class="container unselectable">
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between mt-1">
     <div class="title">{{ formData.title }}</div>
     <button mat-stroked-button (click)="navigateToLocations()">Volver</button>
   </div>
@@ -33,13 +33,16 @@
             formControlName="locationName"
             placeholder=""
           />
+          <mat-error *ngIf="locationForm.get('locationName')?.errors?.required">
+            El nombre es requerido.
+          </mat-error>
+          <mat-error *ngIf="locationForm.get('locationName')?.errors?.pattern">
+            El nombre sólo puede contener letras.
+          </mat-error>
           <mat-error
             *ngIf="locationForm.get('locationName')?.errors?.nameExists"
           >
             Este nombre ya está siendo usado.
-          </mat-error>
-          <mat-error *ngIf="locationForm.get('locationName')?.errors?.required">
-            El nombre es requerido.
           </mat-error>
         </mat-form-field>
 
@@ -80,7 +83,7 @@
             El teléfono es requerido.
           </mat-error>
           <mat-error *ngIf="locationForm.get('phoneNumber')?.errors?.pattern">
-            El teléfono solo puede contener dígitos.
+            El teléfono solo puede contener números.
           </mat-error>
           <mat-error
             *ngIf="
@@ -88,7 +91,7 @@
               !locationForm.get('phoneNumber')?.errors?.pattern
             "
           >
-            Debes ingresar al menos 7 dígitos.
+            El teléfono debe tener al menos 7 números.
           </mat-error>
         </mat-form-field>
       </div>

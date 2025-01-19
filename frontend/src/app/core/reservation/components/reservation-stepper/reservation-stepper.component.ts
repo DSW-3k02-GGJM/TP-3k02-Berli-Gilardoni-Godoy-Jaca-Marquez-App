@@ -55,7 +55,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-reservation-stepper',
   standalone: true,
   templateUrl: './reservation-stepper.component.html',
-  styleUrl: './reservation-stepper.component.scss',
+  styleUrl: '../../../../shared/styles/generic-reservation-stepper.scss',
   imports: [
     CommonModule,
     ReactiveFormsModule,

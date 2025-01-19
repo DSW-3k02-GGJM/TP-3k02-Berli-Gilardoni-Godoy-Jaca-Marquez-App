@@ -94,16 +94,16 @@
             formControlName="documentID"
             placeholder=""
           />
-          <mat-error
-            *ngIf="registerForm.get('documentID')?.errors?.documentIDExists"
-          >
-            Este número ya está siendo usado.
-          </mat-error>
           <mat-error *ngIf="registerForm.get('documentID')?.errors?.required">
             El número de documento es requerido.
           </mat-error>
           <mat-error *ngIf="registerForm.get('documentID')?.errors?.pattern">
             El número de documento no es válido.
+          </mat-error>
+          <mat-error
+            *ngIf="registerForm.get('documentID')?.errors?.documentIDExists"
+          >
+            Este número ya está siendo usado.
           </mat-error>
         </mat-form-field>
 
@@ -124,6 +124,9 @@
           <mat-error *ngIf="registerForm.get('userName')?.errors?.required">
             El nombre es requerido.
           </mat-error>
+          <mat-error *ngIf="registerForm.get('userName')?.errors?.pattern">
+            El nombre sólo puede contener letras.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field
@@ -142,6 +145,9 @@
           />
           <mat-error *ngIf="registerForm.get('userSurname')?.errors?.required">
             El apellido es requerido.
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('userSurname')?.errors?.pattern">
+            El apellido sólo puede contener letras.
           </mat-error>
         </mat-form-field>
 
@@ -202,6 +208,17 @@
           />
           <mat-error *ngIf="registerForm.get('phoneNumber')?.errors?.required">
             El teléfono es requerido.
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('phoneNumber')?.errors?.pattern">
+            El teléfono solo puede contener números.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              registerForm.get('phoneNumber')?.errors?.minlength &&
+              !registerForm.get('phoneNumber')?.errors?.pattern
+            "
+          >
+            El teléfono debe tener al menos 7 números.
           </mat-error>
         </mat-form-field>
 

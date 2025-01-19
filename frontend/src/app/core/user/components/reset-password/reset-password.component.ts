@@ -38,7 +38,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-reset-password',
   standalone: true,
   templateUrl: './reset-password.component.html',
-  styleUrl: '../../../../shared/styles/genericForm.scss',
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     FormsModule,
     ReactiveFormsModule,

@@ -53,41 +53,41 @@
   margin: 20px 0 0 0;
 }
 
-form .textarea {
+.textarea {
   width: 100%;
 }
 
-form .user-details .input-box {
-  margin-bottom: 10px;
+.user-details .input-box {
+  margin-bottom: 2rem;
   width: calc(100% / 2 - 20px);
 }
 
-form .user-details .input-box input {
+.user-details .input-box input {
   width: 100%;
 }
 
-form .user-details .input-toggle-box {
+.user-details .input-toggle-box {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
   width: calc(100% / 2 - 20px);
 }
 
-form .user-details .input-toggle-box .text {
+.user-details .input-toggle-box .text {
   margin-right: 5px;
 }
 
-form .input-box span.details {
+.input-box span.details {
   display: block;
   margin-bottom: 5px;
 }
 
-form .button {
+.button {
   height: 45px;
   margin-bottom: 10px;
 }
 
-form .button button {
+.button button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,17 +104,30 @@ form .button button {
   background: colors.$main;
 }
 
-form .button button:hover {
+.button button:hover {
   background: colors.$secondary;
 }
 
-form .button button:disabled {
+.button button:disabled {
+  background: colors.$secondary;
   pointer-events: none;
   opacity: 0.7;
 }
 
 .form-control {
   box-shadow: none;
+}
+
+.unselectable {
+  user-select: none;
+}
+
+.id-div {
+  margin-right: 1.5rem;
+}
+
+.img-input {
+  margin-bottom: 2rem;
 }
 
 @media (max-width: 768px) {
@@ -133,7 +146,6 @@ form .button button:disabled {
   }
 
   form .user-details .input-box {
-    margin-bottom: 15px;
     width: 100%;
   }
 }

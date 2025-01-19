@@ -2,13 +2,17 @@
   <div class="title">Mi perfil</div>
   <hr />
   <div class="information">
-    <div class="information-title">ID de usuario</div>
-    <div class="information-content id-div">
-      <span>{{ currentUserId }}</span>
+    <div class="d-flex id-div">
+      <div class="information-title">ID de usuario</div>
+      <div class="information-content">
+        <span>{{ currentUserId }}</span>
+      </div>
     </div>
-    <div class="information-title">Email</div>
-    <div class="information-content">
-      <span>{{ email }}</span>
+    <div class="d-flex">
+      <div class="information-title">Email</div>
+      <div class="information-content">
+        <span>{{ email }}</span>
+      </div>
     </div>
   </div>
   <hr />
@@ -50,16 +54,16 @@
             formControlName="documentID"
             placeholder=""
           />
-          <mat-error
-            *ngIf="profileForm.get('documentID')?.errors?.documentIDExists"
-          >
-            Este número ya está siendo usado.
-          </mat-error>
           <mat-error *ngIf="profileForm.get('documentID')?.errors?.required">
             El número de documento es requerido.
           </mat-error>
           <mat-error *ngIf="profileForm.get('documentID')?.errors?.pattern">
             El número de documento no es válido.
+          </mat-error>
+          <mat-error
+            *ngIf="profileForm.get('documentID')?.errors?.documentIDExists"
+          >
+            Este número ya está siendo usado.
           </mat-error>
         </mat-form-field>
 
@@ -80,6 +84,9 @@
           <mat-error *ngIf="profileForm.get('userName')?.errors?.required">
             El nombre es requerido.
           </mat-error>
+          <mat-error *ngIf="profileForm.get('userName')?.errors?.pattern">
+            El nombre sólo puede contener letras.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field
@@ -98,6 +105,9 @@
           />
           <mat-error *ngIf="profileForm.get('userSurname')?.errors?.required">
             El apellido es requerido.
+          </mat-error>
+          <mat-error *ngIf="profileForm.get('userSurname')?.errors?.pattern">
+            El apellido sólo puede contener letras.
           </mat-error>
         </mat-form-field>
 
@@ -160,7 +170,15 @@
             El teléfono es requerido.
           </mat-error>
           <mat-error *ngIf="profileForm.get('phoneNumber')?.errors?.pattern">
-            El teléfono no es válido.
+            El teléfono solo puede contener números.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              profileForm.get('phoneNumber')?.errors?.minlength &&
+              !profileForm.get('phoneNumber')?.errors?.pattern
+            "
+          >
+            El teléfono debe tener al menos 7 números.
           </mat-error>
         </mat-form-field>
 

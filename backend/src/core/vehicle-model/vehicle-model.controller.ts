@@ -1,5 +1,5 @@
 // Express
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 // MikroORM
 import { orm } from '../../shared/database/orm.js';
@@ -10,63 +10,7 @@ import { Vehicle } from '../vehicle/vehicle.entity.js';
 
 const em = orm.em;
 
-const sanitizedVehicleModelInput = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    vehicleModelName: req.body.vehicleModelName,
-    transmissionType: req.body.transmissionType,
-    passengerCount: req.body.passengerCount,
-    imagePath: req.body.imagePath,
-    category: req.body.category,
-    brand: req.body.brand,
-    vehicles: req.body.vehicles,
-  };
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-
-  const id = Number.parseInt(req.params.id);
-
-  const {
-    vehicleModelName,
-    transmissionType,
-    passengerCount,
-    imagePath,
-    category,
-    brand,
-  } = req.body.sanitizedInput;
-
-  if (
-    !vehicleModelName ||
-    !transmissionType ||
-    !imagePath ||
-    !category ||
-    !brand
-  ) {
-    return res.status(400).json({ message: 'All information is required' });
-  }
-
-  if (passengerCount < 0) {
-    return res
-      .status(400)
-      .json({ message: 'Passenger count must be greater than 0' });
-  }
-
-  const vehicleModel = await em.findOne(VehicleModel, { vehicleModelName });
-  if (vehicleModel && vehicleModel.id !== id) {
-    return res.status(400).json({ message: 'This name is already used' });
-  }
-
-  next();
-};
-
-const findAll = async (req: Request, res: Response) => {
+const findAll = async (_req: Request, res: Response) => {
   try {
     const vehicleModels = await em.find(
       VehicleModel,
@@ -174,12 +118,4 @@ const verifyVehicleModelNameExists = async (req: Request, res: Response) => {
   }
 };
 
-export {
-  sanitizedVehicleModelInput,
-  findAll,
-  findOne,
-  add,
-  update,
-  remove,
-  verifyVehicleModelNameExists,
-};
+export { findAll, findOne, add, update, remove, verifyVehicleModelNameExists };

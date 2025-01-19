@@ -1,5 +1,5 @@
 // Express
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 // MikroORM
 import { orm } from '../../shared/database/orm.js';
@@ -10,40 +10,7 @@ import { VehicleModel } from '../vehicle-model/vehicle-model.entity.js';
 
 const em = orm.em;
 
-const sanitizedBrandInput = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    brandName: req.body.brandName,
-    vehicleModels: req.body.vehicleModels,
-  };
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-
-  const id = Number.parseInt(req.params.id);
-  const brandName = req.body.sanitizedInput.brandName;
-
-  if (!brandName) {
-    return res.status(400).json({ message: 'All information is required' });
-  }
-
-  const brand = await em.findOne(Brand, { brandName });
-  if (brand) {
-    if (brand.id !== id) {
-      return res.status(400).json({ message: 'This name is already used' });
-    }
-  }
-
-  next();
-};
-
-const findAll = async (req: Request, res: Response) => {
+const findAll = async (_req: Request, res: Response) => {
   try {
     const brands = await em.find(Brand, {});
     res
@@ -104,12 +71,10 @@ const remove = async (req: Request, res: Response) => {
     if (!brand) {
       res.status(404).json({ message: 'The brand does not exist' });
     } else if (brandInUse) {
-      res
-        .status(400)
-        .json({
-          message:
-            'La marca no se puede eliminar porque tiene modelos asociados.',
-        });
+      res.status(400).json({
+        message:
+          'La marca no se puede eliminar porque tiene modelos asociados.',
+      });
     } else {
       await em.removeAndFlush(brand);
       res.status(200).json({ message: 'The brand has been deleted' });
@@ -134,12 +99,4 @@ const verifyBrandNameExists = async (req: Request, res: Response) => {
   }
 };
 
-export {
-  sanitizedBrandInput,
-  findAll,
-  findOne,
-  add,
-  update,
-  remove,
-  verifyBrandNameExists,
-};
+export { findAll, findOne, add, update, remove, verifyBrandNameExists };

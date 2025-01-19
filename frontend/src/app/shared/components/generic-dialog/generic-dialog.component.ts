@@ -20,10 +20,7 @@ import { DialogData } from '@shared/interfaces/generic-dialog.interface';
   selector: 'app-generic-dialog',
   standalone: true,
   templateUrl: './generic-dialog.component.html',
-  styleUrls: [
-    './generic-dialog.component.scss',
-    '../../styles/genericDialog.scss',
-  ],
+  styleUrl: '../../styles/generic-dialog.scss',
   imports: [
     CommonModule,
     MatButtonModule,

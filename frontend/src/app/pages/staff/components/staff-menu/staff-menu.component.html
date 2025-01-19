@@ -24,6 +24,7 @@
                 [routerLink]="baseLink + link.path"
                 routerLinkActive="active"
                 aria-current="page"
+                (click)="toggleNavbar()"
               >
                 <span class="link-label">{{ link.label }}</span>
               </a>

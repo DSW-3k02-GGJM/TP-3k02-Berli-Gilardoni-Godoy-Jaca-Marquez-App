@@ -92,6 +92,13 @@ export class NavbarComponent implements OnInit {
     return this.isLogged && !this.isAdminOrEmployee;
   }
 
+  toggleNavbar(): void {
+    const navbar: HTMLElement = document.getElementById('navbarNav')!;
+    if (navbar?.classList.contains('show')) {
+      navbar.classList.remove('show');
+    }
+  }
+
   logout(): void {
     this.authService.logout().subscribe({
       next: () => this.openDialog(),

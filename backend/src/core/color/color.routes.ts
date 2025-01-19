@@ -4,16 +4,18 @@ import { Router } from 'express';
 // Controllers
 import {
   findAll,
-  verifyColorNameExists,
   findOne,
-  sanitizedColorInput,
   add,
   update,
   remove,
+  verifyColorNameExists,
 } from './color.controller.js';
 
 // Services
 import { AuthService } from '../../shared/services/auth.service.js';
+
+// Middlewares
+import { sanitizedInput } from './color.middleware.js';
 
 export const colorRouter = Router();
 
@@ -30,14 +32,14 @@ colorRouter.get('/:id', AuthService.isAuthenticated(['admin']), findOne);
 colorRouter.post(
   '/',
   AuthService.isAuthenticated(['admin']),
-  sanitizedColorInput,
+  sanitizedInput,
   add
 );
 
 colorRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin']),
-  sanitizedColorInput,
+  sanitizedInput,
   update
 );
 

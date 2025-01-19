@@ -45,7 +45,10 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-communication-by-email',
   standalone: true,
   templateUrl: './communication-by-email.component.html',
-  styleUrl: './communication-by-email.component.scss',
+  styleUrls: [
+    '../../../../shared/styles/generic-form.scss',
+    './communication-by-email.component.scss',
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,

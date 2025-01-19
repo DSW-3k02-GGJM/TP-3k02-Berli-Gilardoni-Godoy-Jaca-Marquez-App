@@ -1,5 +1,5 @@
 // Express
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 // MikroORM
 import { orm } from '../../shared/database/orm.js';
@@ -10,40 +10,7 @@ import { Vehicle } from '../vehicle/vehicle.entity.js';
 
 const em = orm.em;
 
-const sanitizedColorInput = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.sanitizedInput = {
-    colorName: req.body.colorName,
-    vehicles: req.body.vehicles,
-  };
-
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined) {
-      delete req.body.sanitizedInput[key];
-    }
-  });
-
-  const id = Number.parseInt(req.params.id);
-  const colorName = req.body.sanitizedInput.colorName;
-
-  if (!colorName) {
-    return res.status(400).json({ message: 'All information is required' });
-  }
-
-  const color = await em.findOne(Color, { colorName });
-  if (color) {
-    if (color.id !== id) {
-      return res.status(400).json({ message: 'This name is already used' });
-    }
-  }
-
-  next();
-};
-
-const findAll = async (req: Request, res: Response) => {
+const findAll = async (_req: Request, res: Response) => {
   try {
     const colors = await em.find(Color, {});
     res
@@ -132,12 +99,4 @@ const verifyColorNameExists = async (req: Request, res: Response) => {
   }
 };
 
-export {
-  sanitizedColorInput,
-  findAll,
-  findOne,
-  add,
-  update,
-  remove,
-  verifyColorNameExists,
-};
+export { findAll, findOne, add, update, remove, verifyColorNameExists };

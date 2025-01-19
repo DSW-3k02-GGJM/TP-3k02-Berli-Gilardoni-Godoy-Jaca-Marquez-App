@@ -3,19 +3,20 @@ import { Router } from 'express';
 
 // Controllers
 import {
-  sanitizedFilterInput,
-  findAvailable,
   findAll,
-  verifyLicensePlateExists,
   findOne,
-  sanitizedVehicleInput,
   add,
   update,
   remove,
+  verifyLicensePlateExists,
+  findAvailable,
 } from './vehicle.controller.js';
 
 // Services
 import { AuthService } from '../../shared/services/auth.service.js';
+
+// Middlewares
+import { sanitizedFilterInput, sanitizedInput } from './vehicle.middleware.js';
 
 export const vehicleRouter = Router();
 
@@ -34,14 +35,14 @@ vehicleRouter.get('/:id', AuthService.isAuthenticated(['admin']), findOne);
 vehicleRouter.post(
   '/',
   AuthService.isAuthenticated(['admin']),
-  sanitizedVehicleInput,
+  sanitizedInput,
   add
 );
 
 vehicleRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin']),
-  sanitizedVehicleInput,
+  sanitizedInput,
   update
 );
 

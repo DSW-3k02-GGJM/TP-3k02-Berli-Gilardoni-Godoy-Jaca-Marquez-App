@@ -4,16 +4,18 @@ import { Router } from 'express';
 // Controllers
 import {
   findAll,
-  verifyBrandNameExists,
   findOne,
-  sanitizedBrandInput,
   add,
   update,
   remove,
+  verifyBrandNameExists,
 } from './brand.controller.js';
 
 // Services
 import { AuthService } from '../../shared/services/auth.service.js';
+
+// Middlewares
+import { sanitizedInput } from './brand.middleware.js';
 
 export const brandRouter = Router();
 
@@ -30,14 +32,14 @@ brandRouter.get('/:id', AuthService.isAuthenticated(['admin']), findOne);
 brandRouter.post(
   '/',
   AuthService.isAuthenticated(['admin']),
-  sanitizedBrandInput,
+  sanitizedInput,
   add
 );
 
 brandRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin']),
-  sanitizedBrandInput,
+  sanitizedInput,
   update
 );
 

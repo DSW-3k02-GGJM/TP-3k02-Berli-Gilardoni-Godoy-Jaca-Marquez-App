@@ -4,16 +4,18 @@ import { Router } from 'express';
 // Controllers
 import {
   findAll,
-  verifyLocationNameExists,
   findOne,
-  sanitizedLocationInput,
   add,
   update,
   remove,
+  verifyLocationNameExists,
 } from './location.controller.js';
 
 // Services
 import { AuthService } from '../../shared/services/auth.service.js';
+
+// Middlewares
+import { sanitizedInput } from './location.middleware.js';
 
 export const locationRouter = Router();
 
@@ -30,14 +32,14 @@ locationRouter.get('/:id', AuthService.isAuthenticated(['admin']), findOne);
 locationRouter.post(
   '/',
   AuthService.isAuthenticated(['admin']),
-  sanitizedLocationInput,
+  sanitizedInput,
   add
 );
 
 locationRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin']),
-  sanitizedLocationInput,
+  sanitizedInput,
   update
 );
 

@@ -17,7 +17,7 @@ import { LocationsResponse } from '@core/location/interfaces/locations-response.
   selector: 'app-locations',
   standalone: true,
   templateUrl: './locations.component.html',
-  styleUrl: './locations.component.scss',
+  styleUrl: '../../../../shared/styles/generic-new-button.scss',
   imports: [CommonModule, LocationsTableComponent],
 })
 export class LocationsComponent implements OnInit {

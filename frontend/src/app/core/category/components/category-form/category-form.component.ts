@@ -34,7 +34,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-category-form',
   standalone: true,
   templateUrl: './category-form.component.html',
-  styleUrl: '../../../../shared/styles/genericForm.scss',
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -59,7 +59,10 @@ export class CategoryFormComponent implements OnInit {
 
   categoryForm: FormGroup = new FormGroup(
     {
-      categoryName: new FormControl('', [Validators.required]),
+      categoryName: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+$'),
+      ]),
       categoryDescription: new FormControl('', [Validators.required]),
       pricePerDay: new FormControl('', [
         Validators.required,

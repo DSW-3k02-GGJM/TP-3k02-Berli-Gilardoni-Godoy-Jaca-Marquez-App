@@ -17,7 +17,7 @@ import { CategoriesResponse } from '@core/category/interfaces/categories-respons
   selector: 'app-categories',
   standalone: true,
   templateUrl: './categories.component.html',
-  styleUrl: './categories.component.scss',
+  styleUrl: '../../../../shared/styles/generic-new-button.scss',
   imports: [CommonModule, CategoriesTableComponent],
 })
 export class CategoriesComponent implements OnInit {

@@ -14,7 +14,7 @@
     <mat-card-content>No hay reservas registradas</mat-card-content>
   </mat-card>
   <div *ngIf="!errorMessage && reservations.length > 0">
-    <div class="d-flex justify-content-between gap-3 filter">
+    <div class="filter">
       <mat-form-field class="input-box flex-grow-1" hideRequiredMarker="true">
         <mat-label>Búsqueda por Nro. Documento</mat-label>
         <input
@@ -84,7 +84,7 @@
               | filter : filterRows : 'user.documentID'
           "
         >
-          <td>{{ formatDate(reservation.reservationDate) }}</td>
+          <td>{{ formatDate(reservation.reservationDate ?? "") }}</td>
           <td>{{ getLicensePlate(reservation.vehicle) }}</td>
           <td>
             {{
@@ -97,8 +97,8 @@
                 : "Sin iniciar"
             }}
           </td>
-          <td>{{ formatDate(reservation.startDate) }}</td>
-          <td>{{ formatDate(reservation.plannedEndDate) }}</td>
+          <td>{{ formatDate(reservation.startDate ?? "") }}</td>
+          <td>{{ formatDate(reservation.plannedEndDate ?? "") }}</td>
           <td>
             {{
               reservation.realEndDate

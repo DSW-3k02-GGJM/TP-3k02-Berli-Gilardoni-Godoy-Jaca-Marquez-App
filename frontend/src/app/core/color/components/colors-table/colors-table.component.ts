@@ -32,7 +32,7 @@ import { ColorFilterPipe } from '@core/color/pipes/color-filter.pipe';
   selector: 'app-colors-table',
   standalone: true,
   templateUrl: './colors-table.component.html',
-  styleUrl: '../../../../shared/styles/genericTable.scss',
+  styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
     FormsModule,

@@ -1,3 +1,14 @@
+@use "../styles/colors" as colors;
+
+img {
+  width: 100px;
+  height: 100px;
+}
+
+.custom-blue {
+  background-color: colors.$main;
+}
+
 .title {
   text-align: center;
   font-size: 25px;

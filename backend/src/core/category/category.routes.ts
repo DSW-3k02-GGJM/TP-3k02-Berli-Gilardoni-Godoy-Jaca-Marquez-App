@@ -4,16 +4,18 @@ import { Router } from 'express';
 // Controllers
 import {
   findAll,
-  verifyCategoryNameExists,
   findOne,
-  sanitizedCategoryInput,
   add,
   update,
   remove,
+  verifyCategoryNameExists,
 } from './category.controller.js';
 
 // Services
 import { AuthService } from '../../shared/services/auth.service.js';
+
+// Middlewares
+import { sanitizedInput } from './category.middleware.js';
 
 export const categoryRouter = Router();
 
@@ -30,14 +32,14 @@ categoryRouter.get('/:id', AuthService.isAuthenticated(['admin']), findOne);
 categoryRouter.post(
   '/',
   AuthService.isAuthenticated(['admin']),
-  sanitizedCategoryInput,
+  sanitizedInput,
   add
 );
 
 categoryRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin']),
-  sanitizedCategoryInput,
+  sanitizedInput,
   update
 );
 

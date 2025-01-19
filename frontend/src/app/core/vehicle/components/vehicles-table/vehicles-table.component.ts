@@ -32,7 +32,7 @@ import { VehicleFilterPipe } from '@core/vehicle/pipes/vehicle-filter.pipe';
   selector: 'app-vehicles-table',
   standalone: true,
   templateUrl: './vehicles-table.component.html',
-  styleUrl: '../../../../shared/styles/genericTable.scss',
+  styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
     FormsModule,

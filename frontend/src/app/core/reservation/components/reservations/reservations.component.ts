@@ -21,7 +21,7 @@ import { ReservationsResponse } from '@core/reservation/interfaces/reservations-
   selector: 'app-reservations',
   standalone: true,
   templateUrl: './reservations.component.html',
-  styleUrl: './reservations.component.scss',
+  styleUrl: '../../../../shared/styles/generic-new-button.scss',
   imports: [CommonModule, ReservationsTableComponent],
 })
 export class ReservationsComponent implements OnInit {

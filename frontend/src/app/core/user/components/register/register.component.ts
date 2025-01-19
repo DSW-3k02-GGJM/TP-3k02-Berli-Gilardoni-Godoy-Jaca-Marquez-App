@@ -39,7 +39,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-register',
   standalone: true,
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     CommonModule,
     FormsModule,
@@ -70,11 +70,20 @@ export class RegisterComponent {
       documentType: new FormControl('', [Validators.required]),
       documentID: new FormControl(
         '',
-        [Validators.required, Validators.pattern('^[0-9]*$')],
+        [
+          Validators.required,
+          Validators.pattern('^([0-9]{7,8}|[A-Za-z0-9]{6,20})$'),
+        ],
         [this.userApiService.uniqueDocumentIDValidator(-1)]
       ),
-      userName: new FormControl('', [Validators.required]),
-      userSurname: new FormControl('', [Validators.required]),
+      userName: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+$'),
+      ]),
+      userSurname: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+$'),
+      ]),
       birthDate: new FormControl('', [
         Validators.required,
         this.userAgeValidationService.userAgeValidation(),

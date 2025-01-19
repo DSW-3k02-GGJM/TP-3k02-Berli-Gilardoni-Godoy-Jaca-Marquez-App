@@ -36,10 +36,7 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   selector: 'app-forgot-password',
   standalone: true,
   templateUrl: './forgot-password.component.html',
-  styleUrls: [
-    './forgot-password.component.scss',
-    '../../../../shared/styles/genericForm.scss',
-  ],
+  styleUrl: '../../../../shared/styles/generic-form.scss',
   imports: [
     CommonModule,
     FormsModule,

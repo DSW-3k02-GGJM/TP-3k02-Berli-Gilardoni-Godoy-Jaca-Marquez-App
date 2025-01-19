@@ -35,8 +35,8 @@ import { Vehicle } from '@core/vehicle/interfaces/vehicle.interface';
   standalone: true,
   templateUrl: './reservations-client-table.component.html',
   styleUrls: [
+    '../../../../shared/styles/generic-table.scss',
     './reservations-client-table.component.scss',
-    '../../../../shared/styles/genericTable.scss',
   ],
   imports: [CommonModule, FormsModule, MatInputModule, MatCardModule],
 })
@@ -112,13 +112,13 @@ export class ReservationsClientTableComponent {
     return this.formatDateService.fromDashToSlash(date);
   }
 
-  getBrandName(vehicle: Vehicle | number): string {
+  getBrandName(vehicle: Vehicle | number | undefined): string {
     return typeof vehicle === 'object'
       ? vehicle.vehicleModel?.brand?.brandName ?? ''
       : '';
   }
 
-  getVehicleModelName(vehicle: Vehicle | number): string {
+  getVehicleModelName(vehicle: Vehicle | number | undefined): string {
     return typeof vehicle === 'object'
       ? vehicle.vehicleModel?.vehicleModelName ?? ''
       : '';
@@ -154,7 +154,7 @@ export class ReservationsClientTableComponent {
     const today: Date = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const startDate: Date = new Date(reservation.startDate);
+    const startDate: Date = new Date(reservation.startDate ?? '');
     startDate.setHours(startDate.getHours() + 3);
 
     if (today >= startDate) {
