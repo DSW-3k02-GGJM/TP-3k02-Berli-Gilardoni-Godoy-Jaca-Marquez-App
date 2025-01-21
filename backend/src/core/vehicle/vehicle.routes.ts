@@ -16,7 +16,11 @@ import {
 import { AuthService } from '../../shared/services/auth.service.js';
 
 // Middlewares
-import { sanitizedFilterInput, sanitizedInput } from './vehicle.middleware.js';
+import {
+  sanitizedFilterInput,
+  sanitizedCreateInput,
+  sanitizedUpdateInput,
+} from './vehicle.middleware.js';
 
 export const vehicleRouter = Router();
 
@@ -35,14 +39,14 @@ vehicleRouter.get('/:id', AuthService.isAuthenticated(['admin']), findOne);
 vehicleRouter.post(
   '/',
   AuthService.isAuthenticated(['admin']),
-  sanitizedInput,
+  sanitizedCreateInput,
   add
 );
 
 vehicleRouter.put(
   '/:id',
   AuthService.isAuthenticated(['admin']),
-  sanitizedInput,
+  sanitizedUpdateInput,
   update
 );
 

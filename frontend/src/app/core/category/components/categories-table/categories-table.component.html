@@ -1,29 +1,29 @@
-<div class="tables-div">
-  <mat-card
-    *ngIf="errorMessage"
-    class="bg-dark border border-white text-white text-center fs-4 mt-4"
-  >
-    <mat-card-content>
-      {{ errorMessage }}
-    </mat-card-content>
-  </mat-card>
-  <mat-card
-    *ngIf="!errorMessage && categories.length === 0"
-    class="bg-dark border border-white text-white text-center fs-4 mt-4"
-  >
-    <mat-card-content>No hay categorías registradas</mat-card-content>
-  </mat-card>
-  <div *ngIf="!errorMessage && categories.length > 0">
-    <mat-form-field class="input-box" hideRequiredMarker="true">
-      <mat-label>Búsqueda por Nombre</mat-label>
-      <input
-        matInput
-        type="text"
-        [(ngModel)]="filterRows"
-        name="filterPost"
-        placeholder="Escribe al menos 3 caracteres..."
-      />
-    </mat-form-field>
+<mat-card
+  *ngIf="errorMessage"
+  class="bg-dark border border-white text-white text-center fs-4 mt-4"
+>
+  <mat-card-content>
+    {{ errorMessage }}
+  </mat-card-content>
+</mat-card>
+<mat-card
+  *ngIf="!errorMessage && categories.length === 0"
+  class="bg-dark border border-white text-white text-center fs-4 mt-4"
+>
+  <mat-card-content>No hay categorías registradas</mat-card-content>
+</mat-card>
+<div *ngIf="!errorMessage && categories.length > 0">
+  <mat-form-field class="input-box" hideRequiredMarker="true">
+    <mat-label>Búsqueda por Nombre</mat-label>
+    <input
+      matInput
+      type="text"
+      [(ngModel)]="filterRows"
+      name="filterPost"
+      placeholder="Escribe al menos 3 caracteres..."
+    />
+  </mat-form-field>
+  <div class="tables-div">
     <mat-card
       *ngIf="filteredCategories.length === 0"
       class="bg-dark border border-white text-white text-center fs-4 mt-2"

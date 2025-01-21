@@ -1,48 +1,42 @@
-<div class="tables-div">
-  <mat-card
-    *ngIf="errorMessage"
-    class="bg-dark border border-white text-white text-center fs-4 mt-4"
-  >
-    <mat-card-content>
-      {{ errorMessage }}
-    </mat-card-content>
-  </mat-card>
-  <mat-card
-    *ngIf="!errorMessage && reservations.length === 0"
-    class="bg-dark border border-white text-white text-center fs-4 mt-4"
-  >
-    <mat-card-content>No hay reservas registradas</mat-card-content>
-  </mat-card>
-  <div *ngIf="!errorMessage && reservations.length > 0">
-    <div class="filter">
-      <mat-form-field class="input-box flex-grow-1" hideRequiredMarker="true">
-        <mat-label>Búsqueda por Nro. Documento</mat-label>
-        <input
-          matInput
-          type="text"
-          [(ngModel)]="filterRows"
-          name="filterPost"
-          placeholder="Escribe al menos 3 caracteres..."
-          (ngModelChange)="filterReservations()"
-        />
-      </mat-form-field>
-      <mat-form-field
-        class="input-box date-input-box"
-        hideRequiredMarker="true"
-      >
-        <mat-label
-          >Búsqueda por Fecha (entre Inicio y Fin de Reserva, desde
-          1900)</mat-label
-        >
-        <input
-          matInput
-          [(ngModel)]="filterDate"
-          name="filterDate"
-          type="date"
-          (ngModelChange)="filterReservations()"
-        />
-      </mat-form-field>
-    </div>
+<mat-card
+  *ngIf="errorMessage"
+  class="bg-dark border border-white text-white text-center fs-4 mt-4"
+>
+  <mat-card-content>
+    {{ errorMessage }}
+  </mat-card-content>
+</mat-card>
+<mat-card
+  *ngIf="!errorMessage && reservations.length === 0"
+  class="bg-dark border border-white text-white text-center fs-4 mt-4"
+>
+  <mat-card-content>No hay reservas registradas</mat-card-content>
+</mat-card>
+<div *ngIf="!errorMessage && reservations.length > 0">
+  <div class="filter">
+    <mat-form-field class="input-box flex-grow-1" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Nro. Documento</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="filterRows"
+        name="filterPost"
+        placeholder="Escribe al menos 3 caracteres..."
+        (ngModelChange)="filterReservations()"
+      />
+    </mat-form-field>
+    <mat-form-field class="input-box date-input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Fecha</mat-label>
+      <input
+        matInput
+        [(ngModel)]="filterDate"
+        name="filterDate"
+        type="date"
+        (ngModelChange)="filterReservations()"
+      />
+    </mat-form-field>
+  </div>
+  <div class="tables-div">
     <mat-card
       *ngIf="
         filteredReservations.length === 0 ||
@@ -113,7 +107,7 @@
           <td>
             {{
               reservation.realEndDate
-                ? "$" + reservation.calculatedPrice
+                ? "$" + reservation.finalPrice
                 : reservation.cancellationDate
                 ? "Reserva cancelada"
                 : "Reserva no finalizada"

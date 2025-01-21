@@ -52,11 +52,8 @@ const sanitizedUpdateInput = sanitizeInput({
     'address',
     'phoneNumber',
     'nationality',
-    'role',
-    'verified',
   ],
   date: ['birthDate'],
-  role: ['admin', 'employee', 'client'],
   unique: ['documentID'],
   entity: 'User',
 });

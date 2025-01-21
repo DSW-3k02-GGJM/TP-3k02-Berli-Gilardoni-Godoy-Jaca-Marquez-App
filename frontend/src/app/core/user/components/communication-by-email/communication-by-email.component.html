@@ -1,5 +1,5 @@
 <div class="container unselectable">
-  <div class="title">Comunicarse con un usuario</div>
+  <div class="title me-4">Comunicarse con un usuario</div>
   <hr />
   <mat-card
     *ngIf="displayedMessage"
@@ -121,7 +121,7 @@
         (ngSubmit)="sendEmail()"
         autocomplete="off"
       >
-        <div class="information">
+        <div class="information mb-4">
           <div class="information-title">Email</div>
           <div class="information-content">
             <span>{{ selectedRow?.email }}</span>
@@ -169,7 +169,7 @@
         <mat-error *ngIf="errorMessage">
           {{ errorMessage }}
         </mat-error>
-        <button mat-button matStepperPrevious class="mb-3">Volver</button>
+        <button mat-button matStepperPrevious class="my-3">Volver</button>
         <div class="button">
           <button
             type="submit"

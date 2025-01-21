@@ -81,7 +81,7 @@ export class LocationsTableComponent {
             next: () => {
               this.locationDeleted.emit();
               this.snackBarService.show(
-                'La sucursal ha sido eliminada exitosamente'
+                'La sucursal ha sido eliminada correctamente'
               );
             },
             error: (error: HttpErrorResponse) => {

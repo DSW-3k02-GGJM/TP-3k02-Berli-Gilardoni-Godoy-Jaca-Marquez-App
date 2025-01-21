@@ -29,6 +29,9 @@ export class Reservation extends BaseEntity {
   @Property({ nullable: true })
   finalKms?: number;
 
+  @Property({ nullable: true })
+  finalPrice?: number;
+
   @ManyToOne(() => User, { nullable: false })
   user!: Rel<User>;
 

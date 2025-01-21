@@ -83,7 +83,7 @@ export class UsersTableComponent {
             next: () => {
               this.userDeleted.emit();
               this.snackBarService.show(
-                'El usuario ha sido eliminado exitosamente'
+                'El usuario ha sido eliminado correctamente'
               );
             },
             error: (error: HttpErrorResponse) => {

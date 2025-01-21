@@ -14,8 +14,7 @@ import { MailService } from '../../shared/services/mail.service.js';
 
 // Configuration
 import {
-  FRONTEND_DOMAIN,
-  FRONTEND_PORT,
+  FRONTEND_URL,
   SECRET_KEY,
   SECRET_EMAIL_KEY,
   SECRET_PASSWORD_KEY,
@@ -25,7 +24,7 @@ import {
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-const frontendURL = `${FRONTEND_DOMAIN}${FRONTEND_PORT}`;
+const frontendURL = FRONTEND_URL;
 
 const em = orm.em;
 

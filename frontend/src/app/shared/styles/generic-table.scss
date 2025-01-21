@@ -7,7 +7,8 @@
   position: relative;
 }
 
-.table td {
+.table th,
+table td {
   vertical-align: middle;
   word-wrap: break-word;
 }

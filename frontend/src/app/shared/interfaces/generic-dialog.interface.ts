@@ -17,4 +17,8 @@ export interface DialogData {
   mainButtonColor?: string;
   haveRouterLink: boolean;
   goTo?: string;
+  showCheckOutFields?: boolean;
+  initialKms?: number;
+  finalKms?: number;
+  returnDeposit?: boolean;
 }

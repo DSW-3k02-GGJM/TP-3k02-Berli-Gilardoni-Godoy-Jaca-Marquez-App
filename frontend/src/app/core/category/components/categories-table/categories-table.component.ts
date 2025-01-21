@@ -81,7 +81,7 @@ export class CategoriesTableComponent {
             next: () => {
               this.categoryDeleted.emit();
               this.snackBarService.show(
-                'La categoría ha sido eliminada exitosamente'
+                'La categoría ha sido eliminada correctamente'
               );
             },
             error: (error: HttpErrorResponse) => {

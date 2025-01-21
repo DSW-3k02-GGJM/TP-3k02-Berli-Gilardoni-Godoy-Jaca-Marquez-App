@@ -81,7 +81,7 @@ export class VehiclesTableComponent {
             next: () => {
               this.vehicleDeleted.emit();
               this.snackBarService.show(
-                'El vehículo ha sido eliminado exitosamente'
+                'El vehículo ha sido eliminado correctamente'
               );
             },
             error: (error: HttpErrorResponse) => {

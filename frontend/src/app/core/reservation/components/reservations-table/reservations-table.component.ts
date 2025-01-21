@@ -17,14 +17,14 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 
 // RxJS
-import { Observable } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of } from 'rxjs';
 
 // Services
 import { ReservationApiService } from '@core/reservation/services/reservation.api.service';
 import { ReservationModifiedService } from '@core/reservation/services/reservation.modified.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 import { ReservationFilterService } from '@shared/services/filters/reservation-filter.service';
-import { ReservationFinalPriceCalculationService } from '@shared/services/calculations/reservation-final-price-calculation.service';
+import { ReservationPriceCalculationService } from '@shared/services/calculations/reservation-price-calculation.service';
 import { FormatDateService } from '@shared/services/utils/format-date.service';
 
 // Components
@@ -43,6 +43,8 @@ import { Message } from '@shared/interfaces/message.interface';
 
 // Pipes
 import { ReservationFilterPipe } from '@core/reservation/pipes/reservation-filter.pipe';
+import { VehicleApiService } from '@core/vehicle/services/vehicle.api.service.js';
+import { VehicleInput } from '@core/vehicle/interfaces/vehicle-input.interface.js';
 
 @Component({
   selector: 'app-reservations-table',
@@ -74,10 +76,11 @@ export class ReservationsTableComponent {
 
   constructor(
     private readonly reservationApiService: ReservationApiService,
+    private readonly vehicleApiService: VehicleApiService,
     private readonly snackBarService: SnackBarService,
     private readonly reservationModifiedService: ReservationModifiedService,
     private readonly reservationFilterService: ReservationFilterService,
-    private readonly reservationFinalPriceCalculationService: ReservationFinalPriceCalculationService,
+    private readonly reservationPriceCalculationService: ReservationPriceCalculationService,
     private readonly formatDateService: FormatDateService,
     private readonly dialog: MatDialog
   ) {}
@@ -143,7 +146,7 @@ export class ReservationsTableComponent {
 
     const apiAction: () => Observable<Message> = () =>
       this.reservationApiService.delete(id);
-    const successMessage: string = 'La reserva ha sido eliminada exitosamente';
+    const successMessage: string = 'La reserva ha sido eliminada correctamente';
     const errorMessage: string = 'Error al eliminar la reserva';
 
     this.openDialogWithAction(
@@ -175,7 +178,7 @@ export class ReservationsTableComponent {
           new Date()
         ),
       } as ReservationInput);
-    const successMessage: string = 'La reserva ha sido cancelada exitosamente';
+    const successMessage: string = 'La reserva ha sido cancelada correctamente';
     const errorMessage: string = 'Error al cancelar la reserva';
 
     this.openDialogWithAction(
@@ -205,7 +208,7 @@ export class ReservationsTableComponent {
       } as ReservationInput);
     };
     const successMessage: string =
-      'Se ha realizado el check-in de la reserva exitosamente';
+      'Se ha realizado el check-in de la reserva correctamente';
     const errorMessage: string = 'Error al realizar el check-in de la reserva';
 
     this.openDialogWithAction(
@@ -222,22 +225,53 @@ export class ReservationsTableComponent {
       title: 'Check-out Reserva',
       titleColor: 'dark',
       image: 'assets/check-in-out/check-out.png',
-      message: '¿Está seguro de que desea realizar el check-out de la reserva?',
+      message:
+        'Por favor, ingrese el kilometraje actual del vehículo y confirme si debe realizarse la devolución del depósito al cliente',
       showBackButton: true,
       backButtonTitle: 'Volver',
       mainButtonTitle: 'Confirmar',
-      mainButtonColor: 'custom-blue',
       haveRouterLink: false,
+      showCheckOutFields: true,
+      initialKms: this.getTotalKms(reservation.vehicle),
     };
 
+    const currentDateWithoutTimeZone =
+      this.formatDateService.removeTimeZoneFromDate(new Date());
+
     const apiAction: () => Observable<Message> = () => {
-      return this.reservationApiService.update(reservation.id, {
-        realEndDate: this.formatDateService.removeTimeZoneFromDate(new Date()),
-        finalKms: this.getTotalKms(reservation.vehicle),
-      } as ReservationInput);
+      return forkJoin({
+        vehicleResponse: this.vehicleApiService.update(
+          this.getVehicleID(reservation.vehicle),
+          {
+            totalKms: dialogData.finalKms,
+          } as VehicleInput
+        ),
+        reservationResponse: this.reservationApiService.update(reservation.id, {
+          realEndDate: currentDateWithoutTimeZone,
+          finalKms: dialogData.finalKms,
+          finalPrice:
+            this.reservationPriceCalculationService.calculateFinalPrice(
+              reservation as Reservation,
+              currentDateWithoutTimeZone as string,
+              (dialogData.returnDeposit ?? true) as boolean
+            ),
+        } as ReservationInput),
+      }).pipe(
+        map(() => {
+          return {
+            message: 'Both requests have been resolved correctly',
+          };
+        }),
+        catchError(() => {
+          return of({
+            message: 'There was an error in the execution of the transaction',
+          });
+        })
+      );
     };
+
     const successMessage: string =
-      'Se ha realizado el check-out de la reserva exitosamente';
+      'Se ha realizado el check-out de la reserva correctamente';
     const errorMessage: string = 'Error al realizar el check-out de la reserva';
 
     this.openDialogWithAction(
@@ -295,22 +329,15 @@ export class ReservationsTableComponent {
     return typeof user === 'object' ? user.documentID : '';
   }
 
-  calculateFinalPrices(reservations: Reservation[]): Reservation[] {
-    return reservations.map((reservation: Reservation) => ({
-      ...reservation,
-      calculatedPrice:
-        this.reservationFinalPriceCalculationService.calculatePrice(
-          reservation as Reservation
-        ),
-    }));
+  getVehicleID(vehicle: Vehicle | number | undefined): number {
+    return typeof vehicle === 'object' ? vehicle.id : -1;
   }
 
   filterReservations(): void {
     let filteredReservations: Reservation[] = this.reservations;
     if (this.filterDate) {
       if (Number.parseInt(this.filterDate.substring(0, 4)) < 1900) {
-        this.filteredReservations =
-          this.calculateFinalPrices(filteredReservations);
+        this.filteredReservations = filteredReservations;
         return;
       }
       if (this.filterRows.length >= 3) {
@@ -321,7 +348,7 @@ export class ReservationsTableComponent {
         filteredReservations
       );
     }
-    this.filteredReservations = this.calculateFinalPrices(filteredReservations);
+    this.filteredReservations = filteredReservations;
   }
 
   disableCheckIn(reservation: Reservation): boolean {

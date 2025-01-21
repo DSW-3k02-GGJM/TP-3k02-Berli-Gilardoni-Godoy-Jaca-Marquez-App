@@ -219,11 +219,13 @@ export class ReservationFormComponent implements OnInit {
     } else if (event.selectedIndex === 2) {
       this.setFilter();
     } else if (event.selectedIndex === 3) {
-      this.finalPrice = this.reservationPriceCalculationService.calculatePrice(
-        this.startDate,
-        this.endDate,
-        this.pricePerDay
-      );
+      this.finalPrice =
+        this.reservationPriceCalculationService.calculateInitialPrice(
+          this.startDate,
+          this.endDate,
+          this.pricePerDay,
+          this.deposit
+        );
     }
   }
 

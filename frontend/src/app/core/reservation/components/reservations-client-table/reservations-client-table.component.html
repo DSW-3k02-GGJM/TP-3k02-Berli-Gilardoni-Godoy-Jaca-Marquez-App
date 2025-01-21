@@ -1,49 +1,42 @@
-<div class="tables-div">
-  <mat-card
-    *ngIf="errorMessage"
-    class="bg-dark border border-white text-white text-center fs-3 mt-3"
-  >
-    <mat-card-content>
-      {{ errorMessage }}
-    </mat-card-content>
-  </mat-card>
-  <mat-card
-    *ngIf="!errorMessage && reservations.length === 0"
-    class="bg-dark border border-white text-white text-center fs-3 mt-3 no-reservations"
-  >
-    <mat-card-content>
-      <p>
-        ¡Tu próxima aventura te espera! Explora nuestras opciones y realiza tu
-        primera reserva ahora...
-      </p>
-      <button
-        class="btn btn-find btn-lg text-white"
-        (click)="navigateToReservation()"
-      >
-        Buscar vehículos
-      </button>
-    </mat-card-content>
-  </mat-card>
-  <div *ngIf="!errorMessage && reservations.length > 0">
-    <div class="d-flex gap-3 filter">
-      <mat-form-field
-        class="input-box date-input-box"
-        hideRequiredMarker="true"
-      >
-        <mat-label
-          >Búsqueda por Fecha (entre Inicio y Fin de Reserva, desde
-          1900)</mat-label
-        >
-        <input
-          matInput
-          [(ngModel)]="filterDate"
-          name="filterDate"
-          type="date"
-          (ngModelChange)="filterReservations()"
-        />
-      </mat-form-field>
-    </div>
-
+<mat-card
+  *ngIf="errorMessage"
+  class="bg-dark border border-white text-white text-center fs-3 mt-3"
+>
+  <mat-card-content>
+    {{ errorMessage }}
+  </mat-card-content>
+</mat-card>
+<mat-card
+  *ngIf="!errorMessage && reservations.length === 0"
+  class="bg-dark border border-white text-white text-center fs-3 mt-3 no-reservations"
+>
+  <mat-card-content>
+    <p>
+      ¡Tu próxima aventura te espera! Explora nuestras opciones y realiza tu
+      primera reserva ahora...
+    </p>
+    <button
+      class="btn btn-find btn-lg text-white"
+      (click)="navigateToReservation()"
+    >
+      Buscar vehículos
+    </button>
+  </mat-card-content>
+</mat-card>
+<div *ngIf="!errorMessage && reservations.length > 0">
+  <div class="d-flex gap-3 filter">
+    <mat-form-field class="input-box date-input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Fecha</mat-label>
+      <input
+        matInput
+        [(ngModel)]="filterDate"
+        name="filterDate"
+        type="date"
+        (ngModelChange)="filterReservations()"
+      />
+    </mat-form-field>
+  </div>
+  <div class="tables-div">
     <mat-card
       *ngIf="filteredReservations.length === 0"
       class="bg-dark border border-white text-white text-center fs-4 mt-2"
@@ -103,7 +96,7 @@
           <td>
             {{
               reservation.realEndDate
-                ? "$" + reservation.calculatedPrice
+                ? "$" + reservation.finalPrice
                 : reservation.cancellationDate
                 ? "Reserva cancelada"
                 : "Reserva no finalizada"

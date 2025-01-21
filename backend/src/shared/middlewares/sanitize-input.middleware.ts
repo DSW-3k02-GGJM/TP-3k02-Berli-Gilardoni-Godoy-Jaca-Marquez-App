@@ -12,7 +12,6 @@ import { Entity } from '../types/custom/entity.type.js';
 
 // External Libraries
 import moment from 'moment';
-import { Loaded } from '@mikro-orm/core';
 
 /**
 Middleware to sanitize and validate inputs.

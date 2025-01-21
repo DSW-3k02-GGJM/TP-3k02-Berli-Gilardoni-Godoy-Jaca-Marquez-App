@@ -81,7 +81,7 @@ export class BrandsTableComponent {
             next: () => {
               this.brandDeleted.emit();
               this.snackBarService.show(
-                'La marca ha sido eliminada exitosamente'
+                'La marca ha sido eliminada correctamente'
               );
             },
             error: (error: HttpErrorResponse) => {

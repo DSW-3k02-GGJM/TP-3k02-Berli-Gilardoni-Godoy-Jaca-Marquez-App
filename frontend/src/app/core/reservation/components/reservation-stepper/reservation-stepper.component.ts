@@ -202,11 +202,13 @@ export class ReservationStepperComponent implements OnInit {
     if (event.selectedIndex === 1) {
       this.setFilter();
     } else if (event.selectedIndex === 2) {
-      this.finalPrice = this.reservationPriceCalculationService.calculatePrice(
-        this.startDate,
-        this.endDate,
-        this.pricePerDay
-      );
+      this.finalPrice =
+        this.reservationPriceCalculationService.calculateInitialPrice(
+          this.startDate,
+          this.endDate,
+          this.pricePerDay,
+          this.deposit
+        );
     }
   }
 

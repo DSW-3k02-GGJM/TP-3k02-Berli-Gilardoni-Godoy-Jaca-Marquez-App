@@ -81,7 +81,7 @@ export class ColorsTableComponent {
             next: () => {
               this.colorDeleted.emit();
               this.snackBarService.show(
-                'El color ha sido eliminado exitosamente'
+                'El color ha sido eliminado correctamente'
               );
             },
             error: (error: HttpErrorResponse) => {

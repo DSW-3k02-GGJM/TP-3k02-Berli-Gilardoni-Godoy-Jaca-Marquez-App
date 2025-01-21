@@ -23,7 +23,7 @@
         {{
           userRole === "admin"
             ? "Es necesaria para poder agregar una nueva reserva correctamente"
-            : "Por favor, intentá más tarde o ponete en contacto con el administrador"
+            : "Por favor, intente más tarde o póngase en contacto con el administrador"
         }}
       </p>
     </mat-card-content>
@@ -38,7 +38,9 @@
       <mat-step [stepControl]="userForm">
         <form app-prevent-enter [formGroup]="userForm">
           <hr />
-          <ng-template matStepLabel>Seleccionar usuario</ng-template>
+          <ng-template matStepLabel
+            ><span class="step-label-1">Seleccionar usuario</span></ng-template
+          >
           <div class="user-details">
             <mat-form-field
               class="input-box"
@@ -93,7 +95,9 @@
       <mat-step [stepControl]="vehicleFilterForm">
         <form app-prevent-enter [formGroup]="vehicleFilterForm">
           <hr />
-          <ng-template matStepLabel>Seleccionar filtro</ng-template>
+          <ng-template matStepLabel
+            ><span class="step-label-1">Seleccionar filtro</span></ng-template
+          >
           <div class="user-details">
             <mat-form-field
               class="input-box"
@@ -165,7 +169,9 @@
       </mat-step>
       <mat-step [stepControl]="vehicleModelForm">
         <hr />
-        <ng-template matStepLabel>Seleccionar modelo</ng-template>
+        <ng-template matStepLabel
+          ><span class="step-label-1">Seleccionar modelo</span></ng-template
+        >
         <div *ngIf="response.length === 0" class="container2">
           <p class="title">
             No hay autos disponibles para esa fecha en esa sucursal ;\
@@ -190,7 +196,9 @@
         </div>
       </mat-step>
       <mat-step>
-        <ng-template matStepLabel>Confirmar Reserva</ng-template>
+        <ng-template matStepLabel
+          ><span class="step-label-1">Confirmar Reserva</span></ng-template
+        >
         <p class="title">Información de la Reserva</p>
         <hr />
         <div class="information">

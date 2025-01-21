@@ -63,7 +63,7 @@ export class VehicleModelsTableComponent {
     this.imageApiService.deleteImage(imagePath).subscribe({
       next: () => {
         this.vehicleModelDeleted.emit();
-        this.snackBarService.show('El modelo ha sido eliminado exitosamente');
+        this.snackBarService.show('El modelo ha sido eliminado correctamente');
       },
       error: (error: HttpErrorResponse) => {
         if (error.status !== 400) {

@@ -22,10 +22,10 @@
       <p class="sub-text">
         {{
           userRole === "client"
-            ? "Por favor, intentá más tarde o comunicate con nuestro servicio de atención al cliente"
+            ? "Por favor, intente más tarde o comuníquese con nuestro servicio de atención al cliente"
             : userRole === "employee"
-            ? "Por favor, intentá más tarde o ponete en contacto con el administrador"
-            : "Por favor, ingresá al Menú Staff y agregá al menos una sucursal para habilitar las reservas"
+            ? "Por favor, intente más tarde o póngase en contacto con el administrador"
+            : "Por favor, ingrese al Menú Staff y agregue al menos una sucursal para habilitar las reservas"
         }}
       </p>
     </mat-card-content>
@@ -40,7 +40,11 @@
       <mat-step [stepControl]="vehicleFilterForm">
         <form app-prevent-enter [formGroup]="vehicleFilterForm">
           <hr />
-          <ng-template matStepLabel>Seleccionar fechas y sucursal</ng-template>
+          <ng-template matStepLabel
+            ><span class="step-label-2"
+              >Seleccionar fechas y sucursal</span
+            ></ng-template
+          >
           <div class="user-details">
             <mat-form-field
               class="input-box"
@@ -112,7 +116,11 @@
       </mat-step>
       <mat-step [stepControl]="vehicleModelForm">
         <hr />
-        <ng-template matStepLabel>Seleccionar modelo de vehículo</ng-template>
+        <ng-template matStepLabel
+          ><span class="step-label-2"
+            >Seleccionar modelo de vehículo</span
+          ></ng-template
+        >
         <div *ngIf="response.length === 0" class="container2">
           <p class="title">
             No hay autos disponibles para esa fecha en esa sucursal ;\
@@ -137,7 +145,9 @@
         </div>
       </mat-step>
       <mat-step>
-        <ng-template matStepLabel>Confirmar reserva</ng-template>
+        <ng-template matStepLabel
+          ><span class="step-label-2">Confirmar reserva</span></ng-template
+        >
         <p class="title">Información de la Reserva</p>
         <hr />
         <div class="information">

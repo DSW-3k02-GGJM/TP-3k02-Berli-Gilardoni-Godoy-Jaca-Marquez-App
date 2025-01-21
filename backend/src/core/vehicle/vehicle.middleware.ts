@@ -9,7 +9,7 @@ const sanitizedFilterInput = sanitizeInput({
   dateRange: { startDate: 'startDate', endDate: 'endDate' },
 });
 
-const sanitizedInput = sanitizeInput({
+const sanitizedCreateInput = sanitizeInput({
   required: [
     'licensePlate',
     'manufacturingYear',
@@ -30,4 +30,18 @@ const sanitizedInput = sanitizeInput({
   entity: 'Vehicle',
 });
 
-export { sanitizedFilterInput, sanitizedInput };
+const sanitizedUpdateInput = sanitizeInput({
+  required: [],
+  uppercase: ['licensePlate'],
+  numeric: [
+    'manufacturingYear',
+    'totalKms',
+    'location',
+    'color',
+    'vehicleModel',
+  ],
+  unique: ['licensePlate'],
+  entity: 'Vehicle',
+});
+
+export { sanitizedFilterInput, sanitizedCreateInput, sanitizedUpdateInput };

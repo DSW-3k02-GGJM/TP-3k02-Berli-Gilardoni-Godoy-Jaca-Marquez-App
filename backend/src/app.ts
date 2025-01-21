@@ -12,13 +12,11 @@ import { routes } from './routes.js';
 import { AuthService } from './shared/services/auth.service.js';
 import { ScheduleService } from './shared/services/schedule.service.js';
 
+// Utils
+import { getPortFromUrl } from './shared/utils/url-port.js';
+
 // Configuration
-import {
-  FRONTEND_DOMAIN,
-  FRONTEND_PORT,
-  BACKEND_DOMAIN,
-  BACKEND_PORT,
-} from './config.js';
+import { FRONTEND_URL, BACKEND_URL } from './config.js';
 
 // External Libraries
 import cookieParser from 'cookie-parser';
@@ -27,7 +25,7 @@ import cors from 'cors';
 const app = express();
 
 const corsOptions = {
-  origin: `${FRONTEND_DOMAIN}${FRONTEND_PORT}`,
+  origin: FRONTEND_URL,
   credentials: true,
 };
 
@@ -48,7 +46,7 @@ app.use((_, res, next) => {
 });
 
 app.get('/api/config', (_, res) => {
-  res.json({ imageServerUrl: `${BACKEND_DOMAIN}${BACKEND_PORT}` });
+  res.json({ imageServerUrl: BACKEND_URL });
 });
 
 Object.entries(routes).forEach(([path, router]) => {
@@ -61,8 +59,8 @@ app.use((_, res) => {
 
 await syncSchema();
 
-app.listen(BACKEND_PORT, async () => {
+app.listen(getPortFromUrl(BACKEND_URL), async () => {
   await AuthService.ensureAdminExists();
   await ScheduleService.initializeScheduler();
-  console.log(`Server running at ${BACKEND_DOMAIN}${BACKEND_PORT}/`);
+  console.log(`Server running at ${BACKEND_URL}`);
 });

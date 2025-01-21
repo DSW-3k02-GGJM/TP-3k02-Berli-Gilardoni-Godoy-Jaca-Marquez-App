@@ -5,16 +5,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const envSchema = z.object({
-  BACKEND_DOMAIN: z.string().url().default('http://localhost:'),
-  BACKEND_PORT: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .default('3000'),
-  FRONTEND_DOMAIN: z.string().url().default('http://localhost:'),
-  FRONTEND_PORT: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .default('4200'),
+  BACKEND_URL: z.string().url().default('http://localhost:3000'),
+  FRONTEND_URL: z.string().url().default('http://localhost:4200'),
   SECRET_KEY: z.string().default('password1'),
   SECRET_EMAIL_KEY: z.string().default('password2'),
   SECRET_PASSWORD_KEY: z.string().default('password3'),
@@ -37,10 +29,8 @@ if (!success) {
 }
 
 export const {
-  BACKEND_DOMAIN,
-  BACKEND_PORT,
-  FRONTEND_DOMAIN,
-  FRONTEND_PORT,
+  BACKEND_URL,
+  FRONTEND_URL,
   SECRET_KEY,
   SECRET_EMAIL_KEY,
   SECRET_PASSWORD_KEY,

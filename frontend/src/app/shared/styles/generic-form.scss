@@ -126,6 +126,10 @@
   margin-right: 1.5rem;
 }
 
+.email-div {
+  display: flex;
+}
+
 .img-input {
   margin-bottom: 2rem;
 }
@@ -147,5 +151,11 @@
 
   form .user-details .input-box {
     width: 100%;
+  }
+}
+
+@media (max-width: 385px) {
+  .email-div {
+    display: block;
   }
 }

@@ -19,7 +19,6 @@ import { MatCardModule } from '@angular/material/card';
 import { ReservationApiService } from '@core/reservation/services/reservation.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 import { ReservationFilterService } from '@shared/services/filters/reservation-filter.service';
-import { ReservationFinalPriceCalculationService } from '@shared/services/calculations/reservation-final-price-calculation.service';
 import { FormatDateService } from '@shared/services/utils/format-date.service';
 
 // Components
@@ -53,7 +52,6 @@ export class ReservationsClientTableComponent {
     private readonly reservationApiService: ReservationApiService,
     private readonly snackBarService: SnackBarService,
     private readonly reservationFilterService: ReservationFilterService,
-    private readonly reservationFinalPriceCalculationService: ReservationFinalPriceCalculationService,
     private readonly formatDateService: FormatDateService,
     private readonly dialog: MatDialog,
     private readonly router: Router
@@ -96,7 +94,7 @@ export class ReservationsClientTableComponent {
               next: () => {
                 this.reservationCancelled.emit();
                 this.snackBarService.show(
-                  'La reserva ha sido cancelada exitosamente'
+                  'La reserva ha sido cancelada correctamente'
                 );
               },
               error: () => {
@@ -124,22 +122,11 @@ export class ReservationsClientTableComponent {
       : '';
   }
 
-  calculateFinalPrices(reservations: Reservation[]): Reservation[] {
-    return reservations.map((reservation: Reservation) => ({
-      ...reservation,
-      calculatedPrice:
-        this.reservationFinalPriceCalculationService.calculatePrice(
-          reservation as Reservation
-        ),
-    }));
-  }
-
   filterReservations(): void {
     let filteredReservations: Reservation[] = this.reservations;
     if (this.filterDate) {
       if (Number.parseInt(this.filterDate.substring(0, 4)) < 1900) {
-        this.filteredReservations =
-          this.calculateFinalPrices(filteredReservations);
+        this.filteredReservations = filteredReservations;
         return;
       }
       filteredReservations = this.reservationFilterService.filterReservations(
@@ -147,7 +134,7 @@ export class ReservationsClientTableComponent {
         filteredReservations
       );
     }
-    this.filteredReservations = this.calculateFinalPrices(filteredReservations);
+    this.filteredReservations = filteredReservations;
   }
 
   disableCancellation(reservation: Reservation): boolean {
