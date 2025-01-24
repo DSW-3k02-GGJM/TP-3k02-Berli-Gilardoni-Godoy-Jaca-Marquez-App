@@ -90,7 +90,7 @@
             type="number"
             formControlName="passengerCount"
             placeholder=""
-            min="1"
+            min="2"
           />
           <mat-error
             *ngIf="vehicleModelForm.get('passengerCount')?.errors?.required"
@@ -100,7 +100,15 @@
           <mat-error
             *ngIf="vehicleModelForm.get('passengerCount')?.errors?.min"
           >
-            La cantidad de pasajeros debe ser mayor o igual a 1.
+            La cantidad de pasajeros debe ser mayor o igual a 2.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              vehicleModelForm.get('passengerCount')?.errors?.pattern &&
+              !vehicleModelForm.get('passengerCount')?.errors?.min
+            "
+          >
+            La cantidad de pasajeros debe ser un número entero.
           </mat-error>
         </mat-form-field>
         <mat-form-field

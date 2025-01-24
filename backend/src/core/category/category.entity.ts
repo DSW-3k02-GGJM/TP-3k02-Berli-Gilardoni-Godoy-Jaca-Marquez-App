@@ -19,10 +19,10 @@ export class Category extends BaseEntity {
   @Property({ nullable: false })
   categoryDescription!: string;
 
-  @Property({ type: 'float', nullable: false })
+  @Property({ nullable: false })
   pricePerDay!: number;
 
-  @Property({ type: 'float', nullable: false })
+  @Property({ nullable: false })
   depositValue!: number;
 
   @OneToMany(() => VehicleModel, (vehicleModel) => vehicleModel.category, {

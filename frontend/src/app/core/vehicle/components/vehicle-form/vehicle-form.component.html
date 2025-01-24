@@ -89,6 +89,15 @@
           <mat-error *ngIf="vehicleForm.get('manufacturingYear')?.errors?.max">
             El año de fabricación no puede ser del futuro.
           </mat-error>
+          <mat-error
+            *ngIf="
+              vehicleForm.get('manufacturingYear')?.errors?.pattern &&
+              !vehicleForm.get('manufacturingYear')?.errors?.min &&
+              !vehicleForm.get('manufacturingYear')?.errors?.max
+            "
+          >
+            El año de fabricación debe ser un número entero.
+          </mat-error>
         </mat-form-field>
         <mat-form-field
           class="input-box"
@@ -110,6 +119,14 @@
           </mat-error>
           <mat-error *ngIf="vehicleForm.get('totalKms')?.errors?.min">
             Los km recorridos no pueden ser negativos.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              vehicleForm.get('totalKms')?.errors?.pattern &&
+              !vehicleForm.get('totalKms')?.errors?.min
+            "
+          >
+            Los km recorridos deben ser un número entero.
           </mat-error>
         </mat-form-field>
         <mat-form-field

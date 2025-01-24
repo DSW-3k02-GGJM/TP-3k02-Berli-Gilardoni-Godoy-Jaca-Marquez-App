@@ -87,13 +87,21 @@
           <mat-error *ngIf="categoryForm.get('pricePerDay')?.errors?.min">
             El precio por día debe ser mayor o igual a 1.
           </mat-error>
+          <mat-error
+            *ngIf="
+              categoryForm.get('pricePerDay')?.errors?.pattern &&
+              !categoryForm.get('pricePerDay')?.errors?.min
+            "
+          >
+            El precio por día debe ser un número entero.
+          </mat-error>
         </mat-form-field>
         <mat-form-field
           class="input-box"
           appearance="outline"
           hideRequiredMarker="true"
         >
-          <mat-label>Valor depósito</mat-label>
+          <mat-label>Valor de depósito</mat-label>
           <input
             matInput
             id="depositValue"
@@ -107,6 +115,14 @@
           </mat-error>
           <mat-error *ngIf="categoryForm.get('depositValue')?.errors?.min">
             El valor de depósito debe ser mayor o igual a 1.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              categoryForm.get('depositValue')?.errors?.pattern &&
+              !categoryForm.get('depositValue')?.errors?.min
+            "
+          >
+            El valor de depósito debe ser un número entero.
           </mat-error>
         </mat-form-field>
       </div>

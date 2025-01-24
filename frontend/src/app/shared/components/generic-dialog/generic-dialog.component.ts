@@ -57,6 +57,7 @@ export class GenericDialogComponent implements OnDestroy {
       finalKms: new FormControl(this.data.initialKms, [
         Validators.required,
         Validators.min((this.data.initialKms ?? 0) + 1),
+        Validators.pattern(/^\d+$/),
       ]),
       returnDeposit: new FormControl(true, [Validators.required]),
     },

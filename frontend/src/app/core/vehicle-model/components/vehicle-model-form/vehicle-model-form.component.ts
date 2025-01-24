@@ -86,7 +86,8 @@ export class VehicleModelFormComponent implements OnInit {
       transmissionType: new FormControl('', [Validators.required]),
       passengerCount: new FormControl('', [
         Validators.required,
-        Validators.min(1),
+        Validators.min(2),
+        Validators.pattern(/^\d+$/),
       ]),
       category: new FormControl('', [Validators.required]),
       brand: new FormControl('', [Validators.required]),

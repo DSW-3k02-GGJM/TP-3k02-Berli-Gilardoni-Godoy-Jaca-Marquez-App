@@ -60,7 +60,7 @@ cd frontend
 
 **Importá datos pre-cargados desde el siguiente archivo .mysql, para facilitar la prueba de la aplicación:**
 
-- [Base de Datos](https://drive.google.com/file/d/1yTwhIJxGQsc-7Be9Q_Hmqmft0WOD2jTH/view?usp=sharing)
+- [Base de Datos](https://drive.google.com/file/d/12hKOOJdNTaggBVWNVtNBo-ZBNhTbuq8V/view)
 
 ---
 

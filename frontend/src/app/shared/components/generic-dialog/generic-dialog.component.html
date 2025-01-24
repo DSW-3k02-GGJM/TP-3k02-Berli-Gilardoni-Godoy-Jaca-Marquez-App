@@ -59,6 +59,14 @@
         <mat-error *ngIf="checkOutForm.get('finalKms')?.errors?.min">
           El kilometraje debe ser mayor a {{ data.initialKms }}.
         </mat-error>
+        <mat-error
+          *ngIf="
+            checkOutForm.get('finalKms')?.errors?.pattern &&
+            !checkOutForm.get('finalKms')?.errors?.min
+          "
+        >
+          El kilometraje debe ser un número entero.
+        </mat-error>
       </mat-form-field>
       <div class="input-toggle-box mb-5">
         <p class="text m-0">Devolver depósito:</p>

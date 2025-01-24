@@ -99,7 +99,7 @@ export const sanitizeInput = (options: {
     if (numeric) {
       for (const field of numeric) {
         const value = req.body.sanitizedInput[field];
-        if (value !== undefined && (isNaN(value) || value < 1)) {
+        if (value !== undefined && (isNaN(value) || value < 0)) {
           return res.status(400).json({
             message: `El campo "${field}" debe ser un número positivo`,
           });

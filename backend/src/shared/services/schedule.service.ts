@@ -87,8 +87,8 @@ export class ScheduleService {
   }
 
   static async initializeScheduler() {
-    console.log('Scheduler initialized:\n - Frequency (Every minute)\n');
-    cron.schedule('* * * * *', async () => {
+    console.log('Scheduler initialized:\n - Frequency (Every 10 minutes)\n');
+    cron.schedule('*/10 * * * *', async () => {
       try {
         await ScheduleService.sendPendingReminders();
       } catch (error) {

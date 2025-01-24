@@ -72,10 +72,12 @@ export class CategoryFormComponent implements OnInit {
       pricePerDay: new FormControl('', [
         Validators.required,
         Validators.min(1),
+        Validators.pattern(/^\d+$/),
       ]),
       depositValue: new FormControl('', [
         Validators.required,
         Validators.min(1),
+        Validators.pattern(/^\d+$/),
       ]),
     },
     { updateOn: 'blur' }
