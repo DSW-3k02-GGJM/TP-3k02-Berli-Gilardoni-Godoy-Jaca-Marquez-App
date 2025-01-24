@@ -14,19 +14,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 
 // RxJS
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 
 // Services
 import { VehicleApiService } from '@core/vehicle/services/vehicle.api.service';
 import { ColorApiService } from '@core/color/services/color.api.service';
 import { LocationApiService } from '@core/location/services/location.api.service';
 import { VehicleModelApiService } from '@core/vehicle-model/services/vehicle-model.api.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
+import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 import { LicensePlateValidationService } from '@shared/services/validations/license-plate-validation.service';
 
 // Interfaces
@@ -38,6 +40,8 @@ import { Location } from '@core/location/interfaces/location.interface';
 import { VehicleModel } from '@core/vehicle-model/interfaces/vehicle-model.interface';
 import { ForkJoinResponse } from '@core/vehicle/interfaces/fork-join-response.interface';
 import { FormData } from '@shared/interfaces/form-data.interface';
+import { ErrorDialogOptions } from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -67,11 +71,9 @@ export class VehicleFormComponent implements OnInit {
     buttonText: '',
   };
   currentVehicleId: number = -1;
-  displayedMessage: string = '';
-  errorMessage: string = '';
   pending: boolean = false;
 
-  dataLoadError: boolean = false;
+  displayedMessage: boolean = false;
 
   colors: Color[] = [];
   locations: Location[] = [];
@@ -97,53 +99,40 @@ export class VehicleFormComponent implements OnInit {
   );
 
   constructor(
-    private vehicleApiService: VehicleApiService,
-    private colorApiService: ColorApiService,
-    private locationApiService: LocationApiService,
-    private vehicleModelApiService: VehicleModelApiService,
-    private licensePlateValidationService: LicensePlateValidationService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router
+    private readonly vehicleApiService: VehicleApiService,
+    private readonly colorApiService: ColorApiService,
+    private readonly locationApiService: LocationApiService,
+    private readonly vehicleModelApiService: VehicleModelApiService,
+    private readonly openDialogService: OpenDialogService,
+    private readonly snackBarService: SnackBarService,
+    private readonly licensePlateValidationService: LicensePlateValidationService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadRelatedData();
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentVehicleId = params['id'];
-        if (this.currentVehicleId) {
-          this.assignFormData('Edit');
-          this.vehicleApiService.getOne(this.currentVehicleId).subscribe({
-            next: (response: VehicleResponse) => {
-              this.vehicleForm.patchValue({
-                ...response.data,
-                color: this.getColorId(response.data.color),
-                location: this.getLocationId(response.data.location),
-                vehicleModel: this.getVehicleModelId(
-                  response.data.vehicleModel
-                ),
-              });
-            },
-            error: () => {
-              this.displayedMessage = '⚠️ Error de conexión';
-            },
-          });
-          this.vehicleForm.controls['licensePlate'].setAsyncValidators([
-            this.vehicleApiService.uniqueLicensePlateValidator(
-              this.currentVehicleId
-            ),
-          ]);
-        } else {
-          this.assignFormData('Create');
-          this.vehicleForm.controls['licensePlate'].setAsyncValidators([
-            this.vehicleApiService.uniqueLicensePlateValidator(-1),
-          ]);
+
+        const mode: string = this.currentVehicleId ? 'Edit' : 'Create';
+        this.assignFormData(mode);
+
+        this.vehicleForm.controls['licensePlate'].setAsyncValidators([
+          this.vehicleApiService.uniqueLicensePlateValidator(
+            this.currentVehicleId
+          ),
+        ]);
+
+        if (mode === 'Edit') {
+          this.loadVehicleData();
         }
       },
     });
   }
 
-  assignFormData(action: string): void {
+  private assignFormData(action: string): void {
     this.formData = {
       action,
       title: action === 'Create' ? 'Nuevo vehículo' : 'Editar vehículo',
@@ -151,7 +140,7 @@ export class VehicleFormComponent implements OnInit {
     } as FormData;
   }
 
-  loadData(): void {
+  private loadRelatedData(): void {
     forkJoin({
       colors: this.colorApiService.getAll(),
       locations: this.locationApiService.getAll(),
@@ -161,10 +150,33 @@ export class VehicleFormComponent implements OnInit {
         this.colors = response.colors.data;
         this.locations = response.locations.data;
         this.vehicleModels = response.vehicleModels.data;
+        this.sortRelatedData();
       },
-      error: () => {
-        this.displayedMessage = '⚠️ Error de conexión';
-      },
+      error: () => this.handleRelatedLoadError(),
+    });
+  }
+
+  private sortRelatedData(): void {
+    this.colors = this.colors.sort((a: Color, b: Color) =>
+      a.colorName.localeCompare(b.colorName)
+    );
+
+    this.locations = this.locations.sort((a: Location, b: Location) =>
+      a.locationName.localeCompare(b.locationName)
+    );
+
+    this.vehicleModels = this.vehicleModels.sort(
+      (a: VehicleModel, b: VehicleModel) =>
+        `${a.brand?.brandName} ${a.vehicleModelName}`.localeCompare(
+          `${b.brand?.brandName} ${b.vehicleModelName}`
+        )
+    );
+  }
+
+  private loadVehicleData(): void {
+    this.vehicleApiService.getOne(this.currentVehicleId).subscribe({
+      next: (response: VehicleResponse) => this.handleLoadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
     });
   }
 
@@ -178,53 +190,70 @@ export class VehicleFormComponent implements OnInit {
     return typeof brand === 'object' ? brand.brandName : '';
   }
 
-  getColorId(color: Color | number | undefined): number {
+  private getColorId(color: Color | number | undefined): number {
     return typeof color === 'object' ? color.id : -1;
   }
 
-  getLocationId(location: Location | number | undefined): number {
+  private getLocationId(location: Location | number | undefined): number {
     return typeof location === 'object' ? location.id : -1;
   }
 
-  getVehicleModelId(vehicleModel: VehicleModel | undefined): number {
+  private getVehicleModelId(vehicleModel: VehicleModel | undefined): number {
     return typeof vehicleModel === 'object' ? vehicleModel.id : -1;
   }
 
   onSubmit(): void {
     if (!this.vehicleForm.invalid) {
       this.pending = true;
-      if (this.formData.action === 'Create') {
-        this.vehicleApiService
-          .create(this.vehicleForm.value as VehicleInput)
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToVehicles();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      } else if (this.formData.action === 'Edit') {
-        this.vehicleApiService
-          .update(this.currentVehicleId, this.vehicleForm.value as VehicleInput)
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToVehicles();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      }
+      this.getVehicleRequest().subscribe({
+        next: (response: Message) => this.handleSubmitSuccess(response),
+        error: (error: HttpErrorResponse) => this.handleError(error),
+      });
     }
+  }
+
+  private getVehicleRequest(): Observable<Message> {
+    const data = this.vehicleForm.value as VehicleInput;
+    return this.formData.action === 'Create'
+      ? this.vehicleApiService.create(data)
+      : this.vehicleApiService.update(this.currentVehicleId, data);
+  }
+
+  private handleLoadSuccess(response: VehicleResponse): void {
+    this.vehicleForm.patchValue({
+      ...response.data,
+      color: this.getColorId(response.data.color),
+      location: this.getLocationId(response.data.location),
+      vehicleModel: this.getVehicleModelId(response.data.vehicleModel),
+    });
+  }
+
+  private handleSubmitSuccess(response: Message): void {
+    this.pending = false;
+    this.snackBarService.show(response.message);
+    this.navigateToVehicles();
+  }
+
+  private handleRelatedLoadError(): void {
+    this.openDialogService.error({
+      goTo: '/home',
+    } as ErrorDialogOptions);
+    this.displayedMessage = true;
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    if (!this.displayedMessage) {
+      this.openErrorDialog(error);
+    }
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    const goTo = error.status === 500 ? '/home' : '/staff/vehicles';
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo,
+    } as ErrorDialogOptions);
   }
 
   navigateToVehicles(): void {

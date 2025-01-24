@@ -80,7 +80,7 @@ export const sanitizeInput = (options: {
       );
       if (missing.length > 0) {
         return res.status(400).json({
-          message: `All information is required. Missing: ${missing.join(
+          message: `Toda la información es requerida. Falta(n): ${missing.join(
             ', '
           )}`,
         });
@@ -101,7 +101,7 @@ export const sanitizeInput = (options: {
         const value = req.body.sanitizedInput[field];
         if (value !== undefined && (isNaN(value) || value < 1)) {
           return res.status(400).json({
-            message: `The field "${field}" must be a positive number.`,
+            message: `El campo "${field}" debe ser un número positivo`,
           });
         }
       }
@@ -112,7 +112,7 @@ export const sanitizeInput = (options: {
         const value = req.body.sanitizedInput[field];
         if (value !== undefined && isNaN(new Date(value).getTime())) {
           return res.status(400).json({
-            message: `The field "${field}" must be a valid date.`,
+            message: `El campo "${field}" debe ser una fecha válida`,
           });
         }
       }
@@ -123,13 +123,13 @@ export const sanitizeInput = (options: {
       const startDateValue = req.body.sanitizedInput[startDate];
       if (moment(startDateValue).isBefore(moment().startOf('day'))) {
         return res.status(400).json({
-          message: 'The start date cannot be in the past.',
+          message: 'La fecha de inicio debe ser mayor o igual a hoy',
         });
       }
       const endDateValue = req.body.sanitizedInput[endDate];
       if (moment(startDateValue).isAfter(moment(endDateValue))) {
         return res.status(400).json({
-          message: 'The end date cannot be before the start date.',
+          message: 'La fecha de fin debe ser posterior a la de inicio',
         });
       }
     }
@@ -140,7 +140,7 @@ export const sanitizeInput = (options: {
         const value = req.body.sanitizedInput[field];
         if (value !== undefined && !emailRegex.test(value)) {
           return res.status(400).json({
-            message: `The field "${field}" must be a valid email address.`,
+            message: `El campo "${field}" debe ser una dirección de correo electrónico válida`,
           });
         }
       }
@@ -149,7 +149,9 @@ export const sanitizeInput = (options: {
     if (role) {
       if (!role.includes(req.body.sanitizedInput.role)) {
         return res.status(400).json({
-          message: `Role does not exist. Valid roles are: ${role.join(', ')}.`,
+          message: `El rol no existe. Los roles válidos son: ${role.join(
+            ', '
+          )}`,
         });
       }
     }
@@ -158,30 +160,31 @@ export const sanitizeInput = (options: {
       for (const [field1, field2] of Object.entries(match)) {
         if (req.body[field1] !== req.body[field2]) {
           return res.status(400).json({
-            message: `The fields "${field1}" and "${field2}" must match.`,
+            message: `Las contraseñas deben coincidir.`,
           });
         }
       }
     }
 
     if (unique && entity) {
-      const id = Number.parseInt(req.params.id);
-      const errors: string[] = [];
-      for (const field of unique) {
-        const uniqueValue = req.body.sanitizedInput[field];
-        if (uniqueValue !== undefined) {
-          const existingEntity = await em.findOne(entity, {
-            [field]: uniqueValue,
-          });
-          if (existingEntity && (existingEntity as BaseEntity)?.id !== id) {
-            errors.push(`${field} "${uniqueValue}" is already used.`);
+      try {
+        const id = Number.parseInt(req.params.id);
+        for (const field of unique) {
+          const uniqueValue = req.body.sanitizedInput[field].trim();
+          if (uniqueValue !== undefined) {
+            const existingEntity = await em.findOne(entity, {
+              [field]: uniqueValue,
+            });
+            if (existingEntity && (existingEntity as BaseEntity)?.id !== id) {
+              return res.status(400).json({
+                message:
+                  'Se ha detectado un valor repetido que debería ser único.',
+              });
+            }
           }
         }
-      }
-      if (errors.length > 0) {
-        return res.status(400).json({
-          message: errors.join(', '),
-        });
+      } catch (error) {
+        res.status(500).json({ message: 'Error de conexión' });
       }
     }
 

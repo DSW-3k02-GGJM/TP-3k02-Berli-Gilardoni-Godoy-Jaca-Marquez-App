@@ -22,24 +22,24 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatStepperModule, MatStepper } from '@angular/material/stepper';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 
 // Services
 import { UserApiService } from '@core/user/services/user.api.service';
-import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
-
-// Components
-import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 
 // Interfaces
 import { User } from '@core/user/interfaces/user.interface';
 import { UsersResponse } from '@core/user/interfaces/users-response.interface';
 import { EmailData } from '@core/user/interfaces/email-data.interface';
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import {
+  ErrorDialogOptions,
+  SuccessDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
+import { Message } from '@shared/interfaces/message.interface';
 
 @Component({
   selector: 'app-communication-by-email',
@@ -84,7 +84,6 @@ export class CommunicationByEmailComponent implements AfterViewInit {
   ];
 
   displayedMessage: string = '';
-  errorMessage: string = '';
   noCoincidences: boolean = false;
   pending: boolean = false;
 
@@ -105,8 +104,7 @@ export class CommunicationByEmailComponent implements AfterViewInit {
 
   constructor(
     private readonly userApiService: UserApiService,
-    private readonly snackBarService: SnackBarService,
-    private readonly dialog: MatDialog
+    private readonly openDialogService: OpenDialogService
   ) {}
 
   ngAfterViewInit(): void {
@@ -134,48 +132,32 @@ export class CommunicationByEmailComponent implements AfterViewInit {
     return window.innerWidth < 768;
   }
 
-  openDialog(): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Email enviado',
-        titleColor: 'dark',
-        image: 'assets/generic/checkmark.png',
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/home',
-      },
-    } as GenericDialog);
+  private loadUsers(): void {
+    this.userApiService.getAll().subscribe({
+      next: (response: UsersResponse) => this.handleLoadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleLoadError(error),
+    });
   }
 
-  loadUsers(): void {
-    this.displayedMessage = '';
-    this.userApiService.getAll().subscribe({
-      next: (response: UsersResponse) => {
-        if (response.data.length === 0) {
-          this.displayedMessage = 'No hay usuarios registrados';
-        } else {
-          this.dataSource.data = response.data;
-        }
-      },
-      error: () => {
-        this.displayedMessage = '⚠️ Error de conexión';
-      },
-    });
+  private handleLoadSuccess(response: UsersResponse): void {
+    this.displayedMessage = response.data.length
+      ? ''
+      : 'No hay usuarios registrados';
+
+    this.dataSource.data = response.data;
+  }
+
+  private handleLoadError(error: HttpErrorResponse): void {
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: '/home',
+    } as ErrorDialogOptions);
   }
 
   applyFilter(event: Event): void {
     const filterValue: string = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.filteredData.length === 0) {
-      this.noCoincidences = true;
-    } else {
-      this.noCoincidences = false;
-    }
+    this.noCoincidences = this.dataSource.filteredData.length === 0;
   }
 
   onSelectedRow(row: User): void {
@@ -192,19 +174,25 @@ export class CommunicationByEmailComponent implements AfterViewInit {
           this.emailForm.value as EmailData
         )
         .subscribe({
-          next: () => {
-            this.pending = false;
-            this.openDialog();
-          },
-          error: (error: HttpErrorResponse) => {
-            this.pending = false;
-            if (error.status !== 400) {
-              this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-            } else {
-              this.snackBarService.show('Error al enviar el email');
-            }
-          },
+          next: (response: Message) => this.handleSubmitSuccess(response),
+          error: (error: HttpErrorResponse) => this.handleSubmitError(error),
         });
     }
+  }
+
+  private handleSubmitSuccess(response: Message): void {
+    this.pending = false;
+    this.openDialogService.success({
+      title: response.message,
+      goTo: '/home',
+    } as SuccessDialogOptions);
+  }
+
+  private handleSubmitError(error: HttpErrorResponse): void {
+    this.pending = false;
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: '/home',
+    } as ErrorDialogOptions);
   }
 }

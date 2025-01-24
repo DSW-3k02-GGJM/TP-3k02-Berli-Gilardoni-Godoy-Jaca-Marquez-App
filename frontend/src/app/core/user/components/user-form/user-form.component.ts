@@ -5,7 +5,6 @@ import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -20,10 +19,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
+// RxJS
+import { Observable } from 'rxjs';
+
 // Services
 import { UserApiService } from '@core/user/services/user.api.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
-import { FormatDateService } from '@shared/services/utils/format-date.service';
 import { UserAgeValidationService } from '@shared/services/validations/user-age-validation.service';
 import { EmailValidationService } from '@shared/services/validations/email-validation.service';
 
@@ -31,6 +33,8 @@ import { EmailValidationService } from '@shared/services/validations/email-valid
 import { UserResponse } from '@core/user/interfaces/user-response.interface';
 import { UserInput } from '@core/user/interfaces/user-input.interface';
 import { FormData } from '@shared/interfaces/form-data.interface';
+import { ErrorDialogOptions } from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -50,7 +54,6 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
     MatIconModule,
     MatSelectModule,
     MatSlideToggleModule,
-    FormsModule,
     PreventEnterDirective,
   ],
 })
@@ -62,10 +65,8 @@ export class UserFormComponent implements OnInit {
     title: '',
     buttonText: '',
   };
-
   currentUserId: number = -1;
   currentEmail: string = '';
-  errorMessage: string = '';
   pending: boolean = false;
 
   userForm: FormGroup = new FormGroup(
@@ -105,8 +106,8 @@ export class UserFormComponent implements OnInit {
 
   constructor(
     private readonly userApiService: UserApiService,
+    private readonly openDialogService: OpenDialogService,
     private readonly snackBarService: SnackBarService,
-    private readonly formatDateService: FormatDateService,
     private readonly userAgeValidationService: UserAgeValidationService,
     private readonly emailValidationService: EmailValidationService,
     private readonly activatedRoute: ActivatedRoute,
@@ -117,56 +118,24 @@ export class UserFormComponent implements OnInit {
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentUserId = params['id'];
-        if (this.currentUserId) {
-          this.assignFormData('Edit');
-          this.userApiService.getOne(this.currentUserId).subscribe({
-            next: (response: UserResponse) => {
-              const birthDateFormat: string =
-                this.formatDateService.removeTimeZoneFromString(
-                  response.data.birthDate
-                );
-              this.currentEmail = response.data.email;
-              this.userForm.controls['documentID'].setAsyncValidators([
-                this.userApiService.uniqueDocumentIDValidator(
-                  this.currentUserId
-                ),
-              ]);
-              this.userForm.patchValue({
-                ...response.data,
-                birthDate: birthDateFormat,
-              });
-            },
-            error: () =>
-              this.snackBarService.show(
-                'Error al obtener la información del usuario'
-              ),
-          });
+
+        const mode: string = this.currentUserId ? 'Edit' : 'Create';
+        this.assignFormData(mode);
+
+        this.userForm.controls['documentID'].setAsyncValidators([
+          this.userApiService.uniqueDocumentIDValidator(this.currentUserId),
+        ]);
+
+        if (mode === 'Edit') {
+          this.loadUserData();
         } else {
-          this.assignFormData('Create');
-          this.userForm.addControl(
-            'email',
-            new FormControl(
-              '',
-              [
-                Validators.required,
-                this.emailValidationService.emailValidation(),
-              ],
-              [this.userApiService.uniqueEmailValidator()]
-            )
-          );
-          this.userForm.addControl(
-            'password',
-            new FormControl('', [Validators.required])
-          );
-          this.userForm.controls['documentID'].setAsyncValidators([
-            this.userApiService.uniqueDocumentIDValidator(-1),
-          ]);
+          this.setupCreationFields();
         }
       },
     });
   }
 
-  assignFormData(action: string): void {
+  private assignFormData(action: string): void {
     this.formData = {
       action,
       title: action === 'Create' ? 'Nuevo usuario' : 'Editar usuario',
@@ -174,7 +143,29 @@ export class UserFormComponent implements OnInit {
     } as FormData;
   }
 
-  clickEvent(event: MouseEvent): void {
+  private loadUserData(): void {
+    this.userApiService.getOne(this.currentUserId).subscribe({
+      next: (response: UserResponse) => this.handleLoadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
+  }
+
+  private setupCreationFields(): void {
+    this.userForm.addControl(
+      'email',
+      new FormControl(
+        '',
+        [Validators.required, this.emailValidationService.emailValidation()],
+        [this.userApiService.uniqueEmailValidator()]
+      )
+    );
+    this.userForm.addControl(
+      'password',
+      new FormControl('', [Validators.required])
+    );
+  }
+
+  togglePasswordVisibility(event: MouseEvent): void {
     event.preventDefault();
     this.hide.set(!this.hide());
     event.stopPropagation();
@@ -183,36 +174,42 @@ export class UserFormComponent implements OnInit {
   onSubmit(): void {
     if (!this.userForm.invalid) {
       this.pending = true;
-      if (this.formData.action === 'Create') {
-        this.userApiService.create(this.userForm.value as UserInput).subscribe({
-          next: () => {
-            this.pending = false;
-            this.navigateToUsers();
-          },
-          error: (error: HttpErrorResponse) => {
-            this.pending = false;
-            if (error.status !== 400) {
-              this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-            }
-          },
-        });
-      } else if (this.formData.action === 'Edit') {
-        this.userApiService
-          .update(this.currentUserId, this.userForm.value as UserInput)
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToUsers();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      }
+      this.getUserRequest().subscribe({
+        next: (response: Message) => this.handleSubmitSuccess(response),
+        error: (error: HttpErrorResponse) => this.handleError(error),
+      });
     }
+  }
+
+  private getUserRequest(): Observable<Message> {
+    const data = this.userForm.value as UserInput;
+    return this.formData.action === 'Create'
+      ? this.userApiService.create(data)
+      : this.userApiService.update(this.currentUserId, data);
+  }
+
+  private handleLoadSuccess(response: UserResponse): void {
+    this.currentEmail = response.data.email;
+    this.userForm.patchValue(response.data);
+  }
+
+  private handleSubmitSuccess(response: Message): void {
+    this.pending = false;
+    this.snackBarService.show(response.message);
+    this.navigateToUsers();
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    this.openErrorDialog(error);
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    const goTo = error.status === 500 ? '/home' : '/staff/users';
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo,
+    } as ErrorDialogOptions);
   }
 
   navigateToUsers(): void {

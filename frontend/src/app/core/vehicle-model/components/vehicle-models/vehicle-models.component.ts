@@ -1,10 +1,12 @@
 // Angular
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Services
 import { VehicleModelApiService } from '@core/vehicle-model/services/vehicle-model.api.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 
 // Components
 import { VehicleModelsTableComponent } from '@core/vehicle-model/components/vehicle-models-table/vehicle-models-table.component';
@@ -12,6 +14,7 @@ import { VehicleModelsTableComponent } from '@core/vehicle-model/components/vehi
 // Interfaces
 import { VehicleModel } from '@core/vehicle-model/interfaces/vehicle-model.interface';
 import { VehicleModelsResponse } from '@core/vehicle-model/interfaces/vehicle-models-response.interface';
+import { ErrorDialogOptions } from '@shared/interfaces/generic-dialog.interface';
 
 @Component({
   selector: 'app-vehicle-models',
@@ -22,10 +25,10 @@ import { VehicleModelsResponse } from '@core/vehicle-model/interfaces/vehicle-mo
 })
 export class VehicleModelsComponent implements OnInit {
   vehicleModels: VehicleModel[] = [];
-  errorMessage: string = '';
 
   constructor(
     private readonly vehicleModelApiService: VehicleModelApiService,
+    private readonly openDialogService: OpenDialogService,
     private readonly router: Router
   ) {}
 
@@ -37,12 +40,22 @@ export class VehicleModelsComponent implements OnInit {
     this.loadData();
   }
 
-  loadData(): void {
+  private loadData(): void {
     this.vehicleModelApiService.getAll().subscribe({
-      next: (response: VehicleModelsResponse) =>
-        (this.vehicleModels = response.data),
-      error: () => (this.errorMessage = '⚠️ Error de conexión'),
+      next: (response: VehicleModelsResponse) => this.handleSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
     });
+  }
+
+  private handleSuccess(response: VehicleModelsResponse): void {
+    this.vehicleModels = response.data;
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: '/home',
+    } as ErrorDialogOptions);
   }
 
   newVehicleModel(): void {

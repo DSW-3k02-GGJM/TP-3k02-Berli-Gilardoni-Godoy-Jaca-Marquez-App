@@ -13,16 +13,17 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 // Angular Material
 import { MatInputModule } from '@angular/material/input';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 
 // RxJS
-import { catchError, forkJoin, map, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 // Services
 import { ReservationApiService } from '@core/reservation/services/reservation.api.service';
-import { ReservationModifiedService } from '@core/reservation/services/reservation.modified.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
+import { ReservationModifiedService } from '@core/reservation/services/reservation.modified.service';
 import { ReservationFilterService } from '@shared/services/filters/reservation-filter.service';
 import { ReservationPriceCalculationService } from '@shared/services/calculations/reservation-price-calculation.service';
 import { FormatDateService } from '@shared/services/utils/format-date.service';
@@ -36,15 +37,13 @@ import { ReservationInput } from '@core/reservation/interfaces/reservation-input
 import { User } from '@core/user/interfaces/user.interface';
 import { Vehicle } from '@core/vehicle/interfaces/vehicle.interface';
 import {
-  GenericDialog,
   DialogData,
+  ErrorDialogOptions,
 } from '@shared/interfaces/generic-dialog.interface';
 import { Message } from '@shared/interfaces/message.interface';
 
 // Pipes
 import { ReservationFilterPipe } from '@core/reservation/pipes/reservation-filter.pipe';
-import { VehicleApiService } from '@core/vehicle/services/vehicle.api.service.js';
-import { VehicleInput } from '@core/vehicle/interfaces/vehicle-input.interface.js';
 
 @Component({
   selector: 'app-reservations-table',
@@ -65,7 +64,6 @@ import { VehicleInput } from '@core/vehicle/interfaces/vehicle-input.interface.j
 })
 export class ReservationsTableComponent {
   @Input() reservations: Reservation[] = [];
-  @Input() errorMessage: string = '';
   @Output() reservationDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
@@ -76,13 +74,12 @@ export class ReservationsTableComponent {
 
   constructor(
     private readonly reservationApiService: ReservationApiService,
-    private readonly vehicleApiService: VehicleApiService,
     private readonly snackBarService: SnackBarService,
+    private readonly openDialogService: OpenDialogService,
     private readonly reservationModifiedService: ReservationModifiedService,
     private readonly reservationFilterService: ReservationFilterService,
     private readonly reservationPriceCalculationService: ReservationPriceCalculationService,
-    private readonly formatDateService: FormatDateService,
-    private readonly dialog: MatDialog
+    private readonly formatDateService: FormatDateService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -91,7 +88,7 @@ export class ReservationsTableComponent {
     }
   }
 
-  openDialogWithAction(
+  private openDialogWithAction(
     dialogData: DialogData,
     apiAction: () => Observable<Message>,
     successMessage: string,
@@ -99,38 +96,46 @@ export class ReservationsTableComponent {
     actionType: 'delete' | 'cancel' | 'checkin' | 'checkout'
   ): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
-      this.dialog.open(GenericDialogComponent, {
-        width: '350px',
-        enterAnimationDuration: '0ms',
-        exitAnimationDuration: '0ms',
-        data: dialogData,
-      } as GenericDialog);
+      this.openDialogService.generic(dialogData as DialogData);
     dialogRef.afterClosed().subscribe({
       next: (result) => {
         if (result) {
           apiAction().subscribe({
-            next: () => {
-              if (actionType === 'delete') {
-                this.reservationDeleted.emit();
-              } else {
-                this.reservationModifiedService.notifyReservationModified();
-              }
-              this.snackBarService.show(successMessage);
-            },
-            error: (error: HttpErrorResponse) => {
-              if (actionType === 'delete' && error.status === 400) {
-                this.openErrorDialog(error.error.message);
-              } else {
-                this.snackBarService.show(errorMessage);
-              }
-            },
+            next: () => this.handleSuccess(actionType, successMessage),
+            error: (error: HttpErrorResponse) =>
+              this.handleError(actionType, error, errorMessage),
           });
         }
       },
     });
   }
 
-  openDeleteDialog(id: number): void {
+  private handleSuccess(
+    actionType: 'delete' | 'cancel' | 'checkin' | 'checkout',
+    successMessage: string
+  ): void {
+    if (actionType === 'delete') {
+      this.reservationDeleted.emit();
+    } else {
+      this.reservationModifiedService.notifyReservationModified();
+    }
+    this.snackBarService.show(successMessage);
+  }
+
+  private handleError(
+    actionType: 'delete' | 'cancel' | 'checkin' | 'checkout',
+    error: HttpErrorResponse,
+    errorMessage: string
+  ) {
+    const takeServerMessage: boolean =
+      actionType === 'delete' || error.status === 500;
+    this.openDialogService.error({
+      message: takeServerMessage ? error.error?.message : errorMessage,
+      goTo: takeServerMessage && error.status === 500 ? '/home' : '',
+    } as ErrorDialogOptions);
+  }
+
+  private openDeleteDialog(id: number): void {
     const dialogData: DialogData = {
       id,
       title: 'Eliminar reserva',
@@ -158,7 +163,7 @@ export class ReservationsTableComponent {
     );
   }
 
-  openCancelDialog(id: number): void {
+  private openCancelDialog(id: number): void {
     const dialogData: DialogData = {
       id,
       title: 'Cancelar reserva',
@@ -174,9 +179,7 @@ export class ReservationsTableComponent {
 
     const apiAction: () => Observable<Message> = () =>
       this.reservationApiService.update(id, {
-        cancellationDate: this.formatDateService.removeTimeZoneFromDate(
-          new Date()
-        ),
+        cancellationDate: this.formatDateService.formatDateToDash(new Date()),
       } as ReservationInput);
     const successMessage: string = 'La reserva ha sido cancelada correctamente';
     const errorMessage: string = 'Error al cancelar la reserva';
@@ -190,7 +193,7 @@ export class ReservationsTableComponent {
     );
   }
 
-  openCheckInDialog(reservation: Reservation): void {
+  private openCheckInDialog(reservation: Reservation): void {
     const dialogData: DialogData = {
       title: 'Check-in Reserva',
       titleColor: 'dark',
@@ -202,6 +205,7 @@ export class ReservationsTableComponent {
       mainButtonColor: 'custom-blue',
       haveRouterLink: false,
     };
+
     const apiAction: () => Observable<Message> = () => {
       return this.reservationApiService.update(reservation.id, {
         initialKms: this.getTotalKms(reservation.vehicle),
@@ -220,7 +224,7 @@ export class ReservationsTableComponent {
     );
   }
 
-  openCheckOutDialog(reservation: Reservation): void {
+  private openCheckOutDialog(reservation: Reservation): void {
     const dialogData: DialogData = {
       title: 'Check-out Reserva',
       titleColor: 'dark',
@@ -235,43 +239,23 @@ export class ReservationsTableComponent {
       initialKms: this.getTotalKms(reservation.vehicle),
     };
 
-    const currentDateWithoutTimeZone =
-      this.formatDateService.removeTimeZoneFromDate(new Date());
+    const realEndDate: string = this.formatDateService.formatDateToDash(
+      new Date()
+    );
 
     const apiAction: () => Observable<Message> = () => {
-      return forkJoin({
-        vehicleResponse: this.vehicleApiService.update(
-          this.getVehicleID(reservation.vehicle),
-          {
-            totalKms: dialogData.finalKms,
-          } as VehicleInput
+      return this.reservationApiService.checkOut(reservation.id, {
+        realEndDate,
+        finalKms: dialogData.finalKms,
+        finalPrice: this.reservationPriceCalculationService.calculateFinalPrice(
+          reservation as Reservation,
+          realEndDate as string,
+          (dialogData.returnDeposit ?? true) as boolean
         ),
-        reservationResponse: this.reservationApiService.update(reservation.id, {
-          realEndDate: currentDateWithoutTimeZone,
-          finalKms: dialogData.finalKms,
-          finalPrice:
-            this.reservationPriceCalculationService.calculateFinalPrice(
-              reservation as Reservation,
-              currentDateWithoutTimeZone as string,
-              (dialogData.returnDeposit ?? true) as boolean
-            ),
-        } as ReservationInput),
-      }).pipe(
-        map(() => {
-          return {
-            message: 'Both requests have been resolved correctly',
-          };
-        }),
-        catchError(() => {
-          return of({
-            message: 'There was an error in the execution of the transaction',
-          });
-        })
-      );
+      } as ReservationInput);
     };
-
     const successMessage: string =
-      'Se ha realizado el check-out de la reserva correctamente';
+      'Se ha realizado el check-out de la reserva exitosamente';
     const errorMessage: string = 'Error al realizar el check-out de la reserva';
 
     this.openDialogWithAction(
@@ -283,41 +267,15 @@ export class ReservationsTableComponent {
     );
   }
 
-  openErrorDialog(message: string): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Error al eliminar la reserva',
-        titleColor: 'dark',
-        image: 'assets/generic/wrongmark.png',
-        message,
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: false,
-      },
-    } as GenericDialog);
-  }
-
   formatDate(date: string): string {
     return this.formatDateService.fromDashToSlash(date);
-  }
-
-  get filteredReservationsByDocumentID(): Reservation[] {
-    if (this.filterRows.length < 3) return this.filteredReservations;
-    return this.reservations.filter((reservation: Reservation) =>
-      this.getDocumentID(reservation.user)
-        .toLowerCase()
-        .includes(this.filterRows.toLowerCase())
-    );
   }
 
   getLicensePlate(vehicle: Vehicle | number | undefined): string {
     return typeof vehicle === 'object' ? vehicle.licensePlate : '';
   }
 
-  getTotalKms(vehicle: Vehicle | number | undefined): number {
+  private getTotalKms(vehicle: Vehicle | number | undefined): number {
     return typeof vehicle === 'object' ? vehicle.totalKms : -1;
   }
 
@@ -329,8 +287,13 @@ export class ReservationsTableComponent {
     return typeof user === 'object' ? user.documentID : '';
   }
 
-  getVehicleID(vehicle: Vehicle | number | undefined): number {
-    return typeof vehicle === 'object' ? vehicle.id : -1;
+  get filteredReservationsByDocumentID(): Reservation[] {
+    if (this.filterRows.length < 3) return this.filteredReservations;
+    return this.reservations.filter((reservation: Reservation) =>
+      this.getDocumentID(reservation.user)
+        .toLowerCase()
+        .includes(this.filterRows.toLowerCase())
+    );
   }
 
   filterReservations(): void {
@@ -352,16 +315,13 @@ export class ReservationsTableComponent {
   }
 
   disableCheckIn(reservation: Reservation): boolean {
-    const today: Date = new Date();
-    today.setHours(0, 0, 0, 0);
+    const currentDate: string = this.formatDateService.formatDateToDash(
+      new Date()
+    );
+    const startDate: string = reservation.startDate ?? '';
+    const plannedEndDate: string = reservation.plannedEndDate ?? '';
 
-    const startDate: Date = new Date(reservation.startDate ?? '');
-    startDate.setHours(startDate.getHours() + 3);
-
-    const plannedEndDate: Date = new Date(reservation.plannedEndDate ?? '');
-    plannedEndDate.setHours(plannedEndDate.getHours() + 3);
-
-    if (today < startDate || today > plannedEndDate) {
+    if (currentDate < startDate || currentDate > plannedEndDate) {
       return true;
     }
     return false;
@@ -375,14 +335,13 @@ export class ReservationsTableComponent {
     this.openCheckOutDialog(reservation as Reservation);
   }
 
-  disableCancellation(reservation: Reservation): boolean {
-    const today: Date = new Date();
-    today.setHours(0, 0, 0, 0);
+  disableCancellationAndDeletion(reservation: Reservation): boolean {
+    const currentDate: string = this.formatDateService.formatDateToDash(
+      new Date()
+    );
+    const startDate: string = reservation.startDate ?? '';
 
-    const startDate: Date = new Date(reservation.startDate ?? '');
-    startDate.setHours(startDate.getHours() + 3);
-
-    if (today >= startDate) {
+    if (currentDate >= startDate) {
       return true;
     }
     return false;

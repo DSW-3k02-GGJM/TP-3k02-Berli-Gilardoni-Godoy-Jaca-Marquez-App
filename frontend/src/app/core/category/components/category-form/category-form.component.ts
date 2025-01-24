@@ -18,14 +18,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 
+// RxJS
+import { Observable } from 'rxjs';
+
 // Services
 import { CategoryApiService } from '@core/category/services/category.api.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Interfaces
 import { CategoryResponse } from '@core/category/interfaces/category-response.interface';
 import { CategoryInput } from '@core/category/interfaces/category-input.interface';
 import { FormData } from '@shared/interfaces/form-data.interface';
+import { ErrorDialogOptions } from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -54,7 +60,6 @@ export class CategoryFormComponent implements OnInit {
     buttonText: '',
   };
   currentCategoryId: number = -1;
-  errorMessage: string = '';
   pending: boolean = false;
 
   categoryForm: FormGroup = new FormGroup(
@@ -78,6 +83,7 @@ export class CategoryFormComponent implements OnInit {
 
   constructor(
     private readonly categoryApiService: CategoryApiService,
+    private readonly openDialogService: OpenDialogService,
     private readonly snackBarService: SnackBarService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router
@@ -87,30 +93,22 @@ export class CategoryFormComponent implements OnInit {
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentCategoryId = params['id'];
-        if (this.currentCategoryId) {
-          this.assignFormData('Edit');
-          this.categoryApiService.getOne(this.currentCategoryId).subscribe({
-            next: (response: CategoryResponse) =>
-              this.categoryForm.patchValue(response.data),
-            error: () =>
-              this.snackBarService.show(
-                'Error al obtener la información de la categoría'
-              ),
-          });
-          this.categoryForm.controls['categoryName'].setAsyncValidators([
-            this.categoryApiService.uniqueNameValidator(this.currentCategoryId),
-          ]);
-        } else {
-          this.assignFormData('Create');
-          this.categoryForm.controls['categoryName'].setAsyncValidators([
-            this.categoryApiService.uniqueNameValidator(-1),
-          ]);
+
+        const mode: string = this.currentCategoryId ? 'Edit' : 'Create';
+        this.assignFormData(mode);
+
+        this.categoryForm.controls['categoryName'].setAsyncValidators([
+          this.categoryApiService.uniqueNameValidator(this.currentCategoryId),
+        ]);
+
+        if (mode === 'Edit') {
+          this.loadCategoryData();
         }
       },
     });
   }
 
-  assignFormData(action: string): void {
+  private assignFormData(action: string): void {
     this.formData = {
       action,
       title: action === 'Create' ? 'Nueva categoría' : 'Editar categoría',
@@ -118,44 +116,51 @@ export class CategoryFormComponent implements OnInit {
     } as FormData;
   }
 
+  private loadCategoryData(): void {
+    this.categoryApiService.getOne(this.currentCategoryId).subscribe({
+      next: (response: CategoryResponse) => this.handleLoadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
+  }
+
   onSubmit(): void {
     if (!this.categoryForm.invalid) {
       this.pending = true;
-      if (this.formData.action == 'Create') {
-        this.categoryApiService
-          .create(this.categoryForm.value as CategoryInput)
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToCategories();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      } else if (this.formData.action == 'Edit') {
-        this.categoryApiService
-          .update(
-            this.currentCategoryId,
-            this.categoryForm.value as CategoryInput
-          )
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToCategories();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      }
+      this.getCategoryRequest().subscribe({
+        next: (response: Message) => this.handleSubmitSuccess(response),
+        error: (error: HttpErrorResponse) => this.handleError(error),
+      });
     }
+  }
+
+  private getCategoryRequest(): Observable<Message> {
+    const data = this.categoryForm.value as CategoryInput;
+    return this.formData.action === 'Create'
+      ? this.categoryApiService.create(data)
+      : this.categoryApiService.update(this.currentCategoryId, data);
+  }
+
+  private handleLoadSuccess(response: CategoryResponse): void {
+    this.categoryForm.patchValue(response.data);
+  }
+
+  private handleSubmitSuccess(response: Message): void {
+    this.pending = false;
+    this.snackBarService.show(response.message);
+    this.navigateToCategories();
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    this.openErrorDialog(error);
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    const goTo = error.status === 500 ? '/home' : '/staff/categories';
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo,
+    } as ErrorDialogOptions);
   }
 
   navigateToCategories(): void {

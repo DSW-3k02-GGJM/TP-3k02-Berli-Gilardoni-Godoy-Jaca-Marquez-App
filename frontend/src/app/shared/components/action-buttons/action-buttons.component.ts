@@ -25,7 +25,7 @@ export class ActionButtonsComponent {
     this.deleteEntity.emit(this.entity);
   }
 
-  getUserRole(user: ActionButtons): string {
+  private getUserRole(user: ActionButtons): string {
     return 'role' in user ? user.role : '';
   }
 

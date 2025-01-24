@@ -18,14 +18,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 
+// RxJS
+import { Observable } from 'rxjs';
+
 // Services
 import { LocationApiService } from '@core/location/services/location.api.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Interfaces
 import { LocationResponse } from '@core/location/interfaces/location-response.interface';
 import { LocationInput } from '@core/location/interfaces/location-input.interface';
 import { FormData } from '@shared/interfaces/form-data.interface';
+import { ErrorDialogOptions } from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -54,7 +60,6 @@ export class LocationFormComponent implements OnInit {
     buttonText: '',
   };
   currentLocationId: number = -1;
-  errorMessage: string = '';
   pending: boolean = false;
 
   locationForm: FormGroup = new FormGroup(
@@ -75,6 +80,7 @@ export class LocationFormComponent implements OnInit {
 
   constructor(
     private readonly locationApiService: LocationApiService,
+    private readonly openDialogService: OpenDialogService,
     private readonly snackBarService: SnackBarService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router
@@ -84,30 +90,22 @@ export class LocationFormComponent implements OnInit {
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentLocationId = params['id'];
-        if (this.currentLocationId) {
-          this.assignFormData('Edit');
-          this.locationApiService.getOne(this.currentLocationId).subscribe({
-            next: (response: LocationResponse) =>
-              this.locationForm.patchValue(response.data),
-            error: () =>
-              this.snackBarService.show(
-                'Error al obtener la información de la sucursal'
-              ),
-          });
-          this.locationForm.controls['locationName'].setAsyncValidators([
-            this.locationApiService.uniqueNameValidator(this.currentLocationId),
-          ]);
-        } else {
-          this.assignFormData('Create');
-          this.locationForm.controls['locationName'].setAsyncValidators([
-            this.locationApiService.uniqueNameValidator(-1),
-          ]);
+
+        const mode: string = this.currentLocationId ? 'Edit' : 'Create';
+        this.assignFormData(mode);
+
+        this.locationForm.controls['locationName'].setAsyncValidators([
+          this.locationApiService.uniqueNameValidator(this.currentLocationId),
+        ]);
+
+        if (mode === 'Edit') {
+          this.loadLocationData();
         }
       },
     });
   }
 
-  assignFormData(action: string): void {
+  private assignFormData(action: string): void {
     this.formData = {
       action,
       title: action === 'Create' ? 'Nueva sucursal' : 'Editar sucursal',
@@ -115,44 +113,51 @@ export class LocationFormComponent implements OnInit {
     } as FormData;
   }
 
+  private loadLocationData(): void {
+    this.locationApiService.getOne(this.currentLocationId).subscribe({
+      next: (response: LocationResponse) => this.handleLoadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
+  }
+
   onSubmit(): void {
     if (!this.locationForm.invalid) {
       this.pending = true;
-      if (this.formData.action == 'Create') {
-        this.locationApiService
-          .create(this.locationForm.value as LocationInput)
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToLocations();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      } else if (this.formData.action == 'Edit') {
-        this.locationApiService
-          .update(
-            this.currentLocationId,
-            this.locationForm.value as LocationInput
-          )
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToLocations();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      }
+      this.getLocationRequest().subscribe({
+        next: (response: Message) => this.handleSubmitSuccess(response),
+        error: (error: HttpErrorResponse) => this.handleError(error),
+      });
     }
+  }
+
+  private getLocationRequest(): Observable<Message> {
+    const data = this.locationForm.value as LocationInput;
+    return this.formData.action === 'Create'
+      ? this.locationApiService.create(data)
+      : this.locationApiService.update(this.currentLocationId, data);
+  }
+
+  private handleLoadSuccess(response: LocationResponse): void {
+    this.locationForm.patchValue(response.data);
+  }
+
+  private handleSubmitSuccess(response: Message): void {
+    this.pending = false;
+    this.snackBarService.show(response.message);
+    this.navigateToLocations();
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    this.openErrorDialog(error);
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    const goTo = error.status === 500 ? '/home' : '/staff/locations';
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo,
+    } as ErrorDialogOptions);
   }
 
   navigateToLocations(): void {

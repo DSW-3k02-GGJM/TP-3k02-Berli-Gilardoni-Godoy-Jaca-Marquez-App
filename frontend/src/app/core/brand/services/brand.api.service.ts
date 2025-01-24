@@ -32,8 +32,8 @@ export class BrandApiService {
     return this.http.get<BrandResponse>(`${this.apiUrl}/${id}`);
   }
 
-  create(data: BrandInput): Observable<void> {
-    return this.http.post<void>(this.apiUrl, data);
+  create(data: BrandInput): Observable<Message> {
+    return this.http.post<Message>(this.apiUrl, data);
   }
 
   update(id: number, data: BrandInput): Observable<Message> {

@@ -1,18 +1,10 @@
 <mat-card
-  *ngIf="errorMessage"
-  class="bg-dark border border-white text-white text-center fs-4 mt-4"
->
-  <mat-card-content>
-    {{ errorMessage }}
-  </mat-card-content>
-</mat-card>
-<mat-card
-  *ngIf="!errorMessage && colors.length === 0"
+  *ngIf="colors.length === 0"
   class="bg-dark border border-white text-white text-center fs-4 mt-4"
 >
   <mat-card-content>No hay colores registrados</mat-card-content>
 </mat-card>
-<div *ngIf="!errorMessage && colors.length > 0">
+<div *ngIf="colors.length > 0">
   <mat-form-field class="input-box" hideRequiredMarker="true">
     <mat-label>Búsqueda por Nombre</mat-label>
     <input

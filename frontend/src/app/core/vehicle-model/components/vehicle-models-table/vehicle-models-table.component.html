@@ -1,18 +1,10 @@
 <mat-card
-  *ngIf="errorMessage"
-  class="bg-dark border border-white text-white text-center fs-4 mt-4"
->
-  <mat-card-content>
-    {{ errorMessage }}
-  </mat-card-content>
-</mat-card>
-<mat-card
-  *ngIf="!errorMessage && vehicleModels.length === 0"
+  *ngIf="vehicleModels.length === 0"
   class="bg-dark border border-white text-white text-center fs-4 mt-4"
 >
   <mat-card-content>No hay modelos registrados</mat-card-content>
 </mat-card>
-<div *ngIf="!errorMessage && vehicleModels.length > 0">
+<div *ngIf="vehicleModels.length > 0">
   <mat-form-field class="input-box" hideRequiredMarker="true">
     <mat-label>Búsqueda por Nombre</mat-label>
     <input

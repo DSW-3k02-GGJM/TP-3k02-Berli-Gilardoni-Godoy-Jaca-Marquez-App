@@ -11,7 +11,7 @@ import { SnackBar } from '@shared/interfaces/snack-bar.interface';
   providedIn: 'root',
 })
 export class SnackBarService {
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private readonly snackBar: MatSnackBar) {}
 
   show(message: string): void {
     this.snackBar.open(message, 'Cerrar', {

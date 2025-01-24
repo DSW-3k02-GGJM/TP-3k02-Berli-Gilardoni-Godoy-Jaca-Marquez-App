@@ -1,236 +1,212 @@
 <mat-card
-  *ngIf="displayedMessage"
-  class="bg-dark border border-white text-white text-center fs-3 mt-4 w-80"
+  *ngIf="!hasLocations"
+  class="bg-dark border border-white text-white text-center mt-4"
 >
   <mat-card-content>
-    {{ displayedMessage }}
+    <p class="fs-3 p-2">⏳ No hay sucursales disponibles en este momento...</p>
+    <p class="sub-text">
+      Por favor, intente más tarde o comuníquese con nuestro servicio de
+      atención al cliente
+    </p>
   </mat-card-content>
 </mat-card>
-<div *ngIf="!displayedMessage">
-  <mat-card
-    *ngIf="!hasLocations"
-    class="bg-dark border border-white text-white text-center mt-4"
+<div *ngIf="hasLocations" class="container unselectable">
+  <mat-stepper
+    [orientation]="isSmallScreen ? 'vertical' : 'horizontal'"
+    [linear]="true"
+    #stepper
+    (selectionChange)="onStepChange($event)"
   >
-    <mat-card-content>
-      <p [ngClass]="fontSizeClass" class="p-2">
-        {{
-          userRole !== "admin"
-            ? "⏳ No hay sucursales disponibles en este momento..."
-            : "No hay sucursales registradas..."
-        }}
-      </p>
-      <p class="sub-text">
-        {{
-          userRole === "client"
-            ? "Por favor, intente más tarde o comuníquese con nuestro servicio de atención al cliente"
-            : userRole === "employee"
-            ? "Por favor, intente más tarde o póngase en contacto con el administrador"
-            : "Por favor, ingrese al Menú Staff y agregue al menos una sucursal para habilitar las reservas"
-        }}
-      </p>
-    </mat-card-content>
-  </mat-card>
-  <div *ngIf="hasLocations" class="container unselectable">
-    <mat-stepper
-      [orientation]="isSmallScreen ? 'vertical' : 'horizontal'"
-      [linear]="true"
-      #stepper
-      (selectionChange)="onStepChange($event)"
-    >
-      <mat-step [stepControl]="vehicleFilterForm">
-        <form app-prevent-enter [formGroup]="vehicleFilterForm">
-          <hr />
-          <ng-template matStepLabel
-            ><span class="step-label-2"
-              >Seleccionar fechas y sucursal</span
-            ></ng-template
-          >
-          <div class="user-details">
-            <mat-form-field
-              class="input-box"
-              appearance="outline"
-              hideRequiredMarker="true"
-            >
-              <mat-label>¿Qué días te interesan?</mat-label>
-              <mat-date-range-input [rangePicker]="picker">
-                <input
-                  matStartDate
-                  placeholder="Fecha Inicio"
-                  id="startDate"
-                  class="form-control"
-                  formControlName="startDate"
-                />
-                <input
-                  matEndDate
-                  placeholder="Fecha Fin"
-                  id="endDate"
-                  class="form-control"
-                  formControlName="endDate"
-                />
-              </mat-date-range-input>
-              <mat-error
-                *ngIf="vehicleFilterForm.get('startDate')?.errors?.dateInvalid"
-              >
-                {{ vehicleFilterForm.get("startDate")?.errors?.dateInvalid }}
-              </mat-error>
-
-              <mat-error
-                *ngIf="vehicleFilterForm.get('endDate')?.errors?.dateInvalid"
-              >
-                {{ vehicleFilterForm.get("endDate")?.errors?.dateInvalid }}
-              </mat-error>
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="picker"
-              ></mat-datepicker-toggle>
-              <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
-
-            <mat-form-field
-              class="input-box"
-              appearance="outline"
-              hideRequiredMarker="true"
-            >
-              <mat-label>¡Elegí tu sucursal más cercana!</mat-label>
-              <mat-select id="location" formControlName="location">
-                <mat-option
-                  *ngFor="let location of locations"
-                  [value]="location.id"
-                >
-                  {{ location.locationName }}
-                </mat-option>
-              </mat-select>
-
-              <mat-error
-                *ngIf="vehicleFilterForm.get('location')?.errors?.required"
-              >
-                La sucursal es requerida.
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <hr />
-          <div>
-            <button mat-button matStepperNext>Siguiente</button>
-          </div>
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="vehicleModelForm">
+    <mat-step [stepControl]="vehicleFilterForm">
+      <form app-prevent-enter [formGroup]="vehicleFilterForm">
         <hr />
         <ng-template matStepLabel
           ><span class="step-label-2"
-            >Seleccionar modelo de vehículo</span
+            >Seleccionar fechas y sucursal</span
           ></ng-template
         >
-        <div *ngIf="response.length === 0" class="container2">
-          <p class="title">
-            No hay autos disponibles para esa fecha en esa sucursal ;\
-          </p>
-          <button class="btn-change-filter" mat-button matStepperPrevious>
-            Cambiar Filtro
-          </button>
+        <div class="user-details">
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>¿Qué días te interesan?</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input
+                matStartDate
+                placeholder="Fecha Inicio"
+                id="startDate"
+                class="form-control"
+                formControlName="startDate"
+              />
+              <input
+                matEndDate
+                placeholder="Fecha Fin"
+                id="endDate"
+                class="form-control"
+                formControlName="endDate"
+              />
+            </mat-date-range-input>
+            <mat-error
+              *ngIf="vehicleFilterForm.get('startDate')?.errors?.dateInvalid"
+            >
+              {{ vehicleFilterForm.get("startDate")?.errors?.dateInvalid }}
+            </mat-error>
+
+            <mat-error
+              *ngIf="vehicleFilterForm.get('endDate')?.errors?.dateInvalid"
+            >
+              {{ vehicleFilterForm.get("endDate")?.errors?.dateInvalid }}
+            </mat-error>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+
+          <mat-form-field
+            class="input-box"
+            appearance="outline"
+            hideRequiredMarker="true"
+          >
+            <mat-label>¡Elegí tu sucursal más cercana!</mat-label>
+            <mat-select id="location" formControlName="location">
+              <mat-option
+                *ngFor="let location of locations"
+                [value]="location.id"
+              >
+                {{ location.locationName }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error
+              *ngIf="vehicleFilterForm.get('location')?.errors?.required"
+            >
+              La sucursal es requerida.
+            </mat-error>
+          </mat-form-field>
         </div>
-        <section class="vehicle-list my-4 mx-4">
-          <ng-container *ngIf="response.length > 0">
-            <app-vehicle-card
-              *ngFor="let vehicle of response"
-              [vehicle]="vehicle"
-              [imageServerUrl]="imageServerUrl"
-              (modelSelected)="onModelSelected(vehicle)"
-            ></app-vehicle-card>
-          </ng-container>
-        </section>
         <hr />
         <div>
-          <button mat-button matStepperPrevious>Volver</button>
+          <button mat-button matStepperNext>Siguiente</button>
         </div>
-      </mat-step>
-      <mat-step>
-        <ng-template matStepLabel
-          ><span class="step-label-2">Confirmar reserva</span></ng-template
-        >
-        <p class="title">Información de la Reserva</p>
-        <hr />
-        <div class="information">
-          <div class="information-section">
-            <div class="information-title">Fecha de Inicio</div>
-            <div class="information-content">
-              <span>{{ startDate }}</span>
-            </div>
-          </div>
-          <div class="information-section">
-            <div class="information-title2">Fecha de Fin</div>
-            <div class="information-content">
-              <span>{{ endDate }}</span>
-            </div>
-          </div>
-          <div class="information-section">
-            <div class="information-title2">Sucursal de Retiro</div>
-            <div class="information-content">
-              <span>{{ location }}</span>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <div class="information">
-          <div class="information-section me-2">
-            <div class="information-title">Marca</div>
-            <div class="information-content">
-              <span>{{ brand }}</span>
-            </div>
-          </div>
-          <div class="information-section">
-            <div class="information-title">Modelo</div>
-            <div class="information-content">
-              <span>{{ vehicleModel }}</span>
-            </div>
-          </div>
-          <div class="information-section">
-            <div class="information-title2">Categoria</div>
-            <div class="information-content">
-              <span>{{ category }}</span>
-            </div>
-          </div>
-          <div class="information-section">
-            <div class="information-title2">Cantidad de Pasajeros</div>
-            <div class="information-content">
-              <span>{{ passengerCount }}</span>
-            </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="vehicleModelForm">
+      <hr />
+      <ng-template matStepLabel
+        ><span class="step-label-2"
+          >Seleccionar modelo de vehículo</span
+        ></ng-template
+      >
+      <div *ngIf="response.length === 0" class="container2">
+        <p class="title">
+          No hay autos disponibles para esa fecha en esa sucursal ;\
+        </p>
+        <button class="btn-change-filter" mat-button matStepperPrevious>
+          Cambiar Filtro
+        </button>
+      </div>
+      <section class="vehicle-list my-4 mx-4">
+        <ng-container *ngIf="response.length > 0">
+          <app-vehicle-card
+            *ngFor="let vehicle of response"
+            [vehicle]="vehicle"
+            [imageServerUrl]="imageServerUrl"
+            (modelSelected)="onModelSelected(vehicle)"
+          ></app-vehicle-card>
+        </ng-container>
+      </section>
+      <hr />
+      <div>
+        <button mat-button matStepperPrevious>Volver</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel
+        ><span class="step-label-2">Confirmar reserva</span></ng-template
+      >
+      <p class="title">Información de la Reserva</p>
+      <hr />
+      <div class="information">
+        <div class="information-section">
+          <div class="information-title">Fecha de Inicio</div>
+          <div class="information-content">
+            <span>{{ startDate }}</span>
           </div>
         </div>
-        <div class="information">
-          <div class="information-section">
-            <div class="information-title">Precio por Día</div>
-            <div class="information-content">
-              <span>{{ pricePerDay }}</span>
-            </div>
-          </div>
-          <div class="information-section">
-            <div class="information-title2">Valor del Depósito</div>
-            <div class="information-content">
-              <span>{{ deposit }}</span>
-            </div>
+        <div class="information-section">
+          <div class="information-title2">Fecha de Fin</div>
+          <div class="information-content">
+            <span>{{ endDate }}</span>
           </div>
         </div>
-        <hr />
-        <div class="information">
-          <div class="information-section">
-            <div class="information-title">Precio Final</div>
-            <div class="information-content">
-              <span class="fw-bold fs-5"> ${{ finalPrice }} </span>
-            </div>
+        <div class="information-section">
+          <div class="information-title2">Sucursal de Retiro</div>
+          <div class="information-content">
+            <span>{{ location }}</span>
           </div>
         </div>
-        <hr />
-        <mat-error *ngIf="errorMessage">
-          {{ errorMessage }}
-        </mat-error>
-        <div class="div-back">
-          <button class="btn-back" mat-button matStepperPrevious>Volver</button>
-          <button mat-flat-button (click)="submitReservation()">
-            Finalizar Reserva
-          </button>
+      </div>
+      <hr />
+      <div class="information">
+        <div class="information-section me-2">
+          <div class="information-title">Marca</div>
+          <div class="information-content">
+            <span>{{ brand }}</span>
+          </div>
         </div>
-      </mat-step>
-    </mat-stepper>
-  </div>
+        <div class="information-section">
+          <div class="information-title">Modelo</div>
+          <div class="information-content">
+            <span>{{ vehicleModel }}</span>
+          </div>
+        </div>
+        <div class="information-section">
+          <div class="information-title2">Categoria</div>
+          <div class="information-content">
+            <span>{{ category }}</span>
+          </div>
+        </div>
+        <div class="information-section">
+          <div class="information-title2">Cantidad de Pasajeros</div>
+          <div class="information-content">
+            <span>{{ passengerCount }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="information">
+        <div class="information-section">
+          <div class="information-title">Precio por Día</div>
+          <div class="information-content">
+            <span>{{ pricePerDay }}</span>
+          </div>
+        </div>
+        <div class="information-section">
+          <div class="information-title2">Valor del Depósito</div>
+          <div class="information-content">
+            <span>{{ deposit }}</span>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="information">
+        <div class="information-section">
+          <div class="information-title">Precio Total</div>
+          <div class="information-content">
+            <span class="fw-bold fs-5"> ${{ initialPrice }} </span>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="div-back">
+        <button class="btn-back" mat-button matStepperPrevious>Volver</button>
+        <button mat-flat-button (click)="submitReservation()">
+          Finalizar Reserva
+        </button>
+      </div>
+    </mat-step>
+  </mat-stepper>
 </div>

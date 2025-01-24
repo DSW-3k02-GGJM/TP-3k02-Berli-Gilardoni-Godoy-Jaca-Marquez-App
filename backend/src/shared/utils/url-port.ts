@@ -5,7 +5,7 @@
  * @throws Error if the port cannot be determined.
  */
 
-export function getPortFromUrl(url: string): string {
+export const getPortFromUrl = (url: string): string => {
   const parsedUrl = new URL(url);
   if (parsedUrl.port) {
     return parsedUrl.port;
@@ -23,4 +23,4 @@ export function getPortFromUrl(url: string): string {
   }
 
   throw new Error('Unable to determine the port from the URL...');
-}
+};

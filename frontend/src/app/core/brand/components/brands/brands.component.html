@@ -1,15 +1,10 @@
-<div class="text-white">
-  <div
-    class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4"
-  >
-    <h2 class="my-0 ms-4">Nuestras marcas</h2>
-    <button (click)="newBrand()">Nueva</button>
-  </div>
-  <section class="brands-list mt-4 mx-4">
-    <app-brands-table
-      [brands]="brands"
-      [errorMessage]="errorMessage"
-      (brandDeleted)="onBrandDeleted()"
-    ></app-brands-table>
-  </section>
+<div class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4">
+  <h2 class="text-white my-0 ms-4">Nuestras marcas</h2>
+  <button (click)="newBrand()">Nueva</button>
 </div>
+<section class="brands-list mt-4 mx-4">
+  <app-brands-table
+    [brands]="brands"
+    (brandDeleted)="onBrandDeleted()"
+  ></app-brands-table>
+</section>

@@ -22,3 +22,19 @@ export interface DialogData {
   finalKms?: number;
   returnDeposit?: boolean;
 }
+
+export interface ErrorDialogOptions {
+  message: string;
+  goTo?: string;
+}
+
+export interface DeleteDialogOptions {
+  entity: string;
+  message: string;
+}
+
+export interface SuccessDialogOptions {
+  title: string;
+  message?: string;
+  goTo: string;
+}

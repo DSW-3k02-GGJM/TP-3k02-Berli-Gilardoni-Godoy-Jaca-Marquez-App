@@ -1,15 +1,10 @@
-<div class="text-white">
-  <div
-    class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4"
-  >
-    <h2 class="my-0 ms-4">Nuestros vehículos</h2>
-    <button (click)="newVehicle()">Nuevo</button>
-  </div>
-  <section class="vehicles-list mt-4 mx-4">
-    <app-vehicles-table
-      [vehicles]="vehicles"
-      [errorMessage]="errorMessage"
-      (vehicleDeleted)="onVehicleDeleted()"
-    ></app-vehicles-table>
-  </section>
+<div class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4">
+  <h2 class="text-white my-0 ms-4">Nuestros vehículos</h2>
+  <button (click)="newVehicle()">Nuevo</button>
 </div>
+<section class="vehicles-list mt-4 mx-4">
+  <app-vehicles-table
+    [vehicles]="vehicles"
+    (vehicleDeleted)="onVehicleDeleted()"
+  ></app-vehicles-table>
+</section>

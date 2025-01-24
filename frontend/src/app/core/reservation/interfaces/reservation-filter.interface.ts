@@ -1,5 +1,5 @@
 export interface ReservationFilter {
-  startDate: Date | string;
-  endDate: Date | string;
+  startDate: Date;
+  endDate: Date;
   location: string;
 }

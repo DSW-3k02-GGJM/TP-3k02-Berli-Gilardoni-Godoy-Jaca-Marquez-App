@@ -1,5 +1,6 @@
 // Angular
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   Input,
@@ -12,12 +13,13 @@ import { Router } from '@angular/router';
 
 // Angular Material
 import { MatInputModule } from '@angular/material/input';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 
 // Services
 import { ReservationApiService } from '@core/reservation/services/reservation.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { ReservationFilterService } from '@shared/services/filters/reservation-filter.service';
 import { FormatDateService } from '@shared/services/utils/format-date.service';
 
@@ -28,6 +30,11 @@ import { GenericDialogComponent } from '@shared/components/generic-dialog/generi
 import { Reservation } from '@core/reservation/interfaces/reservation.interface';
 import { ReservationInput } from '@core/reservation/interfaces/reservation-input.interface';
 import { Vehicle } from '@core/vehicle/interfaces/vehicle.interface';
+import {
+  DialogData,
+  ErrorDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 @Component({
   selector: 'app-reservations-client-table',
@@ -41,7 +48,6 @@ import { Vehicle } from '@core/vehicle/interfaces/vehicle.interface';
 })
 export class ReservationsClientTableComponent {
   @Input() reservations: Reservation[] = [];
-  @Input() errorMessage: string = '';
   @Output() reservationCancelled: EventEmitter<void> = new EventEmitter<void>();
 
   filterDate: string = '';
@@ -51,9 +57,9 @@ export class ReservationsClientTableComponent {
   constructor(
     private readonly reservationApiService: ReservationApiService,
     private readonly snackBarService: SnackBarService,
+    private readonly openDialogService: OpenDialogService,
     private readonly reservationFilterService: ReservationFilterService,
     private readonly formatDateService: FormatDateService,
-    private readonly dialog: MatDialog,
     private readonly router: Router
   ) {}
 
@@ -63,47 +69,47 @@ export class ReservationsClientTableComponent {
     }
   }
 
-  openCancelDialog(id: number): void {
+  private openCancelDialog(id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
-      this.dialog.open(GenericDialogComponent, {
-        width: '350px',
-        enterAnimationDuration: '0ms',
-        exitAnimationDuration: '0ms',
-        data: {
-          title: 'Cancelar reserva',
-          titleColor: 'danger',
-          image: 'assets/generic/wrongmark.png',
-          message: '¿Está seguro de que desea cancelar la reserva?',
-          showBackButton: true,
-          backButtonTitle: 'Volver',
-          mainButtonTitle: 'Cancelar',
-          mainButtonColor: 'bg-danger',
-          haveRouterLink: false,
-        },
+      this.openDialogService.generic({
+        title: 'Cancelar reserva',
+        titleColor: 'danger',
+        image: 'assets/generic/wrongmark.png',
+        message: '¿Está seguro de que desea cancelar la reserva?',
+        showBackButton: true,
+        backButtonTitle: 'Volver',
+        mainButtonTitle: 'Cancelar',
+        mainButtonColor: 'bg-danger',
+        haveRouterLink: false,
       });
     dialogRef.afterClosed().subscribe({
       next: (result: boolean | undefined) => {
         if (result) {
           this.reservationApiService
             .update(id, {
-              cancellationDate: this.formatDateService.removeTimeZoneFromDate(
+              cancellationDate: this.formatDateService.formatDateToDash(
                 new Date()
               ),
             } as ReservationInput)
             .subscribe({
-              next: () => {
-                this.reservationCancelled.emit();
-                this.snackBarService.show(
-                  'La reserva ha sido cancelada correctamente'
-                );
-              },
-              error: () => {
-                this.snackBarService.show('Error al cancelar la reserva');
-              },
+              next: () => this.handleSuccess(),
+              error: (error: HttpErrorResponse) => this.handleError(error),
             });
         }
       },
     });
+  }
+
+  private handleSuccess(): void {
+    this.reservationCancelled.emit();
+    this.snackBarService.show('La reserva ha sido cancelada correctamente');
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: '/home',
+    } as ErrorDialogOptions);
   }
 
   formatDate(date: string): string {
@@ -138,13 +144,12 @@ export class ReservationsClientTableComponent {
   }
 
   disableCancellation(reservation: Reservation): boolean {
-    const today: Date = new Date();
-    today.setHours(0, 0, 0, 0);
+    const currentDate: string = this.formatDateService.formatDateToDash(
+      new Date()
+    );
+    const startDate: string = reservation.startDate ?? '';
 
-    const startDate: Date = new Date(reservation.startDate ?? '');
-    startDate.setHours(startDate.getHours() + 3);
-
-    if (today >= startDate) {
+    if (currentDate >= startDate) {
       return true;
     }
     return false;

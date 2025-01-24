@@ -7,7 +7,7 @@ import { provideRouter, RouterOutlet } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 // Angular Material
-import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 // Services
 import { AuthService } from '@security/services/auth.service';
@@ -17,9 +17,6 @@ import { AppComponent } from './app.component';
 
 // Layouts
 import { NavbarComponent } from '@shared/layouts/navbar/navbar.component';
-
-// Config
-import { MY_DATE_FORMATS } from '@shared/config/date-formats.config';
 
 // Routing
 import { routes } from './app.routes';
@@ -42,7 +39,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     provideAnimationsAsync(),
     AuthService,
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   bootstrap: [AppComponent],
 })

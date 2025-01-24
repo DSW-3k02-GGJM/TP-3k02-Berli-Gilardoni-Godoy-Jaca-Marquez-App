@@ -1,5 +1,6 @@
 // Angular
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -9,6 +10,7 @@ import { Subscription } from 'rxjs';
 // Services
 import { ReservationApiService } from '@core/reservation/services/reservation.api.service';
 import { ReservationModifiedService } from '@core/reservation/services/reservation.modified.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 
 // Components
 import { ReservationsTableComponent } from '@core/reservation/components/reservations-table/reservations-table.component';
@@ -16,7 +18,7 @@ import { ReservationsTableComponent } from '@core/reservation/components/reserva
 // Interfaces
 import { Reservation } from '@core/reservation/interfaces/reservation.interface';
 import { ReservationsResponse } from '@core/reservation/interfaces/reservations-response.interface';
-
+import { ErrorDialogOptions } from '@shared/interfaces/generic-dialog.interface';
 @Component({
   selector: 'app-reservations',
   standalone: true,
@@ -26,13 +28,13 @@ import { ReservationsResponse } from '@core/reservation/interfaces/reservations-
 })
 export class ReservationsComponent implements OnInit {
   reservations: Reservation[] = [];
-  errorMessage: string = '';
 
   private subscription?: Subscription;
 
   constructor(
     private readonly reservationApiService: ReservationApiService,
     private readonly reservationModifiedService: ReservationModifiedService,
+    private readonly openDialogService: OpenDialogService,
     private readonly router: Router
   ) {}
 
@@ -57,12 +59,22 @@ export class ReservationsComponent implements OnInit {
     this.loadData();
   }
 
-  loadData(): void {
+  private loadData(): void {
     this.reservationApiService.getAllByAdmin().subscribe({
-      next: (response: ReservationsResponse) =>
-        (this.reservations = response.data),
-      error: () => (this.errorMessage = '⚠️ Error de conexión'),
+      next: (response: ReservationsResponse) => this.handleSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
     });
+  }
+
+  private handleSuccess(response: ReservationsResponse): void {
+    this.reservations = response.data;
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: '/home',
+    } as ErrorDialogOptions);
   }
 
   newReservation(): void {

@@ -7,8 +7,8 @@ import { BaseEntity } from '../../shared/database/base.entity.js';
 
 @Entity()
 export class Reminder extends BaseEntity {
-  @Property({ nullable: false })
-  reminderDate!: Date;
+  @Property({ columnType: 'DATE', nullable: false })
+  reminderDate!: string;
 
   @Property({ nullable: false })
   sent!: boolean;

@@ -33,8 +33,8 @@ export class VehicleModelApiService {
     return this.http.get<VehicleModelResponse>(`${this.apiUrl}/${id}`);
   }
 
-  create(data: VehicleModelInput): Observable<void> {
-    return this.http.post<void>(this.apiUrl, data);
+  create(data: VehicleModelInput): Observable<Message> {
+    return this.http.post<Message>(this.apiUrl, data);
   }
 
   update(id: number, data: VehicleModelInput): Observable<Message> {

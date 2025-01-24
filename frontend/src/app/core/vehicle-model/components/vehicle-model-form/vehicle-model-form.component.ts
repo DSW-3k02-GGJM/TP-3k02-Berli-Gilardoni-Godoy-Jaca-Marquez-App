@@ -21,13 +21,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 
 // RxJS
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 
 // Services
 import { VehicleModelApiService } from '@core/vehicle-model/services/vehicle-model.api.service';
 import { BrandApiService } from '@core/brand/services/brand.api.service';
 import { CategoryApiService } from '@core/category/services/category.api.service';
 import { ImageApiService } from '@shared/services/api/image.api.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
+import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Interfaces
 import { VehicleModelResponse } from '@core/vehicle-model/interfaces/vehicle-model-response.interface';
@@ -35,11 +37,13 @@ import { VehicleModelInput } from '@core/vehicle-model/interfaces/vehicle-model-
 import { Brand } from '@core/brand/interfaces/brand.interface';
 import { Category } from '@core/category/interfaces/category.interface';
 import { ForkJoinResponse } from '@core/vehicle-model/interfaces/fork-join-response.interface';
+import { UploadImageResponse } from '@shared/interfaces/upload-image-response.interface';
 import { FormData } from '@shared/interfaces/form-data.interface';
+import { ErrorDialogOptions } from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
-import { UploadImageResponse } from '@shared/interfaces/upload-image-response.interface';
 
 @Component({
   selector: 'app-vehicle-model-form',
@@ -66,9 +70,9 @@ export class VehicleModelFormComponent implements OnInit {
     buttonText: '',
   };
   currentVehicleModelId: number = -1;
-  displayedMessage: string = '';
-  errorMessage: string = '';
   pending: boolean = false;
+
+  displayedMessage: boolean = false;
 
   oldPath: string = '';
   selectedFile: File | null = null;
@@ -92,53 +96,39 @@ export class VehicleModelFormComponent implements OnInit {
   );
 
   constructor(
-    private vehicleModelApiService: VehicleModelApiService,
-    private brandApiService: BrandApiService,
-    private categoryApiService: CategoryApiService,
-    private imageApiService: ImageApiService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router
+    private readonly vehicleModelApiService: VehicleModelApiService,
+    private readonly brandApiService: BrandApiService,
+    private readonly categoryApiService: CategoryApiService,
+    private readonly imageApiService: ImageApiService,
+    private readonly openDialogService: OpenDialogService,
+    private readonly snackBarService: SnackBarService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadRelatedData();
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentVehicleModelId = params['id'];
-        if (this.currentVehicleModelId) {
-          this.assignFormData('Edit');
-          this.vehicleModelApiService
-            .getOne(this.currentVehicleModelId)
-            .subscribe({
-              next: (response: VehicleModelResponse) => {
-                this.vehicleModelForm.patchValue({
-                  ...response.data,
-                  brand: this.getBrandId(response.data.brand),
-                  category: this.getCategoryId(response.data.category),
-                });
-              },
-              error: () => {
-                this.displayedMessage = '⚠️ Error de conexión';
-              },
-            });
-          this.vehicleModelForm.controls['vehicleModelName'].setAsyncValidators(
-            [
-              this.vehicleModelApiService.uniqueNameValidator(
-                this.currentVehicleModelId
-              ),
-            ]
-          );
-        } else {
-          this.assignFormData('Create');
-          this.vehicleModelForm.controls['vehicleModelName'].setAsyncValidators(
-            [this.vehicleModelApiService.uniqueNameValidator(-1)]
-          );
+
+        const mode: string = this.currentVehicleModelId ? 'Edit' : 'Create';
+        this.assignFormData(mode);
+
+        this.vehicleModelForm.controls['vehicleModelName'].setAsyncValidators([
+          this.vehicleModelApiService.uniqueNameValidator(
+            this.currentVehicleModelId
+          ),
+        ]);
+
+        if (mode === 'Edit') {
+          this.loadVehicleModelData();
         }
       },
     });
   }
 
-  assignFormData(action: string): void {
+  private assignFormData(action: string): void {
     this.formData = {
       action,
       title: action === 'Create' ? 'Nuevo modelo' : 'Editar modelo',
@@ -146,7 +136,7 @@ export class VehicleModelFormComponent implements OnInit {
     } as FormData;
   }
 
-  loadData(): void {
+  private loadRelatedData(): void {
     forkJoin({
       brands: this.brandApiService.getAll(),
       categories: this.categoryApiService.getAll(),
@@ -154,10 +144,27 @@ export class VehicleModelFormComponent implements OnInit {
       next: (response: ForkJoinResponse) => {
         this.brands = response.brands.data;
         this.categories = response.categories.data;
+        this.sortRelatedData();
       },
-      error: () => {
-        this.displayedMessage = '⚠️ Error de conexión';
-      },
+      error: () => this.handleRelatedLoadError(),
+    });
+  }
+
+  private sortRelatedData(): void {
+    this.brands = this.brands.sort((a: Brand, b: Brand) =>
+      a.brandName.localeCompare(b.brandName)
+    );
+
+    this.categories = this.categories.sort((a: Category, b: Category) =>
+      a.categoryName.localeCompare(b.categoryName)
+    );
+  }
+
+  private loadVehicleModelData(): void {
+    this.vehicleModelApiService.getOne(this.currentVehicleModelId).subscribe({
+      next: (response: VehicleModelResponse) =>
+        this.handleLoadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
     });
   }
 
@@ -165,13 +172,16 @@ export class VehicleModelFormComponent implements OnInit {
     const file: File | null =
       (event.target as HTMLInputElement)?.files?.[0] || null;
 
-    if (file) {
-      const imagePathControl: AbstractControl | null =
-        this.vehicleModelForm.get('imagePath');
+    const imagePathControl: AbstractControl | null =
+      this.vehicleModelForm.get('imagePath');
 
-      this.oldPath = imagePathControl?.value || '';
-      imagePathControl?.setValue(file.name);
-    }
+    const newValue: string = file
+      ? file.name
+      : this.currentVehicleModelId
+      ? this.oldPath
+      : '';
+
+    imagePathControl?.setValue(newValue);
 
     this.selectedFile = file;
   }
@@ -180,84 +190,100 @@ export class VehicleModelFormComponent implements OnInit {
     return [this.brands, this.categories].every((array) => array.length > 0);
   }
 
-  getBrandId(brand: Brand | undefined): number {
+  private getBrandId(brand: Brand | undefined): number {
     return typeof brand === 'object' ? brand.id : -1;
   }
 
-  getCategoryId(category: Category | number | undefined): number {
+  private getCategoryId(category: Category | number | undefined): number {
     return typeof category === 'object' ? category.id : -1;
   }
 
   onSubmit(): void {
     if (!this.vehicleModelForm.invalid) {
       this.pending = true;
+
       if (this.selectedFile) {
-        this.imageApiService.uploadImage(this.selectedFile as File).subscribe({
-          next: (response: UploadImageResponse) => {
-            this.vehicleModelForm.patchValue({
-              imagePath: response.imagePath ?? '',
-            });
-            this.submitForm(this.oldPath);
-          },
-          error: () => {
-            this.pending = false;
-            this.errorMessage = 'Error al subir la imagen. Intente de nuevo.';
-          },
-        });
+        this.uploadImage();
       } else {
         this.submitForm(null);
       }
     }
   }
 
-  deleteImageIfNeeded(oldPath: string | null): void {
-    if (oldPath) {
-      this.imageApiService.deleteImage(oldPath).subscribe({
-        error: (error: HttpErrorResponse) => {
-          if (error.status !== 400) {
-            this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-          }
-        },
-      });
-    }
+  private uploadImage(): void {
+    this.imageApiService.uploadImage(this.selectedFile as File).subscribe({
+      next: (response: UploadImageResponse) =>
+        this.handleImageUploadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
   }
 
   submitForm(oldPath: string | null): void {
     this.deleteImageIfNeeded(oldPath);
-    if (this.formData.action === 'Create') {
-      this.vehicleModelApiService
-        .create(this.vehicleModelForm.value as VehicleModelInput)
-        .subscribe({
-          next: () => {
-            this.pending = false;
-            this.navigateToVehicleModels();
-          },
-          error: (error: HttpErrorResponse) => {
-            this.pending = false;
-            if (error.status !== 400) {
-              this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-            }
-          },
-        });
-    } else if (this.formData.action === 'Edit') {
-      this.vehicleModelApiService
-        .update(
-          this.currentVehicleModelId,
-          this.vehicleModelForm.value as VehicleModelInput
-        )
-        .subscribe({
-          next: () => {
-            this.pending = false;
-            this.navigateToVehicleModels();
-          },
-          error: (error: HttpErrorResponse) => {
-            this.pending = false;
-            if (error.status !== 400) {
-              this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-            }
-          },
-        });
+
+    this.getVehicleModelRequest().subscribe({
+      next: (response: Message) => this.handleSubmitSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
+  }
+
+  deleteImageIfNeeded(oldPath: string | null): void {
+    if (oldPath) {
+      this.imageApiService.deleteImage(oldPath).subscribe({
+        error: (error: HttpErrorResponse) => this.handleError(error),
+      });
     }
+  }
+
+  private getVehicleModelRequest(): Observable<Message> {
+    const data = this.vehicleModelForm.value as VehicleModelInput;
+    return this.formData.action === 'Create'
+      ? this.vehicleModelApiService.create(data)
+      : this.vehicleModelApiService.update(this.currentVehicleModelId, data);
+  }
+
+  private handleLoadSuccess(response: VehicleModelResponse): void {
+    this.vehicleModelForm.patchValue({
+      ...response.data,
+      brand: this.getBrandId(response.data.brand),
+      category: this.getCategoryId(response.data.category),
+    });
+    this.oldPath = response.data.imagePath;
+  }
+
+  private handleImageUploadSuccess(response: UploadImageResponse): void {
+    this.vehicleModelForm.patchValue({
+      imagePath: response.imagePath,
+    });
+    this.submitForm(this.oldPath);
+  }
+
+  private handleSubmitSuccess(response: Message): void {
+    this.pending = false;
+    this.snackBarService.show(response.message);
+    this.navigateToVehicleModels();
+  }
+
+  private handleRelatedLoadError(): void {
+    this.openDialogService.error({
+      goTo: '/home',
+    } as ErrorDialogOptions);
+    this.displayedMessage = true;
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    if (!this.displayedMessage) {
+      this.openErrorDialog(error);
+    }
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    const goTo = error.status === 500 ? '/home' : '/staff/vehicle-models';
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo,
+    } as ErrorDialogOptions);
   }
 
   navigateToVehicleModels(): void {

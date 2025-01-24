@@ -23,13 +23,17 @@ try {
   transporter
     .verify()
     .then(() => {
-      console.log('\nReady to send emails');
+      logSuccessfulMessage();
     })
     .catch(() => {
       logError();
     });
 } catch (error) {
   logError();
+}
+
+function logSuccessfulMessage() {
+  console.log('\nReady to send emails');
 }
 
 function logError() {

@@ -11,7 +11,7 @@
     <div class="d-flex">
       <div class="information-title">Email</div>
       <div class="information-content">
-        <span>{{ email }}</span>
+        <span>{{ currentEmail }}</span>
       </div>
     </div>
   </div>
@@ -201,15 +201,12 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <mat-error *ngIf="errorMessage">
-        {{ errorMessage }}
-      </mat-error>
       <div class="button">
         <button
           type="submit"
           [disabled]="profileForm.invalid || profileForm.pending"
         >
-          <ng-container *ngIf="!profileForm.pending; else loading">
+          <ng-container *ngIf="!profileForm.pending && !pending; else loading">
             Guardar cambios
           </ng-container>
           <ng-template #loading>

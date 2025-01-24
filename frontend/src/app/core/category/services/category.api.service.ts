@@ -32,8 +32,8 @@ export class CategoryApiService {
     return this.http.get<CategoryResponse>(`${this.apiUrl}/${id}`);
   }
 
-  create(data: CategoryInput): Observable<void> {
-    return this.http.post<void>(this.apiUrl, data);
+  create(data: CategoryInput): Observable<Message> {
+    return this.http.post<Message>(this.apiUrl, data);
   }
 
   update(id: number, data: CategoryInput): Observable<Message> {

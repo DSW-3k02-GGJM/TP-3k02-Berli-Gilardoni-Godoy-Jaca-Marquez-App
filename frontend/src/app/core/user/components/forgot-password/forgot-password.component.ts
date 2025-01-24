@@ -17,17 +17,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDialog } from '@angular/material/dialog';
 
 // Services
 import { AuthService } from '@security/services/auth.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { EmailValidationService } from '@shared/services/validations/email-validation.service';
 
-// Components
-import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
-
 // Interfaces
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import {
+  ErrorDialogOptions,
+  SuccessDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -66,27 +67,9 @@ export class ForgotPasswordComponent {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly emailValidationService: EmailValidationService,
-    private readonly dialog: MatDialog
+    private readonly openDialogService: OpenDialogService,
+    private readonly emailValidationService: EmailValidationService
   ) {}
-
-  openDialog(): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Solicitud exitosa',
-        titleColor: 'dark',
-        image: 'assets/generic/checkmark.png',
-        message: 'Por favor, revise su correo para recuperar su contraseña.',
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/home',
-      },
-    } as GenericDialog);
-  }
 
   onSubmit(): void {
     if (!this.forgotPassword.invalid) {
@@ -94,21 +77,36 @@ export class ForgotPasswordComponent {
       const email: string = this.forgotPassword.value.email;
       if (email) {
         this.authService.sendPasswordReset(email).subscribe({
-          next: () => {
-            this.pending = false;
-            this.openDialog();
-          },
-          error: (error: HttpErrorResponse) => {
-            this.pending = false;
-            if (error.status === 404) {
-              this.errorMessage =
-                'El email no pertenece a una cuenta registrada';
-            } else if (error.status !== 400) {
-              this.errorMessage = 'Error en el servidor';
-            }
-          },
+          next: (response: Message) => this.handleSuccess(response),
+          error: (error: HttpErrorResponse) => this.handleError(error),
         });
       }
     }
+  }
+
+  private handleSuccess(response: Message): void {
+    this.pending = false;
+    this.openDialogService.success({
+      title: response.message,
+      message: 'Por favor, revise su correo para recuperar su contraseña.',
+      goTo: '/home',
+    } as SuccessDialogOptions);
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    const errorMessage = error.error?.message;
+    if (error.status === 500) {
+      this.showErrorDialog(errorMessage, '/home');
+    } else {
+      this.errorMessage = errorMessage;
+    }
+  }
+
+  private showErrorDialog(message: string, goTo: string): void {
+    this.openDialogService.error({
+      message,
+      goTo,
+    } as ErrorDialogOptions);
   }
 }

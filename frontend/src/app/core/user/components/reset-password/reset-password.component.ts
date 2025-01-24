@@ -12,27 +12,28 @@ import {
 import { ActivatedRoute } from '@angular/router';
 
 // Angular Material
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDialog } from '@angular/material/dialog';
 
 // Services
 import { AuthService } from '@security/services/auth.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { MatchPasswordsValidationService } from '@shared/services/validations/match-passwords-validation.service';
-
-// Components
-import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
 
 // Interfaces
 import { PasswordResetData } from '@core/user/interfaces/password-reset-data.interface';
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import {
+  ErrorDialogOptions,
+  SuccessDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
+import { Message } from '@shared/interfaces/message.interface';
 
 @Component({
   selector: 'app-reset-password',
@@ -43,10 +44,10 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
+    MatButtonModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
     MatIconModule,
     MatSelectModule,
     PreventEnterDirective,
@@ -55,7 +56,6 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
 export class ResetPasswordComponent {
   hide: WritableSignal<boolean> = signal(true);
 
-  errorMessage: string = '';
   pending: boolean = false;
 
   resetPasswordForm: FormGroup = new FormGroup(
@@ -79,51 +79,15 @@ export class ResetPasswordComponent {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly openDialogService: OpenDialogService,
     private readonly matchPasswordsValidationService: MatchPasswordsValidationService,
-    private readonly dialog: MatDialog,
     private readonly activatedRoute: ActivatedRoute
   ) {}
 
-  clickEvent(event: MouseEvent): void {
+  togglePasswordVisibility(event: MouseEvent): void {
     event.preventDefault();
     this.hide.set(!this.hide());
     event.stopPropagation();
-  }
-
-  openDialog(): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Contraseña restablecida correctamente',
-        titleColor: 'dark',
-        image: 'assets/generic/checkmark.png',
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/home',
-      },
-    } as GenericDialog);
-  }
-
-  openErrorDialog(): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Error al restablecer la contraseña',
-        titleColor: 'dark',
-        image: 'assets/generic/wrongmark.png',
-        message:
-          'El periodo de restablecimiento de la contraseña ha expirado o es inválido',
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/home',
-      },
-    } as GenericDialog);
   }
 
   onSubmit(): void {
@@ -131,28 +95,41 @@ export class ResetPasswordComponent {
       this.pending = true;
       this.activatedRoute.params.subscribe({
         next: (params) => {
-          const token: string = params['token'];
           this.authService
             .verifyPasswordResetToken(
-              token,
+              params['token'],
               this.resetPasswordForm.value as PasswordResetData
             )
             .subscribe({
-              next: () => {
-                this.pending = false;
-                this.openDialog();
-              },
-              error: (error: HttpErrorResponse) => {
-                this.pending = false;
-                if (error.status === 401) {
-                  this.openErrorDialog();
-                } else if (error.status !== 400) {
-                  this.errorMessage = 'Error en el servidor';
-                }
-              },
+              next: (response: Message) => this.handleSuccess(response),
+              error: (error: HttpErrorResponse) => this.handleError(error),
             });
         },
       });
     }
+  }
+
+  private handleSuccess(response: Message): void {
+    this.pending = false;
+    this.openSuccessDialog(response);
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    this.openErrorDialog(error);
+  }
+
+  private openSuccessDialog(response: Message): void {
+    this.openDialogService.success({
+      title: response.message,
+      goTo: '/home',
+    } as SuccessDialogOptions);
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: '/home',
+    } as ErrorDialogOptions);
   }
 }

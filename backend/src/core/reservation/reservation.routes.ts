@@ -6,6 +6,7 @@ import {
   findAll,
   add,
   update,
+  checkOut,
   remove,
   getReservationsByUser,
   userReservation,
@@ -19,6 +20,7 @@ import {
   sanitizedAdminInput,
   sanitizedUserInput,
   sanitizedUpdateInput,
+  sanitizedCheckOutInput,
 } from './reservation.middleware.js';
 
 export const reservationRouter = Router();
@@ -47,6 +49,13 @@ reservationRouter.post(
   AuthService.isAuthenticated(['admin', 'employee', 'client']),
   sanitizedUserInput,
   userReservation
+);
+
+reservationRouter.put(
+  '/checkout/:id',
+  AuthService.isAuthenticated(['admin', 'employee']),
+  sanitizedCheckOutInput,
+  checkOut
 );
 
 reservationRouter.put(

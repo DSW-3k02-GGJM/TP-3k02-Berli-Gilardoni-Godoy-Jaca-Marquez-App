@@ -32,8 +32,8 @@ export class ColorApiService {
     return this.http.get<ColorResponse>(`${this.apiUrl}/${id}`);
   }
 
-  create(data: ColorInput): Observable<void> {
-    return this.http.post<void>(this.apiUrl, data);
+  create(data: ColorInput): Observable<Message> {
+    return this.http.post<Message>(this.apiUrl, data);
   }
 
   update(id: number, data: ColorInput): Observable<Message> {

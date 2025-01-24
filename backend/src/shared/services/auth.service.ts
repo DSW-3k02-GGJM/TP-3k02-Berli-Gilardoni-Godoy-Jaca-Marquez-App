@@ -13,6 +13,8 @@ import { SECRET_KEY, ADMIN_EMAIL, ADMIN_PASSWORD } from '../../config.js';
 // External Libraries
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { subYears } from 'date-fns';
+import { formatDateToDash } from '../utils/format-date.js';
 
 const em = orm.em.fork();
 
@@ -30,7 +32,7 @@ export class AuthService {
     try {
       return jwt.verify(token, SECRET_KEY);
     } catch (error) {
-      throw new Error('Invalid token');
+      throw new Error('Token inválido');
     }
   }
 
@@ -47,7 +49,7 @@ export class AuthService {
       if (!token) {
         return res
           .status(401)
-          .json({ message: 'Unauthorized access (no token)' });
+          .json({ message: 'Acceso no autorizado (sin token)' });
       }
 
       try {
@@ -56,12 +58,12 @@ export class AuthService {
         if (!roles.includes(this.getRole(data))) {
           return res
             .status(401)
-            .json({ message: 'Unauthorized access (role)' });
+            .json({ message: 'Acceso no autorizado (sin rol)' });
         }
 
         req.session.user = data;
       } catch (error) {
-        return res.status(500).json({ message: 'Server error' });
+        return res.status(500).json({ message: 'Error de conexión' });
       }
       next();
     };
@@ -80,9 +82,6 @@ export class AuthService {
     if (!adminUser) {
       const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
 
-      const today = new Date();
-      today.setHours(today.getHours() - 3);
-
       em.create(User, {
         email: ADMIN_EMAIL,
         password: hashedPassword,
@@ -91,9 +90,7 @@ export class AuthService {
         documentID: '12345678',
         userName: 'Admin',
         userSurname: 'Admin',
-        birthDate: new Date(today.setFullYear(today.getFullYear() - 30))
-          .toISOString()
-          .split('T')[0],
+        birthDate: formatDateToDash(subYears(new Date(), 30)),
         address: 'Admin 123',
         phoneNumber: '3419876543',
         nationality: 'Argentina',

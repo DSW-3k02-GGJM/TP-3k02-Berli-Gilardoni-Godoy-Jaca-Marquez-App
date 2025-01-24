@@ -64,7 +64,7 @@ cd frontend
 
 ---
 
-> ⚠️ **Nota:** Deberás modificar las imágenes de los modelos de los vehículos para que las mismas puedan visualizarse correctamente al momento de realizar una reserva, dado que las rutas almacenadas en estos datos de prueba corresponden a imagenes que no se encontrarán disponibles si no fueron agregadas a través del uso de nuestra aplicación.
+> ⚠️ **Nota:** Deberás modificar las imágenes de los modelos de los vehículos para que las mismas puedan visualizarse correctamente al momento de realizar una reserva, dado que las rutas almacenadas en estos datos de prueba corresponden a imagenes que no se encontrarán disponibles localmente si no fueron agregadas a través del uso de nuestra aplicación.
 
 ---
 
@@ -77,7 +77,7 @@ Regularidad:
 |:-|:-|
 |CRUD simple|1. CRUD Categoría<br>2. CRUD Color<br>3. CRUD Marca<br>4. CRUD Sucursal<br>5. CRUD Usuario|
 |CRUD dependiente|1. CRUD Modelo {depende de} CRUD Categoría y Marca<br>2. CRUD Reserva {depende de} CRUD Vehículo y Usuario<br>3.CRUD Vehículo {depende de} CRUD Color, Modelo y Sucursal|
-|Listado<br>+<br>detalle|1. Listado de reservas filtrado por fecha<br>2. Listado de vehículos disponibles filtrado por rango de fechas solicitado para una reserva<br>3. Listado de clientes|
+|Listado<br>+<br>detalle|1. Listado de reservas filtrado por fecha<br>2. Listado de vehículos disponibles filtrado por rango de fechas solicitado para una reserva<br>3. Listado de usuarios filtrado por número de documento|
 |CUU/Epic|1. Reservar un vehículo<br>2. Realizar el check-in de una reserva<br>3. Realizar el check-out de una reserva|
 
 Adicionales para Aprobación

@@ -23,4 +23,15 @@ const sanitizedUpdateInput = sanitizeInput({
   date: ['realEndDate', 'cancellationDate'],
 });
 
-export { sanitizedAdminInput, sanitizedUserInput, sanitizedUpdateInput };
+const sanitizedCheckOutInput = sanitizeInput({
+  required: ['realEndDate', 'finalKms', 'finalPrice'],
+  numeric: ['finalKms', 'finalPrice'],
+  date: ['realEndDate'],
+});
+
+export {
+  sanitizedAdminInput,
+  sanitizedUserInput,
+  sanitizedUpdateInput,
+  sanitizedCheckOutInput,
+};

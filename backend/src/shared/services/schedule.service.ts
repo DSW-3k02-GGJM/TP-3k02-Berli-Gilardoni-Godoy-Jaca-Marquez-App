@@ -7,20 +7,23 @@ import { Reminder } from '../../core/reminder/reminder.entity.js';
 // Services
 import { MailService } from './mail.service.js';
 
+// Utils
+import { fromDashToSlash, formatDateToDash } from '../utils/format-date.js';
+
 // External Libraries
 import cron from 'node-cron';
-import { format, addHours } from 'date-fns';
 
 const em = orm.em.fork();
 
 export class ScheduleService {
   static async sendPendingReminders() {
     console.log('\nChecking pending reminders...');
+    const currentDate = formatDateToDash(new Date());
     const reminders = await em.find(
       Reminder,
       {
         sent: false,
-        reminderDate: { $lte: new Date() },
+        reminderDate: { $lte: currentDate },
       },
       {
         populate: [
@@ -40,11 +43,6 @@ export class ScheduleService {
     for (const reminder of reminders) {
       const email = reminder.reservation.user.email;
       const startDate = reminder.reservation.startDate;
-      const adjustedStartDate = addHours(new Date(startDate), 3);
-      const formattedStartDate = format(
-        new Date(adjustedStartDate),
-        'dd/MM/yyyy'
-      );
 
       const realEndDate = reminder.reservation.realEndDate;
       const cancellationDate = reminder.reservation.cancellationDate;
@@ -56,8 +54,8 @@ export class ScheduleService {
         continue;
       }
 
-      const now = new Date();
-      if (now < new Date(startDate)) {
+      if (currentDate < startDate) {
+        const formattedStartDate = fromDashToSlash(startDate);
         const brand = reminder.reservation.vehicle.vehicleModel.brand.brandName;
         const vehicleModel =
           reminder.reservation.vehicle.vehicleModel.vehicleModelName;
@@ -89,8 +87,8 @@ export class ScheduleService {
   }
 
   static async initializeScheduler() {
-    console.log('Scheduler initialized:\n - Frequency (Every 10 minutes)\n');
-    cron.schedule('*/10 * * * *', async () => {
+    console.log('Scheduler initialized:\n - Frequency (Every minute)\n');
+    cron.schedule('* * * * *', async () => {
       try {
         await ScheduleService.sendPendingReminders();
       } catch (error) {

@@ -7,12 +7,13 @@ import { Router } from '@angular/router';
 
 // Angular Material
 import { MatInputModule } from '@angular/material/input';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 
 // Services
 import { LocationApiService } from '@core/location/services/location.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 
 // Components
 import { ActionButtonsComponent } from '@shared/components/action-buttons/action-buttons.component';
@@ -20,7 +21,11 @@ import { GenericDialogComponent } from '@shared/components/generic-dialog/generi
 
 // Interfaces
 import { Location } from '@core/location/interfaces/location.interface';
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import {
+  DeleteDialogOptions,
+  ErrorDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Types
 import { ActionButtons } from '@shared/types/action-buttons.type';
@@ -44,7 +49,6 @@ import { LocationFilterPipe } from '@core/location/pipes/location-filter.pipe';
 })
 export class LocationsTableComponent {
   @Input() locations: Location[] = [];
-  @Input() errorMessage: string = '';
   @Output() locationDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
@@ -52,66 +56,38 @@ export class LocationsTableComponent {
   constructor(
     private readonly locationApiService: LocationApiService,
     private readonly snackBarService: SnackBarService,
-    private readonly dialog: MatDialog,
+    private readonly openDialogService: OpenDialogService,
     private readonly router: Router
   ) {}
 
-  openDeleteDialog(name: string, id: number): void {
+  private openDeleteDialog(name: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
-      this.dialog.open(GenericDialogComponent, {
-        width: '350px',
-        enterAnimationDuration: '0ms',
-        exitAnimationDuration: '0ms',
-        data: {
-          title: 'Eliminar sucursal',
-          titleColor: 'danger',
-          image: 'assets/generic/delete.png',
-          message: `¿Está seguro de que desea eliminar la sucursal ${name}?`,
-          showBackButton: true,
-          backButtonTitle: 'Volver',
-          mainButtonTitle: 'Eliminar',
-          mainButtonColor: 'bg-danger',
-          haveRouterLink: false,
-        },
-      } as GenericDialog);
+      this.openDialogService.delete({
+        entity: 'sucursal',
+        message: `¿Está seguro de que desea eliminar la sucursal ${name}?`,
+      } as DeleteDialogOptions);
     dialogRef.afterClosed().subscribe({
       next: (result: boolean | undefined) => {
         if (result) {
           this.locationApiService.delete(id).subscribe({
-            next: () => {
-              this.locationDeleted.emit();
-              this.snackBarService.show(
-                'La sucursal ha sido eliminada correctamente'
-              );
-            },
-            error: (error: HttpErrorResponse) => {
-              if (error.status === 400) {
-                this.openErrorDialog(error.error.message);
-              } else {
-                this.snackBarService.show('Error al eliminar la sucursal');
-              }
-            },
+            next: (response: Message) => this.handleSuccess(response),
+            error: (error: HttpErrorResponse) => this.handleError(error),
           });
         }
       },
     });
   }
 
-  openErrorDialog(message: string): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Error al eliminar la sucursal',
-        titleColor: 'dark',
-        image: 'assets/generic/wrongmark.png',
-        message,
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: false,
-      },
-    } as GenericDialog);
+  private handleSuccess(response: Message): void {
+    this.locationDeleted.emit();
+    this.snackBarService.show(response.message);
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: error.status === 500 ? '/home' : null,
+    } as ErrorDialogOptions);
   }
 
   get filteredLocations(): Location[] {
@@ -122,7 +98,7 @@ export class LocationsTableComponent {
     );
   }
 
-  getLocationName(location: ActionButtons): string {
+  private getLocationName(location: ActionButtons): string {
     return 'locationName' in location ? location.locationName : '';
   }
 

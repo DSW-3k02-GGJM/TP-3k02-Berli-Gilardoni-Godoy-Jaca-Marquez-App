@@ -1,13 +1,5 @@
 <mat-card
-  *ngIf="errorMessage"
-  class="bg-dark border border-white text-white text-center fs-3 mt-3"
->
-  <mat-card-content>
-    {{ errorMessage }}
-  </mat-card-content>
-</mat-card>
-<mat-card
-  *ngIf="!errorMessage && reservations.length === 0"
+  *ngIf="reservations.length === 0"
   class="bg-dark border border-white text-white text-center fs-3 mt-3 no-reservations"
 >
   <mat-card-content>
@@ -23,7 +15,7 @@
     </button>
   </mat-card-content>
 </mat-card>
-<div *ngIf="!errorMessage && reservations.length > 0">
+<div *ngIf="reservations.length > 0">
   <div class="d-flex gap-3 filter">
     <mat-form-field class="input-box date-input-box" hideRequiredMarker="true">
       <mat-label>Búsqueda por Fecha</mat-label>
@@ -107,10 +99,7 @@
               class="btn btn-dark fs-5"
               (click)="cancelReservation(reservation)"
               [disabled]="
-                reservation.realEndDate ||
-                reservation.cancellationDate ||
-                reservation.initialKms ||
-                disableCancellation(reservation)
+                reservation.cancellationDate || disableCancellation(reservation)
               "
             >
               🚫

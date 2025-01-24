@@ -88,10 +88,6 @@
             </td>
           </ng-container>
 
-          <tr class="mat-row no-data" *matNoDataRow>
-            <td class="mat-cell" colspan="6">{{ displayedMessage }}</td>
-          </tr>
-
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr
             mat-row
@@ -166,9 +162,6 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-error *ngIf="errorMessage">
-          {{ errorMessage }}
-        </mat-error>
         <button mat-button matStepperPrevious class="my-3">Volver</button>
         <div class="button">
           <button

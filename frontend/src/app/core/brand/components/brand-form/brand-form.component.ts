@@ -18,14 +18,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 
+// RxJS
+import { Observable } from 'rxjs';
+
 // Services
 import { BrandApiService } from '@core/brand/services/brand.api.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Interfaces
 import { BrandResponse } from '@core/brand/interfaces/brand-response.interface';
 import { BrandInput } from '@core/brand/interfaces/brand-input.interface';
 import { FormData } from '@shared/interfaces/form-data.interface';
+import { ErrorDialogOptions } from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -54,7 +60,6 @@ export class BrandFormComponent implements OnInit {
     buttonText: '',
   };
   currentBrandId: number = -1;
-  errorMessage: string = '';
   pending: boolean = false;
 
   brandForm: FormGroup = new FormGroup(
@@ -69,6 +74,7 @@ export class BrandFormComponent implements OnInit {
 
   constructor(
     private readonly brandApiService: BrandApiService,
+    private readonly openDialogService: OpenDialogService,
     private readonly snackBarService: SnackBarService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router
@@ -78,30 +84,22 @@ export class BrandFormComponent implements OnInit {
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentBrandId = params['id'];
-        if (this.currentBrandId) {
-          this.assignFormData('Edit');
-          this.brandApiService.getOne(this.currentBrandId).subscribe({
-            next: (response: BrandResponse) =>
-              this.brandForm.patchValue(response.data),
-            error: () =>
-              this.snackBarService.show(
-                'Error al obtener la información de la marca'
-              ),
-          });
-          this.brandForm.controls['brandName'].setAsyncValidators([
-            this.brandApiService.uniqueNameValidator(this.currentBrandId),
-          ]);
-        } else {
-          this.assignFormData('Create');
-          this.brandForm.controls['brandName'].setAsyncValidators([
-            this.brandApiService.uniqueNameValidator(-1),
-          ]);
+
+        const mode: string = this.currentBrandId ? 'Edit' : 'Create';
+        this.assignFormData(mode);
+
+        this.brandForm.controls['brandName'].setAsyncValidators([
+          this.brandApiService.uniqueNameValidator(this.currentBrandId),
+        ]);
+
+        if (mode === 'Edit') {
+          this.loadBrandData();
         }
       },
     });
   }
 
-  assignFormData(action: string): void {
+  private assignFormData(action: string): void {
     this.formData = {
       action,
       title: action === 'Create' ? 'Nueva marca' : 'Editar marca',
@@ -109,41 +107,51 @@ export class BrandFormComponent implements OnInit {
     } as FormData;
   }
 
+  private loadBrandData(): void {
+    this.brandApiService.getOne(this.currentBrandId).subscribe({
+      next: (response: BrandResponse) => this.handleLoadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
+  }
+
   onSubmit(): void {
     if (!this.brandForm.invalid) {
       this.pending = true;
-      if (this.formData.action === 'Create') {
-        this.brandApiService
-          .create(this.brandForm.value as BrandInput)
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToBrands();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      } else if (this.formData.action === 'Edit') {
-        this.brandApiService
-          .update(this.currentBrandId, this.brandForm.value as BrandInput)
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToBrands();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      }
+      this.getBrandRequest().subscribe({
+        next: (response: Message) => this.handleSubmitSuccess(response),
+        error: (error: HttpErrorResponse) => this.handleError(error),
+      });
     }
+  }
+
+  private getBrandRequest(): Observable<Message> {
+    const data = this.brandForm.value as BrandInput;
+    return this.formData.action === 'Create'
+      ? this.brandApiService.create(data)
+      : this.brandApiService.update(this.currentBrandId, data);
+  }
+
+  private handleLoadSuccess(response: BrandResponse): void {
+    this.brandForm.patchValue(response.data);
+  }
+
+  private handleSubmitSuccess(response: Message): void {
+    this.pending = false;
+    this.snackBarService.show(response.message);
+    this.navigateToBrands();
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    this.openErrorDialog(error);
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    const goTo = error.status === 500 ? '/home' : '/staff/brands';
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo,
+    } as ErrorDialogOptions);
   }
 
   navigateToBrands(): void {

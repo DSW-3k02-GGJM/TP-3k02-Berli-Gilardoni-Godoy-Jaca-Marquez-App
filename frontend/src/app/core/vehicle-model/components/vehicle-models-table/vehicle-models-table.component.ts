@@ -7,13 +7,14 @@ import { Router } from '@angular/router';
 
 // Angular Material
 import { MatInputModule } from '@angular/material/input';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 
 // Services
 import { VehicleModelApiService } from '@core/vehicle-model/services/vehicle-model.api.service';
 import { ImageApiService } from '@shared/services/api/image.api.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 
 // Components
 import { ActionButtonsComponent } from '@shared/components/action-buttons/action-buttons.component';
@@ -22,7 +23,11 @@ import { GenericDialogComponent } from '@shared/components/generic-dialog/generi
 // Interfaces
 import { VehicleModel } from '@core/vehicle-model/interfaces/vehicle-model.interface';
 import { UploadImageResponse } from '@shared/interfaces/upload-image-response.interface';
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import {
+  DeleteDialogOptions,
+  ErrorDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Types
 import { ActionButtons } from '@shared/types/action-buttons.type';
@@ -46,7 +51,6 @@ import { VehicleModelFilterPipe } from '@core/vehicle-model/pipes/vehicle-model-
 })
 export class VehicleModelsTableComponent {
   @Input() vehicleModels: VehicleModel[] = [];
-  @Input() errorMessage: string = '';
   @Output() vehicleModelDeleted: EventEmitter<void> = new EventEmitter<void>();
 
   filterRows: string = '';
@@ -55,77 +59,47 @@ export class VehicleModelsTableComponent {
     private readonly vehicleModelApiService: VehicleModelApiService,
     private readonly imageApiService: ImageApiService,
     private readonly snackBarService: SnackBarService,
-    private readonly dialog: MatDialog,
+    private readonly openDialogService: OpenDialogService,
     private readonly router: Router
   ) {}
 
-  deleteImage(imagePath: string): void {
-    this.imageApiService.deleteImage(imagePath).subscribe({
-      next: () => {
-        this.vehicleModelDeleted.emit();
-        this.snackBarService.show('El modelo ha sido eliminado correctamente');
-      },
-      error: (error: HttpErrorResponse) => {
-        if (error.status !== 400) {
-          this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-        }
-      },
-    });
-  }
-
-  openDeleteDialog(name: string, id: number): void {
+  private openDeleteDialog(name: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
-      this.dialog.open(GenericDialogComponent, {
-        width: '350px',
-        enterAnimationDuration: '0ms',
-        exitAnimationDuration: '0ms',
-        data: {
-          title: 'Eliminar modelo',
-          titleColor: 'danger',
-          image: 'assets/generic/delete.png',
-          message: `¿Está seguro de que desea eliminar el modelo ${name}?`,
-          showBackButton: true,
-          backButtonTitle: 'Volver',
-          mainButtonTitle: 'Eliminar',
-          mainButtonColor: 'bg-danger',
-          haveRouterLink: false,
-        },
-      } as GenericDialog);
+      this.openDialogService.delete({
+        entity: 'modelo',
+        message: `¿Está seguro de que desea eliminar el modelo ${name}?`,
+      } as DeleteDialogOptions);
     dialogRef.afterClosed().subscribe({
       next: (result: boolean | undefined) => {
         if (result) {
           this.vehicleModelApiService.delete(id).subscribe({
-            next: (response: UploadImageResponse) => {
-              this.deleteImage(response.imagePath ?? '');
-            },
-            error: (error: HttpErrorResponse) => {
-              if (error.status === 400) {
-                this.openErrorDialog(error.error.message);
-              } else {
-                this.snackBarService.show('Error al eliminar el modelo');
-              }
-            },
+            next: (response: UploadImageResponse) =>
+              this.handleSuccess(response),
+            error: (error: HttpErrorResponse) => this.handleError(error),
           });
         }
       },
     });
   }
 
-  openErrorDialog(message: string): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Error al eliminar el modelo',
-        titleColor: 'dark',
-        image: 'assets/generic/wrongmark.png',
-        message,
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: false,
-      },
-    } as GenericDialog);
+  private handleSuccess(response: UploadImageResponse): void {
+    this.deleteImage(response.imagePath ?? '');
+
+    this.vehicleModelDeleted.emit();
+    this.snackBarService.show(response.message);
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: error.status === 500 ? '/home' : null,
+    } as ErrorDialogOptions);
+  }
+
+  private deleteImage(imagePath: string): void {
+    this.imageApiService.deleteImage(imagePath).subscribe({
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
   }
 
   get filteredVehicleModels(): VehicleModel[] {
@@ -148,7 +122,7 @@ export class VehicleModelsTableComponent {
       : '';
   }
 
-  getVehicleModelName(vehicleModel: ActionButtons): string {
+  private getVehicleModelName(vehicleModel: ActionButtons): string {
     return 'vehicleModelName' in vehicleModel
       ? vehicleModel.vehicleModelName
       : '';

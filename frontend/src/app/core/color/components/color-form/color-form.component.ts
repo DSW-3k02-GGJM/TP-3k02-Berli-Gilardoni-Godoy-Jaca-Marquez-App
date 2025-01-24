@@ -18,14 +18,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 
+// RxJS
+import { Observable } from 'rxjs';
+
 // Services
 import { ColorApiService } from '@core/color/services/color.api.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
 
 // Interfaces
 import { ColorResponse } from '@core/color/interfaces/color-response.interface';
 import { ColorInput } from '@core/color/interfaces/color-input.interface';
 import { FormData } from '@shared/interfaces/form-data.interface';
+import { ErrorDialogOptions } from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -54,7 +60,6 @@ export class ColorFormComponent implements OnInit {
     buttonText: '',
   };
   currentColorId: number = -1;
-  errorMessage: string = '';
   pending: boolean = false;
 
   colorForm: FormGroup = new FormGroup(
@@ -69,6 +74,7 @@ export class ColorFormComponent implements OnInit {
 
   constructor(
     private readonly colorApiService: ColorApiService,
+    private readonly openDialogService: OpenDialogService,
     private readonly snackBarService: SnackBarService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router
@@ -78,30 +84,22 @@ export class ColorFormComponent implements OnInit {
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentColorId = params['id'];
-        if (this.currentColorId) {
-          this.assignFormData('Edit');
-          this.colorApiService.getOne(this.currentColorId).subscribe({
-            next: (response: ColorResponse) =>
-              this.colorForm.patchValue(response.data),
-            error: () =>
-              this.snackBarService.show(
-                'Error al obtener la información del color'
-              ),
-          });
-          this.colorForm.controls['colorName'].setAsyncValidators([
-            this.colorApiService.uniqueNameValidator(this.currentColorId),
-          ]);
-        } else {
-          this.assignFormData('Create');
-          this.colorForm.controls['colorName'].setAsyncValidators([
-            this.colorApiService.uniqueNameValidator(-1),
-          ]);
+
+        const mode: string = this.currentColorId ? 'Edit' : 'Create';
+        this.assignFormData(mode);
+
+        this.colorForm.controls['colorName'].setAsyncValidators([
+          this.colorApiService.uniqueNameValidator(this.currentColorId),
+        ]);
+
+        if (mode === 'Edit') {
+          this.loadColorData();
         }
       },
     });
   }
 
-  assignFormData(action: string): void {
+  private assignFormData(action: string): void {
     this.formData = {
       action,
       title: action === 'Create' ? 'Nuevo color' : 'Editar color',
@@ -109,41 +107,51 @@ export class ColorFormComponent implements OnInit {
     } as FormData;
   }
 
+  private loadColorData(): void {
+    this.colorApiService.getOne(this.currentColorId).subscribe({
+      next: (response: ColorResponse) => this.handleLoadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
+  }
+
   onSubmit(): void {
     if (!this.colorForm.invalid) {
       this.pending = true;
-      if (this.formData.action === 'Create') {
-        this.colorApiService
-          .create(this.colorForm.value as ColorInput)
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToColors();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      } else if (this.formData.action === 'Edit') {
-        this.colorApiService
-          .update(this.currentColorId, this.colorForm.value as ColorInput)
-          .subscribe({
-            next: () => {
-              this.pending = false;
-              this.navigateToColors();
-            },
-            error: (error: HttpErrorResponse) => {
-              this.pending = false;
-              if (error.status !== 400) {
-                this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-              }
-            },
-          });
-      }
+      this.getColorRequest().subscribe({
+        next: (response: Message) => this.handleSubmitSuccess(response),
+        error: (error: HttpErrorResponse) => this.handleError(error),
+      });
     }
+  }
+
+  private getColorRequest(): Observable<Message> {
+    const data = this.colorForm.value as ColorInput;
+    return this.formData.action === 'Create'
+      ? this.colorApiService.create(data)
+      : this.colorApiService.update(this.currentColorId, data);
+  }
+
+  private handleLoadSuccess(response: ColorResponse): void {
+    this.colorForm.patchValue(response.data);
+  }
+
+  private handleSubmitSuccess(response: Message): void {
+    this.pending = false;
+    this.snackBarService.show(response.message);
+    this.navigateToColors();
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    this.openErrorDialog(error);
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    const goTo = error.status === 500 ? '/home' : '/staff/colors';
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo,
+    } as ErrorDialogOptions);
   }
 
   navigateToColors(): void {

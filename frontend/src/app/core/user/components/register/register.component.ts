@@ -11,26 +11,27 @@ import {
 } from '@angular/forms';
 
 // Angular Material
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDialog } from '@angular/material/dialog';
 
 // Services
 import { AuthService } from '@security/services/auth.service';
 import { UserApiService } from '@core/user/services/user.api.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { UserAgeValidationService } from '@shared/services/validations/user-age-validation.service';
 import { EmailValidationService } from '@shared/services/validations/email-validation.service';
 
-// Components
-import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
-
 // Interfaces
 import { UserInput } from '@core/user/interfaces/user-input.interface';
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import {
+  ErrorDialogOptions,
+  SuccessDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -44,10 +45,10 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MatButtonModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
     MatIconModule,
     MatSelectModule,
     PreventEnterDirective,
@@ -56,7 +57,6 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
 export class RegisterComponent {
   hide: WritableSignal<boolean> = signal(true);
 
-  errorMessage: string = '';
   pending: boolean = false;
 
   registerForm: FormGroup = new FormGroup(
@@ -102,33 +102,15 @@ export class RegisterComponent {
   constructor(
     private readonly authService: AuthService,
     private readonly userApiService: UserApiService,
+    private readonly openDialogService: OpenDialogService,
     private readonly userAgeValidationService: UserAgeValidationService,
-    private readonly emailValidationService: EmailValidationService,
-    private readonly dialog: MatDialog
+    private readonly emailValidationService: EmailValidationService
   ) {}
 
-  clickEvent(event: MouseEvent): void {
+  togglePasswordVisibility(event: MouseEvent): void {
     event.preventDefault();
     this.hide.set(!this.hide());
     event.stopPropagation();
-  }
-
-  openDialog(): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '350px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Registro exitoso',
-        titleColor: 'dark',
-        image: 'assets/generic/checkmark.png',
-        message: 'Por favor, revise su correo para verificar su cuenta.',
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/home',
-      },
-    } as GenericDialog);
   }
 
   onSubmit(): void {
@@ -137,17 +119,34 @@ export class RegisterComponent {
       this.authService
         .register(this.registerForm.value as UserInput)
         .subscribe({
-          next: () => {
-            this.pending = false;
-            this.openDialog();
-          },
-          error: (error: HttpErrorResponse) => {
-            this.pending = false;
-            if (error.status !== 400) {
-              this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-            }
-          },
+          next: (response: Message) => this.handleSuccess(response),
+          error: (error: HttpErrorResponse) => this.handleError(error),
         });
     }
+  }
+
+  private handleSuccess(response: Message): void {
+    this.pending = false;
+    this.openSuccessDialog(response);
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    this.openErrorDialog(error);
+  }
+
+  private openSuccessDialog(response: Message): void {
+    this.openDialogService.success({
+      title: response.message,
+      message: 'Por favor, revise su correo para verificar su cuenta.',
+      goTo: '/home',
+    } as SuccessDialogOptions);
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: '/home',
+    } as ErrorDialogOptions);
   }
 }

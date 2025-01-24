@@ -28,19 +28,26 @@ export class ReservationApiService {
     );
   }
 
-  createByAdmin(data: ReservationInput): Observable<void> {
-    return this.http.post<void>(
+  createByAdmin(data: ReservationInput): Observable<Message> {
+    return this.http.post<Message>(
       `${this.apiUrl}/create-admin-reservation`,
       data
     );
   }
 
-  createByUser(data: ReservationInput): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/create-user-reservation`, data);
+  createByUser(data: ReservationInput): Observable<Message> {
+    return this.http.post<Message>(
+      `${this.apiUrl}/create-user-reservation`,
+      data
+    );
   }
 
   update(id: number, data: ReservationInput): Observable<Message> {
     return this.http.put<Message>(`${this.apiUrl}/${id}`, data);
+  }
+
+  checkOut(id: number, data: ReservationInput): Observable<Message> {
+    return this.http.put<Message>(`${this.apiUrl}/checkout/${id}`, data);
   }
 
   delete(id: number): Observable<Message> {

@@ -18,10 +18,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 
 // Services
 import { AuthService } from '@security/services/auth.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { EmailValidationService } from '@shared/services/validations/email-validation.service';
 
 // Components
@@ -29,7 +30,12 @@ import { GenericDialogComponent } from '@shared/components/generic-dialog/generi
 
 // Interfaces
 import { LoginData } from '@core/user/interfaces/login-data.interface';
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import {
+  DialogData,
+  ErrorDialogOptions,
+  SuccessDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -72,53 +78,39 @@ export class LoginComponent {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly emailValidationService: EmailValidationService,
-    private readonly dialog: MatDialog
+    private readonly openDialogService: OpenDialogService,
+    private readonly emailValidationService: EmailValidationService
   ) {}
 
-  clickEvent(event: MouseEvent): void {
-    event.preventDefault();
-    this.hide.set(!this.hide());
-    event.stopPropagation();
+  private openSuccessDialog(response: Message): void {
+    this.openDialogService.success({
+      title: response.message,
+      goTo: '/home',
+    } as SuccessDialogOptions);
   }
 
-  openDialog(): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Inicio de sesión exitoso',
-        titleColor: 'dark',
-        image: 'assets/generic/checkmark.png',
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/home',
-      },
-    } as GenericDialog);
+  private openErrorDialog(message: string): void {
+    this.openDialogService.error({
+      message,
+      goTo: '/home',
+    } as ErrorDialogOptions);
   }
 
-  openValidationDialog(): void {
+  private openValidationDialog(message: string): void {
     const email: string = this.loginForm.value.email;
     this.sendEmailVerification(email);
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
-      this.dialog.open(GenericDialogComponent, {
-        width: '350px',
-        enterAnimationDuration: '0ms',
-        exitAnimationDuration: '0ms',
-        data: {
-          title: 'Cuenta no verificada',
-          titleColor: 'dark',
-          image: 'assets/generic/wrongmark.png',
-          message: `Por favor, revise su email y verifique su cuenta para poder ingresar.`,
-          showBackButton: true,
-          backButtonTitle: 'Aceptar',
-          mainButtonTitle: 'Reenviar Email',
-          mainButtonColor: 'custom-blue',
-          haveRouterLink: false,
-        },
-      } as GenericDialog);
+      this.openDialogService.generic({
+        title: message,
+        titleColor: 'dark',
+        image: 'assets/generic/wrongmark.png',
+        message: `Por favor, revise su email y verifique su cuenta para poder ingresar.`,
+        showBackButton: true,
+        backButtonTitle: 'Aceptar',
+        mainButtonTitle: 'Reenviar Email',
+        mainButtonColor: 'custom-blue',
+        haveRouterLink: false,
+      } as DialogData);
     dialogRef.afterClosed().subscribe({
       next: (result: boolean | undefined) => {
         if (result) {
@@ -128,37 +120,46 @@ export class LoginComponent {
     });
   }
 
-  sendEmailVerification(email: string): void {
+  private sendEmailVerification(email: string): void {
     this.authService.sendEmailVerification(email).subscribe({
-      next: () => {
-        this.message = 'Se ha enviado un email de verificación a tu correo.';
-      },
-      error: () => {
-        this.message =
-          'No se pudo enviar el email de verificación. Intente nuevamente.';
-      },
+      next: (response: Message) => (this.message = response.message),
+      error: (error: HttpErrorResponse) =>
+        (this.message = error.error?.message),
     });
+  }
+
+  togglePasswordVisibility(event: MouseEvent): void {
+    event.preventDefault();
+    this.hide.set(!this.hide());
+    event.stopPropagation();
   }
 
   onSubmit(): void {
     if (!this.loginForm.invalid) {
       this.pending = true;
       this.authService.login(this.loginForm.value as LoginData).subscribe({
-        next: () => {
-          this.pending = false;
-          this.openDialog();
-        },
-        error: (error: HttpErrorResponse) => {
-          this.pending = false;
-          if (error.status === 401) {
-            this.message = 'El email y/o la contraseña son incorrectos';
-          } else if (error.status === 403) {
-            this.openValidationDialog();
-          } else {
-            this.message = 'Error en el servidor';
-          }
-        },
+        next: (response: Message) => this.handleSuccess(response),
+        error: (error: HttpErrorResponse) => this.handleError(error),
       });
+    }
+  }
+
+  private handleSuccess(response: Message): void {
+    this.pending = false;
+    this.openSuccessDialog(response);
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+
+    const errorMessage: string = error.error?.message;
+
+    if (error.status === 403) {
+      this.openValidationDialog(errorMessage);
+    } else if (error.status === 500) {
+      this.openErrorDialog(errorMessage);
+    } else {
+      this.message = errorMessage;
     }
   }
 }

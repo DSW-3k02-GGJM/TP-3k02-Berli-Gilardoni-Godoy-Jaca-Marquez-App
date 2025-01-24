@@ -11,6 +11,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Services
 import { AuthService } from '@security/services/auth.service';
 
+// Interfaces
+import { Message } from '@shared/interfaces/message.interface';
+
 @Component({
   selector: 'app-email-verification',
   standalone: true,
@@ -22,7 +25,9 @@ import { AuthService } from '@security/services/auth.service';
   imports: [CommonModule, MatButtonModule, MatProgressSpinnerModule],
 })
 export class EmailVerificationComponent implements OnInit {
-  status: string = 'loading';
+  pending: boolean = true;
+  image: string = '';
+  message: string = '';
 
   constructor(
     private readonly authService: AuthService,
@@ -32,22 +37,31 @@ export class EmailVerificationComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe({
-      next: (params) => {
-        const token: string = params['token'];
-        this.authService.verifyEmailToken(token).subscribe({
-          next: () => {
-            this.status = 'success';
-          },
-          error: (error: HttpErrorResponse) => {
-            if (error.status === 401) {
-              this.status = 'error';
-            } else {
-              this.status = 'common-error';
-            }
-          },
-        });
-      },
+      next: (params) => this.verifyToken(params['token']),
     });
+  }
+
+  private verifyToken(token: string): void {
+    this.authService.verifyEmailToken(token).subscribe({
+      next: (response: Message) => this.handleSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
+  }
+
+  private handleSuccess(response: Message): void {
+    this.image = 'checkmark';
+    this.message = response.message;
+    this.pending = false;
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.image = 'wrongmark';
+    this.message = error.error?.message;
+    this.pending = false;
+  }
+
+  getImagePath(): string {
+    return `assets/generic/${this.image}.png`;
   }
 
   navigateToLogin(): void {

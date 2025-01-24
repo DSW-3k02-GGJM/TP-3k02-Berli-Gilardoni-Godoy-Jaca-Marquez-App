@@ -1,7 +1,7 @@
 // Angular
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -12,26 +12,25 @@ import {
 import { ActivatedRoute } from '@angular/router';
 
 // Angular Material
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDialog } from '@angular/material/dialog';
 
 // Services
 import { UserApiService } from '@core/user/services/user.api.service';
-import { UserResponse } from '@core/user/interfaces/user-response.interface';
-import { UserInput } from '@core/user/interfaces/user-input.interface';
-import { FormatDateService } from '@shared/services/utils/format-date.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { UserAgeValidationService } from '@shared/services/validations/user-age-validation.service';
 
-// Components
-import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
-
 // Interfaces
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import { UserResponse } from '@core/user/interfaces/user-response.interface';
+import { UserInput } from '@core/user/interfaces/user-input.interface';
+import {
+  ErrorDialogOptions,
+  SuccessDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
@@ -55,12 +54,9 @@ import { PreventEnterDirective } from '@shared/directives/prevent-enter.directiv
   ],
 })
 export class ProfileComponent implements OnInit {
-  hide: WritableSignal<boolean> = signal(true);
-
-  errorMessage: string = '';
-
   currentUserId: number = -1;
-  email: string = '';
+  currentEmail: string = '';
+  pending: boolean = false;
 
   profileForm: FormGroup = new FormGroup(
     {
@@ -94,9 +90,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private readonly userApiService: UserApiService,
-    private readonly formatDateService: FormatDateService,
+    private readonly openDialogService: OpenDialogService,
     private readonly userAgeValidationService: UserAgeValidationService,
-    private readonly dialog: MatDialog,
     private readonly activatedRoute: ActivatedRoute
   ) {}
 
@@ -104,64 +99,61 @@ export class ProfileComponent implements OnInit {
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.currentUserId = params['id'];
-        this.userApiService.getOne(this.currentUserId).subscribe({
-          next: (response: UserResponse) => {
-            const birthDateFormat: string =
-              this.formatDateService.removeTimeZoneFromString(
-                response.data.birthDate
-              );
-            this.email = response.data.email;
-            this.profileForm.controls['documentID'].setAsyncValidators([
-              this.userApiService.uniqueDocumentIDValidator(this.currentUserId),
-            ]);
-            this.profileForm.patchValue({
-              ...response.data,
-              birthDate: birthDateFormat,
-            });
-          },
-        });
+
+        this.profileForm.controls['documentID'].setAsyncValidators([
+          this.userApiService.uniqueDocumentIDValidator(this.currentUserId),
+        ]);
+
+        this.loadUserData();
       },
     });
   }
 
-  clickEvent(event: MouseEvent): void {
-    event.preventDefault();
-    this.hide.set(!this.hide());
-    event.stopPropagation();
+  private loadUserData(): void {
+    this.userApiService.getOne(this.currentUserId).subscribe({
+      next: (response: UserResponse) => this.handleLoadSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
   }
 
-  openDialog(): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '300px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Cambios registrados',
-        titleColor: 'dark',
-        image: 'assets/generic/checkmark.png',
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/home',
-      },
-    } as GenericDialog);
+  private handleLoadSuccess(response: UserResponse): void {
+    this.currentEmail = response.data.email;
+    this.profileForm.patchValue(response.data);
   }
 
   onSubmit(): void {
     if (!this.profileForm.invalid) {
+      this.pending = true;
       this.userApiService
         .update(this.currentUserId, this.profileForm.value as UserInput)
         .subscribe({
-          next: () => {
-            this.openDialog();
-          },
-          error: (error: HttpErrorResponse) => {
-            if (error.status !== 400) {
-              this.errorMessage =
-                'Error al actualizar el usuario. Intente de nuevo.';
-            }
-          },
+          next: () => this.handleSuccess(),
+          error: (error: HttpErrorResponse) => this.handleError(error),
         });
     }
+  }
+
+  private handleSuccess(): void {
+    this.pending = false;
+    this.openSuccessDialog();
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.pending = false;
+    this.openErrorDialog(error);
+  }
+
+  private openSuccessDialog(): void {
+    this.openDialogService.success({
+      title: 'Cambios registrados',
+      goTo: '/home',
+    } as SuccessDialogOptions);
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo: '/home',
+    } as ErrorDialogOptions);
   }
 }

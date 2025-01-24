@@ -1,10 +1,7 @@
-<div class="text-white">
-  <h2 class="mt-4 ms-5">Mis reservas</h2>
-  <section class="reservations-list mt-4 mx-5">
-    <app-reservations-client-table
-      [reservations]="reservations"
-      [errorMessage]="errorMessage"
-      (reservationCancelled)="onReservationCancelled()"
-    ></app-reservations-client-table>
-  </section>
-</div>
+<h2 class="text-white mt-4 ms-5">Mis reservas</h2>
+<section class="reservations-list mt-4 mx-5">
+  <app-reservations-client-table
+    [reservations]="reservations"
+    (reservationCancelled)="onReservationCancelled()"
+  ></app-reservations-client-table>
+</section>

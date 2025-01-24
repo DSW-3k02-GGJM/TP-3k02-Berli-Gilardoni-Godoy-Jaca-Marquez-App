@@ -72,7 +72,7 @@
           <button
             mat-icon-button
             matSuffix
-            (click)="clickEvent($event)"
+            (click)="togglePasswordVisibility($event)"
             [attr.aria-label]="'Ocultar contraseña'"
             [attr.aria-pressed]="hide()"
           >
@@ -280,9 +280,6 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <mat-error *ngIf="errorMessage">
-        {{ errorMessage }}
-      </mat-error>
       <div class="button">
         <button type="submit" [disabled]="userForm.invalid || userForm.pending">
           <ng-container *ngIf="!userForm.pending && !pending; else loading">

@@ -32,8 +32,8 @@ export class LocationApiService {
     return this.http.get<LocationResponse>(`${this.apiUrl}/${id}`);
   }
 
-  create(data: LocationInput): Observable<void> {
-    return this.http.post<void>(this.apiUrl, data);
+  create(data: LocationInput): Observable<Message> {
+    return this.http.post<Message>(this.apiUrl, data);
   }
 
   update(id: number, data: LocationInput): Observable<Message> {

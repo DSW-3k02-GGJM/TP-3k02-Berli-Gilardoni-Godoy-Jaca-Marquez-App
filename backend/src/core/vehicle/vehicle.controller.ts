@@ -19,11 +19,12 @@ const findAll = async (_req: Request, res: Response) => {
         populate: ['color', 'location', 'vehicleModel.brand'],
       }
     );
-    res
-      .status(200)
-      .json({ message: 'All vehicles have been found', data: vehicles });
+    res.status(200).json({
+      message: 'Todos los vehículos han sido encontrados',
+      data: vehicles,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de conexión' });
   }
 };
 
@@ -38,14 +39,14 @@ const findOne = async (req: Request, res: Response) => {
       }
     );
     if (!vehicle) {
-      res.status(404).json({ message: 'The vehicle does not exist' });
+      res.status(404).json({ message: 'Vehículo no encontrado' });
     } else {
       res
         .status(200)
-        .json({ message: 'The vehicle has been found', data: vehicle });
+        .json({ message: 'El vehículo ha sido encontrado', data: vehicle });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de conexión' });
   }
 };
 
@@ -53,9 +54,11 @@ const add = async (req: Request, res: Response) => {
   try {
     em.create(Vehicle, req.body.sanitizedInput);
     await em.flush();
-    res.status(201).end();
+    res
+      .status(201)
+      .json({ message: 'El vehículo ha sido registrado exitosamente' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de conexión' });
   }
 };
 
@@ -64,14 +67,16 @@ const update = async (req: Request, res: Response) => {
     const id = Number.parseInt(req.params.id);
     const vehicle = await em.findOne(Vehicle, { id });
     if (!vehicle) {
-      res.status(404).json({ message: 'The vehicle does not exist' });
+      res.status(404).json({ message: 'Vehículo no encontrado' });
     } else {
       em.assign(vehicle, req.body.sanitizedInput);
       await em.flush();
-      res.status(200).json({ message: 'The vehicle has been updated' });
+      res
+        .status(200)
+        .json({ message: 'El vehículo ha sido actualizado exitosamente' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de conexión' });
   }
 };
 
@@ -81,7 +86,7 @@ const remove = async (req: Request, res: Response) => {
     const vehicle = await em.findOne(Vehicle, { id });
     const vehicleInUse = await em.findOne(Reservation, { vehicle: id });
     if (!vehicle) {
-      res.status(404).json({ message: 'The vehicle does not exist' });
+      res.status(404).json({ message: 'Vehículo no encontrado' });
     } else if (vehicleInUse) {
       res.status(400).json({
         message:
@@ -89,16 +94,18 @@ const remove = async (req: Request, res: Response) => {
       });
     } else {
       await em.removeAndFlush(vehicle);
-      res.status(200).json({ message: 'The vehicle has been deleted' });
+      res
+        .status(200)
+        .json({ message: 'El vehículo ha sido eliminado exitosamente' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de conexión' });
   }
 };
 
 const verifyLicensePlateExists = async (req: Request, res: Response) => {
   try {
-    const licensePlate = req.params.licensePlate;
+    const licensePlate = req.params.licensePlate.trim();
     const id = Number.parseInt(req.params.id);
     const vehicle = await em.findOneOrFail(Vehicle, { licensePlate });
     if (vehicle.id === id) {
@@ -131,19 +138,21 @@ const findAvailable = async (req: Request, res: Response) => {
       ],
     });
 
+    // Extract unique and sorted vehicle IDs from the reservations
+    const uniqueVehicleIds = Array.from(
+      new Set(reservations.map((res) => res.vehicle.id))
+    ).sort();
+
     // Build a filter for vehicles, searching for those
     // that are from the location specified in the request filter,
     // and whose ids do not match any id of the vehicles associated
     // with the active reservations that overlap the dates
     // (reservations obtained in the previous query)
     const vehicleFilter: {} = {
-      $and: [
-        { 'l1.id': filter.location },
-        { id: { $nin: reservations.map((res) => res.vehicle.id) } },
-      ],
+      $and: [{ 'l1.id': filter.location }, { id: { $nin: uniqueVehicleIds } }],
     };
 
-    // Find the vehicles that meet the previous filter (vehicleFilters)
+    // Find the vehicles that meet the previous filter (vehicleFilter)
     const vehicles = await em.find(Vehicle, vehicleFilter, {
       populate: ['location', 'vehicleModel.brand', 'vehicleModel.category'],
     });
@@ -169,13 +178,11 @@ const findAvailable = async (req: Request, res: Response) => {
 
     // Return an OK response code with the information from responseData
     res.status(200).json({
-      message: 'All vehicles have been found',
+      message: 'Todos los vehículos disponibles han sido encontrados',
       data: responseData,
     });
   } catch (error) {
-    // If something fails, return a response code indicating an error,
-    // along with a descriptive error message
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de conexión' });
   }
 };
 

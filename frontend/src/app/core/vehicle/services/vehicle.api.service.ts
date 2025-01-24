@@ -10,6 +10,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 // RxJS
 import { catchError, delay, map, Observable, of } from 'rxjs';
 
+// Services
+import { FormatDateService } from '@shared/services/utils/format-date.service';
+
 // Interfaces
 import { VehiclesResponse } from '@core/vehicle/interfaces/vehicles-response.interface';
 import { VehicleResponse } from '@core/vehicle/interfaces/vehicle-response.interface';
@@ -23,7 +26,10 @@ import { Message } from '@shared/interfaces/message.interface';
 export class VehicleApiService {
   private readonly apiUrl = '/api/vehicles';
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly formatDateService: FormatDateService
+  ) {}
 
   getAll(): Observable<VehiclesResponse> {
     return this.http.get<VehiclesResponse>(this.apiUrl);
@@ -33,8 +39,8 @@ export class VehicleApiService {
     return this.http.get<VehicleResponse>(`${this.apiUrl}/${id}`);
   }
 
-  create(data: VehicleInput): Observable<void> {
-    return this.http.post<void>(this.apiUrl, data);
+  create(data: VehicleInput): Observable<Message> {
+    return this.http.post<Message>(this.apiUrl, data);
   }
 
   update(id: number, data: VehicleInput): Observable<Message> {
@@ -71,21 +77,13 @@ export class VehicleApiService {
       );
   }
 
-  private getStartDate(startDate: Date | string): string {
-    return typeof startDate === 'string' ? startDate : '';
-  }
-
-  private getEndDate(endDate: Date | string): string {
-    return typeof endDate === 'string' ? endDate : '';
-  }
-
   findAvailableVehicles(
     filter: ReservationFilter
   ): Observable<VehiclesResponse> {
     const params = new HttpParams({
       fromObject: {
-        startDate: this.getStartDate(filter.startDate),
-        endDate: this.getEndDate(filter.endDate),
+        startDate: this.formatDateService.formatDateToDash(filter.startDate),
+        endDate: this.formatDateService.formatDateToDash(filter.endDate),
         location: filter.location,
       },
     });

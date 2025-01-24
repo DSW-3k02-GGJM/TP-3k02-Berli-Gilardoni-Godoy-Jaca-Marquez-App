@@ -1,30 +1,12 @@
 <div class="container unselectable">
-  <div class="content" *ngIf="status === 'success'" [@statusChange]="status">
-    <img src="assets/generic/checkmark.png" alt="checkmark" />
-    <p class="title">Su cuenta ha sido verificada</p>
+  <div class="content" *ngIf="!pending">
+    <img [src]="getImagePath()" [alt]="image" />
+    <p class="title">{{ message }}</p>
     <div class="button">
       <button (click)="navigateToLogin()">Aceptar</button>
     </div>
   </div>
-  <div class="content" *ngIf="status === 'error'" [@statusChange]="status">
-    <img src="assets/generic/wrongmark.png" alt="wrongmark" />
-    <p class="title">Verificación incorrecta o expirada</p>
-    <div class="button">
-      <button (click)="navigateToLogin()">Aceptar</button>
-    </div>
-  </div>
-  <div
-    class="content"
-    *ngIf="status === 'common-error'"
-    [@statusChange]="status"
-  >
-    <img src="assets/generic/wrongmark.png" alt="wrongmark" />
-    <p class="title">Error en el servidor</p>
-    <div class="button">
-      <button (click)="navigateToLogin()">Aceptar</button>
-    </div>
-  </div>
-  <div class="content" *ngIf="status === 'loading'" [@statusChange]="status">
+  <div class="content" *ngIf="pending">
     <mat-spinner diameter="150"></mat-spinner>
     <p class="title">Verificando...</p>
   </div>

@@ -33,8 +33,8 @@ export class UserApiService {
     return this.http.get<UserResponse>(`${this.apiUrl}/${id}`);
   }
 
-  create(data: UserInput): Observable<void> {
-    return this.http.post<void>(this.apiUrl, data);
+  create(data: UserInput): Observable<Message> {
+    return this.http.post<Message>(this.apiUrl, data);
   }
 
   update(id: number, data: UserInput): Observable<Message> {

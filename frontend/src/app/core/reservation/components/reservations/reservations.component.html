@@ -1,15 +1,10 @@
-<div class="text-white">
-  <div
-    class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4"
-  >
-    <h2 class="my-0 ms-4">Nuestras reservas</h2>
-    <button (click)="newReservation()">Nueva</button>
-  </div>
-  <section class="reservations-list mt-4 mx-4">
-    <app-reservations-table
-      [reservations]="reservations"
-      [errorMessage]="errorMessage"
-      (reservationDeleted)="onReservationDeleted()"
-    ></app-reservations-table>
-  </section>
+<div class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4">
+  <h2 class="text-white my-0 ms-4">Nuestras reservas</h2>
+  <button (click)="newReservation()">Nueva</button>
 </div>
+<section class="reservations-list mt-4 mx-4">
+  <app-reservations-table
+    [reservations]="reservations"
+    (reservationDeleted)="onReservationDeleted()"
+  ></app-reservations-table>
+</section>

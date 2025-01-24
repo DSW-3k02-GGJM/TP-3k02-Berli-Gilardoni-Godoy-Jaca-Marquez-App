@@ -1,5 +1,5 @@
 // Angular
-import { CommonModule, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import {
@@ -19,9 +19,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule, MatSelectChange } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule, MatStepper } from '@angular/material/stepper';
-import { MatDialog } from '@angular/material/dialog';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
+
+// RxJS
+import { forkJoin } from 'rxjs';
 
 // Services
 import { AuthService } from '@security/services/auth.service';
@@ -30,7 +32,7 @@ import { UserApiService } from '@core/user/services/user.api.service';
 import { LocationApiService } from '@core/location/services/location.api.service';
 import { VehicleApiService } from '@core/vehicle/services/vehicle.api.service';
 import { ImageApiService } from '@shared/services/api/image.api.service';
-import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 import { ReservationDatesValidationService } from '@shared/services/validations/reservation-dates-validation.service';
 import { VehicleCardTransformerService } from '@shared/services/formatters/vehicle-card-transformer.service';
 import { ReservationPriceCalculationService } from '@shared/services/calculations/reservation-price-calculation.service';
@@ -38,21 +40,26 @@ import { FormatDateService } from '@shared/services/utils/format-date.service';
 
 // Components
 import { VehicleCardComponent } from '@core/vehicle/components/vehicle-card/vehicle-card.component';
-import { GenericDialogComponent } from '@shared/components/generic-dialog/generic-dialog.component';
 
 // Interfaces
+import { ForkJoinAdminResponse } from '@core/reservation/interfaces/fork-join-response';
 import { ReservationInput } from '@core/reservation/interfaces/reservation-input.interface';
 import { ReservationFilter } from '@core/reservation/interfaces/reservation-filter.interface';
 import { VehiclesResponse } from '@core/vehicle/interfaces/vehicles-response.interface';
 import { VehicleCard } from '@core/vehicle/interfaces/vehicle-card.interface';
 import { User } from '@core/user/interfaces/user.interface';
-import { UsersResponse } from '@core/user/interfaces/users-response.interface';
 import { Location } from '@core/location/interfaces/location.interface';
-import { LocationsResponse } from '@core/location/interfaces/locations-response.interface';
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import {
+  ErrorDialogOptions,
+  SuccessDialogOptions,
+} from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 // Directives
 import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
+
+// External Libraries
+import { addDays } from 'date-fns';
 
 @Component({
   selector: 'app-reservation-form',
@@ -109,10 +116,10 @@ export class ReservationFormComponent implements OnInit {
   deposit: number = 0;
   brand: string = '';
 
-  finalPrice: number = 0;
+  initialPrice: number = 0;
 
-  errorMessage: string = '';
-  displayedMessage: string = '';
+  tomorrow: Date = addDays(new Date(), 1);
+  oneWeekAfterTomorrow: Date = addDays(this.tomorrow, 7);
 
   userForm: FormGroup = new FormGroup({
     documentType: new FormControl('', [Validators.required]),
@@ -121,8 +128,10 @@ export class ReservationFormComponent implements OnInit {
 
   vehicleFilterForm: FormGroup = new FormGroup(
     {
-      startDate: new FormControl('', [Validators.required]),
-      endDate: new FormControl('', [Validators.required]),
+      startDate: new FormControl(this.tomorrow, [Validators.required]),
+      endDate: new FormControl(this.oneWeekAfterTomorrow, [
+        Validators.required,
+      ]),
       location: new FormControl('', [Validators.required]),
     },
     {
@@ -145,40 +154,46 @@ export class ReservationFormComponent implements OnInit {
     private readonly locationApiService: LocationApiService,
     private readonly vehicleApiService: VehicleApiService,
     private readonly imageApiService: ImageApiService,
-    private readonly snackBarService: SnackBarService,
+    private readonly openDialogService: OpenDialogService,
     private readonly reservationDatesValidationService: ReservationDatesValidationService,
     private readonly vehicleCardTransformerService: VehicleCardTransformerService,
     private readonly reservationPriceCalculationService: ReservationPriceCalculationService,
-    private readonly formatDateService: FormatDateService,
-    private readonly dialog: MatDialog
+    private readonly formatDateService: FormatDateService
   ) {}
 
   ngOnInit(): void {
-    this.getUserRole();
-    this.getImageServerUrl();
-    this.loadUsers();
-    this.loadLocations();
+    this.loadRelatedData();
   }
 
   private isSmallScreenWidth(): boolean {
     return window.innerWidth < 768;
   }
 
-  openDialog(): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Reserva exitosa',
-        titleColor: 'dark',
-        image: 'assets/generic/checkmark.png',
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/staff/reservations',
+  private loadRelatedData(): void {
+    forkJoin({
+      userRole: this.authService.getAuthenticatedRole(),
+      imageServerUrl: this.imageApiService.getImageServerUrl(),
+      users: this.userApiService.getAll(),
+      locations: this.locationApiService.getAll(),
+    }).subscribe({
+      next: (response: ForkJoinAdminResponse) => {
+        this.userRole = response.userRole.role;
+        this.imageServerUrl = response.imageServerUrl.imageServerUrl;
+        this.users = response.users.data;
+        this.locations = response.locations.data;
+        this.sortRelatedData();
       },
-    } as GenericDialog);
+      error: (error: HttpErrorResponse) => this.handleError(error),
+    });
+  }
+
+  private sortRelatedData(): void {
+    this.users = this.users.sort((a: User, b: User) =>
+      a.documentID.localeCompare(b.documentID)
+    );
+    this.locations = this.locations.sort((a: Location, b: Location) =>
+      a.locationName.localeCompare(b.locationName)
+    );
   }
 
   onModelSelected(v: VehicleCard): void {
@@ -196,53 +211,57 @@ export class ReservationFormComponent implements OnInit {
 
   onStepChange(event: StepperSelectionEvent): void {
     if (event.selectedIndex === 1) {
-      this.vehicleFilterForm.get('startDate')?.valueChanges.subscribe({
-        next: (value: Date | null) => {
-          this.startDate = value
-            ? formatDate(value, 'dd/MM/yyyy', 'en-US')
-            : '';
-        },
-      });
-      this.vehicleFilterForm.get('endDate')?.valueChanges.subscribe({
-        next: (value: Date | null) => {
-          this.endDate = value ? formatDate(value, 'dd/MM/yyyy', 'en-US') : '';
-        },
-      });
-      this.vehicleFilterForm.get('location')?.valueChanges.subscribe({
-        next: (value: number | null) => {
-          const selectedLocation = this.locations.find(
-            (location: Location) => location.id === value
-          );
-          this.location = selectedLocation ? selectedLocation.locationName : '';
-        },
-      });
+      this.initializeDateFields();
+      this.subscribeToFormChanges();
     } else if (event.selectedIndex === 2) {
       this.setFilter();
     } else if (event.selectedIndex === 3) {
-      this.finalPrice =
-        this.reservationPriceCalculationService.calculateInitialPrice(
-          this.startDate,
-          this.endDate,
-          this.pricePerDay,
-          this.deposit
-        );
+      this.calculateInitialPrice();
     }
   }
 
-  loadUsers(): void {
-    this.userApiService.getAll().subscribe({
-      next: (response: UsersResponse) => (this.users = response.data),
-      error: () => {
-        this.displayedMessage = '⚠️ Error de conexión';
+  private initializeDateFields(): void {
+    const startDate: Date = this.vehicleFilterForm.get('startDate')?.value;
+    const endDate: Date = this.vehicleFilterForm.get('endDate')?.value;
+    this.startDate = startDate
+      ? this.formatDateService.formatDateToSlash(startDate)
+      : '';
+    this.endDate = endDate
+      ? this.formatDateService.formatDateToSlash(endDate)
+      : '';
+  }
+
+  private subscribeToFormChanges(): void {
+    this.subscribeToDateField('startDate', (formattedValue: string) => {
+      this.startDate = formattedValue;
+    });
+    this.subscribeToDateField('endDate', (formattedValue: string) => {
+      this.endDate = formattedValue;
+    });
+    this.subscribeToLocationField();
+  }
+
+  private subscribeToDateField(
+    fieldName: string,
+    callback: (formattedValue: string) => void
+  ): void {
+    this.vehicleFilterForm.get(fieldName)?.valueChanges.subscribe({
+      next: (value: Date | null) => {
+        const formattedValue: string = value
+          ? this.formatDateService.formatDateToSlash(value)
+          : '';
+        callback(formattedValue as string);
       },
     });
   }
 
-  loadLocations(): void {
-    this.locationApiService.getAll().subscribe({
-      next: (response: LocationsResponse) => (this.locations = response.data),
-      error: () => {
-        this.displayedMessage = '⚠️ Error de conexión';
+  private subscribeToLocationField(): void {
+    this.vehicleFilterForm.get('location')?.valueChanges.subscribe({
+      next: (value: number | null) => {
+        const selectedLocation = this.locations.find(
+          (location: Location) => location.id === value
+        );
+        this.location = selectedLocation ? selectedLocation.locationName : '';
       },
     });
   }
@@ -251,54 +270,13 @@ export class ReservationFormComponent implements OnInit {
     return this.locations.length > 0;
   }
 
-  getUserRole(): void {
-    this.authService.getAuthenticatedRole().subscribe({
-      next: (response: { role: string }) => {
-        this.userRole = response.role;
-      },
-      error: () => {
-        this.displayedMessage = '⚠️ Error de conexión';
-      },
-    });
-  }
-
-  getImageServerUrl(): void {
-    this.imageApiService.getImageServerUrl().subscribe({
-      next: (response: { imageServerUrl: string }) => {
-        this.imageServerUrl = `${response.imageServerUrl}/`;
-      },
-      error: () => {
-        this.displayedMessage = '⚠️ Error de conexión';
-      },
-    });
-  }
-
-  getStartDate(startDate: Date | string): Date {
-    return typeof startDate !== 'string' ? startDate : new Date();
-  }
-
-  getEndDate(endDate: Date | string): Date {
-    return typeof endDate !== 'string' ? endDate : new Date();
-  }
-
-  setFilter(): void {
+  private setFilter(): void {
     if (!this.vehicleFilterForm.invalid) {
-      const formValues: ReservationFilter = this.vehicleFilterForm.value;
-
-      const filter: ReservationFilter = {
-        startDate: this.formatDateService.removeTimeZoneFromDate(
-          this.getStartDate(formValues.startDate)
-        ),
-        endDate: this.formatDateService.removeTimeZoneFromDate(
-          this.getEndDate(formValues.endDate)
-        ),
-        location: formValues.location,
-      };
-      this.fetchVehicles(filter as ReservationFilter);
+      this.fetchVehicles(this.vehicleFilterForm.value as ReservationFilter);
     }
   }
 
-  fetchVehicles(filter: ReservationFilter): void {
+  private fetchVehicles(filter: ReservationFilter): void {
     this.vehicleApiService
       .findAvailableVehicles(filter as ReservationFilter)
       .subscribe({
@@ -306,28 +284,36 @@ export class ReservationFormComponent implements OnInit {
           this.response = response.data.map(
             this.vehicleCardTransformerService.transformToVehicleCardFormat
           );
+          this.sortVehicleCards();
         },
-        error: () => {
-          this.snackBarService.show(
-            'Error al obtener los vehículos disponibles'
-          );
-        },
+        error: (error: HttpErrorResponse) => this.handleError(error),
       });
+  }
+
+  private sortVehicleCards(): void {
+    this.response = this.response.sort((a: VehicleCard, b: VehicleCard) =>
+      `${a.brand} ${a.vehicleModel}`.localeCompare(
+        `${b.brand} ${b.vehicleModel}`
+      )
+    );
+  }
+
+  private calculateInitialPrice(): void {
+    this.initialPrice =
+      this.reservationPriceCalculationService.calculateInitialPrice(
+        this.startDate,
+        this.endDate,
+        this.pricePerDay,
+        this.deposit
+      );
   }
 
   onDocumentTypeSelected(event: MatSelectChange): void {
     const selectedDocumentType: string = event.value;
-    this.filteredUsers = this.users
-      .filter(
-        (user: User) =>
-          user.documentType === selectedDocumentType && user.role === 'client'
-      )
-      .sort((a: User, b: User) =>
-        a.documentID.localeCompare(b.documentID, undefined, {
-          numeric: true,
-          sensitivity: 'base',
-        })
-      );
+    this.filteredUsers = this.users.filter(
+      (user: User) =>
+        user.documentType === selectedDocumentType && user.role === 'client'
+    );
     this.documentType = selectedDocumentType;
   }
 
@@ -342,16 +328,11 @@ export class ReservationFormComponent implements OnInit {
   submitReservation(): void {
     const formValues: ReservationFilter = this.vehicleFilterForm.value;
 
-    const today: Date = new Date();
-    today.setHours(today.getHours() - 3);
-
     const data: ReservationInput = {
-      reservationDate: this.formatDateService.removeTimeZoneFromDate(today),
-      startDate: this.formatDateService.removeTimeZoneFromDate(
-        this.getStartDate(formValues.startDate)
-      ),
-      plannedEndDate: this.formatDateService.removeTimeZoneFromDate(
-        this.getEndDate(formValues.endDate)
+      reservationDate: this.formatDateService.formatDateToDash(new Date()),
+      startDate: this.formatDateService.formatDateToDash(formValues.startDate),
+      plannedEndDate: this.formatDateService.formatDateToDash(
+        formValues.endDate
       ),
       user: this.userForm.value.documentID,
       vehicle: this.vehicleID,
@@ -360,14 +341,27 @@ export class ReservationFormComponent implements OnInit {
     this.reservationApiService
       .createByAdmin(data as ReservationInput)
       .subscribe({
-        next: () => {
-          this.openDialog();
-        },
-        error: (error: HttpErrorResponse) => {
-          if (error.status !== 400) {
-            this.errorMessage = 'Error en el servidor. Intente de nuevo.';
-          }
-        },
+        next: (response: Message) => this.handleSuccess(response),
+        error: (error: HttpErrorResponse) => this.handleError(error),
       });
+  }
+
+  private handleSuccess(response: Message): void {
+    this.openDialogService.success({
+      title: response.message,
+      goTo: '/staff/reservations',
+    } as SuccessDialogOptions);
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    this.openErrorDialog(error);
+  }
+
+  private openErrorDialog(error: HttpErrorResponse): void {
+    const goTo = error.status === 500 ? '/home' : '/staff/reservations';
+    this.openDialogService.error({
+      message: error.error?.message,
+      goTo,
+    } as ErrorDialogOptions);
   }
 }

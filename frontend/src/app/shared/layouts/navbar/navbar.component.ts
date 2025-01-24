@@ -6,17 +6,13 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 // RxJS
 import { Subscription } from 'rxjs';
 
-// Angular Material
-import { MatDialog } from '@angular/material/dialog';
-
 // Services
 import { AuthService } from '@security/services/auth.service';
-
-// Components
-import { GenericDialogComponent } from '../../components/generic-dialog/generic-dialog.component';
+import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
 
 // Interfaces
-import { GenericDialog } from '@shared/interfaces/generic-dialog.interface';
+import { SuccessDialogOptions } from '@shared/interfaces/generic-dialog.interface';
+import { Message } from '@shared/interfaces/message.interface';
 
 @Component({
   selector: 'app-navbar',
@@ -33,7 +29,7 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly dialog: MatDialog
+    private readonly openDialogService: OpenDialogService
   ) {}
 
   ngOnInit(): void {
@@ -43,22 +39,16 @@ export class NavbarComponent implements OnInit {
 
         if (this.isLogged) {
           this.authService.getAuthenticatedId().subscribe({
-            next: (response: { id: number }) => {
-              this.profileLink = `/user/${response.id}`;
-            },
-            error: () => {
-              this.profileLink = '/home';
-            },
+            next: (response: { id: number }) =>
+              (this.profileLink = `/user/${response.id}`),
+            error: () => (this.profileLink = '/home'),
           });
 
           this.authService.getAuthenticatedRole().subscribe({
-            next: (response: { role: string }) => {
-              this.isAdminOrEmployee =
-                response.role === 'admin' || response.role === 'employee';
-            },
-            error: () => {
-              this.isAdminOrEmployee = false;
-            },
+            next: (response: { role: string }) =>
+              (this.isAdminOrEmployee =
+                response.role === 'admin' || response.role === 'employee'),
+            error: () => (this.isAdminOrEmployee = false),
           });
         }
       },
@@ -69,23 +59,6 @@ export class NavbarComponent implements OnInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-  }
-
-  openDialog(): void {
-    this.dialog.open(GenericDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms',
-      data: {
-        title: 'Cierre de sesión exitoso',
-        titleColor: 'dark',
-        image: 'assets/generic/checkmark.png',
-        showBackButton: false,
-        mainButtonTitle: 'Aceptar',
-        haveRouterLink: true,
-        goTo: '/home',
-      },
-    } as GenericDialog);
   }
 
   showReservationButton(): boolean {
@@ -99,9 +72,16 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  private openDialog(response: Message): void {
+    this.openDialogService.success({
+      title: response.message,
+      goTo: '/home',
+    } as SuccessDialogOptions);
+  }
+
   logout(): void {
     this.authService.logout().subscribe({
-      next: () => this.openDialog(),
+      next: (response: Message) => this.openDialog(response),
     });
   }
 }

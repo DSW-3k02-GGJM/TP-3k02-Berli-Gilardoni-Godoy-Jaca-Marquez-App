@@ -72,7 +72,7 @@ export class GenericDialogComponent implements OnDestroy {
   }
 
   confirm(): void {
-    if (this.checkOutForm.valid) {
+    if (!this.checkOutForm.invalid) {
       this.data.finalKms = this.checkOutForm.get('finalKms')?.value;
       this.data.returnDeposit = this.checkOutForm.get('returnDeposit')?.value;
       this.dialogRef.close({ action: true });

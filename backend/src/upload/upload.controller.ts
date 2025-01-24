@@ -33,20 +33,20 @@ const add = async (req: Request, res: Response) => {
   try {
     upload.single('image')(req, res, (err) => {
       if (err) {
-        return res.status(500).json({ message: 'Error uploading file' });
+        return res.status(500).json({ message: 'Error al subir el archivo' });
       }
       if (!req.file) {
         return res
           .status(400)
-          .json({ message: 'Only image files are allowed!' });
+          .json({ message: 'Solo se permiten archivos de imagen' });
       }
       res.status(200).json({
-        message: 'Image uploaded successfully',
+        message: 'La imagen ha sido subida exitosamente',
         imagePath: req.file.filename,
       });
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de conexión' });
   }
 };
 
@@ -55,13 +55,15 @@ const remove = async (req: Request, res: Response) => {
     const filename = req.params.filename;
     const imagePath = path.resolve('public', filename);
     fs.unlink(imagePath, (err) => {
-      if (err) {
-        return res.status(500).json({ message: 'Error deleting the image' });
+      if (err && err.code !== 'ENOENT') {
+        return res.status(500).json({ message: 'Error al eliminar la imagen' });
       }
-      res.status(200).json({ message: 'Image deleted successfully' });
+      res
+        .status(200)
+        .json({ message: 'La imagen se ha eliminado exitosamente' });
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de conexión' });
   }
 };
 
