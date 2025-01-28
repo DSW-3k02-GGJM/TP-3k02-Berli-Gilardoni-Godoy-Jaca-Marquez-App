@@ -122,17 +122,17 @@
   user-select: text;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 991px) {
   .container {
     max-width: 750px;
   }
 
   .step-label-1 {
-    font-size: 0.7rem;
+    font-size: 0.55rem;
   }
 
   .step-label-2 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 }
 

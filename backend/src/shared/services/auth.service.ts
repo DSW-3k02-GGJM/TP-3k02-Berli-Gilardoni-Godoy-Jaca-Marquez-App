@@ -10,11 +10,13 @@ import { User } from '../../core/user/user.entity.js';
 // Configuration
 import { SECRET_KEY, ADMIN_EMAIL, ADMIN_PASSWORD } from '../../config.js';
 
+// Utils
+import { formatDateToDash } from '../utils/format-date.js';
+
 // External Libraries
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { subYears } from 'date-fns';
-import { formatDateToDash } from '../utils/format-date.js';
 
 const em = orm.em.fork();
 

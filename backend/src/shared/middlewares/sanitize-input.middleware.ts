@@ -10,8 +10,11 @@ import { BaseEntity } from '../database/base.entity.js';
 // Types
 import { Entity } from '../types/custom/entity.type.js';
 
+// Utils
+import { formatDateToDash } from '../utils/format-date.js';
+
 // External Libraries
-import moment from 'moment';
+import { isBefore, isAfter } from 'date-fns';
 
 /**
 Middleware to sanitize and validate inputs.
@@ -120,14 +123,17 @@ export const sanitizeInput = (options: {
 
     if (dateRange) {
       const { startDate, endDate } = dateRange;
+
       const startDateValue = req.body.sanitizedInput[startDate];
-      if (moment(startDateValue).isBefore(moment().startOf('day'))) {
+      const endDateValue = req.body.sanitizedInput[endDate];
+      const currentDate = formatDateToDash(new Date());
+
+      if (isBefore(startDateValue, currentDate)) {
         return res.status(400).json({
           message: 'La fecha de inicio debe ser mayor o igual a hoy',
         });
       }
-      const endDateValue = req.body.sanitizedInput[endDate];
-      if (moment(startDateValue).isAfter(moment(endDateValue))) {
+      if (isAfter(startDateValue, endDateValue)) {
         return res.status(400).json({
           message: 'La fecha de fin debe ser posterior a la de inicio',
         });
