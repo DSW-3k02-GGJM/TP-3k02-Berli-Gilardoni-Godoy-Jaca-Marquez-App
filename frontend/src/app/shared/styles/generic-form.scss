@@ -1,0 +1,161 @@
+@use "../styles/colors" as colors;
+
+:host {
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.container {
+  max-width: 700px;
+  width: 100%;
+  height: auto;
+  background-color: colors.$white;
+  margin-bottom: 1.5rem;
+  padding: 15px 30px;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px colors.$black;
+}
+
+.container .title {
+  font-size: 25px;
+  font-weight: 500;
+  position: relative;
+}
+
+.container .information-title {
+  font-size: 20px;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.container .information {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.container .information .information-content {
+  display: flex;
+  align-items: center;
+  user-select: text;
+}
+
+.content form .user-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0 0 0;
+}
+
+.textarea {
+  width: 100%;
+}
+
+.user-details .input-box {
+  margin-bottom: 2rem;
+  width: calc(100% / 2 - 20px);
+}
+
+.user-details .input-box input {
+  width: 100%;
+}
+
+.user-details .input-toggle-box {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: calc(100% / 2 - 20px);
+}
+
+.user-details .input-toggle-box .text {
+  margin-right: 5px;
+}
+
+.input-box span.details {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.button {
+  height: 45px;
+  margin-bottom: 10px;
+}
+
+.button button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  color: colors.$white;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: colors.$main;
+}
+
+.button button:hover {
+  background: colors.$secondary;
+}
+
+.button button:disabled {
+  background: colors.$secondary;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.form-control {
+  box-shadow: none;
+}
+
+.unselectable {
+  user-select: none;
+}
+
+.id-div {
+  margin-right: 1.5rem;
+}
+
+.email-div {
+  display: flex;
+}
+
+.img-input {
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+  }
+
+  form .user-details {
+    padding-top: 5px;
+    max-height: 450px;
+    overflow-y: scroll;
+  }
+
+  form .user-details::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  form .user-details .input-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 385px) {
+  .email-div {
+    display: block;
+  }
+}
