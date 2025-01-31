@@ -1,183 +1,185 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 // Angular
-import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
-// Angular Material
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCardModule } from '@angular/material/card';
-
-
+// Components
 import { VehicleFormComponent } from './vehicle-form.component';
 
-// Services
-import { VehicleApiService } from '@core/vehicle/services/vehicle.api.service';
-import { ColorApiService } from '@core/color/services/color.api.service';
-import { LocationApiService } from '@core/location/services/location.api.service';
-import { VehicleModelApiService } from '@core/vehicle-model/services/vehicle-model.api.service';
-import { OpenDialogService } from '@shared/services/notifications/open-dialog.service';
-import { SnackBarService } from '@shared/services/notifications/snack-bar.service';
-import { LicensePlateValidationService } from '@shared/services/validations/license-plate-validation.service';
-
-// Directives
-import { PreventEnterDirective } from '@shared/directives/prevent-enter.directive';
+// Testing
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('VehicleFormComponent', () => {
   let component: VehicleFormComponent;
   let fixture: ComponentFixture<VehicleFormComponent>;
 
+  const formValues = {
+    licensePlate: 'AAA123',
+    manufacturingYear: 2020,
+    totalKms: 10000,
+    vehicleModel: 'Fiesta',
+    color: 'Rojo',
+    location: 'Centro',
+  };
+
+  const setFormValues = (values = formValues) => {
+    component.vehicleForm.patchValue(values);
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        VehicleFormComponent,
-        HttpClientModule, 
-        CommonModule, 
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatProgressSpinnerModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatSelectModule,
-        MatCardModule,
-        PreventEnterDirective,
-    ],
-      providers: [
-        VehicleApiService,
-        ColorApiService,
-        LocationApiService,
-        VehicleModelApiService,
-        OpenDialogService,
-        SnackBarService,
-        LicensePlateValidationService,
-        { provide: ActivatedRoute, useValue: {} },
-        { provide: Router, useValue: {} }
-      ]
-    })
-    .compileComponents();
-  });
-  
-  it('should create VehicleFormComponent', () => {
+      imports: [VehicleFormComponent, HttpClientModule],
+      providers: [{ provide: ActivatedRoute, useValue: {} }],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(VehicleFormComponent);
     component = fixture.componentInstance;
-    expect(component).toBeTruthy();
   });
 
-  it('should initialize form with empty controls', () => {
-    fixture = TestBed.createComponent(VehicleFormComponent);
-    component = fixture.componentInstance;
-    const form = component.vehicleForm;
-    expect(form.controls['licensePlate'].value).toEqual('');
-    expect(form.controls['manufacturingYear'].value).toEqual('');
-    expect(form.controls['totalKms'].value).toEqual('');
-    expect(form.controls['vehicleModel'].value).toEqual('');
-    expect(form.controls['color'].value).toEqual('');
-    expect(form.controls['location'].value).toEqual('');
-  })
+  describe('Form Creation', () => {
+    it('should create an instance', () => {
+      expect(component.vehicleForm).toBeTruthy();
+    });
+  });
 
-  it('should validate form with valid data', () => {
-    fixture = TestBed.createComponent(VehicleFormComponent);
-    component = fixture.componentInstance;
-    const form = component.vehicleForm;
-    form.controls['licensePlate'].setValue('ABC123');
-    form.controls['manufacturingYear'].setValue(2020);
-    form.controls['totalKms'].setValue(10000);
-    form.controls['vehicleModel'].setValue('Fiesta');
-    form.controls['color'].setValue('Rojo');
-    form.controls['location'].setValue('Centro');
-    expect(form.valid).toBeTrue();
-    })
+  describe('Form Initialization', () => {
+    it('should initialize with empty controls', () => {
+      Object.keys(formValues).forEach((key) => {
+        expect(component.vehicleForm.get(key)?.value).toEqual('');
+      });
+    });
+  });
 
-    it('should invalidate form with wrong licensePlate', () => {
-        fixture = TestBed.createComponent(VehicleFormComponent);
-        component = fixture.componentInstance;
-        const form = component.vehicleForm;
-        form.controls['licensePlate'].setValue('AA11111 RTY');
-        form.controls['manufacturingYear'].setValue(2020);
-        form.controls['totalKms'].setValue(10000);
-        form.controls['vehicleModel'].setValue('Fiesta');
-        form.controls['color'].setValue('Rojo');
-        form.controls['location'].setValue('Centro');
-        expect(form.valid).toBeFalse();
-    })
+  describe('Form Validations', () => {
+    describe('generic', () => {
+      it('should be valid with correct data', () => {
+        setFormValues();
+        expect(component.vehicleForm.valid).toBeTrue();
+      });
+    });
 
-    it('should invalidate form with wrong manufacturingYear', () => {
-        fixture = TestBed.createComponent(VehicleFormComponent);
-        component = fixture.componentInstance;
-        const form = component.vehicleForm;
-        form.controls['licensePlate'].setValue('AA11111 RTY');
-        form.controls['manufacturingYear'].setValue(1800);
-        form.controls['totalKms'].setValue(10000);
-        form.controls['vehicleModel'].setValue('Fiesta');
-        form.controls['color'].setValue('Rojo');
-        form.controls['location'].setValue('Centro');
-        expect(form.valid).toBeFalse();
-    })
+    describe('licensePlate', () => {
+      it('should be invalid if empty', () => {
+        setFormValues({ ...formValues, licensePlate: '' });
+        expect(component.vehicleForm.get('licensePlate')?.invalid).toBeTrue();
+        expect(
+          component.vehicleForm.get('licensePlate')?.errors?.['required']
+        ).toBeTruthy();
+      });
 
-    it('should invalidate form with wrong totalKms', () => {
-        fixture = TestBed.createComponent(VehicleFormComponent);
-        component = fixture.componentInstance;
-        const form = component.vehicleForm;
-        form.controls['licensePlate'].setValue('AAA123');
-        form.controls['manufacturingYear'].setValue(2020);
-        form.controls['totalKms'].setValue(-10000);
-        form.controls['vehicleModel'].setValue('Fiesta');
-        form.controls['color'].setValue('Rojo');
-        form.controls['location'].setValue('Centro');
-        expect(form.valid).toBeFalse();
-    })
-    
-    it('should invalidate form with wrong vehicleModel', () => {
-        fixture = TestBed.createComponent(VehicleFormComponent);
-        component = fixture.componentInstance;
-        const form = component.vehicleForm;
-        form.controls['licensePlate'].setValue('AAA123');
-        form.controls['manufacturingYear'].setValue(2020);
-        form.controls['totalKms'].setValue(10000);
-        form.controls['vehicleModel'].setValue('');
-        form.controls['color'].setValue('Rojo');
-        form.controls['location'].setValue('Centro');
-        expect(form.valid).toBeFalse();
-    })
+      it('should be invalid with wrong format', () => {
+        setFormValues({ ...formValues, licensePlate: 'AA11111 RTY' });
+        expect(component.vehicleForm.get('licensePlate')?.invalid).toBeTrue();
+        expect(
+          component.vehicleForm.get('licensePlate')?.errors?.[
+            'invalidLicensePlate'
+          ]
+        ).toBeTruthy();
+      });
+    });
 
-    it('should invalidate form with wrong color', () => {
-        fixture = TestBed.createComponent(VehicleFormComponent);
-        component = fixture.componentInstance;
-        const form = component.vehicleForm;
-        form.controls['licensePlate'].setValue('AAA123');
-        form.controls['manufacturingYear'].setValue(2020);
-        form.controls['totalKms'].setValue(10000);
-        form.controls['vehicleModel'].setValue('Fiesta');
-        form.controls['color'].setValue('');
-        form.controls['location'].setValue('Centro');
-        expect(form.valid).toBeFalse();
-    })
+    describe('manufacturingYear', () => {
+      it('should be valid with min value', () => {
+        setFormValues({ ...formValues, manufacturingYear: 1900 });
+        expect(
+          component.vehicleForm.get('manufacturingYear')?.valid
+        ).toBeTrue();
+      });
 
-    it('should invalidate form with wrong location', () => {
-        fixture = TestBed.createComponent(VehicleFormComponent);
-        component = fixture.componentInstance;
-        const form = component.vehicleForm;
-        form.controls['licensePlate'].setValue('AAA123');
-        form.controls['manufacturingYear'].setValue(2020);
-        form.controls['totalKms'].setValue(10000);
-        form.controls['vehicleModel'].setValue('Fiesta');
-        form.controls['color'].setValue('Rojo');
-        form.controls['location'].setValue('');
-        expect(form.valid).toBeFalse();
-    })
+      it('should be valid with max value (current year)', () => {
+        setFormValues({
+          ...formValues,
+          manufacturingYear: new Date().getFullYear(),
+        });
+        expect(
+          component.vehicleForm.get('manufacturingYear')?.valid
+        ).toBeTrue();
+      });
 
+      it('should be invalid if less than min value', () => {
+        setFormValues({ ...formValues, manufacturingYear: 1800 });
+        expect(
+          component.vehicleForm.get('manufacturingYear')?.invalid
+        ).toBeTrue();
+        expect(
+          component.vehicleForm.get('manufacturingYear')?.errors?.['min']
+        ).toBeTruthy();
+      });
+
+      it('should be invalid if greater than max value', () => {
+        setFormValues({
+          ...formValues,
+          manufacturingYear: new Date().getFullYear() + 1,
+        });
+        expect(
+          component.vehicleForm.get('manufacturingYear')?.invalid
+        ).toBeTrue();
+        expect(
+          component.vehicleForm.get('manufacturingYear')?.errors?.['max']
+        ).toBeTruthy();
+      });
+
+      it('should be invalid if not an integer', () => {
+        setFormValues({ ...formValues, manufacturingYear: 2000.5 });
+        expect(
+          component.vehicleForm.get('manufacturingYear')?.invalid
+        ).toBeTrue();
+        expect(
+          component.vehicleForm.get('manufacturingYear')?.errors?.['pattern']
+        ).toBeTruthy();
+      });
+    });
+
+    describe('totalKms', () => {
+      it('should be valid with min value (0)', () => {
+        setFormValues({ ...formValues, totalKms: 0 });
+        expect(component.vehicleForm.get('totalKms')?.valid).toBeTrue();
+      });
+
+      it('should be invalid if negative', () => {
+        setFormValues({ ...formValues, totalKms: -10000 });
+        expect(component.vehicleForm.get('totalKms')?.invalid).toBeTrue();
+        expect(
+          component.vehicleForm.get('totalKms')?.errors?.['min']
+        ).toBeTruthy();
+      });
+
+      it('should be invalid if not an integer', () => {
+        setFormValues({ ...formValues, totalKms: 10000.5 });
+        expect(component.vehicleForm.get('totalKms')?.invalid).toBeTrue();
+        expect(
+          component.vehicleForm.get('totalKms')?.errors?.['pattern']
+        ).toBeTruthy();
+      });
+    });
+
+    describe('vehicleModel', () => {
+      it('should be invalid if empty', () => {
+        setFormValues({ ...formValues, vehicleModel: '' });
+        expect(component.vehicleForm.get('vehicleModel')?.invalid).toBeTrue();
+        expect(
+          component.vehicleForm.get('vehicleModel')?.errors?.['required']
+        ).toBeTruthy();
+      });
+    });
+
+    describe('color', () => {
+      it('should be invalid if empty', () => {
+        setFormValues({ ...formValues, color: '' });
+        expect(component.vehicleForm.get('color')?.invalid).toBeTrue();
+        expect(
+          component.vehicleForm.get('color')?.errors?.['required']
+        ).toBeTruthy();
+      });
+    });
+
+    describe('location', () => {
+      it('should be invalid if empty', () => {
+        setFormValues({ ...formValues, location: '' });
+        expect(component.vehicleForm.get('location')?.invalid).toBeTrue();
+        expect(
+          component.vehicleForm.get('location')?.errors?.['required']
+        ).toBeTruthy();
+      });
+    });
+  });
 });
