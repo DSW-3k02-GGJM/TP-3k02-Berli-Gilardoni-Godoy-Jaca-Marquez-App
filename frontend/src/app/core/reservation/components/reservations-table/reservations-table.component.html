@@ -124,6 +124,7 @@
                 />
               </button>
               <button
+              id="check-out"
                 class="btn btn-dark fs-5"
                 (click)="checkOutReservation(reservation)"
                 [disabled]="
@@ -142,6 +143,7 @@
           </td>
           <td>
             <button
+              id="cancel"
               class="btn btn-dark fs-5"
               (click)="cancelReservation(reservation)"
               [disabled]="
@@ -154,6 +156,7 @@
           </td>
           <td>
             <button
+              id="delete"
               class="btn btn-dark fs-5"
               (click)="deleteReservation(reservation)"
               [disabled]="
