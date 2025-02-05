@@ -112,3 +112,13 @@ http://localhost:3000/api/users
 
 ### DELETE
 DELETE http://localhost:3000/api/users/3
+
+### GET ONE
+GET http://localhost:3000/api/users/1
+
+
+### IS AUTHENTICATED
+POST http://localhost:3000/api/users/is-authenticated
+
+### GET AUTHENTICATED ID
+POST http://localhost:3000/api/users/get-authenticated-id
