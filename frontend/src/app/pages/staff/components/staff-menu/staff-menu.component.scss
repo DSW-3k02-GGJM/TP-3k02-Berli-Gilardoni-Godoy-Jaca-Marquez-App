@@ -1,0 +1,67 @@
+@use "../../../../shared/styles/colors" as colors;
+
+.navbar {
+  background-color: colors.$staff-navbar;
+  padding: 0;
+}
+
+.navbar-nav {
+  --bs-nav-link-active: colors.$white;
+  --bs-nav-link-active-bg: colors.$white;
+}
+
+.active {
+  background-color: colors.$secondary;
+}
+
+.navbar-toggler {
+  border-color: colors.$gray;
+  margin: 5px 0 5px -8px;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.container {
+  height: auto;
+}
+
+.container .title {
+  padding-top: 10px;
+  display: flex;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.container .title p {
+  font-size: 30px;
+  font-weight: 500;
+  color: colors.$white;
+}
+
+.unselectable {
+  user-select: none;
+}
+
+@media (min-width: 992px) {
+  ul {
+    gap: 10px;
+  }
+
+  li {
+    margin: 0.7rem 0;
+  }
+}
+
+@media (max-width: 991px) {
+  li {
+    margin: 0.3rem 0;
+  }
+
+  .link-label {
+    margin-left: 0.6rem;
+  }
+}
