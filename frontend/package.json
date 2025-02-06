@@ -4,7 +4,8 @@
   "scripts": {
     "build": "ng build",
     "start": "ng serve -o",
-    "test": "ng test"
+    "test:ut": "ng test",
+    "test:e2e": "npx cypress open"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.1.4",
