@@ -4,13 +4,13 @@
 
 1. Ejecutá el siguiente comando en consola:
 
-```
-   npm install
-```
+   ```
+      npm install
+   ```
 
 2. Configurá VSCode con estas settings:
 
-![Configuración de VSCode](./assets/vs-code-settings.png)
+   ![Configuración de VSCode](./assets/vs-code-settings.png)
 
 ## Pasos previos a la compilación y ejecución
 
@@ -18,7 +18,7 @@
 
    Creá un archivo llamado '**.env**' que siga la forma de '**[./backend/.env.example](./.env.example)**', en la misma ubicación que dicho archivo, y completá la información correspondiente.
 
-> ⚠️ **Nota:** Asegurate de darle a tu variable de entorno **NODE_ENV** el valor '**development**' para poder iniciar correctamente la aplicación.
+   > ⚠️ **Nota:** Asegurate de darle a tu variable de entorno **NODE_ENV** el valor '**development**' para poder iniciar correctamente la aplicación.
 
 2. **Configuración de la conexión MySQL**:
 
@@ -28,7 +28,7 @@
 
    Repetí el paso anterior para tener una base de datos adicional, de forma que puedas ejecutar después los tests automatizados, sin que estos afecten a la base de datos principal.
 
-> ⚠️ **Nota:** El String de Conexión de la base de datos para pruebas debe asignarse a la variable de entorno **MYSQL_CONNECTION_TEST**.
+   > ⚠️ **Nota:** El String de Conexión de la base de datos para pruebas debe asignarse a la variable de entorno **MYSQL_CONNECTION_TEST**.
 
 - **IMPORTANTE**:
 
@@ -38,7 +38,7 @@
 
     La base de datos será creada automáticamente por el ORM si no existe al momento de la ejecución de la aplicación, con el nombre especificado o el valor por defecto. Si decidís usar un nombre específico, asegurate de que esté bien configurado en la variable de entorno mencionada, y de mantener el mismo desde la primera ejecución.
 
-  > 💡 **Sugerencia:** Para más información sobre los valores esperados y descripciones de las variables de entorno, consultá **[environment-variables](./environment-variables.md)**.
+    > 💡 **Sugerencia:** Para más información sobre los valores esperados y descripciones de las variables de entorno, consultá **[environment-variables](./environment-variables.md)**.
 
 ## Compilación y ejecución de la aplicación
 
@@ -46,17 +46,17 @@
 
 1. Ejecutá el siguiente comando en consola para compilar la aplicación:
 
-```
-   npm run build
-```
+   ```
+      npm run build
+   ```
 
 ### Ejecución
 
 1. Ejecutá el siguiente comando en consola para iniciar el servidor:
 
-```
-   npm start
-```
+   ```
+      npm start
+   ```
 
 #### ✅ Éxito al ejecutar el servidor
 

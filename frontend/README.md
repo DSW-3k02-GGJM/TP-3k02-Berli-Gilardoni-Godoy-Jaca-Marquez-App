@@ -4,9 +4,9 @@
 
 1. Ejecutá el siguiente comando en consola:
 
-```
-   npm install
-```
+   ```
+      npm install
+   ```
 
 ## Compilación y ejecución de la aplicación
 
@@ -14,9 +14,9 @@
 
 1. Ejecutá el siguiente comando en consola:
 
-```
-   npm run build
-```
+   ```
+      npm run build
+   ```
 
 ### Ejecución
 
@@ -24,9 +24,9 @@ Antes de ejecutar el frontend, asegurate de que se encuentre en ejecución el ba
 
 1. Ejecutá el siguiente comando en consola:
 
-```
-   npm start
-```
+   ```
+      npm start
+   ```
 
 #### ✅ Éxito al ejecutar el servidor
 
