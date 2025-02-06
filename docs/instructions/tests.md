@@ -114,9 +114,9 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        - Si todo ocurre según lo esperado, se debería abrir una ventana de Google Chrome, en la que puedas ver el resultado de la ejecución del test, como la siguiente:
 
-       ![Vista de Jasmine-Karma](../assets/jasmine-karma.png)
+         ![Vista de Jasmine-Karma](../assets/jasmine-karma.png)
 
-       El orden de ejecución de estos tests unitarios es aleatorio, por lo que lo que veas en tu navegador puede no coincidir exactamente con la imagen de arriba. A pesar de eso, deberías poder visualizar en tu navegador todos los tests que se muestran en la imagen.
+         El orden de ejecución de estos tests unitarios es aleatorio, por lo que lo que veas en tu navegador puede no coincidir exactamente con la imagen de arriba. A pesar de eso, deberías poder visualizar en tu navegador todos los tests que se muestran en la imagen.
 
   - #### Test End-to-End (E2E):
 
@@ -230,36 +230,38 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        - Finalmente, deberías ver lo siguiente cuando el test termine de ejecutarse:
 
-       ![Quinta Vista de Cypress](../assets/cypress-5.png)
+         ![Quinta Vista de Cypress](../assets/cypress-5.png)
 
        ❌ **Fallo en la ejecución del test**
 
        - Hay tres razones principales por las que el test podría fallar:
 
-         1. El backend no se encuentra en ejecución.
+         1. **El backend no se encuentra en ejecución**.
 
-         En este caso, al querer iniciar sesión como administrador, le dará un error, y cuando intente dirigirse al 'Menú Staff' no encontrará el botón para hacerlo.
+            En este caso, al querer iniciar sesión como administrador, le dará un error, y cuando intente dirigirse al 'Menú Staff' no encontrará el botón para hacerlo.
 
-         Por lo tanto, verás algo como:
+            Por lo tanto, verás algo como:
 
-         ![Primer Error de Cypress](../assets/cypress-6.png)
+            ![Primer Error de Cypress](../assets/cypress-6.png)
 
-         🔹 **Solución:** Asegurate de que el backend esté ejecutándose y de que la base de datos esté disponible.
+            🔹 **Solución:** Asegurate de que el backend esté ejecutándose y de que la base de datos esté disponible.
 
-         2. El frontend no se encuentra en ejecución.
+         2. **El frontend no se encuentra en ejecución**.
 
-         En este caso, no podrá acceder a la interfaz, y verás algo como esto:
+            En este caso, no podrá acceder a la interfaz, y verás algo como esto:
 
-         ![Segundo Error de Cypress](../assets/cypress-7.png)
+            ![Segundo Error de Cypress](../assets/cypress-7.png)
 
-         🔹 **Solución:** Verificá que el frontend esté ejecutándose.
+            🔹 **Solución:** Verificá que el frontend esté ejecutándose.
 
-         3. En tu base de datos ya existen entidades con valores que deben ser únicos y que se utilizan en este test. En ese caso, las validaciones asíncronas en los formularios detectarán el conflicto y no permitirán que el test continúe.
+         3. **En tu base de datos ya existen entidades con valores que deben ser únicos y que se utilizan en este test**.
+
+            En ese caso, las validaciones asíncronas en los formularios detectarán el conflicto y no permitirán que el test continúe.
 
             **Ejemplo:** Si ya existe una marca con el nombre "_Alpine_", el test no podrá crear otra con el mismo nombre.
 
-         Verás algo como:
+            Verás algo como:
 
-         ![Tercer Error de Cypress](../assets/cypress-8.png)
+            ![Tercer Error de Cypress](../assets/cypress-8.png)
 
-         🔹 **Solución:** Eliminá los registros con valores duplicados manualmente en tu base de datos.
+            🔹 **Solución:** Eliminá los registros con valores duplicados manualmente en tu base de datos.
