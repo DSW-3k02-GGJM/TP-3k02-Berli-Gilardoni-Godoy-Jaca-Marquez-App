@@ -2,10 +2,8 @@
   "name": "frontend",
   "version": "0.0.1",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "start": "ng serve -o",
     "test": "ng test"
   },
   "devDependencies": {

@@ -4,15 +4,18 @@ import { MySqlDriver } from '@mikro-orm/mysql';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 
 // Configuration
-import { MYSQL_CONNECTION } from '../../config.js';
+import { NODE_ENV, MYSQL_CONNECTION_URL, DATABASE_NAME } from '../../config.js';
+
+const debug = NODE_ENV === 'development';
 
 export const orm = await MikroORM.init({
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   driver: MySqlDriver,
-  clientUrl: MYSQL_CONNECTION,
+  clientUrl: MYSQL_CONNECTION_URL,
+  dbName: DATABASE_NAME,
   highlighter: new SqlHighlighter(),
-  debug: true,
+  debug,
   schemaGenerator: {
     disableForeignKeys: true,
     createForeignKeyConstraints: true,

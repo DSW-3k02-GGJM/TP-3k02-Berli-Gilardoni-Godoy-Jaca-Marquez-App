@@ -24,7 +24,7 @@ export class AuthService {
   static generateToken(
     user: User,
     SECRET_KEY: string,
-    expiresIn: string
+    expiresIn: number
   ): string {
     const payload = { id: user.id, email: user.email, role: user.role };
     return jwt.sign(payload, SECRET_KEY, { expiresIn });
@@ -51,7 +51,7 @@ export class AuthService {
       if (!token) {
         return res
           .status(401)
-          .json({ message: 'Acceso no autorizado (sin token)' });
+          .json({ message: 'Acceso no autorizado (token no proporcionado)' });
       }
 
       try {
@@ -59,8 +59,8 @@ export class AuthService {
 
         if (!roles.includes(this.getRole(data))) {
           return res
-            .status(401)
-            .json({ message: 'Acceso no autorizado (sin rol)' });
+            .status(403)
+            .json({ message: 'Acceso restringido (rol sin permisos)' });
         }
 
         req.session.user = data;

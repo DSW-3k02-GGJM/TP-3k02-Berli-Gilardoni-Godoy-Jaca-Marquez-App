@@ -19,7 +19,11 @@ import { sanitizedInput } from './location.middleware.js';
 
 export const locationRouter = Router();
 
-locationRouter.get('/', findAll);
+locationRouter.get(
+  '/',
+  AuthService.isAuthenticated(['admin', 'employee', 'client']),
+  findAll
+);
 
 locationRouter.get(
   '/location-name-exists/:locationName/:id',

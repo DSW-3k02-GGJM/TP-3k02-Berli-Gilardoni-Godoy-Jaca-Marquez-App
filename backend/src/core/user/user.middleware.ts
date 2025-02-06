@@ -45,21 +45,9 @@ const sanitizedAdminInput = sanitizeInput({
 });
 
 const sanitizedUpdateInput = sanitizeInput({
-  required: [
-    'documentType',
-    'documentID',
-    'userName',
-    'userSurname',
-    'birthDate',
-    'address',
-    'phoneNumber',
-    'nationality',
-    'role',
-    'verified',
-  ],
+  required: [],
   uppercase: ['documentID'],
   date: ['birthDate'],
-  role: ['admin', 'employee', 'client'],
   unique: ['documentID'],
   entity: 'User',
 });

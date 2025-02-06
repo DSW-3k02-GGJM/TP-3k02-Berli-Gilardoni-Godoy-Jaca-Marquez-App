@@ -112,7 +112,7 @@
                 class="btn btn-dark fs-5"
                 (click)="checkInReservation(reservation)"
                 [disabled]="
-                  reservation.initialKms ||
+                  reservation.initialKms !== null ||
                   reservation.cancellationDate ||
                   disableCheckIn(reservation)
                 "
@@ -124,11 +124,11 @@
                 />
               </button>
               <button
-              id="check-out"
+                id="check-out"
                 class="btn btn-dark fs-5"
                 (click)="checkOutReservation(reservation)"
                 [disabled]="
-                  !reservation.initialKms ||
+                  reservation.initialKms === null ||
                   reservation.realEndDate ||
                   reservation.cancellationDate
                 "
@@ -160,7 +160,7 @@
               class="btn btn-dark fs-5"
               (click)="deleteReservation(reservation)"
               [disabled]="
-                reservation.initialKms ||
+                reservation.initialKms !== null ||
                 reservation.cancellationDate ||
                 disableCancellationAndDeletion(reservation)
               "

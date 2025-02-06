@@ -14,6 +14,7 @@ import { MailService } from '../../shared/services/mail.service.js';
 
 // Configuration
 import {
+  NODE_ENV,
   FRONTEND_URL,
   SECRET_KEY,
   SECRET_EMAIL_KEY,
@@ -127,16 +128,18 @@ const register = async (req: Request, res: Response) => {
       verified: false,
     });
     await em.flush();
-    const token = AuthService.generateToken(user, SECRET_EMAIL_KEY, '10m');
-    const verificationLink = `${frontendURL}/verify-email/${token}`;
-    await MailService.sendMail(
-      [email],
-      'Verificación de correo',
-      '',
-      'Para verificar su correo, haga click <a href="' +
-        verificationLink +
-        '">aquí</a>.'
-    );
+    if (NODE_ENV !== 'test') {
+      const token = AuthService.generateToken(user, SECRET_EMAIL_KEY, 600);
+      const verificationLink = `${frontendURL}/verify-email/${token}`;
+      await MailService.sendMail(
+        [email],
+        'Verificación de correo',
+        '',
+        'Para verificar su correo, haga click <a href="' +
+          verificationLink +
+          '">aquí</a>.'
+      );
+    }
     res.status(200).json({ message: 'Registro exitoso' });
   } catch (error) {
     res.status(500).json({ message: 'Error de conexión' });
@@ -146,6 +149,7 @@ const register = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
   const email = req.body.sanitizedInput.email;
   const password = req.body.sanitizedInput.password;
+
   try {
     const user = await em.findOne(User, { email });
     const isValid = user
@@ -159,7 +163,7 @@ const login = async (req: Request, res: Response) => {
     if (!user.verified) {
       return res.status(403).json({ message: 'Cuenta no verificada' });
     }
-    const token = AuthService.generateToken(user, SECRET_KEY, '1h'); // Creates a token and associates it with the user
+    const token = AuthService.generateToken(user, SECRET_KEY, 3600); // Creates a token and associates it with the user
     res
       .cookie('access_token', token, {
         httpOnly: true, // Only accessible from the server
@@ -220,7 +224,7 @@ const sendEmailVerification = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     } else {
-      const token = AuthService.generateToken(user, SECRET_EMAIL_KEY, '10m');
+      const token = AuthService.generateToken(user, SECRET_EMAIL_KEY, 600);
       const verificationLink = `${frontendURL}/verify-email/${token}`;
       await MailService.sendMail(
         [email],
@@ -283,7 +287,7 @@ const sendPasswordReset = async (req: Request, res: Response) => {
         .status(404)
         .json({ message: 'El email no pertenece a una cuenta registrada' });
     } else {
-      const token = AuthService.generateToken(user, SECRET_PASSWORD_KEY, '10m');
+      const token = AuthService.generateToken(user, SECRET_PASSWORD_KEY, 600);
       const resetLink = `${frontendURL}/reset-password/${token}`;
       await MailService.sendMail(
         [email],

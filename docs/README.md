@@ -1,10 +1,23 @@
-# Documentación
+# **Documentación**
 
-Aquí se presenta toda la documentación del proyecto.
+A continuación, se presenta toda la documentación del proyecto:
 
----
-## Indice
-1. [Proposal](https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-Propuesta/blob/main/proposal.md)
-2. [Instalación](./instalacion.md)
-3. [Tracking issues](https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App/issues?q=is%3Aissue)
-4. [Documentación de la API](./api/docsAPI.md)
+## 📌 Contenido
+
+1. ### 📜 **[Propuesta](./proposal.md)**
+
+2. ### ⚙️ **[Intrucciones de Instalación](./installation.md)**
+
+3. ### 🔄 **[Pull Request](https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App/pull/10)**
+
+4. ### 📝 **[Minutas de Reunión y Avance]()**
+
+5. ### 🛠️ **[Tracking de Features, Bugs e Issues](https://github.com/DSW-3k02-GGJM/TP-3k02-Berli-Gilardoni-Godoy-Jaca-Marquez-App/issues?q=is%3Aissue)**
+
+6. ### 🌐 **[Documentación de la API](./api/main/api.md)**
+
+7. ### ✅ **[Evidencia de Ejecución de Tests Automáticos]()**
+
+8. ### 🎥 **[Demostración de App en Video](https://drive.google.com/file/d/1scrp8AMluKXIfDH-DRuDaw3F2Sh5x_VA/view)**
+
+9. ### 🚀 **[Deploy del Proyecto]()**

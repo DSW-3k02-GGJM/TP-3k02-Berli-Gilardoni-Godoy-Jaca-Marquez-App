@@ -46,7 +46,7 @@ reservationRouter.post(
 
 reservationRouter.post(
   '/create-user-reservation',
-  AuthService.isAuthenticated(['admin', 'employee', 'client']),
+  AuthService.isAuthenticated(['client']),
   sanitizedUserInput,
   userReservation
 );
