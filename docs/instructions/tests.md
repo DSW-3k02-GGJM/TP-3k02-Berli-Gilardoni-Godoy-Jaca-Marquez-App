@@ -122,7 +122,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
     - Para el correcto funcionamiento de este test, es necesario tener en ejecución tanto el frontend como el backend.
 
-    > ⚠️ **Nota:** El backend debe ejecutarse en modo `development`, con el objetivo de no afectar el funcionamiento de los tests de la API, que se ejecutan en modo `test`, con una base de datos adicional.
+      > ⚠️ **Nota:** El backend debe ejecutarse en modo `development`, con el objetivo de no afectar el funcionamiento de los tests de la API, que se ejecutan en modo `test`, con una base de datos adicional.
 
     - Asegurate de ejecutar el backend como se mencionó en la sección de ejecución en las **[instrucciones de instalación](../../backend/README.md)**.
 
@@ -196,19 +196,19 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
          3. Registrar:
 
-         i. un nuevo usuario con el rol 'Cliente'.
+            i. un nuevo usuario con el rol 'Cliente'.
 
-         ii. una nueva marca.
+            ii. una nueva marca.
 
-         iii. una nueva categoría.
+            iii. una nueva categoría.
 
-         iv. un nuevo color.
+            iv. un nuevo color.
 
-         v. una nueva sucursal.
+            v. una nueva sucursal.
 
-         vi. un nueva modelo.
+            vi. un nueva modelo.
 
-         vii. un nuevo vehículo.
+            vii. un nuevo vehículo.
 
          4. Realizar como administrador una reserva del nuevo vehículo para el nuevo cliente, con una duración de 1 día, empezando en la fecha actual.
 
