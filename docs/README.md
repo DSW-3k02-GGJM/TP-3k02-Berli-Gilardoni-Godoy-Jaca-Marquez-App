@@ -18,6 +18,6 @@ A continuación, se presenta toda la documentación del proyecto:
 
 7. ### ✅ **[Evidencia de Ejecución de Tests Automáticos]()**
 
-8. ### 🎥 **[Demostración de App en Video](https://drive.google.com/file/d/1scrp8AMluKXIfDH-DRuDaw3F2Sh5x_VA/view)**
+8. ### 🎥 **[Demostración de App en Video](https://drive.google.com/file/d/1V7XDtPzFNP-IRHC_MbFIxB4G2CH9TUK0/view)**
 
 9. ### 🚀 **[Deploy del Proyecto]()**
