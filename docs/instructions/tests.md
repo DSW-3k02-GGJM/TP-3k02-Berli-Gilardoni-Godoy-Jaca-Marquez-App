@@ -4,17 +4,17 @@ Antes de proceder con los pasos a seguir para poder ejecutar los tests, es aprop
 
 - **BACKEND**:
 
-  - JEST + SUPERTEST
+  - **JEST** + **SUPERTEST**
 
 - **FRONTEND**:
 
   - Test Unitario de un Componente:
 
-    - JASMINE + KARMA
+    - **JASMINE** + **KARMA**
 
   - Test End-to-End (E2E):
 
-    - CYPRESS
+    - **CYPRESS**
 
 Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí las instrucciones que se indican a continuación:
 
@@ -22,7 +22,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
   - Antes de empezar, asegurate de haber completado con éxito cada uno de los pasos que se indicaron en las **[instrucciones de instalación del backend](../../backend/README.md)**, en especial los relacionados a la creación de una base de datos adicional para testing.
 
-  > ⚠️ **Nota:** Es muy importante que en tu variable de entorno **MYSQL_CONNECTION_TEST** esté asignado el String de Conexión a dicha base de datos para pruebas.
+    > ⚠️ **Nota:** Es muy importante que en tu variable de entorno **MYSQL_CONNECTION_TEST** esté asignado el String de Conexión a dicha base de datos para pruebas.
 
   1. Asignale el valor `test` a la variable de entorno `NODE_ENV` en tu archivo `.env`.
 
@@ -162,13 +162,13 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        Una vez que lo haga y cargue, deberías poder visualizar lo siguiente:
 
-    ![Primera Vista de Cypress](../assets/cypress-1.png)
+       ![Primera Vista de Cypress](../assets/cypress-1.png)
 
     4. Hacé click en el recuadro que tiene como título `E2E Testing`.
 
        Ahora, deberías ver lo siguiente:
 
-    ![Segunda Vista de Cypress](../assets/cypress-2.png)
+       ![Segunda Vista de Cypress](../assets/cypress-2.png)
 
     5. Aunque debería funcionar en cualquiera de los navegadores que ofrece Cypress, al haberlo testeado nosotros desde Google Chrome, te recomendamos que hagas lo mismo.
 
@@ -176,7 +176,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        Se debería abrir otra ventana del navegador, que muestre lo siguiente:
 
-    ![Tercera Vista de Cypress](../assets/cypress-3.png)
+       ![Tercera Vista de Cypress](../assets/cypress-3.png)
 
     6. Hacé click en el archivo que dice `test.cy.ts`.
 
@@ -184,59 +184,59 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        La pantalla se debería parecer a la siguiente:
 
-    ![Cuarta Vista de Cypress](../assets/cypress-4.png)
+       ![Cuarta Vista de Cypress](../assets/cypress-4.png)
 
-    ✅ **Éxito en la ejecución del test**
+       ✅ **Éxito en la ejecución del test**
 
-    - Si todo ocurre según lo esperado, el test debería realizar, a lo largo de su ejecución (que podrás ver gráficamente en la interfaz en tiempo real), lo siguiente:
+       - Si todo ocurre según lo esperado, el test debería realizar, a lo largo de su ejecución (que podrás ver gráficamente en la interfaz en tiempo real), lo siguiente:
 
-      1. Iniciar sesión como administrador.
+         1. Iniciar sesión como administrador.
 
-      2. Navegar al 'Menú Staff'.
+         2. Navegar al 'Menú Staff'.
 
-      3. Registrar:
+         3. Registrar:
 
-         a. un nuevo usuario con el rol 'Cliente'.
+         i. un nuevo usuario con el rol 'Cliente'.
 
-         b. una nueva marca.
+         ii. una nueva marca.
 
-         c. una nueva categoría.
+         iii. una nueva categoría.
 
-         d. un nuevo color.
+         iv. un nuevo color.
 
-         e. una nueva sucursal.
+         v. una nueva sucursal.
 
-         f. un nueva modelo.
+         vi. un nueva modelo.
 
-         g. un nuevo vehículo.
+         vii. un nuevo vehículo.
 
-      4. Realizar como administrador una reserva del nuevo vehículo para el nuevo cliente, con una duración de 1 día, empezando en la fecha actual.
+         4. Realizar como administrador una reserva del nuevo vehículo para el nuevo cliente, con una duración de 1 día, empezando en la fecha actual.
 
-      5. Realizar el check-in de la reserva.
+         5. Realizar el check-in de la reserva.
 
-      6. Realizar el check-out de la reserva, indicando los kilómetros actuales del vehículo utilizado, y asegurando que se le debe devolver el depósito en garantía al cliente.
+         6. Realizar el check-out de la reserva, indicando los kilómetros actuales del vehículo utilizado, y asegurando que se le debe devolver el depósito en garantía al cliente.
 
-      7. Cerrar sesión.
+         7. Cerrar sesión.
 
-      8. Iniciar sesión desde la cuenta del nuevo cliente.
+         8. Iniciar sesión desde la cuenta del nuevo cliente.
 
-      9. Navegar mediante el botón 'Reserva ahora' hacia la página que le permita realizar una reserva siendo cliente.
+         9. Navegar mediante el botón 'Reserva ahora' hacia la página que le permita realizar una reserva siendo cliente.
 
-      10. Realizar una reserva con una duración de 1 día para el mes próximo, seleccionando el mismo vehículo de la reserva que realizó previamente el administrador.
+         10. Realizar una reserva con una duración de 1 día para el mes próximo, seleccionando el mismo vehículo de la reserva que realizó previamente el administrador.
 
-      11. Visualizar las dos reservas pertenecientes al cliente presionando en 'Mis reservas' (la que realizó el administrador y la del paso anterior).
+         11. Visualizar las dos reservas pertenecientes al cliente presionando en 'Mis reservas' (la que realizó el administrador y la del paso anterior).
 
-      12. Cerrar sesión.
+         12. Cerrar sesión.
 
-    - Finalmente, deberías ver lo siguiente cuando el test termine de ejecutarse:
+       - Finalmente, deberías ver lo siguiente cuando el test termine de ejecutarse:
 
-    ![Quinta Vista de Cypress](../assets/cypress-5.png)
+       ![Quinta Vista de Cypress](../assets/cypress-5.png)
 
-    ❌ **Fallo en la ejecución del test**
+       ❌ **Fallo en la ejecución del test**
 
-    - Hay tres razones principales por las que el test podría fallar:
+       - Hay tres razones principales por las que el test podría fallar:
 
-      1. El backend no se encuentra en ejecución.
+         1. El backend no se encuentra en ejecución.
 
          En este caso, al querer iniciar sesión como administrador, le dará un error, y cuando intente dirigirse al 'Menú Staff' no encontrará el botón para hacerlo.
 
@@ -246,7 +246,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
          🔹 **Solución:** Asegurate de que el backend esté ejecutándose y de que la base de datos esté disponible.
 
-      2. El frontend no se encuentra en ejecución.
+         2. El frontend no se encuentra en ejecución.
 
          En este caso, no podrá acceder a la interfaz, y verás algo como esto:
 
@@ -254,9 +254,9 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
          🔹 **Solución:** Verificá que el frontend esté ejecutándose.
 
-      3. En tu base de datos ya existen entidades con valores que deben ser únicos y que se utilizan en este test. En ese caso, las validaciones asíncronas en los formularios detectarán el conflicto y no permitirán que el test continúe.
+         3. En tu base de datos ya existen entidades con valores que deben ser únicos y que se utilizan en este test. En ese caso, las validaciones asíncronas en los formularios detectarán el conflicto y no permitirán que el test continúe.
 
-         **Ejemplo:** Si ya existe una marca con el nombre "_Alpine_", el test no podrá crear otra con el mismo nombre.
+            **Ejemplo:** Si ya existe una marca con el nombre "_Alpine_", el test no podrá crear otra con el mismo nombre.
 
          Verás algo como:
 
