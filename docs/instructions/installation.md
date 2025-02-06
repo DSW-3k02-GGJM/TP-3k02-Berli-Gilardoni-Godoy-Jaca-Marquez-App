@@ -14,7 +14,7 @@ Para iniciar la aplicación, sigue estos pasos:
    cd backend
    ```
 
-3. **Llevá a cabo cada uno de los pasos que se enumeran en '[backend/README.md](../backend/README.md)'.**
+3. **Llevá a cabo cada uno de los pasos que se enumeran en '[backend/README.md](../../backend/README.md)'.**
 
 4. **Navegá hacia el frontend (Desde la raíz del proyecto):**
 
@@ -22,7 +22,7 @@ Para iniciar la aplicación, sigue estos pasos:
    cd frontend
    ```
 
-5. **Completá cada uno de los pasos que se indican en '[frontend/README.md](../frontend/README.md)'.**
+5. **Completá cada uno de los pasos que se indican en '[frontend/README.md](../../frontend/README.md)'.**
 
 ---
 
