@@ -59,7 +59,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        Para cada uno de los tests ejecutados, se mostrará su descripción y un ícono al principio que hará referencia a su resultado.
 
-     - Además, deberías poder observar también un resumen de cobertura que te indique mediante porcentajes, qué parte de nuestro backend fue testeado.
+     - Además, deberías poder observar también un reporte de cobertura que te indique mediante porcentajes, qué parte de nuestro backend fue testeado.
 
        Se vería algo como:
 
@@ -114,7 +114,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        - Si todo ocurre según lo esperado, se debería abrir una ventana de Google Chrome, en la que puedas ver el resultado de la ejecución del test, como la siguiente:
 
-         ![Vista de Jasmine-Karma](../assets/jasmine-karma.png)
+         ![Vista de Jasmine-Karma](../assets/tests-execution/instructions/jasmine-karma/01.png)
 
          El orden de ejecución de estos tests unitarios es aleatorio, por lo que lo que veas en tu navegador puede no coincidir exactamente con la imagen de arriba. A pesar de eso, deberías poder visualizar en tu navegador todos los tests que se muestran en la imagen.
 
@@ -162,13 +162,13 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        Una vez que lo haga y cargue, deberías poder visualizar lo siguiente:
 
-       ![Primera Vista de Cypress](../assets/cypress-1.png)
+       ![Primera Vista de Cypress](../assets/tests-execution/instructions/cypress/01.png)
 
     4. Hacé click en el recuadro que tiene como título `E2E Testing`.
 
        Ahora, deberías ver lo siguiente:
 
-       ![Segunda Vista de Cypress](../assets/cypress-2.png)
+       ![Segunda Vista de Cypress](../assets/tests-execution/instructions/cypress/02.png)
 
     5. Aunque debería funcionar en cualquiera de los navegadores que ofrece Cypress, al haberlo testeado nosotros desde Google Chrome, te recomendamos que hagas lo mismo.
 
@@ -176,7 +176,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        Se debería abrir otra ventana del navegador, que muestre lo siguiente:
 
-       ![Tercera Vista de Cypress](../assets/cypress-3.png)
+       ![Tercera Vista de Cypress](../assets/tests-execution/instructions/cypress/03.png)
 
     6. Hacé click en el archivo que dice `test.cy.ts`.
 
@@ -184,7 +184,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        La pantalla se debería parecer a la siguiente:
 
-       ![Cuarta Vista de Cypress](../assets/cypress-4.png)
+       ![Cuarta Vista de Cypress](../assets/tests-execution/instructions/cypress/04.png)
 
        ✅ **Éxito en la ejecución del test**
 
@@ -230,7 +230,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        - Finalmente, deberías ver lo siguiente cuando el test termine de ejecutarse:
 
-         ![Quinta Vista de Cypress](../assets/cypress-5.png)
+         ![Quinta Vista de Cypress](../assets/tests-execution/instructions/cypress/05.png)
 
        ❌ **Fallo en la ejecución del test**
 
@@ -242,7 +242,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
             Por lo tanto, verás algo como:
 
-            ![Primer Error de Cypress](../assets/cypress-6.png)
+            ![Primer Error de Cypress](../assets/tests-execution/instructions/cypress/06.png)
 
             🔹 **Solución:** Asegurate de que el backend esté ejecutándose y de que la base de datos esté disponible.
 
@@ -250,7 +250,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
             En este caso, no podrá acceder a la interfaz, y verás algo como esto:
 
-            ![Segundo Error de Cypress](../assets/cypress-7.png)
+            ![Segundo Error de Cypress](../assets/tests-execution/instructions/cypress/07.png)
 
             🔹 **Solución:** Verificá que el frontend esté ejecutándose.
 
@@ -262,6 +262,6 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
             Verás algo como:
 
-            ![Tercer Error de Cypress](../assets/cypress-8.png)
+            ![Tercer Error de Cypress](../assets/tests-execution/instructions/cypress/08.png)
 
             🔹 **Solución:** Eliminá los registros con valores duplicados manualmente en tu base de datos.

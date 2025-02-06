@@ -18,7 +18,7 @@ A continuación, se presenta toda la documentación del proyecto:
 
 7. ### 🧪 **[Instrucciones de Ejecución de Tests Automáticos](./instructions/tests.md)**
 
-8. ### ✅ **[Evidencia de Ejecución de Tests Automáticos]()**
+8. ### ✅ **[Evidencia de Ejecución de Tests Automáticos](./tests-execution-evidence.md)**
 
 9. ### 🎥 **[Demostración de App en Video](https://drive.google.com/file/d/1V7XDtPzFNP-IRHC_MbFIxB4G2CH9TUK0/view)**
 

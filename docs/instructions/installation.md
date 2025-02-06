@@ -28,7 +28,7 @@ Para iniciar la aplicación, sigue estos pasos:
 
 ### 🔹 Opcional: Importar datos de prueba
 
-Podés importar datos de prueba desde este **[archivo .mysql](https://drive.google.com/file/d/1Fe_rSvnW0gEr6h-_c2e2bJjoWgWvtNTY/view)**, para agilizar la carga de información en la aplicación.
+Podés importar datos de prueba desde este **[archivo .sql](https://drive.google.com/file/d/1Fe_rSvnW0gEr6h-_c2e2bJjoWgWvtNTY/view)**, para agilizar la carga de información en la aplicación.
 
 Este archivo contiene únicamente sentencias de inserción de registros para la base de datos MySQL, por lo que, antes de importarlo, debés haber ejecutado la aplicación siguiendo los pasos descriptos anteriormente, para contar con la estructura o esquema de la base de datos generada automáticamente por el ORM.
 
