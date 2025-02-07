@@ -2,7 +2,7 @@
 
 ## Modelo de Datos
 
-![Modelo de Datos](../assets/tp-dsw.png)
+![Modelo de Datos](../../assets/data-model/data-model.png)
 
 ## Alcance Funcional
 

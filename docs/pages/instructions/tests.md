@@ -4,23 +4,23 @@ Antes de proceder con los pasos a seguir para poder ejecutar los tests, es aprop
 
 - **BACKEND**:
 
-  - **JEST** + **SUPERTEST**
+  - **[JEST](https://jestjs.io/)** + **[SUPERTEST](https://www.npmjs.com/package/supertest)**
 
 - **FRONTEND**:
 
   - Test Unitario de un Componente:
 
-    - **JASMINE** + **KARMA**
+    - **[JASMINE](https://jasmine.github.io/)** + **[KARMA](https://karma-runner.github.io/latest/index.html)**
 
   - Test End-to-End (E2E):
 
-    - **CYPRESS**
+    - **[CYPRESS](https://www.cypress.io/)**
 
 Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí las instrucciones que se indican a continuación:
 
 - ### BACKEND
 
-  - Antes de empezar, asegurate de haber completado con éxito cada uno de los pasos que se indicaron en las **[instrucciones de instalación del backend](../../backend/README.md)**, en especial los relacionados a la creación de una base de datos adicional para testing.
+  - Antes de empezar, asegurate de haber completado con éxito cada uno de los pasos que se indicaron en las **[instrucciones de instalación del backend](../../../backend/README.md)**, en especial los relacionados a la creación de una base de datos adicional para testing.
 
     > ⚠️ **Nota:** Es muy importante que en tu variable de entorno **MYSQL_CONNECTION_TEST** esté asignado el String de Conexión a dicha base de datos para pruebas.
 
@@ -114,7 +114,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        - Si todo ocurre según lo esperado, se debería abrir una ventana de Google Chrome, en la que puedas ver el resultado de la ejecución del test, como la siguiente:
 
-         ![Vista de Jasmine-Karma](../assets/tests-execution/instructions/jasmine-karma/01.png)
+         ![Vista de Jasmine-Karma](../../assets/tests-execution/instructions/jasmine-karma/01.png)
 
          El orden de ejecución de estos tests unitarios es aleatorio, por lo que lo que veas en tu navegador puede no coincidir exactamente con la imagen de arriba. A pesar de eso, deberías poder visualizar en tu navegador todos los tests que se muestran en la imagen.
 
@@ -124,7 +124,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
       > ⚠️ **Nota:** El backend debe ejecutarse en modo `development`, con el objetivo de no afectar el funcionamiento de los tests de la API, que se ejecutan en modo `test`, con una base de datos adicional.
 
-    - Asegurate de ejecutar el backend como se mencionó en la sección de ejecución en las **[instrucciones de instalación](../../backend/README.md)**.
+    - Asegurate de ejecutar el backend como se mencionó en la sección de ejecución en las **[instrucciones de instalación](../../../backend/README.md)**.
 
       Como ayuda, te dejamos el comando directamente acá:
 
@@ -134,7 +134,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
       Tené en cuenta que debés encontrarte dentro del directorio del backend cuando lo ejecutes.
 
-    - Lo mismo sucede con el frontend, así que asegurate de ejecutarlo como se mencionó en las **[instrucciones de instalación](../../frontend/README.md)**.
+    - Lo mismo sucede con el frontend, así que asegurate de ejecutarlo como se mencionó en las **[instrucciones de instalación](../../../frontend/README.md)**.
 
       Como ayuda, te dejamos el comando directamente acá:
 
@@ -162,13 +162,13 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        Una vez que lo haga y cargue, deberías poder visualizar lo siguiente:
 
-       ![Primera Vista de Cypress](../assets/tests-execution/instructions/cypress/01.png)
+       ![Primera Vista de Cypress](../../assets/tests-execution/instructions/cypress/01.png)
 
     4. Hacé click en el recuadro que tiene como título `E2E Testing`.
 
        Ahora, deberías ver lo siguiente:
 
-       ![Segunda Vista de Cypress](../assets/tests-execution/instructions/cypress/02.png)
+       ![Segunda Vista de Cypress](../../assets/tests-execution/instructions/cypress/02.png)
 
     5. Aunque debería funcionar en cualquiera de los navegadores que ofrece Cypress, al haberlo testeado nosotros desde Google Chrome, te recomendamos que hagas lo mismo.
 
@@ -176,7 +176,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        Se debería abrir otra ventana del navegador, que muestre lo siguiente:
 
-       ![Tercera Vista de Cypress](../assets/tests-execution/instructions/cypress/03.png)
+       ![Tercera Vista de Cypress](../../assets/tests-execution/instructions/cypress/03.png)
 
     6. Hacé click en el archivo que dice `test.cy.ts`.
 
@@ -184,7 +184,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        La pantalla se debería parecer a la siguiente:
 
-       ![Cuarta Vista de Cypress](../assets/tests-execution/instructions/cypress/04.png)
+       ![Cuarta Vista de Cypress](../../assets/tests-execution/instructions/cypress/04.png)
 
        ✅ **Éxito en la ejecución del test**
 
@@ -230,7 +230,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
        - Finalmente, deberías ver lo siguiente cuando el test termine de ejecutarse:
 
-         ![Quinta Vista de Cypress](../assets/tests-execution/instructions/cypress/05.png)
+         ![Quinta Vista de Cypress](../../assets/tests-execution/instructions/cypress/05.png)
 
        ❌ **Fallo en la ejecución del test**
 
@@ -242,7 +242,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
             Por lo tanto, verás algo como:
 
-            ![Primer Error de Cypress](../assets/tests-execution/instructions/cypress/06.png)
+            ![Primer Error de Cypress](../../assets/tests-execution/instructions/cypress/06.png)
 
             🔹 **Solución:** Asegurate de que el backend esté ejecutándose y de que la base de datos esté disponible.
 
@@ -250,7 +250,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
             En este caso, no podrá acceder a la interfaz, y verás algo como esto:
 
-            ![Segundo Error de Cypress](../assets/tests-execution/instructions/cypress/07.png)
+            ![Segundo Error de Cypress](../../assets/tests-execution/instructions/cypress/07.png)
 
             🔹 **Solución:** Verificá que el frontend esté ejecutándose.
 
@@ -262,6 +262,6 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
             Verás algo como:
 
-            ![Tercer Error de Cypress](../assets/tests-execution/instructions/cypress/08.png)
+            ![Tercer Error de Cypress](../../assets/tests-execution/instructions/cypress/08.png)
 
             🔹 **Solución:** Eliminá los registros con valores duplicados manualmente en tu base de datos.
