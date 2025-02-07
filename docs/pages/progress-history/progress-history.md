@@ -3,14 +3,14 @@
 <h2 align="center">Alquilcar Reservas 🚗</h2>
 <table align="center">
   <tbody>
-    <tr style="text-align: center;">
-      <td width="20%" style="padding-bottom: 10px;"><a href="https://github.com/na04ber"><img src="https://avatars.githubusercontent.com/u/164286460?v=4" width="100" alt="Berli, Nahuel"/><br/><b>Berli, Nahuel</b></a></td>
-      <td width="20%" style="padding-bottom: 10px;"><a href="https://github.com/GilardoniLucio"><img src="https://avatars.githubusercontent.com/u/164241068?v=4" width="100" alt="Gilardoni, Lucio"/><br/><b>Gilardoni, Lucio</b></a></td>
-      <td width="20%" style="padding-bottom: 10px;"><a href="https://github.com/Marcos-Godoy"><img src="https://avatars.githubusercontent.com/u/82327926?v=4" width="100" alt="Godoy, Marcos"/><br/><b>Godoy, Marcos</b></a></td>
+    <tr valign="top">
+      <td align="center" width=20% style="padding-bottom: 10px;"><a href="https://github.com/na04ber"><img src="https://avatars.githubusercontent.com/u/164286460?v=4" width="100" alt="Berli, Nahuel"/><br/><b>Berli, Nahuel</b></a></td>
+      <td align="center" width=20% style="padding-bottom: 10px;"><a href="https://github.com/GilardoniLucio"><img src="https://avatars.githubusercontent.com/u/164241068?v=4" width="100" alt="Gilardoni, Lucio"/><br/><b>Gilardoni, Lucio</b></a></td>
+      <td align="center" width=20% style="padding-bottom: 10px;"><a href="https://github.com/Marcos-Godoy"><img src="https://avatars.githubusercontent.com/u/82327926?v=4" width="100" alt="Godoy, Marcos"/><br/><b>Godoy, Marcos</b></a></td>
     </tr>
     <tr style="text-align: center;">
-      <td width="20%" style="padding-bottom: 10px;"><a href="https://github.com/juampi74"><img src="https://avatars.githubusercontent.com/u/126622905?v=4" width="100" alt="Jaca, Juan Pablo"/><br/><b>Jaca, Juan Pablo</b></a></td>
-      <td width="20%" style="padding-bottom: 10px;"><a href="https://github.com/MatiPoli"><img src="https://avatars.githubusercontent.com/u/70172645?v=4" width="100" alt="Márquez, Matías"/><br/><b>Márquez, Matías</b></a></td>
+      <td align="center" width=20% style="padding-bottom: 10px;"><a href="https://github.com/juampi74"><img src="https://avatars.githubusercontent.com/u/126622905?v=4" width="100" alt="Jaca, Juan Pablo"/><br/><b>Jaca, Juan Pablo</b></a></td>
+      <td align="center" width=20% style="padding-bottom: 10px;"><a href="https://github.com/MatiPoli"><img src="https://avatars.githubusercontent.com/u/70172645?v=4" width="100" alt="Márquez, Matías"/><br/><b>Márquez, Matías</b></a></td>
     </tr>
   </tbody>
 </table>
