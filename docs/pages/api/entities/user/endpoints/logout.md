@@ -1,21 +1,35 @@
-# logout
+# POST /api/users/logout
 
----
 ## Descripción
-Este método permite a un usuario cerrar la sesión. Haciendo que se borre la cookie asociada al usuario.
 
----
+Este endpoint permite que un usuario cierre su sesión en el sistema.
+
+En consecuencia, se elimina la cookie **'access_token'** con el token de autenticación asociada al usuario.
+
 ## Solicitud
+
+### Parámetros para la solicitud
+
 No es necesario utilizar ningún parámetro para realizar la solicitud.
 
----
-## Respuesta
-### Parámetros de respuesta
-* message: string. Mensaje de confirmación.
+### Solicitud de ejemplo
 
-### Respuesta de ejemplo
 ```
-{
-    "message":"Cierre de sesión exitoso"
-}
+POST /api/users/logout
 ```
+
+## Respuesta
+
+### Parámetros de respuesta
+
+- message: string. Mensaje de confirmación.
+
+### Respuesta exitosa
+
+- #### 200 OK
+
+  ```
+  {
+      "message": "Cierre de sesión exitoso"
+  }
+  ```

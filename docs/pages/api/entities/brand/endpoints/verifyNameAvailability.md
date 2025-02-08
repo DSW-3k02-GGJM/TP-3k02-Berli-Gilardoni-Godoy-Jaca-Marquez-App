@@ -25,7 +25,7 @@ Se devolverá `true` si el nombre de la marca ya está en uso y el `id` de la ma
 ### Solicitud de ejemplo
 
 ```
-GET /api/brands/brand-name-exists/Ford/-1
+GET /api/brands/brand-name-exists/Audi/-1
 Cookie: access_token={token};
 ```
 
@@ -70,6 +70,18 @@ Cookie: access_token={token};
       ```
       {
           "message": "Acceso restringido (rol sin permisos)"
+      }
+      ```
+
+- #### 500 Internal Server Error
+
+  - Error de conexión con el servidor:
+
+    - Respuesta:
+
+      ```
+      {
+          "message": "Error de conexión"
       }
       ```
 

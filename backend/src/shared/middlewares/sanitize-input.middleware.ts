@@ -166,7 +166,7 @@ export const sanitizeInput = (options: {
       for (const [field1, field2] of Object.entries(match)) {
         if (req.body[field1] !== req.body[field2]) {
           return res.status(400).json({
-            message: `Las contraseñas deben coincidir.`,
+            message: 'Las contraseñas deben coincidir.',
           });
         }
       }

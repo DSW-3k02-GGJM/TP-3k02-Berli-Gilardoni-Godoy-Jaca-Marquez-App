@@ -406,3 +406,17 @@
 ## 07/02/2025
 
 - Agregado de esta sección de 'Minutas de Reunión y Avance'.
+
+- Documentación de los endpoints de la API del backend para las entidades:
+
+  - Categoría.
+  - Color.
+  - Sucursal.
+  - Reserva.
+  - Vehículo.
+
+## 08/02/2025
+
+- Documentación de los endpoints de la API del backend para la entidad Modelo.
+
+- Actualización de la documentación de los endpoints de la API del backend de la entidad Usuario, para unificar el formato con la del resto de las entidades.

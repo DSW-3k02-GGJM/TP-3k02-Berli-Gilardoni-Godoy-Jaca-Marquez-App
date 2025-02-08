@@ -19,8 +19,8 @@ const sanitizedUserInput = sanitizeInput({
 
 const sanitizedUpdateInput = sanitizeInput({
   required: [],
-  numeric: ['initialKms', 'finalKms', 'finalPrice'],
-  date: ['realEndDate', 'cancellationDate'],
+  numeric: ['initialKms'],
+  date: ['cancellationDate'],
 });
 
 const sanitizedCheckOutInput = sanitizeInput({

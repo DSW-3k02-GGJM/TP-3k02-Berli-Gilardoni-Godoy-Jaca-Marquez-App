@@ -43,16 +43,16 @@ Cookie: access_token={token};
       "message": "Todas las marcas han sido encontradas",
       "data": [
           {
-            "id": 2,
-            "brandName": "Chevrolet"
+              "id": 2,
+              "brandName": "Rolls-Royce"
           },
           {
-            "id": 3,
-            "brandName": "Ford"
+              "id": 3,
+              "brandName": "Ferrari"
           },
           {
-            "id": 1,
-            "brandName": "Toyota"
+              "id": 1,
+              "brandName": "Audi"
           }
       ]
   }

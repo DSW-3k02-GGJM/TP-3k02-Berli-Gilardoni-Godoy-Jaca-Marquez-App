@@ -47,7 +47,7 @@ Cookie: access_token={token};
       "message": "La marca ha sido encontrada",
       "data": {
           "id": 2,
-          "brandName": "Chevrolet"
+          "brandName": "Rolls-Royce"
       }
   }
   ```

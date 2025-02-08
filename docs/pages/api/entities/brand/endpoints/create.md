@@ -26,7 +26,7 @@ Cookie: access_token={token};
 Content-Type: application/json
 
 {
-    "brandName": "Ford"
+    "brandName": "Ferrari"
 }
 ```
 
@@ -40,7 +40,7 @@ Content-Type: application/json
 
 ### Respuesta exitosa
 
-- #### 200 OK
+- #### 201 Created
 
   ```
   {
@@ -54,7 +54,7 @@ Content-Type: application/json
 
   - Parámetros requeridos en el cuerpo de la solicitud no proporcionados:
 
-    - Respuesta:
+    - Respuesta de ejemplo:
 
       ```
       {

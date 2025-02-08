@@ -30,7 +30,7 @@ Cookie: access_token={token};
 Content-Type: application/json
 
 {
-    "brandName": "Volkswagen"
+    "brandName": "Rollridge Motors"
 }
 ```
 

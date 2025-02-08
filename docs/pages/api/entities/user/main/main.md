@@ -1,25 +1,44 @@
-# **User**
+# **Usuario**
 
 ## **Endpoints disponibles**
 
-- ### **POST** - [login](../endpoints/login.md)
-- ### **POST** - [logout](../endpoints/logout.md)
-- ### **POST** - [register](../endpoints/register.md)
-- ### **POST** - [send-email-verification](../endpoints/sendEmailVerification.md)
-- ### **POST** - [verify-email-token](../endpoints/verifyEmailToken.md)
-- ### **POST** - [send-password-reset](../endpoints/sendPasswordReset.md)
-- ### **POST** - [is-authenticated](../endpoints/verifyAuthentication.md)
-- ### **POST** - [verify-password-reset-token](../endpoints/verifyPasswordResetToken.md)
-- ### **POST** - [authenticated-id](../endpoints/getAuthenticatedId.md)
-- ### **POST** - [authenticated-role](../endpoints/getAuthenticatedRole.md)
-- ### **POST** - [send-email](../endpoints/sendEmail.md)
-- ### **GET** - [email-exists](../endpoints/verifyEmailExists.md)
-- ### **GET** - [document-id-exists](../endpoints/verifyDocumentIDExists.md)
-- ### **GET** - [findAll](../endpoints/findAll.md)
-- ### **GET** - [findOne](../endpoints/findOne.md)
-- ### **POST** - [add](../endpoints/add.md)
-- ### **PUT** - [update](../endpoints/update.md)
-- ### **DELETE** - [remove](../endpoints/remove.md)
+- ### **GET** - [Obtener todos los usuarios](../endpoints/getAll.md)
+
+- ### **GET** - [Obtener usuario por ID](../endpoints/getOne.md)
+
+- ### **GET** - [Verificar disponibilidad de número de documento](../endpoints/verifyDocumentIDAvailability.md)
+
+- ### **GET** - [Verificar disponibilidad de email](../endpoints/verifyEmailAvailability.md)
+
+- ### **POST** - [Crear usuario](../endpoints/create.md)
+
+- ### **PUT** - [Actualizar usuario](../endpoints/update.md)
+
+- ### **DELETE** - [Eliminar usuario](../endpoints/delete.md)
+
+---
+
+- ### **POST** - [Registrar usuario](../endpoints/register.md)
+
+- ### **POST** - [Iniciar sesión](../endpoints/login.md)
+
+- ### **POST** - [Cerrar sesión](../endpoints/logout.md)
+
+- ### **POST** - [Enviar email personalizado](../endpoints/sendEmail.md)
+
+- ### **POST** - [Enviar email de verificación de cuenta](../endpoints/sendEmailVerification.md)
+
+- ### **POST** - [Validar token de verificación de cuenta](../endpoints/verifyEmailToken.md)
+
+- ### **POST** - [Enviar email para cambio de contraseña](../endpoints/sendPasswordReset.md)
+
+- ### **POST** - [Validar token de cambio de contraseña](../endpoints/verifyPasswordResetToken.md)
+
+- ### **POST** - [Verificar autenticación](../endpoints/verifyAuthentication.md)
+
+- ### **POST** - [Obtener ID del usuario autenticado](../endpoints/getAuthenticatedId.md)
+
+- ### **POST** - [Obtener rol del usuario autenticado](../endpoints/getAuthenticatedRole.md)
 
 ---
 
