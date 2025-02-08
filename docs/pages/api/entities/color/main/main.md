@@ -1,4 +1,4 @@
-# **Color**
+# 🎨 **Color**
 
 ## **Endpoints disponibles**
 

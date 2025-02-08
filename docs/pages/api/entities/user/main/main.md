@@ -1,4 +1,4 @@
-# **Usuario**
+# 👤 **Usuario**
 
 ## **Endpoints disponibles**
 

@@ -1,4 +1,4 @@
-# **Categoría**
+# 🏷️ **Categoría**
 
 ## **Endpoints disponibles**
 
