@@ -35,14 +35,14 @@ GET /api/vehicles/available?startDate=2025-02-08&endDate=2025-02-15&location=4
   - totalKms: integer. Kilometraje total del vehículo.
   - location: object. Objeto que representa la sucursal a la que corresponde el vehículo.
 
-  > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Sucursal](../../location/main/main.md).
+    > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Sucursal](../../location/main/main.md).
 
   - color: integer. Identificador del color del vehículo.
   - vehicleModel: object. Objeto que representa el modelo del vehículo.
 
-  > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Modelo](../../vehicle-model/main/main.md).
+    > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Modelo](../../vehicle-model/main/main.md).
 
-  > ⚠️ Nota: El modelo contendrá a su vez una [Categoría](../../category/main/main.md) y una [Marca](../../brand/main/main.md).
+    > ⚠️ **Nota**: El modelo contendrá a su vez una [Categoría](../../category/main/main.md) y una [Marca](../../brand/main/main.md).
 
 ### Respuesta exitosa de ejemplo
 

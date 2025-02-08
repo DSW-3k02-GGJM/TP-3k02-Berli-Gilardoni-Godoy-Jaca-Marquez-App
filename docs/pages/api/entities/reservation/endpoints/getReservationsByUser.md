@@ -42,9 +42,9 @@ Cookie: access_token={token};
   - finalPrice: integer. Precio final de la reserva.
   - vehicle: object. Objeto que representa el vehículo asociado a la reserva.
 
-  > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Vehículo](../../vehicle/main/main.md).
+    > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Vehículo](../../vehicle/main/main.md).
 
-  > ⚠️ Nota: El vehículo contendrá a su vez un [Modelo](../../vehicle-model/main/main.md), y, este último, una [Categoría](../../category/main/main.md) y una [Marca](../../brand/main/main.md).
+    > ⚠️ **Nota**: El vehículo contendrá a su vez un [Modelo](../../vehicle-model/main/main.md), y, este último, una [Categoría](../../category/main/main.md) y una [Marca](../../brand/main/main.md).
 
 ### Respuesta exitosa de ejemplo
 

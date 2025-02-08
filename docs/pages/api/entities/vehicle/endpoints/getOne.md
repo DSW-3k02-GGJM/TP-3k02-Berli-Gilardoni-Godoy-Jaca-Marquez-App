@@ -41,17 +41,17 @@ Cookie: access_token={token};
   - totalKms: integer. Kilometraje total del vehículo.
   - location: object. Objeto que representa la sucursal a la que corresponde el vehículo.
 
-  > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Sucursal](../../location/main/main.md).
+    > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Sucursal](../../location/main/main.md).
 
   - color: object. Objeto que representa el color del vehículo.
 
-  > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Color](../../color/main/main.md).
+    > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Color](../../color/main/main.md).
 
   - vehicleModel: object. Objeto que representa el modelo del vehículo.
 
-  > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Modelo](../../vehicle-model/main/main.md).
+    > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Modelo](../../vehicle-model/main/main.md).
 
-  > ⚠️ Nota: El modelo contendrá a su vez una [Marca](../../brand/main/main.md).
+    > ⚠️ **Nota**: El modelo contendrá a su vez una [Marca](../../brand/main/main.md).
 
 ### Respuesta exitosa de ejemplo
 

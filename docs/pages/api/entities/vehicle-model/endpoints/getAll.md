@@ -38,11 +38,11 @@ Cookie: access_token={token};
   - imagePath: string. Ruta de la imagen representativa del modelo.
   - category: object. Objeto que representa la categoría del modelo.
 
-  > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Categoría](../../category/main/main.md).
+    > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Categoría](../../category/main/main.md).
 
   - brand: object. Objeto que representa la marca del modelo.
 
-  > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Marca](../../brand/main/main.md).
+    > 💡 **Sugerencia:** Para más información, consultá la documentación de la entidad [Marca](../../brand/main/main.md).
 
 ### Respuesta exitosa de ejemplo
 
