@@ -1,0 +1,76 @@
+@use "../styles/colors" as colors;
+
+img {
+  width: 100px;
+  height: 100px;
+}
+
+.custom-blue {
+  background-color: colors.$main;
+}
+
+.title {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.message {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.unselectable {
+  user-select: none;
+}
+
+.form-control {
+  box-shadow: none;
+}
+
+.input-toggle-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.button {
+  height: 40px;
+}
+
+.button button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 5px;
+  border: none;
+  color: colors.$white;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: colors.$main;
+}
+
+.button button:hover {
+  background: colors.$secondary;
+}
+
+.button button:disabled {
+  background: colors.$secondary;
+  pointer-events: none;
+  opacity: 0.7;
+}
