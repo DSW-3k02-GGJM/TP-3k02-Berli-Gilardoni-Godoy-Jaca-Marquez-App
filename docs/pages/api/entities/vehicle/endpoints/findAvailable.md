@@ -124,7 +124,7 @@ GET /api/vehicles/available?startDate=2025-02-08&endDate=2025-02-15&location=4
 
   - Parámetros requeridos en la URL de la solicitud no proporcionados:
 
-    - Respuesta:
+    - Respuesta de ejemplo:
 
       ```
       {

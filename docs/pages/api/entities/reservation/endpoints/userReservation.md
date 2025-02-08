@@ -60,7 +60,7 @@ Content-Type: application/json
 
   - Parámetros requeridos en el cuerpo de la solicitud no proporcionados:
 
-    - Respuesta:
+    - Respuesta de ejemplo:
 
       ```
       {
@@ -74,7 +74,7 @@ Content-Type: application/json
 
       ```
       {
-          "message": "El campo \"startDate\" debe ser una fecha válida"
+          "message": "El campo \"plannedEndDate\" debe ser una fecha válida"
       }
       ```
 

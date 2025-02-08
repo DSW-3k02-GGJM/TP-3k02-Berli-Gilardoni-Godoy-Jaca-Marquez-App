@@ -60,7 +60,7 @@ Cookie: access_token={token};
 
   - Parámetros requeridos en el cuerpo de la solicitud no proporcionados:
 
-    - Respuesta:
+    - Respuesta de ejemplo:
 
       ```
       {
@@ -80,7 +80,7 @@ Cookie: access_token={token};
 
   - Kilometraje y/o precio final no numéricos o negativos:
 
-    - Respuesta:
+    - Respuesta de ejemplo:
 
       ```
       {
@@ -143,10 +143,13 @@ Cookie: access_token={token};
   1. Si el cliente devuelve el vehículo **antes o en la fecha de fin planeada** (`realEndDate ≤ plannedEndDate`):
 
      - **Si el depósito en garantía abonado inicialmente es reembolsable**:
+
        ```
        (pricePerDay * (plannedEndDate - startDate)) - depositValue
        ```
+
      - **Si el depósito en garantía abonado inicialmente no es reembolsable**:
+
        ```
        pricePerDay * (plannedEndDate - startDate)
        ```
@@ -154,9 +157,11 @@ Cookie: access_token={token};
   2. Si el cliente devuelve el vehículo **después de la fecha de fin planeada** (`realEndDate > plannedEndDate`):
 
      - **Si el depósito en garantía abonado inicialmente es reembolsable**:
+
        ```
        (pricePerDay * (realEndDate - startDate)) - depositValue
        ```
+
      - **Si el depósito en garantía abonado inicialmente no es reembolsable**:
 
        ```

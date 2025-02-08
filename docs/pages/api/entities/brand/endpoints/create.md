@@ -54,7 +54,7 @@ Content-Type: application/json
 
   - Parámetros requeridos en el cuerpo de la solicitud no proporcionados:
 
-    - Respuesta de ejemplo:
+    - Respuesta:
 
       ```
       {
