@@ -206,7 +206,7 @@ Ahora sí, para ejecutar los tests automáticos en nuestra aplicación, seguí l
 
             v. una nueva sucursal.
 
-            vi. un nueva modelo.
+            vi. un nuevo modelo.
 
             vii. un nuevo vehículo.
 
