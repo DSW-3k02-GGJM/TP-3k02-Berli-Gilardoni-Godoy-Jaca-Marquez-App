@@ -5,16 +5,17 @@
   <mat-card-content>No hay sucursales registradas</mat-card-content>
 </mat-card>
 <div *ngIf="locations.length > 0">
-  <mat-form-field class="input-box" hideRequiredMarker="true">
-    <mat-label>Búsqueda por Nombre</mat-label>
-    <input
-      matInput
-      type="text"
-      [(ngModel)]="filterRows"
-      name="filterPost"
-      placeholder="Escribe al menos 3 caracteres..."
-    />
-  </mat-form-field>
+  <form [formGroup]="filterForm">
+    <mat-form-field class="input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Nombre</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="searchText"
+        placeholder="Escribe al menos 3 caracteres..."
+      />
+    </mat-form-field>
+  </form>
   <div class="tables-div">
     <mat-card
       *ngIf="filteredLocations.length === 0"
@@ -37,11 +38,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="
-            let location of locations | filter : filterRows : 'locationName'
-          "
-        >
+        <tr *ngFor="let location of filteredLocations">
           <td>{{ location.locationName }}</td>
           <td>{{ location.address }}</td>
           <td>{{ location.phoneNumber }}</td>

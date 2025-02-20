@@ -1,8 +1,14 @@
 // Angular
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+} from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // Angular Material
@@ -30,9 +36,6 @@ import { Message } from '@shared/interfaces/message.interface';
 // Types
 import { ActionButtons } from '@shared/types/action-buttons.type';
 
-// Pipes
-import { LocationFilterPipe } from '@core/location/pipes/location-filter.pipe';
-
 @Component({
   selector: 'app-locations-table',
   standalone: true,
@@ -40,10 +43,9 @@ import { LocationFilterPipe } from '@core/location/pipes/location-filter.pipe';
   styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatCardModule,
-    LocationFilterPipe,
     ActionButtonsComponent,
   ],
 })
@@ -51,7 +53,11 @@ export class LocationsTableComponent {
   @Input() locations: Location[] = [];
   @Output() locationDeleted: EventEmitter<void> = new EventEmitter<void>();
 
-  filterRows: string = '';
+  filteredLocations: Location[] = [];
+
+  filterForm: FormGroup = new FormGroup({
+    searchText: new FormControl(''),
+  });
 
   constructor(
     private readonly locationApiService: LocationApiService,
@@ -59,6 +65,27 @@ export class LocationsTableComponent {
     private readonly openDialogService: OpenDialogService,
     private readonly router: Router
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['locations']?.currentValue !== changes['locations']?.previousValue
+    ) {
+      this.filteredLocations = [...this.locations];
+      this.filterForm.get('searchText')?.valueChanges.subscribe({
+        next: (value: string) => this.applyFilter(value || ''),
+      });
+    }
+  }
+
+  private applyFilter(filterValue: string): void {
+    if (filterValue.length < 3) {
+      this.filteredLocations = [...this.locations];
+    } else {
+      this.filteredLocations = this.locations.filter((location: Location) =>
+        location.locationName.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+  }
 
   private openDeleteDialog(name: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
@@ -88,14 +115,6 @@ export class LocationsTableComponent {
       message: error.error?.message,
       goTo: error.status === 500 ? '/home' : null,
     } as ErrorDialogOptions);
-  }
-
-  get filteredLocations(): Location[] {
-    return this.locations.filter((location: Location) =>
-      location.locationName
-        .toLowerCase()
-        .includes(this.filterRows.toLowerCase())
-    );
   }
 
   private getLocationName(location: ActionButtons): string {

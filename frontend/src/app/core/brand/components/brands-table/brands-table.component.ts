@@ -1,8 +1,14 @@
 // Angular
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+} from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // Angular Material
@@ -30,9 +36,6 @@ import { Message } from '@shared/interfaces/message.interface';
 // Types
 import { ActionButtons } from '@shared/types/action-buttons.type';
 
-// Pipes
-import { BrandFilterPipe } from '@core/brand/pipes/brand-filter.pipe';
-
 @Component({
   selector: 'app-brands-table',
   standalone: true,
@@ -40,10 +43,9 @@ import { BrandFilterPipe } from '@core/brand/pipes/brand-filter.pipe';
   styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatCardModule,
-    BrandFilterPipe,
     ActionButtonsComponent,
   ],
 })
@@ -51,7 +53,11 @@ export class BrandsTableComponent {
   @Input() brands: Brand[] = [];
   @Output() brandDeleted: EventEmitter<void> = new EventEmitter<void>();
 
-  filterRows: string = '';
+  filteredBrands: Brand[] = [];
+
+  filterForm: FormGroup = new FormGroup({
+    searchText: new FormControl(''),
+  });
 
   constructor(
     private readonly brandApiService: BrandApiService,
@@ -59,6 +65,25 @@ export class BrandsTableComponent {
     private readonly openDialogService: OpenDialogService,
     private readonly router: Router
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['brands']?.currentValue !== changes['brands']?.previousValue) {
+      this.filteredBrands = [...this.brands];
+      this.filterForm.get('searchText')?.valueChanges.subscribe({
+        next: (value: string) => this.applyFilter(value || ''),
+      });
+    }
+  }
+
+  private applyFilter(filterValue: string): void {
+    if (filterValue.length < 3) {
+      this.filteredBrands = [...this.brands];
+    } else {
+      this.filteredBrands = this.brands.filter((brand: Brand) =>
+        brand.brandName.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+  }
 
   private openDeleteDialog(name: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
@@ -88,12 +113,6 @@ export class BrandsTableComponent {
       message: error.error?.message,
       goTo: error.status === 500 ? '/home' : null,
     } as ErrorDialogOptions);
-  }
-
-  get filteredBrands(): Brand[] {
-    return this.brands.filter((brand: Brand) =>
-      brand.brandName.toLowerCase().includes(this.filterRows.toLowerCase())
-    );
   }
 
   private getBrandName(brand: ActionButtons): string {

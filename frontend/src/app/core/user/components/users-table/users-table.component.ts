@@ -1,8 +1,14 @@
 // Angular
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+} from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // Angular Material
@@ -31,9 +37,6 @@ import { Message } from '@shared/interfaces/message.interface';
 // Types
 import { ActionButtons } from '@shared/types/action-buttons.type';
 
-// Pipes
-import { UserFilterPipe } from '@core/user/pipes/user-filter.pipe';
-
 @Component({
   selector: 'app-users-table',
   standalone: true,
@@ -41,10 +44,9 @@ import { UserFilterPipe } from '@core/user/pipes/user-filter.pipe';
   styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatCardModule,
-    UserFilterPipe,
     ActionButtonsComponent,
   ],
 })
@@ -52,7 +54,11 @@ export class UsersTableComponent {
   @Input() users: User[] = [];
   @Output() userDeleted: EventEmitter<void> = new EventEmitter<void>();
 
-  filterRows: string = '';
+  filteredUsers: User[] = [];
+
+  filterForm: FormGroup = new FormGroup({
+    searchText: new FormControl(''),
+  });
 
   constructor(
     private readonly userApiService: UserApiService,
@@ -61,6 +67,25 @@ export class UsersTableComponent {
     private readonly formatDateService: FormatDateService,
     private readonly router: Router
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['users']?.currentValue !== changes['users']?.previousValue) {
+      this.filteredUsers = [...this.users];
+      this.filterForm.get('searchText')?.valueChanges.subscribe({
+        next: (value: string) => this.applyFilter(value || ''),
+      });
+    }
+  }
+
+  private applyFilter(filterValue: string): void {
+    if (filterValue.length < 3) {
+      this.filteredUsers = [...this.users];
+    } else {
+      this.filteredUsers = this.users.filter((user: User) =>
+        user.email.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+  }
 
   private openDeleteDialog(name: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
@@ -94,12 +119,6 @@ export class UsersTableComponent {
 
   formatBirthDate(date: string): string {
     return this.formatDateService.fromDashToSlash(date);
-  }
-
-  get filteredUsers(): User[] {
-    return this.users.filter((user: User) =>
-      user.email.toLowerCase().includes(this.filterRows.toLowerCase())
-    );
   }
 
   private getUserFullName(user: ActionButtons): string {

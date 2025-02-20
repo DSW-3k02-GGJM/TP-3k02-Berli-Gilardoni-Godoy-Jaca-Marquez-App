@@ -1,8 +1,14 @@
 // Angular
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+} from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // Angular Material
@@ -30,9 +36,6 @@ import { Message } from '@shared/interfaces/message.interface';
 // Types
 import { ActionButtons } from '@shared/types/action-buttons.type';
 
-// Pipes
-import { ColorFilterPipe } from '@core/color/pipes/color-filter.pipe';
-
 @Component({
   selector: 'app-colors-table',
   standalone: true,
@@ -40,10 +43,9 @@ import { ColorFilterPipe } from '@core/color/pipes/color-filter.pipe';
   styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatCardModule,
-    ColorFilterPipe,
     ActionButtonsComponent,
   ],
 })
@@ -51,7 +53,11 @@ export class ColorsTableComponent {
   @Input() colors: Color[] = [];
   @Output() colorDeleted: EventEmitter<void> = new EventEmitter<void>();
 
-  filterRows: string = '';
+  filteredColors: Color[] = [];
+
+  filterForm: FormGroup = new FormGroup({
+    searchText: new FormControl(''),
+  });
 
   constructor(
     private readonly colorApiService: ColorApiService,
@@ -59,6 +65,25 @@ export class ColorsTableComponent {
     private readonly openDialogService: OpenDialogService,
     private readonly router: Router
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['colors']?.currentValue !== changes['colors']?.previousValue) {
+      this.filteredColors = [...this.colors];
+      this.filterForm.get('searchText')?.valueChanges.subscribe({
+        next: (value: string) => this.applyFilter(value || ''),
+      });
+    }
+  }
+
+  private applyFilter(filterValue: string): void {
+    if (filterValue.length < 3) {
+      this.filteredColors = [...this.colors];
+    } else {
+      this.filteredColors = this.colors.filter((color: Color) =>
+        color.colorName.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+  }
 
   private openDeleteDialog(name: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
@@ -88,12 +113,6 @@ export class ColorsTableComponent {
       message: error.error?.message,
       goTo: error.status === 500 ? '/home' : null,
     } as ErrorDialogOptions);
-  }
-
-  get filteredColors(): Color[] {
-    return this.colors.filter((color: Color) =>
-      color.colorName.toLowerCase().includes(this.filterRows.toLowerCase())
-    );
   }
 
   private getColorName(color: ActionButtons): string {

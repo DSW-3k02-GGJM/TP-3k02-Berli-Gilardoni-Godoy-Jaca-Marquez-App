@@ -5,16 +5,17 @@
   <mat-card-content>No hay modelos registrados</mat-card-content>
 </mat-card>
 <div *ngIf="vehicleModels.length > 0">
-  <mat-form-field class="input-box" hideRequiredMarker="true">
-    <mat-label>Búsqueda por Nombre</mat-label>
-    <input
-      matInput
-      type="text"
-      [(ngModel)]="filterRows"
-      name="filterPost"
-      placeholder="Escribe al menos 3 caracteres..."
-    />
-  </mat-form-field>
+  <form [formGroup]="filterForm">
+    <mat-form-field class="input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Nombre</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="searchText"
+        placeholder="Escribe al menos 3 caracteres..."
+      />
+    </mat-form-field>
+  </form>
   <div class="tables-div">
     <mat-card
       *ngIf="filteredVehicleModels.length === 0"
@@ -39,12 +40,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="
-            let vehicleModel of vehicleModels
-              | filter : filterRows : 'vehicleModelName'
-          "
-        >
+        <tr *ngFor="let vehicleModel of filteredVehicleModels">
           <td>{{ vehicleModel.vehicleModelName }}</td>
           <td>{{ vehicleModel.transmissionType }}</td>
           <td>{{ vehicleModel.passengerCount }}</td>

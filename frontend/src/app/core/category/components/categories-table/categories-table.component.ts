@@ -1,8 +1,14 @@
 // Angular
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+} from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // Angular Material
@@ -30,9 +36,6 @@ import { Message } from '@shared/interfaces/message.interface';
 // Types
 import { ActionButtons } from '@shared/types/action-buttons.type';
 
-// Pipes
-import { CategoryFilterPipe } from '@core/category/pipes/category-filter.pipe';
-
 @Component({
   selector: 'app-categories-table',
   standalone: true,
@@ -40,10 +43,9 @@ import { CategoryFilterPipe } from '@core/category/pipes/category-filter.pipe';
   styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatCardModule,
-    CategoryFilterPipe,
     ActionButtonsComponent,
   ],
 })
@@ -51,7 +53,11 @@ export class CategoriesTableComponent {
   @Input() categories: Category[] = [];
   @Output() categoryDeleted: EventEmitter<void> = new EventEmitter<void>();
 
-  filterRows: string = '';
+  filteredCategories: Category[] = [];
+
+  filterForm: FormGroup = new FormGroup({
+    searchText: new FormControl(''),
+  });
 
   constructor(
     private readonly categoryApiService: CategoryApiService,
@@ -59,6 +65,28 @@ export class CategoriesTableComponent {
     private readonly openDialogService: OpenDialogService,
     private readonly router: Router
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['categories']?.currentValue !==
+      changes['categories']?.previousValue
+    ) {
+      this.filteredCategories = [...this.categories];
+      this.filterForm.get('searchText')?.valueChanges.subscribe({
+        next: (value: string) => this.applyFilter(value || ''),
+      });
+    }
+  }
+
+  private applyFilter(filterValue: string): void {
+    if (filterValue.length < 3) {
+      this.filteredCategories = [...this.categories];
+    } else {
+      this.filteredCategories = this.categories.filter((category: Category) =>
+        category.categoryName.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+  }
 
   private openDeleteDialog(name: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
@@ -88,14 +116,6 @@ export class CategoriesTableComponent {
       message: error.error?.message,
       goTo: error.status === 500 ? '/home' : null,
     } as ErrorDialogOptions);
-  }
-
-  get filteredCategories(): Category[] {
-    return this.categories.filter((category: Category) =>
-      category.categoryName
-        .toLowerCase()
-        .includes(this.filterRows.toLowerCase())
-    );
   }
 
   private getCategoryName(category: ActionButtons): string {

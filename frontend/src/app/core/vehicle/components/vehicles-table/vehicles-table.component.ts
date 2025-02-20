@@ -1,8 +1,14 @@
 // Angular
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+} from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // Angular Material
@@ -30,9 +36,6 @@ import { Message } from '@shared/interfaces/message.interface';
 // Types
 import { ActionButtons } from '@shared/types/action-buttons.type';
 
-// Pipes
-import { VehicleFilterPipe } from '@core/vehicle/pipes/vehicle-filter.pipe';
-
 @Component({
   selector: 'app-vehicles-table',
   standalone: true,
@@ -40,10 +43,9 @@ import { VehicleFilterPipe } from '@core/vehicle/pipes/vehicle-filter.pipe';
   styleUrl: '../../../../shared/styles/generic-table.scss',
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatCardModule,
-    VehicleFilterPipe,
     ActionButtonsComponent,
   ],
 })
@@ -51,7 +53,11 @@ export class VehiclesTableComponent {
   @Input() vehicles: Vehicle[] = [];
   @Output() vehicleDeleted: EventEmitter<void> = new EventEmitter<void>();
 
-  filterRows: string = '';
+  filteredVehicles: Vehicle[] = [];
+
+  filterForm: FormGroup = new FormGroup({
+    searchText: new FormControl(''),
+  });
 
   constructor(
     private readonly vehicleApiService: VehicleApiService,
@@ -59,6 +65,27 @@ export class VehiclesTableComponent {
     private readonly openDialogService: OpenDialogService,
     private readonly router: Router
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['vehicles']?.currentValue !== changes['vehicles']?.previousValue
+    ) {
+      this.filteredVehicles = [...this.vehicles];
+      this.filterForm.get('searchText')?.valueChanges.subscribe({
+        next: (value: string) => this.applyFilter(value || ''),
+      });
+    }
+  }
+
+  private applyFilter(filterValue: string): void {
+    if (filterValue.length < 3) {
+      this.filteredVehicles = [...this.vehicles];
+    } else {
+      this.filteredVehicles = this.vehicles.filter((vehicle: Vehicle) =>
+        vehicle.licensePlate.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+  }
 
   private openDeleteDialog(licensePlate: string, id: number): void {
     const dialogRef: MatDialogRef<GenericDialogComponent, boolean> =
@@ -88,12 +115,6 @@ export class VehiclesTableComponent {
       message: error.error?.message,
       goTo: error.status === 500 ? '/home' : null,
     } as ErrorDialogOptions);
-  }
-
-  get filteredVehicles(): Vehicle[] {
-    return this.vehicles.filter((vehicle: Vehicle) =>
-      vehicle.licensePlate.toLowerCase().includes(this.filterRows.toLowerCase())
-    );
   }
 
   getBrandName(vehicle: Vehicle): string {

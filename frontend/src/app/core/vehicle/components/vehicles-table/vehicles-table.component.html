@@ -5,16 +5,17 @@
   <mat-card-content>No hay vehículos registrados</mat-card-content>
 </mat-card>
 <div *ngIf="vehicles.length > 0">
-  <mat-form-field class="input-box" hideRequiredMarker="true">
-    <mat-label>Búsqueda por Patente</mat-label>
-    <input
-      matInput
-      type="text"
-      [(ngModel)]="filterRows"
-      name="filterPost"
-      placeholder="Escribe al menos 3 caracteres..."
-    />
-  </mat-form-field>
+  <form [formGroup]="filterForm">
+    <mat-form-field class="input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Patente</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="searchText"
+        placeholder="Escribe al menos 3 caracteres..."
+      />
+    </mat-form-field>
+  </form>
   <div class="tables-div">
     <mat-card
       *ngIf="filteredVehicles.length === 0"
@@ -40,11 +41,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="
-            let vehicle of vehicles | filter : filterRows : 'licensePlate'
-          "
-        >
+        <tr *ngFor="let vehicle of filteredVehicles">
           <td>{{ vehicle.licensePlate }}</td>
           <td>{{ vehicle.manufacturingYear }}</td>
           <td>{{ vehicle.totalKms }}</td>
