@@ -1,0 +1,27 @@
+@use "../../../../shared/styles/colors" as colors;
+
+.filter {
+  align-items: stretch;
+}
+
+.date-input-box {
+  flex: 0 1 390px;
+}
+
+.no-reservations {
+  width: fit-content;
+  margin: auto;
+  padding: 10px;
+}
+
+.btn-find {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+  background-color: colors.$main;
+  border: 1px solid colors.$white;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-find:hover {
+  background-color: colors.$secondary;
+  box-shadow: 0px 4px 8px colors.$black;
+}

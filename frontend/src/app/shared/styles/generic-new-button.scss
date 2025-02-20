@@ -1,0 +1,19 @@
+@use "../styles/colors" as colors;
+
+button {
+  color: colors.$white;
+  font-size: 1.05rem;
+  font-weight: 500;
+  background-color: colors.$main;
+  border: 0.2rem solid colors.$white;
+  border-radius: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  transition: background-color 0.4s ease, transform 0.2s ease;
+  box-shadow: 0 0.5rem 1rem colors.$new-button;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: colors.$staff-navbar;
+  transform: scale(1.03);
+}

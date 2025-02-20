@@ -1,0 +1,185 @@
+@use "../../../../shared/styles/colors" as colors;
+
+p {
+  margin-bottom: 6px;
+}
+
+.card {
+  width: 400px;
+  aspect-ratio: 1 / 0.7;
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+  margin: 0.8rem auto;
+  overflow: hidden;
+}
+
+.card .image-box {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.card .image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 90%;
+  border-radius: inherit;
+  transition: 0.5s ease-in-out;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid colors.$white;
+  border-radius: inherit;
+  opacity: 0;
+  transition: 0.4s ease-in-out;
+}
+
+.card:hover::after {
+  opacity: 1;
+  inset: 14px;
+}
+
+.card:hover img {
+  filter: grayscale(1) brightness(0.4);
+}
+
+.content {
+  width: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.content h2,
+.content p {
+  opacity: 0;
+  transition: 0.4s 0.2s ease;
+}
+
+.content h2 {
+  color: colors.$white;
+  font-size: 1.7rem;
+  margin-bottom: 12px;
+  scale: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content p {
+  color: colors.$gray;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  transform: translateY(50%);
+}
+
+.card:hover .content h2 {
+  scale: 1;
+  opacity: 1;
+}
+
+.card:hover .content p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.btn-reservation {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: colors.$btn-reservation;
+  color: colors.$white;
+  border: 2px solid colors.$white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  transform: translateY(20px);
+  position: relative;
+}
+
+.card:hover .btn-reservation {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.prices {
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 300px;
+    margin: 0.6rem auto;
+  }
+
+  .card:hover::after {
+    inset: 10px;
+  }
+
+  .content {
+    top: 9%;
+    transform: translate(-50%, 0);
+  }
+
+  .content h2 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .content p {
+    font-size: 0.75rem;
+  }
+
+  .prices {
+    font-size: 0.85rem;
+  }
+
+  .btn-reservation {
+    margin-top: 8px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    width: 200px;
+    margin: 0.4rem auto;
+  }
+
+  .card:hover::after {
+    inset: 8px;
+  }
+
+  .content {
+    top: 12%;
+    transform: translate(-50%, 0);
+  }
+
+  .content h2 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+
+  .content p {
+    font-size: 0.6rem;
+  }
+
+  .prices {
+    font-size: 0.7rem;
+  }
+
+  .btn-reservation {
+    display: none;
+  }
+}

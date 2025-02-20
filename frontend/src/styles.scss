@@ -1,0 +1,23 @@
+@use "@angular/material" as mat;
+@use "./app/shared/styles/m3-theme.scss" as custom;
+@use "./app/shared/styles/colors" as colors;
+
+@include mat.core();
+
+$alquiler-vehiculos-theme: custom.$light-theme;
+
+:root {
+  @include mat.all-component-themes($alquiler-vehiculos-theme);
+}
+
+@include mat.color-variants-backwards-compatibility($alquiler-vehiculos-theme);
+
+html,
+body {
+  background-color: colors.$secondary;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}

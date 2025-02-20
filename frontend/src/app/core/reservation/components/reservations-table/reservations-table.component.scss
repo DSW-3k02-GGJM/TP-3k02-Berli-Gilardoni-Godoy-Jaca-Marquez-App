@@ -1,0 +1,16 @@
+.filter {
+  display: flex;
+  justify-content: between;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.date-input-box {
+  flex: 0 1 30.5%;
+}
+
+@media (max-width: 768px) {
+  .filter {
+    display: block;
+  }
+}

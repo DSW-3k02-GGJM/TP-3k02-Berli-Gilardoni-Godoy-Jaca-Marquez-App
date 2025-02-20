@@ -1,0 +1,57 @@
+<mat-card
+  *ngIf="locations.length === 0"
+  class="bg-dark border border-white text-white text-center fs-4 mt-4"
+>
+  <mat-card-content>No hay sucursales registradas</mat-card-content>
+</mat-card>
+<div *ngIf="locations.length > 0">
+  <form [formGroup]="filterForm">
+    <mat-form-field class="input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Nombre</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="searchText"
+        placeholder="Escribe al menos 3 caracteres..."
+      />
+    </mat-form-field>
+  </form>
+  <div class="tables-div">
+    <mat-card
+      *ngIf="filteredLocations.length === 0"
+      class="bg-dark border border-white text-white text-center fs-4 mt-2"
+    >
+      <mat-card-content
+        >🔍 No se encontraron resultados para la búsqueda</mat-card-content
+      >
+    </mat-card>
+    <table
+      *ngIf="filteredLocations.length > 0"
+      class="table table-dark table-hover table-bordered table-sm border border-white text-center"
+    >
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Dirección</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let location of filteredLocations">
+          <td>{{ location.locationName }}</td>
+          <td>{{ location.address }}</td>
+          <td>{{ location.phoneNumber }}</td>
+          <td class="actions-column">
+            <app-action-buttons
+              [entity]="location"
+              [disableDeletion]="false"
+              (editEntity)="editLocation($event)"
+              (deleteEntity)="deleteLocation($event)"
+            ></app-action-buttons>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

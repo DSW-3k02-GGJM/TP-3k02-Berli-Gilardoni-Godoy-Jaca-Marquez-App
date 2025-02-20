@@ -1,0 +1,95 @@
+<h2 mat-dialog-title class="title text-{{ data.titleColor }} unselectable">
+  {{ data.title }}
+</h2>
+<mat-dialog-content class="content unselectable">
+  <img src="{{ data.image }}" alt="{{ getAltText(data.image) }}" />
+  <div *ngIf="data.message">
+    <hr />
+    <p class="message">{{ data.message }}</p>
+    <hr *ngIf="data.showCheckOutFields" />
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions
+  [ngClass]="data.showCheckOutFields ? 'd-flex justify-content-center' : ''"
+>
+  <ng-container *ngIf="!data.showCheckOutFields">
+    <button
+      *ngIf="data.showBackButton"
+      mat-button
+      [mat-dialog-close]="false"
+      cdkFocusInitial
+    >
+      {{ data.backButtonTitle }}
+    </button>
+    <button
+      mat-button
+      [mat-dialog-close]="true"
+      [ngClass]="
+        data.mainButtonColor ? 'text-white ' + data.mainButtonColor : ''
+      "
+    >
+      {{ data.mainButtonTitle }}
+    </button>
+  </ng-container>
+  <ng-container *ngIf="data.showCheckOutFields">
+    <form
+      app-prevent-enter
+      [formGroup]="checkOutForm"
+      (ngSubmit)="confirm()"
+      autocomplete="off"
+    >
+      <mat-form-field
+        class="input-box mb-4"
+        appearance="outline"
+        hideRequiredMarker="true"
+      >
+        <mat-label>Kilometraje</mat-label>
+        <input
+          matInput
+          id="finalKms"
+          class="form-control"
+          type="number"
+          formControlName="finalKms"
+          placeholder=""
+          [min]="(data.initialKms ?? 0) + 1"
+        />
+        <mat-error *ngIf="checkOutForm.get('finalKms')?.errors?.required">
+          El kilometraje es requerido.
+        </mat-error>
+        <mat-error *ngIf="checkOutForm.get('finalKms')?.errors?.min">
+          El kilometraje debe ser mayor a {{ data.initialKms }}.
+        </mat-error>
+        <mat-error
+          *ngIf="
+            checkOutForm.get('finalKms')?.errors?.pattern &&
+            !checkOutForm.get('finalKms')?.errors?.min
+          "
+        >
+          El kilometraje debe ser un número entero.
+        </mat-error>
+      </mat-form-field>
+      <div class="input-toggle-box mb-5">
+        <p class="text m-0">Devolver depósito:</p>
+        <mat-slide-toggle
+          formControlName="returnDeposit"
+          name="returnDeposit"
+        ></mat-slide-toggle>
+      </div>
+      <div class="d-flex align-items-center justify-content-between">
+        <button
+          *ngIf="data.showBackButton"
+          mat-button
+          [mat-dialog-close]="false"
+          cdkFocusInitial
+        >
+          {{ data.backButtonTitle }}
+        </button>
+        <div class="button">
+          <button type="submit" [disabled]="checkOutForm.invalid">
+            {{ data.mainButtonTitle }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</mat-dialog-actions>

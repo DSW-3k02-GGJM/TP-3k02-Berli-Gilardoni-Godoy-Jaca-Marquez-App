@@ -1,0 +1,10 @@
+<div class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4">
+  <h2 class="text-white my-0 ms-4">Nuestros usuarios</h2>
+  <button (click)="newUser()">Nuevo</button>
+</div>
+<section class="users-list mt-4 mx-4">
+  <app-users-table
+    [users]="users"
+    (userDeleted)="onUserDeleted()"
+  ></app-users-table>
+</section>

@@ -1,0 +1,10 @@
+<div class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4">
+  <h2 class="text-white my-0 ms-4">Nuestros modelos</h2>
+  <button (click)="newVehicleModel()">Nuevo</button>
+</div>
+<section class="vehicle-models-list mt-4 mx-4">
+  <app-vehicle-models-table
+    [vehicleModels]="vehicleModels"
+    (vehicleModelDeleted)="onVehicleModelDeleted()"
+  ></app-vehicle-models-table>
+</section>

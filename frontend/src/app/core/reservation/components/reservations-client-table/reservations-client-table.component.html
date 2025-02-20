@@ -1,0 +1,112 @@
+<mat-card
+  *ngIf="reservations.length === 0"
+  class="bg-dark border border-white text-white text-center fs-3 mt-3 no-reservations"
+>
+  <mat-card-content>
+    <p>
+      ¡Tu próxima aventura te espera! Explora nuestras opciones y realiza tu
+      primera reserva ahora...
+    </p>
+    <button
+      class="btn btn-find btn-lg text-white"
+      (click)="navigateToReservation()"
+    >
+      Buscar vehículos
+    </button>
+  </mat-card-content>
+</mat-card>
+<div *ngIf="reservations.length > 0">
+  <div class="d-flex gap-3 filter">
+    <mat-form-field class="input-box date-input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Fecha</mat-label>
+      <input
+        matInput
+        [(ngModel)]="filterDate"
+        name="filterDate"
+        type="date"
+        (ngModelChange)="filterReservations()"
+      />
+    </mat-form-field>
+  </div>
+  <div class="tables-div">
+    <mat-card
+      *ngIf="filteredReservations.length === 0"
+      class="bg-dark border border-white text-white text-center fs-4 mt-2"
+    >
+      <mat-card-content
+        >🔍 No se encontraron resultados para la búsqueda</mat-card-content
+      >
+    </mat-card>
+    <table
+      *ngIf="filteredReservations.length > 0"
+      class="table table-dark table-hover table-bordered table-sm border border-white text-center"
+    >
+      <thead>
+        <tr>
+          <th>Fecha de Reserva</th>
+          <th>Vehículo</th>
+          <th>Estado</th>
+          <th>Fecha Inicio Reserva</th>
+          <th>Fecha Fin Reserva</th>
+          <th>Devolucion del Vehiculo</th>
+          <th>Precio Final</th>
+          <th>Cancelar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reservation of filteredReservations">
+          <td>{{ formatDate(reservation.reservationDate ?? "") }}</td>
+          <td>
+            {{
+              getBrandName(reservation.vehicle) +
+                " " +
+                getVehicleModelName(reservation.vehicle)
+            }}
+          </td>
+          <td>
+            {{
+              reservation.realEndDate
+                ? "Finalizada"
+                : reservation.cancellationDate
+                ? "Cancelada"
+                : reservation.initialKms
+                ? "Check-in realizado"
+                : "Sin iniciar"
+            }}
+          </td>
+          <td>{{ formatDate(reservation.startDate ?? "") }}</td>
+          <td>{{ formatDate(reservation.plannedEndDate ?? "") }}</td>
+          <td>
+            {{
+              reservation.realEndDate
+                ? formatDate(reservation.realEndDate)
+                : reservation.cancellationDate
+                ? "Reserva cancelada"
+                : "No devuelto"
+            }}
+          </td>
+          <td>
+            {{
+              reservation.realEndDate
+                ? "$" + reservation.finalPrice
+                : reservation.cancellationDate
+                ? "Reserva cancelada"
+                : "Reserva no finalizada"
+            }}
+          </td>
+          <td>
+            <button
+              class="btn btn-dark fs-5"
+              (click)="cancelReservation(reservation)"
+              [disabled]="
+                reservation.cancellationDate || disableCancellation(reservation)
+              "
+            >
+              🚫
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

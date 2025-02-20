@@ -1,0 +1,13 @@
+<div class="container unselectable">
+  <div class="content" *ngIf="!pending">
+    <img [src]="getImagePath()" [alt]="image" />
+    <p class="title">{{ message }}</p>
+    <div class="button">
+      <button (click)="navigateToLogin()">Aceptar</button>
+    </div>
+  </div>
+  <div class="content" *ngIf="pending">
+    <mat-spinner diameter="150"></mat-spinner>
+    <p class="title">Verificando...</p>
+  </div>
+</div>

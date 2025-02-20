@@ -1,0 +1,21 @@
+<div class="card" (click)="placeReservation()">
+  <div class="image-box">
+    <img [src]="completeImageUrl" alt="vehicle-model-image" />
+  </div>
+  <div class="content">
+    <h2>{{ vehicle.brand + " " + vehicle.vehicleModel }}</h2>
+    <p>{{ vehicle.category }}</p>
+    <p>Cantidad de Pasajeros: {{ vehicle.passengerCount }}</p>
+    <p>
+      Precio por día:
+      <span class="prices">${{ vehicle.pricePerDay }}.00</span>
+    </p>
+    <p>
+      Valor del Depósito:
+      <span class="prices">${{ vehicle.deposit }}.00</span>
+    </p>
+    <button class="btn-reservation" (click)="placeReservation()">
+      Alquilar
+    </button>
+  </div>
+</div>

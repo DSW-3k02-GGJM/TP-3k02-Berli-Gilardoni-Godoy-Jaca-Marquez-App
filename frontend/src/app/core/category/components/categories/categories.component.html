@@ -1,0 +1,10 @@
+<div class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4">
+  <h2 class="text-white my-0 ms-4">Nuestras categorías</h2>
+  <button (click)="newCategory()">Nueva</button>
+</div>
+<section class="categories-list mt-4 mx-4">
+  <app-categories-table
+    [categories]="categories"
+    (categoryDeleted)="onCategoryDeleted()"
+  ></app-categories-table>
+</section>

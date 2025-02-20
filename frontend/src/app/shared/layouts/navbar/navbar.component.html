@@ -1,0 +1,93 @@
+<nav class="navbar navbar-expand-lg unselectable">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/" (click)="toggleNavbar()">
+      <img
+        src="assets/logos/alquilcar.png"
+        alt="logo"
+        class="logo d-inline-block align-text-top"
+      />
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbar-dark" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="showReservationButton()">
+          <a
+            class="nav-link text-white"
+            routerLink="/reservation"
+            routerLinkActive="active"
+            (click)="toggleNavbar()"
+            >Reservar</a
+          >
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <ng-container *ngIf="!isLogged; else loggedIn">
+          <li class="nav-item">
+            <a
+              class="nav-link text-white"
+              routerLink="/login"
+              routerLinkActive="active"
+              (click)="toggleNavbar()"
+              >Iniciar sesión</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link text-white"
+              routerLink="/register"
+              routerLinkActive="active"
+              (click)="toggleNavbar()"
+              >Registrarse</a
+            >
+          </li>
+        </ng-container>
+        <ng-template #loggedIn>
+          <li class="nav-item">
+            <a
+              class="nav-link text-white logout"
+              (click)="toggleNavbar(); logout()"
+              >Cerrar Sesión</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link text-white"
+              [routerLink]="profileLink"
+              routerLinkActive="active"
+              (click)="toggleNavbar()"
+              >Mi perfil</a
+            >
+          </li>
+          <li class="nav-item" *ngIf="isAdminOrEmployee">
+            <a
+              class="nav-link text-white"
+              routerLink="/staff/reservations"
+              routerLinkActive="active"
+              (click)="toggleNavbar()"
+              >Menú Staff</a
+            >
+          </li>
+          <li class="nav-item" *ngIf="!isAdminOrEmployee">
+            <a
+              class="nav-link text-white"
+              routerLink="/user-reservations"
+              routerLinkActive="active"
+              (click)="toggleNavbar()"
+              >Mis reservas</a
+            >
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</nav>

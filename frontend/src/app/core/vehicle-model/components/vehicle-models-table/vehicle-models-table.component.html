@@ -1,0 +1,61 @@
+<mat-card
+  *ngIf="vehicleModels.length === 0"
+  class="bg-dark border border-white text-white text-center fs-4 mt-4"
+>
+  <mat-card-content>No hay modelos registrados</mat-card-content>
+</mat-card>
+<div *ngIf="vehicleModels.length > 0">
+  <form [formGroup]="filterForm">
+    <mat-form-field class="input-box" hideRequiredMarker="true">
+      <mat-label>Búsqueda por Nombre</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="searchText"
+        placeholder="Escribe al menos 3 caracteres..."
+      />
+    </mat-form-field>
+  </form>
+  <div class="tables-div">
+    <mat-card
+      *ngIf="filteredVehicleModels.length === 0"
+      class="bg-dark border border-white text-white text-center fs-4 mt-2"
+    >
+      <mat-card-content
+        >🔍 No se encontraron resultados para la búsqueda</mat-card-content
+      >
+    </mat-card>
+    <table
+      *ngIf="filteredVehicleModels.length > 0"
+      class="table table-dark table-hover table-bordered table-sm border border-white text-center"
+    >
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tipo de Transmisión</th>
+          <th>Cantidad de Pasajeros</th>
+          <th>Marca</th>
+          <th>Categoría</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicleModel of filteredVehicleModels">
+          <td>{{ vehicleModel.vehicleModelName }}</td>
+          <td>{{ vehicleModel.transmissionType }}</td>
+          <td>{{ vehicleModel.passengerCount }}</td>
+          <td>{{ getBrandName(vehicleModel) }}</td>
+          <td>{{ getCategoryName(vehicleModel) }}</td>
+          <td class="actions-column">
+            <app-action-buttons
+              [entity]="vehicleModel"
+              [disableDeletion]="false"
+              (editEntity)="editVehicleModel($event)"
+              (deleteEntity)="deleteVehicleModel($event)"
+            ></app-action-buttons>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

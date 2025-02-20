@@ -1,0 +1,295 @@
+<div class="container unselectable">
+  <div class="d-flex justify-content-between align-items-center gap-4 mt-1">
+    <div class="title">{{ formData.title }}</div>
+    <button mat-stroked-button (click)="navigateToUsers()">Volver</button>
+  </div>
+  <hr />
+  <div *ngIf="formData.action === 'Edit'" class="information">
+    <div class="d-flex id-div">
+      <div class="information-title">ID</div>
+      <div class="information-content">
+        <span>{{ currentUserId }}</span>
+      </div>
+    </div>
+    <div class="email-div">
+      <div class="information-title">Email</div>
+      <div class="information-content">
+        <span>{{ currentEmail }}</span>
+      </div>
+    </div>
+  </div>
+  <hr *ngIf="formData.action === 'Edit'" />
+  <div class="content">
+    <form
+      app-prevent-enter
+      [formGroup]="userForm"
+      (ngSubmit)="onSubmit()"
+      autocomplete="off"
+    >
+      <div class="user-details">
+        <mat-form-field
+          *ngIf="formData.action === 'Create'"
+          disabled
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            id="email"
+            class="form-control"
+            type="email"
+            formControlName="email"
+            placeholder="Email"
+          />
+          <mat-error *ngIf="userForm.get('email')?.errors?.required">
+            El email es requerido.
+          </mat-error>
+          <mat-error *ngIf="userForm.get('email')?.errors?.invalidEmail">
+            El email no tiene un formato válido.
+          </mat-error>
+          <mat-error *ngIf="userForm.get('email')?.errors?.emailExists">
+            Este email ya está siendo usado.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="formData.action === 'Create'"
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            id="password"
+            class="form-control"
+            type="password"
+            formControlName="password"
+            placeholder=""
+            [type]="hide() ? 'password' : 'text'"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="togglePasswordVisibility($event)"
+            [attr.aria-label]="'Ocultar contraseña'"
+            [attr.aria-pressed]="hide()"
+          >
+            <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+          <mat-error *ngIf="userForm.get('password')?.errors?.required">
+            La contraseña es requerida.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Rol</mat-label>
+          <mat-select id="role" formControlName="role">
+            <mat-option value="admin">Admin</mat-option>
+            <mat-option value="employee">Empleado</mat-option>
+            <mat-option value="client">Cliente</mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.get('role')?.errors?.required">
+            El rol es requerido.
+          </mat-error>
+        </mat-form-field>
+        <div class="input-toggle-box">
+          <p class="text m-0 me-2 mb-5">Verificado:</p>
+          <mat-slide-toggle
+            formControlName="verified"
+            name="verified"
+            class="mb-5"
+          ></mat-slide-toggle>
+        </div>
+      </div>
+      <hr />
+      <div class="user-details">
+        <mat-form-field
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Tipo de Documento</mat-label>
+          <mat-select id="documentType" formControlName="documentType">
+            <mat-option value="DNI">DNI</mat-option>
+            <mat-option value="Pasaporte">Pasaporte</mat-option>
+            <mat-option value="Libreta">Libreta</mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.get('documentType')?.errors?.required">
+            El tipo de documento es requerido.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Número de Documento</mat-label>
+          <input
+            matInput
+            id="documentID"
+            class="form-control"
+            type="text"
+            formControlName="documentID"
+            placeholder=""
+          />
+          <mat-error *ngIf="userForm.get('documentID')?.errors?.required">
+            El número de documento es requerido.
+          </mat-error>
+          <mat-error *ngIf="userForm.get('documentID')?.errors?.pattern">
+            El número de documento no es válido.
+          </mat-error>
+          <mat-error
+            *ngIf="userForm.get('documentID')?.errors?.documentIDExists"
+          >
+            Este número ya está siendo usado.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Nombre</mat-label>
+          <input
+            matInput
+            id="Name"
+            class="form-control"
+            type="text"
+            formControlName="userName"
+            placeholder=""
+          />
+          <mat-error *ngIf="userForm.get('userName')?.errors?.required">
+            El nombre es requerido.
+          </mat-error>
+          <mat-error *ngIf="userForm.get('userName')?.errors?.pattern">
+            El nombre solo puede contener letras.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Apellido</mat-label>
+          <input
+            matInput
+            id="Surname"
+            class="form-control"
+            type="text"
+            formControlName="userSurname"
+            placeholder=""
+          />
+          <mat-error *ngIf="userForm.get('userSurname')?.errors?.required">
+            El apellido es requerido.
+          </mat-error>
+          <mat-error *ngIf="userForm.get('userSurname')?.errors?.pattern">
+            El apellido solo puede contener letras.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input
+            matInput
+            id="birthDate"
+            class="form-control"
+            type="date"
+            formControlName="birthDate"
+            placeholder=""
+          />
+          <mat-error *ngIf="userForm.get('birthDate')?.errors?.required">
+            La fecha de nacimiento es requerida.
+          </mat-error>
+          <mat-error *ngIf="userForm.get('birthDate')?.errors?.dateInvalid">
+            {{ userForm.get("birthDate")?.errors?.dateInvalid }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Domicilio</mat-label>
+          <input
+            matInput
+            id="address"
+            class="form-control"
+            type="text"
+            formControlName="address"
+            placeholder=""
+          />
+          <mat-error *ngIf="userForm.get('address')?.errors?.required">
+            El domicilio es requerido.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Teléfono</mat-label>
+          <input
+            matInput
+            id="phoneNumber"
+            class="form-control"
+            type="tel"
+            formControlName="phoneNumber"
+            placeholder=""
+          />
+          <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.required">
+            El teléfono es requerido.
+          </mat-error>
+          <mat-error *ngIf="userForm.get('phoneNumber')?.errors?.pattern">
+            El teléfono solo puede contener números.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              userForm.get('phoneNumber')?.errors?.minlength &&
+              !userForm.get('phoneNumber')?.errors?.pattern
+            "
+          >
+            El teléfono debe tener al menos 7 números.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          class="input-box"
+          appearance="outline"
+          hideRequiredMarker="true"
+        >
+          <mat-label>Nacionalidad</mat-label>
+          <input
+            matInput
+            id="nationality"
+            class="form-control"
+            type="text"
+            formControlName="nationality"
+            placeholder=""
+          />
+          <mat-error *ngIf="userForm.get('nationality')?.errors?.required">
+            La nacionalidad es requerida.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="button">
+        <button type="submit" [disabled]="userForm.invalid || userForm.pending">
+          <ng-container *ngIf="!userForm.pending && !pending; else loading">
+            {{ formData.buttonText }}
+          </ng-container>
+          <ng-template #loading>
+            <mat-spinner diameter="30"></mat-spinner>
+          </ng-template>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

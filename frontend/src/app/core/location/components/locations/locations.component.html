@@ -1,0 +1,10 @@
+<div class="d-flex justify-content-between align-items-center gap-5 mt-4 me-4">
+  <h2 class="text-white my-0 ms-4">Nuestras sucursales</h2>
+  <button (click)="newLocation()">Nueva</button>
+</div>
+<section class="locations-list mt-4 mx-4">
+  <app-locations-table
+    [locations]="locations"
+    (locationDeleted)="onLocationDeleted()"
+  ></app-locations-table>
+</section>
