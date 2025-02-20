@@ -346,11 +346,7 @@ const verifyDocumentIDExists = async (req: Request, res: Response) => {
     const documentID = req.params.documentID.trim();
     const id = Number.parseInt(req.params.id);
     const user = await em.findOneOrFail(User, { documentID });
-    if (user.id === id) {
-      res.status(200).json({ exists: false });
-    } else {
-      res.status(200).json({ exists: true });
-    }
+    res.status(200).json({ exists: user.id !== id });
   } catch (error) {
     res.status(200).json({ exists: false });
   }

@@ -111,11 +111,7 @@ const verifyVehicleModelNameExists = async (req: Request, res: Response) => {
     const vehicleModel = await em.findOneOrFail(VehicleModel, {
       vehicleModelName,
     });
-    if (vehicleModel.id === id) {
-      res.status(200).json({ exists: false });
-    } else {
-      res.status(200).json({ exists: true });
-    }
+    res.status(200).json({ exists: vehicleModel.id !== id });
   } catch (error) {
     res.status(200).json({ exists: false });
   }

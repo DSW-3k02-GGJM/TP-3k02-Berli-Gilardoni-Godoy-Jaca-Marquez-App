@@ -96,11 +96,7 @@ const verifyCategoryNameExists = async (req: Request, res: Response) => {
     const categoryName = req.params.categoryName.trim();
     const id = Number.parseInt(req.params.id);
     const category = await em.findOneOrFail(Category, { categoryName });
-    if (category.id === id) {
-      res.status(200).json({ exists: false });
-    } else {
-      res.status(200).json({ exists: true });
-    }
+    res.status(200).json({ exists: category.id !== id });
   } catch (error) {
     res.status(200).json({ exists: false });
   }

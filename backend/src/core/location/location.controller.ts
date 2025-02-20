@@ -96,11 +96,7 @@ const verifyLocationNameExists = async (req: Request, res: Response) => {
     const locationName = req.params.locationName.trim();
     const id = Number.parseInt(req.params.id);
     const location = await em.findOneOrFail(Location, { locationName });
-    if (location.id === id) {
-      res.status(200).json({ exists: false });
-    } else {
-      res.status(200).json({ exists: true });
-    }
+    res.status(200).json({ exists: location.id !== id });
   } catch (error) {
     res.status(200).json({ exists: false });
   }

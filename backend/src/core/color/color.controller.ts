@@ -96,11 +96,7 @@ const verifyColorNameExists = async (req: Request, res: Response) => {
     const colorName = req.params.colorName.trim();
     const id = Number.parseInt(req.params.id);
     const color = await em.findOneOrFail(Color, { colorName });
-    if (color.id === id) {
-      res.status(200).json({ exists: false });
-    } else {
-      res.status(200).json({ exists: true });
-    }
+    res.status(200).json({ exists: color.id !== id });
   } catch (error) {
     res.status(200).json({ exists: false });
   }

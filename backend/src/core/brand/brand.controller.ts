@@ -95,11 +95,7 @@ const verifyBrandNameExists = async (req: Request, res: Response) => {
     const brandName = req.params.brandName.trim();
     const id = Number.parseInt(req.params.id);
     const brand = await em.findOneOrFail(Brand, { brandName });
-    if (brand.id === id) {
-      res.status(200).json({ exists: false });
-    } else {
-      res.status(200).json({ exists: true });
-    }
+    res.status(200).json({ exists: brand.id !== id });
   } catch (error) {
     res.status(200).json({ exists: false });
   }

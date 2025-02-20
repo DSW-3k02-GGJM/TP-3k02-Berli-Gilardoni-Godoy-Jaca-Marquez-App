@@ -108,11 +108,7 @@ const verifyLicensePlateExists = async (req: Request, res: Response) => {
     const licensePlate = req.params.licensePlate.trim();
     const id = Number.parseInt(req.params.id);
     const vehicle = await em.findOneOrFail(Vehicle, { licensePlate });
-    if (vehicle.id === id) {
-      res.status(200).json({ exists: false });
-    } else {
-      res.status(200).json({ exists: true });
-    }
+    res.status(200).json({ exists: vehicle.id !== id });
   } catch (error) {
     res.status(200).json({ exists: false });
   }
