@@ -35,8 +35,6 @@ export class VehicleModel extends BaseEntity {
   @ManyToOne(() => Brand, { nullable: false })
   brand!: Rel<Brand>;
 
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.vehicleModel, {
-    cascade: [Cascade.ALL],
-  })
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.vehicleModel)
   vehicles = new Collection<Vehicle>(this);
 }

@@ -16,8 +16,6 @@ export class Brand extends BaseEntity {
   @Property({ nullable: false, unique: true })
   brandName!: string;
 
-  @OneToMany(() => VehicleModel, (vehicleModel) => vehicleModel.brand, {
-    cascade: [Cascade.ALL],
-  })
+  @OneToMany(() => VehicleModel, (vehicleModel) => vehicleModel.brand)
   vehicleModels = new Collection<VehicleModel>(this);
 }

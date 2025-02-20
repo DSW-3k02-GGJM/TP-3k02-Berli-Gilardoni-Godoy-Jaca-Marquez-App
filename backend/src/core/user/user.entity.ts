@@ -52,8 +52,6 @@ export class User extends BaseEntity {
   @Property({ nullable: false })
   verified!: boolean;
 
-  @OneToMany(() => Reservation, (reservation) => reservation.user, {
-    cascade: [Cascade.ALL],
-  })
+  @OneToMany(() => Reservation, (reservation) => reservation.user)
   reservations = new Collection<Reservation>(this);
 }

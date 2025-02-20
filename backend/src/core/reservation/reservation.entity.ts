@@ -48,8 +48,6 @@ export class Reservation extends BaseEntity {
   @ManyToOne(() => Vehicle, { nullable: false })
   vehicle!: Rel<Vehicle>;
 
-  @OneToMany(() => Reminder, (reminder) => reminder.reservation, {
-    cascade: [Cascade.ALL],
-  })
+  @OneToMany(() => Reminder, (reminder) => reminder.reservation)
   reminders = new Collection<Reminder>(this);
 }

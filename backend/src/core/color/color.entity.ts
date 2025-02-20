@@ -16,8 +16,6 @@ export class Color extends BaseEntity {
   @Property({ nullable: false, unique: true })
   colorName!: string;
 
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.color, {
-    cascade: [Cascade.ALL],
-  })
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.color)
   vehicles = new Collection<Vehicle>(this);
 }

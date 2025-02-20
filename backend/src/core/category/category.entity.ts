@@ -25,8 +25,6 @@ export class Category extends BaseEntity {
   @Property({ nullable: false })
   depositValue!: number;
 
-  @OneToMany(() => VehicleModel, (vehicleModel) => vehicleModel.category, {
-    cascade: [Cascade.ALL],
-  })
+  @OneToMany(() => VehicleModel, (vehicleModel) => vehicleModel.category)
   vehicleModels = new Collection<VehicleModel>(this);
 }

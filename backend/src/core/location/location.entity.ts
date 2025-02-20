@@ -22,8 +22,6 @@ export class Location extends BaseEntity {
   @Property({ nullable: false })
   phoneNumber!: string;
 
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.location, {
-    cascade: [Cascade.ALL],
-  })
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.location)
   vehicles = new Collection<Vehicle>(this);
 }
